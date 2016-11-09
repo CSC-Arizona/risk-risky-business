@@ -13,7 +13,7 @@ All four team members make a commit that modifies this file with your name added
 
 1) Jewell Finder
 
-2) 
+2) Dylan Tobia
 
 3)
 
