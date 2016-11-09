@@ -2,20 +2,16 @@
 
 This is the GitHub repo we will use to store our CSC 335 Final Project, Fall 2016
 
+Team Name: Risky Business 
 
-One team member write your team name, project, and project manager (PM) Bree, Theo, Alex, Miranda, or Cody.  Also please add your name after 1) below.  Make one commit.  You may delete this paragraph.
+Project (Risk, Pokemon, Settlement Management, or MUD): Risk
 
-
-Team Name: _________
-
-Project (Risk, Pokemon, Settlement Management, or MUD): __________
-
-Project Manager: __________
+Project Manager: Theo
 
 
 All four team members make a commit that modifies this file with your name added below this line (leave this line here)
 
-1)
+1) Jewell Finder
 
 2) 
 
