@@ -12,6 +12,7 @@ public class Deck {
 	
 	private Deck(){
 		riskDeck = new ArrayList<Card>();
+		fillDeck();
 	}
 	
 	public static synchronized Deck getInstance(){
@@ -27,6 +28,11 @@ public class Deck {
 	public Card deal(){
 		//TODO: stub
 		return null;
+	}
+	
+	private void fillDeck(){
+		//TODO: add all cards to deck
+		riskDeck.add(new Card("Wildlings", "Mammoth")); //example, not sure what the plan is :) 
 	}
 
 }
