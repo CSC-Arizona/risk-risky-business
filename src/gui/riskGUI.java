@@ -33,14 +33,16 @@ public class riskGUI extends JFrame{
 	private JMenuBar menu;
 	
 	public riskGUI(){
+		setUpGui();
+		setUpDrawingPanel();
+		setUpMenu();
+	}
+	private void setUpGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocation(20,20);
 		setLayout(null);
 		setTitle("GOT Risk");
 		setSize(1800,1000);
-		
-		setUpDrawingPanel();
-		setUpMenu();
 	}
 	private void setUpMenu() {
 		JMenu help = new JMenu("Help");
