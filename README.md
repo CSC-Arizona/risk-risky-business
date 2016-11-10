@@ -15,6 +15,6 @@ All four team members make a commit that modifies this file with your name added
 
 2) Dylan Tobia
 
-3)
+3) Sydney Komro
 
 4)
