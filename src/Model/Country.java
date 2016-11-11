@@ -41,18 +41,43 @@ public class Country {
 	}//end drawMyButton
 	
 	
-	public String getName(){
-		return name;
-	}//end getName
 	
-	public double getX(){
+	
+	public String getName() {
+		return name;
+	}
+
+
+	public double getX() {
 		return x;
 	}
-	
-	public double getY(){
+
+
+	public double getY() {
 		return y;
 	}
-	
+
+
+	public int getForcesVal() {
+		return forcesVal;
+	}
+
+
+	public Player getOccupier() {
+		return occupier;
+	}
+
+
+	public JButton getMyButton() {
+		return myButton;
+	}
+
+
+	public ArrayList<Country> getNeighbors() {
+		return neighbors;
+	}
+
+
 	/*
 	 * equals
 	 * 
