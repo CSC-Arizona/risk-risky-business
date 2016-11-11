@@ -31,8 +31,12 @@ public class riskGUI extends JFrame{
 	
 	private JPanel drawingPanel;
 	private JMenuBar menu;
+	private int width;
+	private int height;
 	
 	public riskGUI(){
+		width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+		height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 		setUpGui();
 		setUpDrawingPanel();
 		setUpMenu();
@@ -57,9 +61,9 @@ public class riskGUI extends JFrame{
 	}
 	private void setUpDrawingPanel() {
 		drawingPanel = new JPanel();
-		drawingPanel.setSize(1765, 890);
+		drawingPanel.setSize(width, height);
 		drawingPanel.setLocation(10,10);
-		drawingPanel.setBackground(Color.LIGHT_GRAY);
+		//drawingPanel.setBackground(Color.LIGHT_GRAY);
 		this.add(drawingPanel);
 		
 	}
