@@ -11,4 +11,7 @@ public abstract class Player {
 	private ArrayList<Country> myCountries;
 	private ArrayList<Card> myCards;
 	
+	
+	
+	
 }
