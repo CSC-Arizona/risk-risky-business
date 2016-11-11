@@ -77,14 +77,15 @@ public class riskGUI extends JFrame{
 	}
 	
 	private class BoardPanel extends JPanel{
-		public void PaintComponent(Graphics g){
-			System.out.println("HI!");
+		@Override
+		public void paintComponent(Graphics g){
+
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.BLACK);
-			g2.fillRect(25,25,25,25);
+			
 			super.paintComponent(g2);
 			Image tmp = gameBoard.getImage();
-			g2.drawImage(tmp, 5, 5, null);
+			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(), drawingPanel.getHeight(),null);
 		}
 		
 	}
