@@ -7,11 +7,15 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,10 +33,11 @@ public class riskGUI extends JFrame{
 		new riskGUI().setVisible(true);
 	}
 	
-	private JPanel drawingPanel;
+	private BoardPanel drawingPanel;
 	private JMenuBar menu;
 	private int width;
 	private int height;
+	private ImageIcon gameBoard;
 	
 	public riskGUI(){
 		width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
@@ -60,11 +65,27 @@ public class riskGUI extends JFrame{
 		
 	}
 	private void setUpDrawingPanel() {
-		drawingPanel = new JPanel();
+		gameBoard = new ImageIcon("GoTMapRisk.jpg");
+		drawingPanel = new BoardPanel();
 		drawingPanel.setSize(width, height);
 		drawingPanel.setLocation(10,10);
-		//drawingPanel.setBackground(Color.LIGHT_GRAY);
+		drawingPanel.setBackground(Color.LIGHT_GRAY);
+		drawingPanel.repaint();
 		this.add(drawingPanel);
+		
+		
+	}
+	
+	private class BoardPanel extends JPanel{
+		public void PaintComponent(Graphics g){
+			System.out.println("HI!");
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(Color.BLACK);
+			g2.fillRect(25,25,25,25);
+			super.paintComponent(g2);
+			Image tmp = gameBoard.getImage();
+			g2.drawImage(tmp, 5, 5, null);
+		}
 		
 	}
 	
