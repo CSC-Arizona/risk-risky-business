@@ -64,6 +64,11 @@ public class Map {
 		countries[49] = new Country("Qarth", 35.25,32.75,Continents.BLACK);
 	}
 	
+	public Country[] getCountries()
+	{
+		return countries;
+	}
+	
 	
 
 }
