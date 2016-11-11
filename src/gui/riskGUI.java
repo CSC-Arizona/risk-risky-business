@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -38,7 +39,7 @@ public class riskGUI extends JFrame{
 	private int width;
 	private int height;
 	private ImageIcon gameBoard;
-	
+	private JButton checkButton;
 	public riskGUI(){
 		width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 		height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
@@ -46,13 +47,16 @@ public class riskGUI extends JFrame{
 		setUpDrawingPanel();
 		setUpMenu();
 	}
+	
 	private void setUpGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocation(20,20);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//setLocation(5,5);
 		setLayout(null);
 		setTitle("GOT Risk");
-		setSize(1800,1000);
+		setSize(width, height);
 	}
+	
 	private void setUpMenu() {
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
@@ -67,10 +71,17 @@ public class riskGUI extends JFrame{
 	private void setUpDrawingPanel() {
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
 		drawingPanel = new BoardPanel();
-		drawingPanel.setSize(width, height);
+		drawingPanel.setLayout(null);
+		drawingPanel.setSize(width-40, height-75);
 		drawingPanel.setLocation(10,10);
 		drawingPanel.setBackground(Color.LIGHT_GRAY);
 		drawingPanel.repaint();
+		checkButton = new JButton("FINDING COORDINATES");
+		checkButton.setSize(200,25);
+		//checkButton.setContentAreaFilled(false);
+		checkButton.setLocation(((width-40)*290)/1510,((height-110)*220)/810);
+		checkButton.setForeground(Color.white);
+		drawingPanel.add(checkButton);
 		this.add(drawingPanel);
 		
 		
