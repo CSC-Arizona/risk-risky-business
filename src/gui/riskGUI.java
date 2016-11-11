@@ -69,8 +69,8 @@ public class riskGUI extends JFrame{
 		
 	}
 	private void setUpDrawingPanel() {
-		int xWidth = 47;
-		int yHeight = 24;
+		int xWidth = (width - 40)/40;
+		int yHeight = (height - 70)/40;
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
