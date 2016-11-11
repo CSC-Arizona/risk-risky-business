@@ -16,16 +16,18 @@ public class Country {
 	private double x;
 	private double y;
 	private int forcesVal;
+	private Continents continent;
 	private Player occupier;
 	private JButton myButton;
 	private ArrayList<Country> neighbors;
 
-	public Country(String name, double x, double y){
+	public Country(String name, double x, double y, Continents continent){
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		x = -1;
 		y = -1;
+		this.continent = continent;
 		forcesVal = 0;
 		occupier = null;
 		neighbors = new ArrayList<Country>();
