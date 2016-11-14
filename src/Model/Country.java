@@ -63,6 +63,10 @@ public class Country {
 		myButton.setLocation((int)(x * xWidth), (int)(y * yHeight));
 	}
 	
+	public void changeButtonSize(int height, int width){
+		myButton.setSize(width, height);
+	}
+	
 	public JButton getButton(){
 		return myButton;
 	}

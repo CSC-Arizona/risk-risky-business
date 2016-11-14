@@ -122,6 +122,10 @@ public class riskGUI extends JFrame {
 			country.makeButton(xWidth, yHeight, new countryClickListner());
 			drawingPanel.add(country.getButton());
 		}//end for
+		
+		//Manually adjusts the size and shape of a few of the weirder 
+		//shaped country buttons
+		
 	}//end drawCountryButtons
 	
 	
@@ -148,7 +152,7 @@ public class riskGUI extends JFrame {
 			xWidth = (int) (drawD.getWidth()/40);
 			yHeight = (int) (drawD.getHeight()/40);
 			updateCountryButtons();
-			drawGridAndNumbers(g2);
+	//		drawGridAndNumbers(g2);
 
 		}
 
