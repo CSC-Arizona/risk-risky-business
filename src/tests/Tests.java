@@ -8,6 +8,7 @@ import Model.Card;
 import Model.Continents;
 import Model.Country;
 import Model.Deck;
+import Model.Dice;
 import Model.HumanPlayer;
 import Model.Map;
 import Model.Player;
@@ -18,7 +19,7 @@ public class Tests {
 	
 	@Test
 	public void testArmy() {
-		//There's nothing to test
+		//TODO: Currently nothing to test
 	}
 	
 	@Test 
@@ -32,11 +33,22 @@ public class Tests {
 	@Test 
 	public void testDeck(){ 
 		Deck testDeck;
-		//need to finish this up
+		//TODO: need to write tests
 		
 	}
 	
-	//need tests for Dice
+	@Test
+	public void testDice(){
+		//100% Coverage
+		Dice die = new Dice();
+		assertEquals(die.getValue(), 0);
+		die.roll(1);
+		die.roll(3);
+		//Not currently testing the roll values here, but used prints to 
+		//make sure it was working properly. 
+	}
+	
+	
 	@Test
 	public void testCountry(){
 		// 90.6% coverage
@@ -63,7 +75,7 @@ public class Tests {
 	
 	@Test
 	public void testHumanPlayer(){
-		// 37.5% coverage (Player: 30% Coverage)
+		//TODO: 37.5% coverage (Player: 30% Coverage)
 		Player human = new HumanPlayer();
 	}
 	
