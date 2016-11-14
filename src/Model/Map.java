@@ -19,7 +19,7 @@ public class Map {
 		countries[4] = new Country("The Rills", 2.5,10.5, Continents.BLUE);
 		countries[5] = new Country("The Neck", 5.5,11.75, Continents.BLUE);
 		countries[6] = new Country("The Flint Cliffs", 3.25,14, Continents.BLUE);
-		countries[7] = new Country("The Grey Cliffs", 9.75,5.5, Continents.BLUE);
+		countries[7] = new Country("The Grey Cliffs", 8.5,5.5, Continents.BLUE);
 		countries[8] = new Country("The Vale", 8,18, Continents.GREEN);
 		countries[9] = new Country("Riverlands",3.5,18.5,Continents.GREEN);
 		countries[10] = new Country("Iron Islands",2,17,Continents.GREEN);
@@ -27,9 +27,9 @@ public class Map {
 		countries[12] = new Country("Crownlands",7.25,21.25,Continents.GREEN);
 		countries[13] = new Country("The Reach",5.5,24,Continents.ORANGE);
 		countries[14] = new Country("Shield Lands", 3,25,Continents.ORANGE);
-		countries[15] = new Country("Whispering Sound", 2.75,28.5,Continents.ORANGE);
+		countries[15] = new Country("Whispering Sound", 1.75,28.5,Continents.ORANGE);
 		countries[16] = new Country("Storm Lands", 7.75,25, Continents.ORANGE);
-		countries[17] = new Country("Red Mountains", 5.5,28.5,Continents.ORANGE);
+		countries[17] = new Country("Red Mountains", 5,28.5,Continents.ORANGE);
 		countries[18] = new Country("Dorne", 7,30.75,Continents.ORANGE);
 		countries[19] = new Country("Braavosi Coastland",13.5,17,Continents.PINK);
 		countries[20] = new Country("Andalos",13.5,21.5,Continents.PINK);
@@ -54,7 +54,7 @@ public class Map {
 		countries[39] = new Country("Vaes Dothrak", 33.5,20,Continents.YELLOW);
 		countries[40] = new Country("Realms of Jhogrvin", 37.25,17.5,Continents.YELLOW);
 		countries[41] = new Country("Ibben", 33.5,8.5,Continents.YELLOW);
-		countries[42] = new Country("Painted Mountains", 25,27.5,Continents.BLACK);
+		countries[42] = new Country("Painted Mountains", 25,28,Continents.BLACK);
 		countries[43] = new Country("Slaver's Bay", 28.5,30.25,Continents.BLACK);
 		countries[44] = new Country("Lhazar",31,28.75,Continents.BLACK);
 		countries[45] = new Country("Samyrian Hills", 34.5,25.75,Continents.BLACK);

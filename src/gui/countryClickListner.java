@@ -7,10 +7,9 @@ import java.awt.event.ActionListener;
 public class countryClickListner implements ActionListener {
 
 	@Override
-	public void actionPerformed(ActionEvent arg0)
+	public void actionPerformed(ActionEvent e)
 	{
-		// TODO Auto-generated method stub
-
+		System.out.println(e.getActionCommand() + " pressed.");
 	}
 
 }

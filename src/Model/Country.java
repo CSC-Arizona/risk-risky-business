@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -31,6 +32,7 @@ public class Country {
 		forcesVal = 0;
 		occupier = null;
 		neighbors = new ArrayList<Country>();
+		myButton = null;
 	}//end constructor
 	
 	
@@ -43,7 +45,27 @@ public class Country {
 	}//end drawMyButton
 	
 	
+	public void makeButton(int xWidth, int yHeight, ActionListener act){
+		myButton = new JButton();
+		myButton.setLocation((int)(x * xWidth), (int)(y * yHeight));
+		myButton.setContentAreaFilled(false);
+		myButton.setActionCommand(name);
+		if (name.length()<5)
+			myButton.setSize(75, 25);
+		else
+			myButton.setSize(name.length() * 8, 25);
+		
+		myButton.addActionListener(act);
+		
+	}//end makeButton
 	
+	public void updateButton(int xWidth, int yHeight){
+		myButton.setLocation((int)(x * xWidth), (int)(y * yHeight));
+	}
+	
+	public JButton getButton(){
+		return myButton;
+	}
 	
 	public String getName() {
 		return name;
