@@ -32,8 +32,16 @@ public class Tests {
 	
 	@Test 
 	public void testDeck(){ 
-		Deck testDeck;
-		//TODO: need to write tests
+		Deck testDeck = Deck.getInstance();
+		assertEquals(52, testDeck.getSize());
+		testDeck.shuffle();
+		testDeck.deal();
+		assertEquals(51, testDeck.getSize());
+		testDeck.deal();
+		assertEquals(50, testDeck.getSize());
+		testDeck.shuffle();
+		assertEquals(52, testDeck.getSize());
+		
 		
 	}
 	

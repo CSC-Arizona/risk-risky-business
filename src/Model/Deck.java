@@ -38,8 +38,8 @@ public class Deck {
 	public Card deal() {
 		if(size>0){
 			Card result;
-			result = riskDeck.get(size);
-			riskDeck.remove(size);
+			result = riskDeck.get(size-1);
+			riskDeck.remove(size-1);
 			size--;
 			return result;
 		}
@@ -104,6 +104,8 @@ public class Deck {
 		deck.add(new Card("Ghiscar", "artillery"));
 		deck.add(new Card("The Red Waste", "infantry"));
 		deck.add(new Card("Qarth", "cavalry"));
+		deck.add(new Card("WILD", "WILD"));
+		deck.add(new Card("WILD", "WILD"));
 	}
 
 }
