@@ -148,18 +148,18 @@ public class riskGUI extends JFrame {
 			xWidth = (int) (drawD.getWidth()/40);
 			yHeight = (int) (drawD.getHeight()/40);
 			updateCountryButtons();
-			// drawGridAndNumbers(g2);
+			drawGridAndNumbers(g2);
 
 		}
 
 		private void drawGridAndNumbers(Graphics2D g2)
 		{
-			for (int i = (width - 40) / 40; i < width - 40; i += ((width - 40) / 40))
+			for (int i = xWidth; i < width - 40; i += xWidth)
 			{
 				g2.drawLine(i, 0, i, height - 70);
 			}
 
-			for (int i = (height - 70) / 40; i < height - 70; i += (height - 70) / 40)
+			for (int i = yHeight; i < height - 70; i += yHeight)
 			{
 				g2.drawLine(0, i, width - 40, i);
 			}
@@ -169,18 +169,19 @@ public class riskGUI extends JFrame {
 
 			int startX = xCount;
 			int startY = yCount;
-			;
+			int y = 0;
 			for (int i = 1; i < 40; i++)
 			{
-				int x = 1;
+				//int x = 1;
+				y++;
 				startY = yCount;
 
 				for (int j = 1; j < 40; j++)
 				{
-					g2.drawString(Integer.toString(x), startX, startY);
+					g2.drawString(Integer.toString(y), startX, startY);
 					startY += yHeight;
 
-					x++;
+				//	x++;
 				}
 				startX += xWidth;
 			}
