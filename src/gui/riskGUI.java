@@ -6,18 +6,23 @@
 
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -39,20 +44,19 @@ public class riskGUI extends JFrame {
 	private JMenuBar menu;
 	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
-	private final int xWidth = (width - 40) / 40;
-	private final int yHeight = (height - 70) / 40;
+	private int xWidth = 0;
+	private int yHeight = 0;
 	private Map map;
 	private ImageIcon gameBoard;
 	private JButton checkButton;
 
 	public riskGUI()
 	{
-//		width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-//		height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 		System.out.println("Width = " + width + " Height = " + height);
 		map = new Map();
 		setUpGui();
 		setUpDrawingPanel();
+		setUpGameStatsPanel();
 		setUpMenu();
 	}
 
@@ -60,8 +64,8 @@ public class riskGUI extends JFrame {
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setLayout(null);
-		setTitle("GOT Risk");
+		setLayout(new BorderLayout());
+		setTitle("GoT Risk");
 		setSize(width, height);
 	}
 
@@ -80,8 +84,6 @@ public class riskGUI extends JFrame {
 
 	private void setUpDrawingPanel()
 	{
-		// int xWidth = (width - 40)/40;
-		// int yHeight = (height - 70)/40;
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
@@ -89,32 +91,45 @@ public class riskGUI extends JFrame {
 		drawingPanel.setLocation(10, 10);
 		drawingPanel.setBackground(Color.LIGHT_GRAY);
 		drawingPanel.repaint();
-	
-		drawCountryButtons();
 		
-		this.add(drawingPanel);
+		//Prepare to draw the buttons!
+		Dimension drawD = drawingPanel.getSize();
+		xWidth = (int) (drawD.getWidth()/40);
+		yHeight = (int) (drawD.getHeight()/40);
+		drawCountryButtons();
+		this.add(drawingPanel, BorderLayout.CENTER);
 
 	}
+	
+	
+	private void setUpGameStatsPanel(){
+		//Currently there to print nothing useful, but see what the game board
+		//will look like
+		JPanel gameStatsPanel = new JPanel();
+		gameStatsPanel.setLayout(new GridLayout(1,6));
+		gameStatsPanel.setPreferredSize(new Dimension(100,10));
+		gameStatsPanel.setBackground(Color.pink);
+//		this.add(gameStatsPanel, BorderLayout.EAST);
+	}//end setUpGameStatsPanel
+	
 
 	//draws buttons over the name of all of the countries
 	private void drawCountryButtons()
 	{
-		JButton mapButton;
 		for (Country country : map.getCountries())
 		{
-			mapButton = new JButton(country.getName());
-			mapButton.setLocation((int) country.getX() * xWidth, (int) country.getY() * yHeight);
-			int length = 0;
-			if(country.getName().length() <=5)
-				length = 75;
-			else
-				length = country.getName().length()*15;
-			mapButton.setSize(length, 25);
-			mapButton.addActionListener(new countryClickListner());
-			drawingPanel.add(mapButton);
-
+			//The Make button method has the same logic that was previously here
+			country.makeButton(xWidth, yHeight, new countryClickListner());
+			drawingPanel.add(country.getButton());
+		}//end for
+	}//end drawCountryButtons
+	
+	
+	//Updates those buttons if the size of the panel changes
+	private void updateCountryButtons(){
+		for (Country country : map.getCountries()){
+			country.updateButton(xWidth, yHeight);
 		}
-
 	}
 
 	private class BoardPanel extends JPanel {
@@ -124,20 +139,21 @@ public class riskGUI extends JFrame {
 
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
-
-			;
 			super.paintComponent(g2);
+			
 			Image tmp = gameBoard.getImage();
 			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(), drawingPanel.getHeight(), null);
 
+			Dimension drawD = drawingPanel.getSize();
+			xWidth = (int) (drawD.getWidth()/40);
+			yHeight = (int) (drawD.getHeight()/40);
+			updateCountryButtons();
 			// drawGridAndNumbers(g2);
 
 		}
 
 		private void drawGridAndNumbers(Graphics2D g2)
 		{
-			int xWidth = 47;
-			int yHeight = 24;
 			for (int i = (width - 40) / 40; i < width - 40; i += ((width - 40) / 40))
 			{
 				g2.drawLine(i, 0, i, height - 70);
