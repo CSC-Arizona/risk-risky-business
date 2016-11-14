@@ -148,7 +148,7 @@ public class riskGUI extends JFrame {
 			xWidth = (int) (drawD.getWidth()/40);
 			yHeight = (int) (drawD.getHeight()/40);
 			updateCountryButtons();
-			drawGridAndNumbers(g2);
+			//drawGridAndNumbers(g2);
 
 		}
 
