@@ -102,8 +102,10 @@ public class riskGUI extends JFrame {
 		JButton mapButton;
 		for (Country country : map.getCountries())
 		{
-			mapButton = new JButton(country.getName());
+			mapButton = new JButton();
 			mapButton.setLocation((int) country.getX() * xWidth, (int) country.getY() * yHeight);
+			mapButton.setContentAreaFilled(false);
+			mapButton.setActionCommand(country.getName());
 			int length = 0;
 			if(country.getName().length() <=5)
 				length = 75;
