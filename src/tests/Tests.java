@@ -16,11 +16,7 @@ import Model.Player;
 public class Tests {
 	
 	//No tests for Faction or Continents enums
-	
-	@Test
-	public void testArmy() {
-		//TODO: Currently nothing to test
-	}
+
 	
 	@Test 
 	public void testCard(){ 
