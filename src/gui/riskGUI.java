@@ -75,9 +75,15 @@ public class riskGUI extends JFrame {
 		menu = new JMenuBar();
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
+		
+		JMenuItem rules = new JMenuItem("Rules");
+		help.add(rules);
 		help.add(about);
 		this.setJMenuBar(menu);
 
+		rules.setActionCommand("rules");
+		about.setActionCommand("about");
+		rules.addActionListener(new helpListener());
 		about.addActionListener(new helpListener());
 
 	}
@@ -109,7 +115,7 @@ public class riskGUI extends JFrame {
 		gameStatsPanel.setLayout(new GridLayout(1,6));
 		gameStatsPanel.setPreferredSize(new Dimension(100,10));
 		gameStatsPanel.setBackground(Color.pink);
-//		this.add(gameStatsPanel, BorderLayout.EAST);
+		//this.add(gameStatsPanel, BorderLayout.EAST);
 	}//end setUpGameStatsPanel
 	
 
@@ -156,6 +162,7 @@ public class riskGUI extends JFrame {
 
 		}
 
+		//draws a 40X40 grid over the risk map. Used for determining where to place buttons.
 		private void drawGridAndNumbers(Graphics2D g2)
 		{
 			for (int i = xWidth; i < width - 40; i += xWidth)
@@ -193,12 +200,18 @@ public class riskGUI extends JFrame {
 
 	}
 
+	//help button listener for opening the about
 	private class helpListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent arg0)
+		public void actionPerformed(ActionEvent e)
 		{
-			JOptionPane.showMessageDialog(riskGUI.this,
+			if(e.getActionCommand().compareTo("rules") == 0)
+			{
+				JOptionPane.showMessageDialog(riskGUI.this,  "Fill this out later, maybe with a hyperlink to the rules", "Rules", JOptionPane.INFORMATION_MESSAGE);
+			}
+			else
+				JOptionPane.showMessageDialog(riskGUI.this,
 					"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
 							+ "\nCreated for our CS335 class as our final project.",
 					"About", JOptionPane.INFORMATION_MESSAGE);
