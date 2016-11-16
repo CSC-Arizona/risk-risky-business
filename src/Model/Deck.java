@@ -51,9 +51,8 @@ public class Deck {
 		return size;
 	}
 
-	//possible units: infantry, cavalry, artillery
+	//possible units: infantry, cavalry, artillery. Add all territories (countries) and 2 wild cards. 
 	private void fillDeck(ArrayList<Card> deck) {
-		// TODO: add all cards to deck
 		deck.add(new Card("The Wall", "infantry"));
 		deck.add(new Card("Skagos", "cavalry"));
 		deck.add(new Card("Wolfswood", "artillery"));
