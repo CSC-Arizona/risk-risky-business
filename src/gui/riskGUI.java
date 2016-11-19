@@ -15,6 +15,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.AncestorListener;
 
 import Model.Country;
 import Model.Map;
@@ -103,10 +106,10 @@ public class riskGUI extends JFrame {
 		xWidth = (int) (drawD.getWidth()/40);
 		yHeight = (int) (drawD.getHeight()/40);
 		drawCountryButtons();
+		
 		this.add(drawingPanel, BorderLayout.CENTER);
-
+		
 	}
-	
 	
 	private void setUpGameStatsPanel(){
 		//Currently there to print nothing useful, but see what the game board
@@ -157,7 +160,10 @@ public class riskGUI extends JFrame {
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth()/40);
 			yHeight = (int) (drawD.getHeight()/40);
-			updateCountryButtons();
+			ImageIcon wallButton = new ImageIcon("thewallbutton.png");
+			JLabel imageButton = new JLabel(wallButton);
+		
+		//	updateCountryButtons();
 	//		drawGridAndNumbers(g2);
 
 		}

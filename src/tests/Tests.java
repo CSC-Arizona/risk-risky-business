@@ -2,6 +2,8 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import Model.Card;
@@ -58,7 +60,9 @@ public class Tests {
 		// 90.6% coverage
 		Country wall = new Country("The Wall", 6.75, 3.5, Continents.BLUE);
 		Country skagos = new Country("Skagos", 10, 3, Continents.BLUE);
-		wall.addNeighbor(skagos);
+		ArrayList<Country> neighbors = new ArrayList<>();
+		neighbors.add(skagos);
+		wall.addNeighbors(neighbors);
 		wall.drawMyButton();
 		
 		assertEquals(wall.getName(), "The Wall");

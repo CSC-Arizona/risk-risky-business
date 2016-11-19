@@ -36,8 +36,8 @@ public class Country {
 	}//end constructor
 	
 	
-	public void addNeighbor(Country neighbor){
-		neighbors.add(neighbor);
+	public void addNeighbors(ArrayList<Country> neighbors){
+		neighbors.addAll(neighbors);
 	}//end addNeighbor
 	
 	public void drawMyButton(){
