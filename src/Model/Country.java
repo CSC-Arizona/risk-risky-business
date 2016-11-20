@@ -36,8 +36,8 @@ public class Country {
 	}//end constructor
 	
 	
-	public void addNeighbors(ArrayList<Country> neighbors){
-		neighbors.addAll(neighbors);
+	public void addNeighbor(Country neighbor){
+		neighbors.add(neighbor);
 	}//end addNeighbor
 	
 	public void drawMyButton(){
@@ -116,6 +116,10 @@ public class Country {
 	public boolean equals(Country comp){
 		return name.equals(comp.getName());
 	}//end equals
+	
+	public String toString(){
+		return name;
+	}
 	
 	
 }
