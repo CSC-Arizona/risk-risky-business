@@ -50,7 +50,7 @@ public class riskGUI extends JFrame {
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
-	//private Map map;
+	//private Map map; dont think this is needed anymore cause it is stored within theGame
 	private Game theGame;
 	private ImageIcon gameBoard;
 	private JButton checkButton;
@@ -61,13 +61,15 @@ public class riskGUI extends JFrame {
 	public riskGUI()
 	{
 		System.out.println("Width = " + width + " Height = " + height);
-		//map = new Map();
+	
+		//creates or grabs an instance of the game, first variable is number of human players, second is total number of players
 		theGame = Game.getInstance(1,3);
 		setUpGui();
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
 		setUpMenu();
-		//creates or grabs an instance of the game, first variable is number of human players, second is total number of players
+		
+		
 		
 	}
 
@@ -150,7 +152,7 @@ public class riskGUI extends JFrame {
 		for (Country country : theGame.getGameMap().getCountries())
 		{
 			//The Make button method has the same logic that was previously here
-			country.makeButton(xWidth, yHeight, new countryClickListner());
+			country.makeButton(xWidth, yHeight, new CountryClickListener());
 			drawingPanel.add(country.getButton());
 		}//end for
 		
@@ -185,8 +187,7 @@ public class riskGUI extends JFrame {
 		
 			updateCountryButtons();
 			currCountryPanel.updatePanel();
-	//		this.pack();
-			this.setVisible(true);
+
 	//		drawGridAndNumbers(g2);
 
 		}
@@ -298,7 +299,7 @@ public class riskGUI extends JFrame {
 	}//end helpListener
 	
 	
-	private class countryClickListner implements ActionListener {
+	private class CountryClickListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e)
