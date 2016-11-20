@@ -54,6 +54,9 @@ public class riskGUI extends JFrame {
 	private Game theGame;
 	private ImageIcon gameBoard;
 	private JButton checkButton;
+	private CountryPanel currCountryPanel;
+	private JButton moveButton;
+	
 
 	public riskGUI()
 	{
@@ -117,7 +120,16 @@ public class riskGUI extends JFrame {
 		yHeight = (int) (drawD.getHeight()/40);
 		drawCountryButtons();
 		
+		//Draw country panel
+		currCountryPanel = new CountryPanel();
+		currCountryPanel.setSize(10 * xWidth, 10 * yHeight);
+		currCountryPanel.setLocation(17 * xWidth, 3 * yHeight);
+//		currCountryPanel.setBackground(Color.BLUE);
+//		currCountryPanel.setLayout(new BorderLayout());
+		
+		drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
+		drawingPanel.repaint();
 		
 	}
 	
@@ -126,9 +138,9 @@ public class riskGUI extends JFrame {
 		//will look like
 		JPanel gameStatsPanel = new JPanel();
 		gameStatsPanel.setLayout(new GridLayout(1,6));
-		gameStatsPanel.setPreferredSize(new Dimension(100,10));
+		gameStatsPanel.setPreferredSize(new Dimension(100,100));
 		gameStatsPanel.setBackground(Color.pink);
-		//this.add(gameStatsPanel, BorderLayout.EAST);
+		this.add(gameStatsPanel, BorderLayout.EAST);
 	}//end setUpGameStatsPanel
 	
 
@@ -159,7 +171,6 @@ public class riskGUI extends JFrame {
 		@Override
 		public void paintComponent(Graphics g)
 		{
-
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
@@ -173,6 +184,9 @@ public class riskGUI extends JFrame {
 			
 		
 			updateCountryButtons();
+			currCountryPanel.updatePanel();
+	//		this.pack();
+			this.setVisible(true);
 	//		drawGridAndNumbers(g2);
 
 		}
@@ -196,24 +210,72 @@ public class riskGUI extends JFrame {
 			int startX = xCount;
 			int startY = yCount;
 			int y = 0;
+			//int x = 0;
 			for (int i = 1; i < 40; i++)
 			{
-				//int x = 1;
+				int x = 1;
 				y++;
 				startY = yCount;
 
 				for (int j = 1; j < 40; j++)
 				{
-					g2.drawString(Integer.toString(y), startX, startY);
+					g2.drawString(Integer.toString(x), startX, startY);
 					startY += yHeight;
 
-				//	x++;
+					x++;
 				}
 				startX += xWidth;
 			}
 		}
 
 	}
+	
+	private class CountryPanel extends JPanel{
+		private JPanel centerPanel;
+		private JButton makeAMoveButton = new JButton();
+		
+/*		public void PaintComponent(Graphics g){
+			update(g);
+			super.paintComponent(g);
+			
+		}//end 
+		*/
+		public CountryPanel(){
+			centerPanel = new JPanel();
+			this.setLocation(17 * xWidth, 3 * yHeight);
+			this.setSize(xWidth*10, yHeight *10);
+			centerPanel.add(new JLabel("Select a Country"));
+			this.add(centerPanel);
+		}
+		
+		public void updatePanel(){
+			this.remove(centerPanel);
+			centerPanel = new JPanel();
+			
+			this.setLocation(17 * xWidth, 3 * yHeight);
+			this.setSize(xWidth*10, yHeight *10);
+			
+			Country curr = theGame.getSelectedCountry();
+			if (curr == null){
+				centerPanel.add(new JLabel("Select a Country"));
+				this.add(centerPanel);
+			}//end if
+			else {
+				centerPanel.setLayout(new BorderLayout());
+				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
+				centerPanel.add(new JLabel(""+curr.getForcesVal()), BorderLayout.SOUTH);
+				
+				ArrayList<Country> neighs = curr.getNeighbors();
+				JPanel neighPanel = new JPanel();
+				neighPanel.setLayout(new GridLayout(neighs.size(),0));
+				for (int i=0; i< neighs.size(); i++)
+					neighPanel.add(new JLabel(neighs.get(i).getName()));
+				centerPanel.add(neighPanel, BorderLayout.CENTER);
+				this.add(centerPanel);
+			}
+			
+		}//end 
+	}//end countryPanel
 
 	//help button listener for opening the about
 	private class helpListener implements ActionListener {
@@ -231,6 +293,25 @@ public class riskGUI extends JFrame {
 							+ "\nCreated for our CS335 class as our final project.",
 					"About", JOptionPane.INFORMATION_MESSAGE);
 
+		}
+
+	}//end helpListener
+	
+	
+	private class countryClickListner implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println(e.getActionCommand() + " pressed.");
+			//step through all countries until the same name as the actionCommand, then return that country
+			for(Country country : theGame.getGameMap().getCountries())
+			{
+				if(country.getName().compareTo(e.getActionCommand()) == 0)
+					theGame.setSelectedCountry(country);
+			}
+			theGame.placeArmies();
+			drawingPanel.repaint();
 		}
 
 	}

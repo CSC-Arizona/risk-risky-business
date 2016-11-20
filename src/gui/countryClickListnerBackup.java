@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import Model.Game;
 import Model.Country;
 //listner for country clicks
-public class countryClickListner implements ActionListener {
+public class countryClickListnerBackup implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e)
