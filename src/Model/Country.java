@@ -116,6 +116,13 @@ public class Country {
 	public boolean equals(Country comp){
 		return name.equals(comp.getName());
 	}//end equals
+
+
+	public void setOccupier(Player player)
+	{
+		occupier = player;
+		
+	}
 	
 	
 }
