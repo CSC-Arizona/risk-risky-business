@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.event.AncestorListener;
 
 import Model.Country;
+import Model.Game;
 import Model.Map;
 
 //just a simple GUI to start, with a drawingPanel for map stuff
@@ -49,18 +50,22 @@ public class riskGUI extends JFrame {
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
-	private Map map;
+	//private Map map;
+	private Game theGame;
 	private ImageIcon gameBoard;
 	private JButton checkButton;
 
 	public riskGUI()
 	{
 		System.out.println("Width = " + width + " Height = " + height);
-		map = new Map();
+		//map = new Map();
+		theGame = Game.getInstance(1,3);
 		setUpGui();
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
 		setUpMenu();
+		//creates or grabs an instance of the game, first variable is number of human players, second is total number of players
+		
 	}
 
 	private void setUpGui()
@@ -74,8 +79,13 @@ public class riskGUI extends JFrame {
 
 	private void setUpMenu()
 	{
+		JMenu file = new JMenu("File");
+		JMenuItem newGame = new JMenuItem("New Game");
+		newGame.addActionListener(new newGameListener());
+		file.add(newGame);
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
+		menu.add(file);
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
 		
@@ -125,7 +135,7 @@ public class riskGUI extends JFrame {
 	//draws buttons over the name of all of the countries
 	private void drawCountryButtons()
 	{
-		for (Country country : map.getCountries())
+		for (Country country : theGame.getGameMap().getCountries())
 		{
 			//The Make button method has the same logic that was previously here
 			country.makeButton(xWidth, yHeight, new countryClickListner());
@@ -140,7 +150,7 @@ public class riskGUI extends JFrame {
 	
 	//Updates those buttons if the size of the panel changes
 	private void updateCountryButtons(){
-		for (Country country : map.getCountries()){
+		for (Country country : theGame.getGameMap().getCountries()){
 			country.updateButton(xWidth, yHeight);
 		}
 	}
@@ -160,10 +170,9 @@ public class riskGUI extends JFrame {
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth()/40);
 			yHeight = (int) (drawD.getHeight()/40);
-			ImageIcon wallButton = new ImageIcon("thewallbutton.png");
-			JLabel imageButton = new JLabel(wallButton);
+			
 		
-		//	updateCountryButtons();
+			updateCountryButtons();
 	//		drawGridAndNumbers(g2);
 
 		}
@@ -224,5 +233,16 @@ public class riskGUI extends JFrame {
 
 		}
 
+	}
+	
+	private class newGameListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			theGame.startGame(0);
+			
+		}
+		
 	}
 }

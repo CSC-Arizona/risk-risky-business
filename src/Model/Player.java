@@ -10,6 +10,7 @@ public abstract class Player {
 	private ArrayList<Card> myCards;
 //  private Continent[] allContinents; TODO	
 	
+
 	private void getTroops(){
 		int addedTroops = myCountries.size()/3;
 		//For when the continent class is finished
@@ -21,6 +22,28 @@ public abstract class Player {
 		}*/
 	}//end getTroops
 	
+	public Player()
+	{
+		this.name = null;
+		this.faction = Faction.BARATHEON;
+		this.availTroops = 0;
+		this.myCountries = new ArrayList<>();
+		this.myCards = new ArrayList<>();
+	}
+
+	public void occupyCountry(Country occupyMe)
+	{
+		myCountries.add(occupyMe);
+	}
+	
+	public boolean equals(Player player)
+	{
+		if(this.faction.compareTo(player.faction) == 0)
+			return true;
+		
+		return false;
+		
+	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
 	public abstract void rearrangeTroops();

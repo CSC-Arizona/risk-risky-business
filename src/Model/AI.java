@@ -2,30 +2,37 @@ package Model;
 
 import java.util.ArrayList;
 
-public class HumanPlayer extends Player {
-	
-	public HumanPlayer(){ 
+public class AI extends Player {
+
+	public AI()
+	{
 		super();
 	}
-
+	
+	
+	public void pickRandomCountry()
+	{
+		
+	}
 	@Override
-	public ArrayList<Card> playCards() {
+	public ArrayList<Card> playCards()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Country attack() {
+	public Country attack()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void rearrangeTroops() {
+	public void rearrangeTroops()
+	{
 		// TODO Auto-generated method stub
 
 	}
-	
-	
 
 }
