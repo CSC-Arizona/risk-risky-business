@@ -25,7 +25,7 @@ public abstract class Player {
 	public Player()
 	{
 		this.name = null;
-		this.faction = null;
+		this.faction = Faction.BARATHEON;
 		this.availTroops = 0;
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
@@ -36,6 +36,14 @@ public abstract class Player {
 		myCountries.add(occupyMe);
 	}
 	
+	public boolean equals(Player player)
+	{
+		if(this.faction.compareTo(player.faction) == 0)
+			return true;
+		
+		return false;
+		
+	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
 	public abstract void rearrangeTroops();

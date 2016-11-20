@@ -8,6 +8,12 @@ public class AI extends Player {
 	{
 		super();
 	}
+	
+	
+	public void pickRandomCountry()
+	{
+		
+	}
 	@Override
 	public ArrayList<Card> playCards()
 	{

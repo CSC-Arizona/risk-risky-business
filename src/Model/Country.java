@@ -123,6 +123,13 @@ public class Country {
 		occupier = player;
 		
 	}
+
+
+	public void setForcesVal(int i)
+	{
+		forcesVal += i;
+		
+	}
 	
 	
 }
