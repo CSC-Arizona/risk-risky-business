@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import Model.Game;
 import Model.Country;
 //listner for country clicks
-public class countryClickListner implements ActionListener {
+public class CountryClickListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -18,7 +18,9 @@ public class countryClickListner implements ActionListener {
 			if(country.getName().compareTo(e.getActionCommand()) == 0)
 				temp.setSelectedCountry(country);
 		}
-		temp.placeArmies();
+		
+		
+		
 	}
 
 }

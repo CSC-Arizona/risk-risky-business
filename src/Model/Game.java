@@ -2,14 +2,16 @@ package Model;
 
 import java.util.ArrayList;
 
-public class Game {
+
+
+public class Game{
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry;
 	private boolean placePhase, playGamePhase;
 	private int humans;
-	private int totalPlayers, armiesPlaced;
+	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
 
 	private Game(int numOfHumanPlayers, int totalNumOfPlayers)
@@ -19,6 +21,7 @@ public class Game {
 		armiesPlaced = 0;
 		placePhase = true;
 		playGamePhase = false;
+		playerLocation = 0;
 		newGame();
 
 	}
@@ -31,7 +34,7 @@ public class Game {
 		return theGame;
 	}
 
-	private void newGame()
+	public void newGame()
 	{
 		selectedCountry = null;
 		gameMap = new Map();
@@ -51,44 +54,65 @@ public class Game {
 	{
 
 		// pick starting countries
-		while (placePhase)
-		{
-			// this loop just does nothing until all armies are placed!
-		}
+//		while (placePhase)
+//		{
+//			if (players.get(playerLocation) instanceof AI)
+//			{
+//				selectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+//				placeArmies();
+//			} else
+//			{
+//				// do nothing because the player needs to select a country
+//
+//			}
+//			// this loop just does nothing until all armies are placed!
+//		}
 		// doNextThing();
 
 	}
 
-	//this is called by the countryClickListener, and "places" an army in a country, and sets the occupier to whichever player is up
+	// this is called by the countryClickListener, and "places" an army in a
+	// country, and sets the occupier to whichever player is up
 	public void placeArmies()
 	{
+
 		if (armiesPlaced < 10)
 		{
 			if (selectedCountry.getOccupier() == null)
 			{
-				players.get(0).occupyCountry(selectedCountry);
-				selectedCountry.setOccupier(players.get(0));
+				players.get(playerLocation).occupyCountry(selectedCountry);
+				selectedCountry.setOccupier(players.get(playerLocation));
 				selectedCountry.setForcesVal(1);
 				armiesPlaced++;
 				System.out.println(armiesPlaced);
+				System.out.println("Next players turn");
+				nextPlayer();
+
 			} else
 			{
 				System.out.println("That country is already Occupied");
 				System.out.println(armiesPlaced);
+
 			}
-		} else if(armiesPlaced < 20)
+
+		} else if (armiesPlaced < 20)
+
 		{
-			if(selectedCountry.getOccupier() == null)//TODO this will need to be deleted, this is just for testing
+			if (selectedCountry.getOccupier() == null)// TODO this will need to
+														// be deleted, this is
+														// just for testing
 				System.out.println("You don't occupy this country");
-			else if(selectedCountry.getOccupier().equals(players.get(0)))
+			else if (selectedCountry.getOccupier().equals(players.get(0)))
 			{
 				selectedCountry.setForcesVal(1);
 				armiesPlaced++;
 				System.out.println("Reinforced " + selectedCountry.getName());
-			}
-			else
+				nextPlayer();
+
+			} else
 				System.out.println("You don't occupy this country");
-		}
+
+		} else
 		{
 			placePhase = false;
 			playGamePhase = true;
@@ -99,7 +123,7 @@ public class Game {
 	private void addAI(int numOfAI)
 	{
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI());
+			players.add(new AI(AIStrat.EASY));//this will change later, depending on what difficulty is chosen;
 
 	}
 
@@ -126,5 +150,13 @@ public class Game {
 	{
 		return gameMap;
 	}
+
+	public void nextPlayer()
+	{
+		playerLocation++;
+		if (playerLocation >= totalPlayers)
+			playerLocation = 0;
+	}
+
 
 }
