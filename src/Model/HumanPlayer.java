@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class HumanPlayer extends Player {
 	
-	public HumanPlayer(){ 
-		super();
+	public HumanPlayer(int numOfPlayers){ 
+		super(numOfPlayers);
 	}
 
 	@Override

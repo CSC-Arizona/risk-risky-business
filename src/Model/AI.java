@@ -6,9 +6,9 @@ import java.util.Random;
 public class AI extends Player {
 
 	private AIStrat myStrat;
-	public AI(AIStrat strat)
+	public AI(AIStrat strat, int numOfPlayers)
 	{
-		super();
+		super(numOfPlayers);
 		myStrat = strat;
 	}
 	
