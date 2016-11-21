@@ -22,11 +22,12 @@ public abstract class Player {
 		}*/
 	}//end getTroops
 	
-	public Player()
+	public Player(int numOfPlayers)
 	{
+		
 		this.name = null;
 		this.faction = Faction.BARATHEON;
-		this.availTroops = 0;
+		this.availTroops = 43-((3-numOfPlayers)*5);
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
 	}
@@ -43,6 +44,16 @@ public abstract class Player {
 		
 		return false;
 		
+	}
+	
+	public int getAvailableTroops()
+	{
+		return availTroops;
+	}
+	
+	public void setAvailableTroops(int troops)
+	{
+		availTroops -= troops;
 	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();

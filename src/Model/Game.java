@@ -77,8 +77,8 @@ public class Game {
 	// country, and sets the occupier to whichever player is up
 	public Player placeArmies(Country countryToPlace)
 	{
-
-		if (armiesPlaced < 10)
+		// place initial 50 armies
+		if (armiesPlaced < 50)
 		{
 			if (countryToPlace.getOccupier() == null)
 			{
@@ -98,14 +98,13 @@ public class Game {
 
 			}
 
-		} else if (armiesPlaced < 20)
+		} else if (armiesPlaced < 107)// place remaining armies on own
+										// countires, this number is if we start
+										// with 35 units, and 3 players
 
 		{
-			if (countryToPlace.getOccupier() == null)// TODO this will need to
-														// be deleted, this is
-														// just for testing
-				System.out.println("You don't occupy this country");
-			else if (countryToPlace.getOccupier().equals(players.get(0)))
+
+			if (countryToPlace.getOccupier().equals(players.get(0)))
 			{
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
@@ -128,7 +127,7 @@ public class Game {
 	private void addAI(int numOfAI)
 	{
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI(AIStrat.EASY));// this will change later,
+			players.add(new AI(AIStrat.EASY, totalPlayers));// this will change later,
 												// depending on what difficulty
 												// is chosen;
 
@@ -148,7 +147,7 @@ public class Game {
 	{
 		for (int i = 0; i < numOfHumanPlayers; i++)
 		{
-			players.add(new HumanPlayer());
+			players.add(new HumanPlayer(totalPlayers));
 		}
 
 	}
@@ -187,7 +186,9 @@ public class Game {
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
 		if (checkIfCountryAvailable(aiSelectedCountry))
 		{
+			
 			placeArmies(aiSelectedCountry);
+			players.get(playerLocation).setAvailableTroops(1);;
 			return true;
 		}
 		return false;
@@ -198,8 +199,9 @@ public class Game {
 
 		return countryToCheck.getOccupier() == null;
 	}
-	
-	public Player getCurrentPlayer(){
+
+	public Player getCurrentPlayer()
+	{
 		return players.get(playerLocation);
 	}
 }
