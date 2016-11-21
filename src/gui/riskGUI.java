@@ -32,9 +32,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.AncestorListener;
 
+import Model.AI;
 import Model.Country;
 import Model.Game;
 import Model.Map;
+import Model.Player;
 
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
@@ -50,27 +52,27 @@ public class riskGUI extends JFrame {
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
-	//private Map map; dont think this is needed anymore cause it is stored within theGame
+	// private Map map; dont think this is needed anymore cause it is stored
+	// within theGame
 	private Game theGame;
 	private ImageIcon gameBoard;
 	private JButton checkButton;
 	private CountryPanel currCountryPanel;
 	private JButton moveButton;
-	
+	private Player nextPlayer;
 
 	public riskGUI()
 	{
 		System.out.println("Width = " + width + " Height = " + height);
-	
-		//creates or grabs an instance of the game, first variable is number of human players, second is total number of players
-		theGame = Game.getInstance(1,3);
+
+		// creates or grabs an instance of the game, first variable is number of
+		// human players, second is total number of players
+		theGame = Game.getInstance(1, 3);
 		setUpGui();
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
 		setUpMenu();
-		
-		
-		
+
 	}
 
 	private void setUpGui()
@@ -93,7 +95,7 @@ public class riskGUI extends JFrame {
 		menu.add(file);
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
-		
+
 		JMenuItem rules = new JMenuItem("Rules");
 		help.add(rules);
 		help.add(about);
@@ -115,56 +117,58 @@ public class riskGUI extends JFrame {
 		drawingPanel.setLocation(10, 10);
 		drawingPanel.setBackground(Color.LIGHT_GRAY);
 		drawingPanel.repaint();
-		
-		//Prepare to draw the buttons!
+
+		// Prepare to draw the buttons!
 		Dimension drawD = drawingPanel.getSize();
-		xWidth = (int) (drawD.getWidth()/40);
-		yHeight = (int) (drawD.getHeight()/40);
+		xWidth = (int) (drawD.getWidth() / 40);
+		yHeight = (int) (drawD.getHeight() / 40);
 		drawCountryButtons();
-		
-		//Draw country panel
+
+		// Draw country panel
 		currCountryPanel = new CountryPanel();
 		currCountryPanel.setSize(10 * xWidth, 10 * yHeight);
 		currCountryPanel.setLocation(17 * xWidth, 3 * yHeight);
-//		currCountryPanel.setBackground(Color.BLUE);
-//		currCountryPanel.setLayout(new BorderLayout());
-		
+		// currCountryPanel.setBackground(Color.BLUE);
+		// currCountryPanel.setLayout(new BorderLayout());
+
 		drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
-		
+
 	}
-	
-	private void setUpGameStatsPanel(){
-		//Currently there to print nothing useful, but see what the game board
-		//will look like
+
+	private void setUpGameStatsPanel()
+	{
+		// Currently there to print nothing useful, but see what the game board
+		// will look like
 		JPanel gameStatsPanel = new JPanel();
-		gameStatsPanel.setLayout(new GridLayout(1,6));
-		gameStatsPanel.setPreferredSize(new Dimension(100,100));
+		gameStatsPanel.setLayout(new GridLayout(1, 6));
+		gameStatsPanel.setPreferredSize(new Dimension(100, 100));
 		gameStatsPanel.setBackground(Color.pink);
 		this.add(gameStatsPanel, BorderLayout.EAST);
-	}//end setUpGameStatsPanel
-	
+	}// end setUpGameStatsPanel
 
-	//draws buttons over the name of all of the countries
+	// draws buttons over the name of all of the countries
 	private void drawCountryButtons()
 	{
 		for (Country country : theGame.getGameMap().getCountries())
 		{
-			//The Make button method has the same logic that was previously here
+			// The Make button method has the same logic that was previously
+			// here
 			country.makeButton(xWidth, yHeight, new CountryClickListener());
 			drawingPanel.add(country.getButton());
-		}//end for
-		
-		//Manually adjusts the size and shape of a few of the weirder 
-		//shaped country buttons
-		
-	}//end drawCountryButtons
-	
-	
-	//Updates those buttons if the size of the panel changes
-	private void updateCountryButtons(){
-		for (Country country : theGame.getGameMap().getCountries()){
+		} // end for
+
+		// Manually adjusts the size and shape of a few of the weirder
+		// shaped country buttons
+
+	}// end drawCountryButtons
+
+	// Updates those buttons if the size of the panel changes
+	private void updateCountryButtons()
+	{
+		for (Country country : theGame.getGameMap().getCountries())
+		{
 			country.updateButton(xWidth, yHeight);
 		}
 	}
@@ -176,23 +180,23 @@ public class riskGUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
-			
+
 			Image tmp = gameBoard.getImage();
 			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(), drawingPanel.getHeight(), null);
 
 			Dimension drawD = drawingPanel.getSize();
-			xWidth = (int) (drawD.getWidth()/40);
-			yHeight = (int) (drawD.getHeight()/40);
-			
-		
+			xWidth = (int) (drawD.getWidth() / 40);
+			yHeight = (int) (drawD.getHeight() / 40);
+
 			updateCountryButtons();
 			currCountryPanel.updatePanel();
 
-	//		drawGridAndNumbers(g2);
+			// drawGridAndNumbers(g2);
 
 		}
 
-		//draws a 40X40 grid over the risk map. Used for determining where to place buttons.
+		// draws a 40X40 grid over the risk map. Used for determining where to
+		// place buttons.
 		private void drawGridAndNumbers(Graphics2D g2)
 		{
 			for (int i = xWidth; i < width - 40; i += xWidth)
@@ -211,7 +215,7 @@ public class riskGUI extends JFrame {
 			int startX = xCount;
 			int startY = yCount;
 			int y = 0;
-			//int x = 0;
+			// int x = 0;
 			for (int i = 1; i < 40; i++)
 			{
 				int x = 1;
@@ -230,101 +234,125 @@ public class riskGUI extends JFrame {
 		}
 
 	}
-	
-	private class CountryPanel extends JPanel{
+
+	private class CountryPanel extends JPanel {
 		private JPanel centerPanel;
 		private JButton makeAMoveButton = new JButton();
-		
-/*		public void PaintComponent(Graphics g){
-			update(g);
-			super.paintComponent(g);
-			
-		}//end 
-		*/
-		public CountryPanel(){
+
+		/*
+		 * public void PaintComponent(Graphics g){ update(g);
+		 * super.paintComponent(g);
+		 * 
+		 * }//end
+		 */
+		public CountryPanel()
+		{
 			centerPanel = new JPanel();
 			this.setLocation(17 * xWidth, 3 * yHeight);
-			this.setSize(xWidth*10, yHeight *10);
+			this.setSize(xWidth * 10, yHeight * 10);
 			centerPanel.add(new JLabel("Select a Country"));
 			this.add(centerPanel);
 		}
-		
-		public void updatePanel(){
+
+		public void updatePanel()
+		{
 			this.remove(centerPanel);
 			centerPanel = new JPanel();
-			
+
 			this.setLocation(17 * xWidth, 3 * yHeight);
-			this.setSize(xWidth*10, yHeight *10);
-			
+			this.setSize(xWidth * 10, yHeight * 10);
+
 			Country curr = theGame.getSelectedCountry();
-			if (curr == null){
+			if (curr == null)
+			{
 				centerPanel.add(new JLabel("Select a Country"));
 				this.add(centerPanel);
-			}//end if
-			else {
+			} // end if
+			else
+			{
 				centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
-				centerPanel.add(new JLabel(""+curr.getForcesVal()), BorderLayout.SOUTH);
-				
+				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
+
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
-				neighPanel.setLayout(new GridLayout(neighs.size(),0));
-				for (int i=0; i< neighs.size(); i++)
+				neighPanel.setLayout(new GridLayout(neighs.size(), 0));
+				for (int i = 0; i < neighs.size(); i++)
 					neighPanel.add(new JLabel(neighs.get(i).getName()));
 				centerPanel.add(neighPanel, BorderLayout.CENTER);
 				this.add(centerPanel);
 			}
-			
-		}//end 
-	}//end countryPanel
 
-	//help button listener for opening the about
+		}// end
+	}// end countryPanel
+
+	// help button listener for opening the about
 	private class helpListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if(e.getActionCommand().compareTo("rules") == 0)
+			if (e.getActionCommand().compareTo("rules") == 0)
 			{
-				JOptionPane.showMessageDialog(riskGUI.this,  "Fill this out later, maybe with a hyperlink to the rules", "Rules", JOptionPane.INFORMATION_MESSAGE);
-			}
-			else
+				JOptionPane.showMessageDialog(riskGUI.this, "Fill this out later, maybe with a hyperlink to the rules",
+						"Rules", JOptionPane.INFORMATION_MESSAGE);
+			} else
 				JOptionPane.showMessageDialog(riskGUI.this,
-					"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
-							+ "\nCreated for our CS335 class as our final project.",
-					"About", JOptionPane.INFORMATION_MESSAGE);
+						"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
+								+ "\nCreated for our CS335 class as our final project.",
+						"About", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 
-	}//end helpListener
-	
-	
+	}// end helpListener
+
 	private class CountryClickListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			System.out.println(e.getActionCommand() + " pressed.");
-			//step through all countries until the same name as the actionCommand, then return that country
-			for(Country country : theGame.getGameMap().getCountries())
+			// step through all countries until the same name as the
+			// actionCommand, then return that country
+			for (Country country : theGame.getGameMap().getCountries())
 			{
-				if(country.getName().compareTo(e.getActionCommand()) == 0)
+				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
 			theGame.placeArmies();
+
 			drawingPanel.repaint();
+			if (theGame.isPlacePhase())
+			{
+				// next player place army
+				if (theGame.getCurrentPlayer() instanceof AI)
+				{
+					while (theGame.getCurrentPlayer() instanceof AI)
+					{
+						theGame.aiChoice();
+					}
+				}
+
+			} else if (theGame.isAttackPhase())
+			{
+				// player chooses attacks
+			} else if (theGame.isReinforcePhase())
+			{
+				// player can reinforce countries
+			}
+
 		}
 
 	}
-	
-	private class newGameListener implements ActionListener{
+
+	private class newGameListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
 			theGame.startGame(0);
-			
+
 		}
-		
+
 	}
 }
