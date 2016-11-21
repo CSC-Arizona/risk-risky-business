@@ -72,13 +72,10 @@ public class riskGUI extends JFrame {
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
-
+		splash = true;
 		setUpGui();
 		setUpMenu();
 		setUpSplash();
-		// creates or grabs an instance of the game, first variable is number of
-		// human players, second is total number of players
-		theGame = Game.getInstance(1, 3);
 
 	}
 
@@ -107,7 +104,6 @@ public class riskGUI extends JFrame {
 		theGame = Game.getInstance(1, 3);
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
-
 	}
 
 	private void splashNames() {
