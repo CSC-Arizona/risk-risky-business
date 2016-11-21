@@ -63,6 +63,9 @@ public class riskGUI extends JFrame {
 	private boolean splash;
 	private ImageIcon splashScreen;
 	private JPanel splashInfo;
+	// my new favorite font...
+	private Font font = new Font("Goudy Old Style", Font.BOLD, 40);
+	private String gameType;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -70,11 +73,7 @@ public class riskGUI extends JFrame {
 		setUpGui();
 		setUpMenu();
 		setUpSplash();
-		// creates or grabs an instance of the game, first variable is number of
-		// human players, second is total number of players
-		theGame = Game.getInstance(1, 3);
-		setUpDrawingPanel();
-		setUpGameStatsPanel();
+
 	}
 
 	private void setUpSplash() {
@@ -96,6 +95,12 @@ public class riskGUI extends JFrame {
 		System.out.println("Brace Yourselves, RISK is Coming...");
 		splash = false;
 		this.remove(drawingPanel);
+		// creates or grabs an instance of the game, first variable is number of
+		// human players, second is total number of players
+		theGame = Game.getInstance(1, 3);
+		setUpDrawingPanel();
+		setUpGameStatsPanel();
+
 	}
 
 	private void splashNames() {
@@ -117,23 +122,44 @@ public class riskGUI extends JFrame {
 	}
 
 	private void splashChooseGame() {
+		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("New Game or Load Game?");
-		splashNumPlayers();
+		splashInfo = new JPanel();
+		splashInfo.setLayout(null);
+		splashInfo.setSize(700, 400);
+		splashInfo.setLocation(width / 2 - 350, height / 2 - 200);
+		JLabel load = new JLabel("New Game or Load Game?");
+		load.setFont(font);
+		load.setLocation(50, 5);
+		load.setSize(600, 150);
+		JButton newG = new JButton("New Game!");
+		newG.setFont(font);
+		newG.setLocation(200, 100);
+		newG.addActionListener(new GameTypeListener());
+		newG.setSize(100, 100);
+		JButton loadG = new JButton("Load Game!");
+		loadG.setFont(font);
+		loadG.setLocation(400, 100);
+		newG.addActionListener(new GameTypeListener());
+		loadG.setSize(100, 100);
+		splashInfo.add(newG);
+		splashInfo.add(loadG);
+		splashInfo.add(load);
+		drawingPanel.add(splashInfo);
+		drawingPanel.repaint();
 	}
 
 	/*
-	 * SplashLoading1 is the first loading page. 
-	 * Sets up the background image and JPanel for information.
-	 * Starts Theme Song, which will play until it ends.
-	 * This screen is shown for 10 seconds.
+	 * SplashLoading1 is the first loading page. Sets up the background image
+	 * and JPanel for information. Starts Theme Song, which will play until it
+	 * ends. This screen is shown for 10 seconds.
 	 */
 	private void splashLoading1() {
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
 		splashInfo.setSize(500, 150);
 		splashInfo.setLocation(width / 2 - 250, height / 2 - 75);
-		Font font = new Font("Goudy Old Style", Font.BOLD, 40);
 		JLabel load = new JLabel("LOADING...");
 		load.setFont(font);
 		load.setLocation(150, 5);
@@ -141,16 +167,16 @@ public class riskGUI extends JFrame {
 		splashInfo.add(load);
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
-		//play the song!
+		// play the song!
 		SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
-		//pause on this screen for 10 seconds
+		// pause on this screen for 10 seconds
 		try {
-			Thread.sleep(20000);
+			Thread.sleep(5000);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			System.out.println("nahhh");
 		}
-		//move on to splash screen #2, choosing game play
+		// move on to splash screen #2, choosing game play
 		splashChooseGame();
 	}
 
@@ -187,9 +213,9 @@ public class riskGUI extends JFrame {
 	}
 
 	private void setUpDrawingPanel() {
-		//if(drawingPanel==null)
+		// if(drawingPanel==null)
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
-		//System.out.println(gameBoard.toString());
+		// System.out.println(gameBoard.toString());
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
 		drawingPanel.setSize(width - 40, height - 70);
@@ -395,6 +421,18 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			theGame.startGame(0);
+
+		}
+
+	}
+
+	private class GameTypeListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			gameType = arg0.getActionCommand();
+			System.out.println(arg0.getActionCommand());
+			splashNumPlayers();
 
 		}
 
