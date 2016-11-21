@@ -8,6 +8,7 @@ public abstract class Player {
 	private int availTroops;
 	private ArrayList<Country> myCountries;
 	private ArrayList<Card> myCards;
+//  private Country currentCountry; //to keep track of where to put the armies in certain Card redeeming situations
 //  private Continent[] allContinents; TODO	
 	
 
