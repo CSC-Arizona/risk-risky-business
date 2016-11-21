@@ -6,7 +6,7 @@ public class Game {
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
-	private Country selectedCountry;
+	private Country selectedCountry, aiSelectedCountry;
 	private boolean placePhase, attackPhase, reinforcePhase;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
@@ -36,6 +36,7 @@ public class Game {
 	public void newGame()
 	{
 		selectedCountry = null;
+		aiSelectedCountry = null;
 		gameMap = new Map();
 		deck = Deck.getInstance();
 		// deck.shuffle();
@@ -74,19 +75,20 @@ public class Game {
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
-	public Player placeArmies()
+	public Player placeArmies(Country countryToPlace)
 	{
 
 		if (armiesPlaced < 10)
 		{
-			if (selectedCountry.getOccupier() == null)
+			if (countryToPlace.getOccupier() == null)
 			{
-				players.get(playerLocation).occupyCountry(selectedCountry);
-				selectedCountry.setOccupier(players.get(playerLocation));
-				selectedCountry.setForcesVal(1);
+				players.get(playerLocation).occupyCountry(countryToPlace);
+				countryToPlace.setOccupier(players.get(playerLocation));
+				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
+				System.out.println("Army placed at : " + countryToPlace.toString());
 				nextPlayer();
 
 			} else
@@ -99,13 +101,13 @@ public class Game {
 		} else if (armiesPlaced < 20)
 
 		{
-			if (selectedCountry.getOccupier() == null)// TODO this will need to
+			if (countryToPlace.getOccupier() == null)// TODO this will need to
 														// be deleted, this is
 														// just for testing
 				System.out.println("You don't occupy this country");
-			else if (selectedCountry.getOccupier().equals(players.get(0)))
+			else if (countryToPlace.getOccupier().equals(players.get(0)))
 			{
-				selectedCountry.setForcesVal(1);
+				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
 				System.out.println("Reinforced " + selectedCountry.getName());
 				nextPlayer();
@@ -182,19 +184,19 @@ public class Game {
 
 	public boolean aiChoice()
 	{
-		selectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
-		if (checkIfCountryAvailable())
+		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		if (checkIfCountryAvailable(aiSelectedCountry))
 		{
-			placeArmies();
+			placeArmies(aiSelectedCountry);
 			return true;
 		}
 		return false;
 	}
 
-	private boolean checkIfCountryAvailable()
+	private boolean checkIfCountryAvailable(Country countryToCheck)
 	{
 
-		return selectedCountry.getOccupier() == null;
+		return countryToCheck.getOccupier() == null;
 	}
 	
 	public Player getCurrentPlayer(){
