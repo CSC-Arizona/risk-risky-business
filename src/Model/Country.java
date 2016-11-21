@@ -48,7 +48,7 @@ public class Country {
 	public void makeButton(int xWidth, int yHeight, ActionListener act){
 		myButton = new JButton();
 		myButton.setLocation((int)(x * xWidth), (int)(y * yHeight));
-		//myButton.setContentAreaFilled(false);
+		myButton.setContentAreaFilled(false);
 		myButton.setActionCommand(name);
 		if (name.length()<5)
 			myButton.setSize(75, 25);

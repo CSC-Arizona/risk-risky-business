@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
 
 import Model.Country;
@@ -120,26 +122,35 @@ public class riskGUI extends JFrame {
 		splashNumPlayers();
 	}
 
+	/*
+	 * SplashLoading1 is the first loading page. 
+	 * Sets up the background image and JPanel for information.
+	 * Starts Theme Song, which will play until it ends.
+	 * This screen is shown for 10 seconds.
+	 */
 	private void splashLoading1() {
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
-		splashInfo.setSize(300, 300);
-		splashInfo.setLocation(width / 2 - 150, height / 2 - 150);
-		Font font = new Font("Times", 100, Font.BOLD);
-		JLabel load = new JLabel("Loading...");
+		splashInfo.setSize(500, 150);
+		splashInfo.setLocation(width / 2 - 250, height / 2 - 75);
+		Font font = new Font("Goudy Old Style", Font.BOLD, 40);
+		JLabel load = new JLabel("LOADING...");
 		load.setFont(font);
-		load.setLocation(40, 100);
-		load.setSize(100, 100);
+		load.setLocation(150, 5);
+		load.setSize(300, 150);
 		splashInfo.add(load);
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
+		//play the song!
 		SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+		//pause on this screen for 10 seconds
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			System.out.println("nahhh");
 		}
+		//move on to splash screen #2, choosing game play
 		splashChooseGame();
 	}
 
@@ -178,7 +189,7 @@ public class riskGUI extends JFrame {
 	private void setUpDrawingPanel() {
 		//if(drawingPanel==null)
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
-		System.out.println(gameBoard.toString());
+		//System.out.println(gameBoard.toString());
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
 		drawingPanel.setSize(width - 40, height - 70);
