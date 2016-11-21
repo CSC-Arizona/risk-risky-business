@@ -323,7 +323,7 @@ public class riskGUI extends JFrame {
 				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
-			theGame.placeArmies();
+			theGame.placeArmies(theGame.getSelectedCountry());
 
 			drawingPanel.repaint();
 			if (theGame.isPlacePhase())
