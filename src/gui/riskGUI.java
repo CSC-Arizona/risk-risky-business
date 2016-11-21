@@ -35,10 +35,12 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
 
+import Model.AI;
 import Model.Country;
 import Model.Game;
 import Model.Map;
 import songplayer.SongPlayer;
+import Model.Player;
 
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
@@ -66,13 +68,17 @@ public class riskGUI extends JFrame {
 	// my new favorite font...
 	private Font font = new Font("Goudy Old Style", Font.BOLD, 40);
 	private String gameType;
+	private Player nextPlayer;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
-		splash = true;
+
 		setUpGui();
 		setUpMenu();
 		setUpSplash();
+		// creates or grabs an instance of the game, first variable is number of
+		// human players, second is total number of players
+		theGame = Game.getInstance(1, 3);
 
 	}
 
@@ -168,10 +174,11 @@ public class riskGUI extends JFrame {
 		splashInfo.add(load);
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
-		
-		// play the song! Commented out for now in order to test without losing my mind
-		//SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav"); 
-		
+
+		// play the song! Commented out for now in order to test without losing
+		// my mind
+		// SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
 			Thread.sleep(5000);
@@ -253,9 +260,11 @@ public class riskGUI extends JFrame {
 		gameStatsPanel.setPreferredSize(new Dimension(100, 100));
 		gameStatsPanel.setBackground(Color.pink);
 		this.add(gameStatsPanel, BorderLayout.EAST);
-	}// end setUpGameStatsPanel
+	}// end
+		// setUpGameStatsPanel
 
 	// draws buttons over the name of all of the countries
+
 	private void drawCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
 			// The Make button method has the same logic that was previously
@@ -270,6 +279,7 @@ public class riskGUI extends JFrame {
 	}// end drawCountryButtons
 
 	// Updates those buttons if the size of the panel changes
+
 	private void updateCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
 			country.updateButton(xWidth, yHeight);
@@ -282,6 +292,7 @@ public class riskGUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
+
 			Image tmp;
 			if (splash)
 				tmp = splashScreen.getImage();
@@ -304,6 +315,7 @@ public class riskGUI extends JFrame {
 
 		// draws a 40X40 grid over the risk map. Used for determining where to
 		// place buttons.
+
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
 				g2.drawLine(i, 0, i, height - 70);
@@ -320,6 +332,7 @@ public class riskGUI extends JFrame {
 			int startY = yCount;
 			int y = 0;
 			// int x = 0;
+
 			for (int i = 1; i < 40; i++) {
 				int x = 1;
 				y++;
@@ -347,6 +360,7 @@ public class riskGUI extends JFrame {
 		 * 
 		 * }//end
 		 */
+
 		public CountryPanel() {
 			centerPanel = new JPanel();
 			this.setLocation(17 * xWidth, 3 * yHeight);
@@ -380,6 +394,7 @@ public class riskGUI extends JFrame {
 				centerPanel.add(neighPanel, BorderLayout.CENTER);
 				this.add(centerPanel);
 			}
+
 			centerPanel.revalidate();
 			centerPanel.repaint();
 
@@ -389,9 +404,9 @@ public class riskGUI extends JFrame {
 	// help button listener for opening the about
 	private class helpListener implements ActionListener {
 
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().compareTo("rules") == 0) {
+
 				JOptionPane.showMessageDialog(riskGUI.this, "Fill this out later, maybe with a hyperlink to the rules",
 						"Rules", JOptionPane.INFORMATION_MESSAGE);
 			} else
@@ -411,12 +426,28 @@ public class riskGUI extends JFrame {
 			System.out.println(e.getActionCommand() + " pressed.");
 			// step through all countries until the same name as the
 			// actionCommand, then return that country
+
 			for (Country country : theGame.getGameMap().getCountries()) {
 				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
 			theGame.placeArmies();
+
 			drawingPanel.repaint();
+			if (theGame.isPlacePhase()) {
+				// next player place army
+				if (theGame.getCurrentPlayer() instanceof AI) {
+					while (theGame.getCurrentPlayer() instanceof AI) {
+						theGame.aiChoice();
+					}
+				}
+
+			} else if (theGame.isAttackPhase()) {
+				// player chooses attacks
+			} else if (theGame.isReinforcePhase()) {
+				// player can reinforce countries
+			}
+
 		}
 
 	}
@@ -440,6 +471,5 @@ public class riskGUI extends JFrame {
 			splashNumPlayers();
 
 		}
-
 	}
 }

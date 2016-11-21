@@ -2,14 +2,12 @@ package Model;
 
 import java.util.ArrayList;
 
-
-
-public class Game{
+public class Game {
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry;
-	private boolean placePhase, playGamePhase;
+	private boolean placePhase, attackPhase, reinforcePhase;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
@@ -20,7 +18,8 @@ public class Game{
 		totalPlayers = totalNumOfPlayers;
 		armiesPlaced = 0;
 		placePhase = true;
-		playGamePhase = false;
+		attackPhase = false;
+		reinforcePhase = false;
 		playerLocation = 0;
 		newGame();
 
@@ -39,6 +38,7 @@ public class Game{
 		selectedCountry = null;
 		gameMap = new Map();
 		deck = Deck.getInstance();
+		// deck.shuffle();
 		players = new ArrayList<>();
 		addHumanPlayers(humans);
 		addAI(totalPlayers - humans);
@@ -54,26 +54,27 @@ public class Game{
 	{
 
 		// pick starting countries
-//		while (placePhase)
-//		{
-//			if (players.get(playerLocation) instanceof AI)
-//			{
-//				selectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
-//				placeArmies();
-//			} else
-//			{
-//				// do nothing because the player needs to select a country
-//
-//			}
-//			// this loop just does nothing until all armies are placed!
-//		}
+		// while (placePhase)
+		// {
+		// if (players.get(playerLocation) instanceof AI)
+		// {
+		// selectedCountry = ((AI)
+		// players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		// placeArmies();
+		// } else
+		// {
+		// // do nothing because the player needs to select a country
+		//
+		// }
+		// // this loop just does nothing until all armies are placed!
+		// }
 		// doNextThing();
 
 	}
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
-	public void placeArmies()
+	public Player placeArmies()
 	{
 
 		if (armiesPlaced < 10)
@@ -115,15 +116,19 @@ public class Game{
 		} else
 		{
 			placePhase = false;
-			playGamePhase = true;
+			attackPhase = true;
 
 		}
+
+		return players.get(playerLocation);
 	}
 
 	private void addAI(int numOfAI)
 	{
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI(AIStrat.EASY));//this will change later, depending on what difficulty is chosen;
+			players.add(new AI(AIStrat.EASY));// this will change later,
+												// depending on what difficulty
+												// is chosen;
 
 	}
 
@@ -151,12 +156,48 @@ public class Game{
 		return gameMap;
 	}
 
-	public void nextPlayer()
+	public Player nextPlayer()
 	{
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
+
+		return players.get(playerLocation);
 	}
 
+	public boolean isPlacePhase()
+	{
+		return placePhase;
+	}
 
+	public boolean isAttackPhase()
+	{
+		return attackPhase;
+	}
+
+	public boolean isReinforcePhase()
+	{
+		return reinforcePhase;
+	}
+
+	public boolean aiChoice()
+	{
+		selectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		if (checkIfCountryAvailable())
+		{
+			placeArmies();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkIfCountryAvailable()
+	{
+
+		return selectedCountry.getOccupier() == null;
+	}
+	
+	public Player getCurrentPlayer(){
+		return players.get(playerLocation);
+	}
 }
