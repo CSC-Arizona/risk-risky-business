@@ -283,8 +283,12 @@ public class riskGUI extends JFrame {
 				this.add(centerPanel);
 			}
 
-		}// end
-	}// end countryPanel
+			centerPanel.revalidate();
+			centerPanel.repaint();
+			
+		}//end 
+	}//end countryPanel
+
 
 	// help button listener for opening the about
 	private class helpListener implements ActionListener {
