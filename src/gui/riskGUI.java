@@ -274,6 +274,8 @@ public class riskGUI extends JFrame {
 				centerPanel.add(neighPanel, BorderLayout.CENTER);
 				this.add(centerPanel);
 			}
+			centerPanel.revalidate();
+			centerPanel.repaint();
 			
 		}//end 
 	}//end countryPanel
