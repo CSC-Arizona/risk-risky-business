@@ -117,6 +117,7 @@ public class riskGUI extends JFrame {
 	}
 
 	private void splashNumPlayers() {
+		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("How many players?");
 		splashHouses();
@@ -124,7 +125,6 @@ public class riskGUI extends JFrame {
 
 	private void splashChooseGame() {
 		drawingPanel.remove(splashInfo);
-		// TODO Auto-generated method stub
 		System.out.println("New Game or Load Game?");
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
@@ -168,9 +168,11 @@ public class riskGUI extends JFrame {
 		splashInfo.add(load);
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
-		// play the song!
-		//SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
-		// pause on this screen for 10 seconds
+		
+		// play the song! Commented out for now in order to test without losing my mind
+		//SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav"); 
+		
+		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException ex) {
@@ -434,7 +436,7 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			gameType = arg0.getActionCommand();
-			System.out.println(arg0.getActionCommand());
+			System.out.println(gameType);
 			splashNumPlayers();
 
 		}
