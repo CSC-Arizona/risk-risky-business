@@ -94,6 +94,7 @@ public class riskGUI extends JFrame {
 		// TODO Auto-generated method stub
 		System.out.println("Brace Yourselves, RISK is Coming...");
 		splash = false;
+		drawingPanel.removeAll();
 		this.remove(drawingPanel);
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
@@ -131,18 +132,18 @@ public class riskGUI extends JFrame {
 		splashInfo.setLocation(width / 2 - 350, height / 2 - 200);
 		JLabel load = new JLabel("New Game or Load Game?");
 		load.setFont(font);
-		load.setLocation(50, 5);
+		load.setLocation(150, 5);
 		load.setSize(600, 150);
 		JButton newG = new JButton("New Game!");
 		newG.setFont(font);
-		newG.setLocation(200, 100);
+		newG.setLocation(50, 200);
 		newG.addActionListener(new GameTypeListener());
-		newG.setSize(100, 100);
+		newG.setSize(300, 100);
 		JButton loadG = new JButton("Load Game!");
 		loadG.setFont(font);
-		loadG.setLocation(400, 100);
-		newG.addActionListener(new GameTypeListener());
-		loadG.setSize(100, 100);
+		loadG.setLocation(375, 200);
+		loadG.addActionListener(new GameTypeListener());
+		loadG.setSize(300, 100);
 		splashInfo.add(newG);
 		splashInfo.add(loadG);
 		splashInfo.add(load);
@@ -168,7 +169,7 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
 		// play the song!
-		SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+		//SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 		// pause on this screen for 10 seconds
 		try {
 			Thread.sleep(5000);
