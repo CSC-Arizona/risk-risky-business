@@ -45,6 +45,9 @@ public abstract class Player {
 		return false;
 		
 	}
+	public ArrayList<Country> getCountries(){
+		return myCountries;
+	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
 	public abstract void rearrangeTroops();
