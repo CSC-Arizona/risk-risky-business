@@ -36,6 +36,7 @@ import javax.swing.event.AncestorListener;
 import Model.Country;
 import Model.Game;
 import Model.Map;
+import songplayer.SongPlayer;
 
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
@@ -66,7 +67,7 @@ public class riskGUI extends JFrame {
 		splash = true;
 		setUpGui();
 		setUpMenu();
-		//setUpSplash();
+		setUpSplash();
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
 		theGame = Game.getInstance(1, 3);
@@ -92,8 +93,7 @@ public class riskGUI extends JFrame {
 		// TODO Auto-generated method stub
 		System.out.println("Brace Yourselves, RISK is Coming...");
 		splash = false;
-		splashInfo.setVisible(false);
-		drawingPanel.repaint();
+		this.remove(drawingPanel);
 	}
 
 	private void splashNames() {
@@ -125,13 +125,15 @@ public class riskGUI extends JFrame {
 		splashInfo.setLayout(null);
 		splashInfo.setSize(300, 300);
 		splashInfo.setLocation(width / 2 - 150, height / 2 - 150);
-		Font font = new Font("Currier", 30, Font.BOLD);
+		Font font = new Font("Times", 100, Font.BOLD);
 		JLabel load = new JLabel("Loading...");
 		load.setFont(font);
+		load.setLocation(40, 100);
+		load.setSize(100, 100);
 		splashInfo.add(load);
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
-		// this.setVisible(true);
+		SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException ex) {
@@ -147,6 +149,7 @@ public class riskGUI extends JFrame {
 		setLayout(new BorderLayout());
 		setTitle("GoT Risk");
 		setSize(width, height);
+		this.setVisible(true);
 	}
 
 	private void setUpMenu() {
@@ -173,7 +176,9 @@ public class riskGUI extends JFrame {
 	}
 
 	private void setUpDrawingPanel() {
+		//if(drawingPanel==null)
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
+		System.out.println(gameBoard.toString());
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
 		drawingPanel.setSize(width - 40, height - 70);
