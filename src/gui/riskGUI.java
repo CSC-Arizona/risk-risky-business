@@ -410,6 +410,7 @@ public class riskGUI extends JFrame {
 					break;
 				case DOTHRAKI:
 					g2.drawImage(dothraki.getImage(), 0, 0, 100, 100, null);
+					break;
 				case WHITEWALKERS:
 					g2.drawImage(whiteWalkers.getImage(), 0, 0, 100, 100,null);
 					break;
@@ -422,7 +423,7 @@ public class riskGUI extends JFrame {
 			}
 			g2.setColor(Color.WHITE);
 			g2.setFont(new Font("Courier",Font.BOLD,20));
-			g2.drawString("Current Player: " + currentPlayer.getName(), 0, 110);
+			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
 
 		}
 
@@ -456,6 +457,7 @@ public class riskGUI extends JFrame {
 						g2.drawImage(dothraki.getImage(), (int) country.getX()
 								* xWidth, (int) country.getY() * yHeight + 5,
 								30, 30, null);
+						break;
 					case WHITEWALKERS:
 						g2.drawImage(whiteWalkers.getImage(),
 								(int) country.getX() * xWidth,
