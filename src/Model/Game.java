@@ -84,6 +84,11 @@ public class Game {
 				countryToPlace.setOccupier(players.get(playerLocation));
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
+				if (armiesPlaced==50){
+					placePhase = false;
+					reinforcePhase = true;
+				}
+					
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
 				System.out.println("Army placed at : " + countryToPlace.toString());

@@ -574,11 +574,12 @@ public class riskGUI extends JFrame {
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
-					while (theGame.getCurrentPlayer() instanceof AI) {
+					while (theGame.isPlacePhase() && theGame.getCurrentPlayer() instanceof AI) {
 						theGame.aiChoicePlacement();
+						System.out.println("hi");
 					}
 				}
-
+				
 			} else if (theGame.isAttackPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
