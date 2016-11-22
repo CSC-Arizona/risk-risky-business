@@ -122,6 +122,7 @@ public class Game {
 		} else {
 			placePhase = false;
 			playPhase = true;
+			nextPlayer();
 
 		}
 
