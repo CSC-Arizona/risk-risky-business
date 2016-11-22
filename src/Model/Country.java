@@ -7,8 +7,6 @@ import java.util.Observable;
 
 import javax.swing.JButton;
 
-import com.sun.medialib.mlib.Constants;
-
 /*
  * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
  * 	File:		Country.java
@@ -150,6 +148,12 @@ public class Country extends Observable {
 	public Faction returnMyOwnersFaction()
 	{
 		return this.getOccupier().getFaction();
+	}
+
+	public void removeUnits(int numOfUnitsToMove)
+	{
+		forcesVal -= numOfUnitsToMove;
+		
 	}
 
 
