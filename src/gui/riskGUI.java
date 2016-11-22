@@ -674,7 +674,7 @@ public class riskGUI extends JFrame {
 				}
 				
 			} else if (theGame.isPlayPhase()) {
-				// player chooses attacks
+				System.out.println("Loops here forevverrrrr");
 			} else if (theGame.isReinforcePhase()) {
 
 				// player can reinforce countries

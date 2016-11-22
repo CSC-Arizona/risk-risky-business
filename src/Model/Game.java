@@ -76,7 +76,7 @@ public class Game {
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
-	public Player placeArmies(Country countryToPlace) {
+	public void placeArmies(Country countryToPlace) {
 		// place initial 50 armies
 		if (armiesPlaced < 50) {
 			if (countryToPlace.getOccupier() == null) {
@@ -115,7 +115,7 @@ public class Game {
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);//selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
-
+				
 			} else
 				System.out.println("You don't occupy this country");
 
@@ -125,7 +125,6 @@ public class Game {
 
 		}
 
-		return players.get(playerLocation);
 	}
 
 	private void addAI(int numOfAI) {
