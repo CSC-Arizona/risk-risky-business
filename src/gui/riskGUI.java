@@ -80,10 +80,11 @@ public class riskGUI extends JFrame {
 	private Player nextPlayer, currPlayer;
 	private int humans;
 	private int ai = -1;
+	private int numOfUnitsToMove = 0;
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
 	private ArrayList<String> possHouses;
-	private boolean decisionMakingPhase = false;
+	private boolean decisionMakingPhase = false, moveUnitsFlag = false;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -680,6 +681,7 @@ public class riskGUI extends JFrame {
 
 	private class makeMoveListener implements ActionListener {
 
+	
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			theGame.placeArmies(theGame.getSelectedCountry());
@@ -695,7 +697,23 @@ public class riskGUI extends JFrame {
 				}
 				
 			} else if (theGame.isPlayPhase()) {
-				System.out.println("Loops here forevverrrrr");
+				//for now just allow players to move armies
+				if(theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer()))
+				{
+					
+					if(!moveUnitsFlag)
+					{ 
+						numOfUnitsToMove = theGame.getUnitsToMove(theGame.getSelectedCountry());
+						if(numOfUnitsToMove > 0)
+							moveUnitsFlag = true;
+					}
+					else
+					{
+						theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
+						moveUnitsFlag = false;
+					}
+
+				}
 			} else if (theGame.isReinforcePhase()) {
 
 				// player can reinforce countries

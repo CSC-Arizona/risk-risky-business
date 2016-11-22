@@ -150,5 +150,11 @@ public class Country extends Observable {
 		return this.getOccupier().getFaction();
 	}
 
+	public void removeUnits(int numOfUnitsToMove)
+	{
+		forcesVal -= numOfUnitsToMove;
+		
+	}
+
 
 }
