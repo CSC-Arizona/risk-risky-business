@@ -84,9 +84,15 @@ public class Game {
 				countryToPlace.setOccupier(players.get(playerLocation));
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
+				if (armiesPlaced==50){
+					placePhase = false;
+					reinforcePhase = true;
+				}
+					
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
 				System.out.println("Army placed at : " + countryToPlace.toString());
+				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
 
 			} else {
@@ -107,6 +113,7 @@ public class Game {
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
 				System.out.println("Reinforced " + selectedCountry.getName());
+				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
 
 			} else
@@ -180,7 +187,7 @@ public class Game {
 		if (checkIfCountryAvailable(aiSelectedCountry)) {
 
 			placeArmies(aiSelectedCountry);
-			players.get(playerLocation).subtractFromAvailableTroops(1);
+
 
 			return true;
 		}
@@ -190,7 +197,7 @@ public class Game {
 	public void aiReinforcePlacement(){
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountryFromOccupied();
 		placeArmies(aiSelectedCountry);
-		players.get(playerLocation).subtractFromAvailableTroops(1);
+		
 	}
 
 	private boolean checkIfCountryAvailable(Country countryToCheck) {
