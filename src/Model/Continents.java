@@ -1,21 +1,36 @@
 package Model;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /*
- * We had a better idea, but we'll change it later! Continents will eventually be objects
+ * 
  */
 
-
-public class Continent {
-// 	BLUE, GREEN, ORANGE, PINK, RED, YELLOW, BLACK;
+public class Continents {
 	private String name; 
-	ArrayList<Country> countries
+	private ArrayList<Country> countries;
+	Color color; 
 	
-	public Continent(String name, ArrayList<Country> countries){ 
+	public Continents(String name, ArrayList<Country> countries, Color color){ 
 		this.name = name;
+		this.countries = countries;
+		this.color = color;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 	public boolean continentBonus(){
+		Iterator<Country> itr = countries.iterator();
+		for(Country curr: countries){ 
+			if(curr.getOccupier() != itr.next().getOccupier())
+				return false;
+		}
 		
+		return true; 
 	}
 	
 }

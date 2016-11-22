@@ -1,9 +1,12 @@
 package Model;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+
+import com.sun.medialib.mlib.Constants;
 
 /*
  * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
@@ -17,7 +20,7 @@ public class Country {
 	private double x;
 	private double y;
 	private int forcesVal;
-	private Continents continent;
+	private Continents continent ;
 	private Player occupier;
 	private JButton myButton;
 	private ArrayList<Country> neighbors;

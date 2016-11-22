@@ -128,7 +128,7 @@ public class riskGUI extends JFrame {
 		gameStatsPanel.setLayout(new GridLayout(1,6));
 		gameStatsPanel.setPreferredSize(new Dimension(100,10));
 		gameStatsPanel.setBackground(Color.pink);
-		//this.add(gameStatsPanel, BorderLayout.EAST);
+		this.add(gameStatsPanel, BorderLayout.EAST);
 	}//end setUpGameStatsPanel
 	
 
