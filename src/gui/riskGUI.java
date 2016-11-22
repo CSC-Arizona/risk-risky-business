@@ -302,7 +302,7 @@ public class riskGUI extends JFrame {
 	private void setUpMenu() {
 		JMenu file = new JMenu("File");
 		JMenuItem newGame = new JMenuItem("New Game");
-		newGame.addActionListener(new newGameListener());
+		newGame.addActionListener(new NewGameListener());
 		file.add(newGame);
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
@@ -569,7 +569,6 @@ public class riskGUI extends JFrame {
 			makeAMoveButton = new JButton("Make your move!");
 			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
-			makeAMoveButton.addActionListener(new makeMoveListener());
 		}
 
 		public void updatePanel() {
@@ -684,9 +683,9 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			theGame.placeArmies(theGame.getSelectedCountry());
-
 			drawingPanel.repaint();
 			if (theGame.isPlacePhase()) {
+				
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
 					while (theGame.isPlacePhase() && theGame.getCurrentPlayer() instanceof AI) {
@@ -715,7 +714,7 @@ public class riskGUI extends JFrame {
 	}//end class
 
 	
-	private class newGameListener implements ActionListener {
+	private class NewGameListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {

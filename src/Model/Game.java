@@ -112,7 +112,7 @@ public class Game {
 			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
-				System.out.println("Reinforced " + armiesPlaced);//selectedCountry.getName());
+				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);//selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
 
