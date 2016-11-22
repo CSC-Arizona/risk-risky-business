@@ -399,16 +399,16 @@ public class riskGUI extends JFrame {
 					switch(ownerFaction)
 					{
 					case STARK:
-						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 					default:
 						break;
 					}
@@ -551,7 +551,7 @@ public class riskGUI extends JFrame {
 					if (country.getName().compareTo(e.getActionCommand()) == 0)
 						theGame.setSelectedCountry(country);
 				}
-
+				drawingPanel.repaint();
 		}
 	}//end class
 	
@@ -585,7 +585,11 @@ public class riskGUI extends JFrame {
 				}//end if
 			}//end else if
 			theGame.setSelectedCountry(null);
-		}
+			drawingPanel.repaint();
+			
+			
+			
+		}//end actionPerformed
 		
 	}
 
