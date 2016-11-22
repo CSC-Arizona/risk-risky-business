@@ -347,6 +347,7 @@ public class riskGUI extends JFrame {
 		wildlings = new ImageIcon("wildlings.jpg");
 	}
 
+
 	
 
 	// draws buttons over the name of all of the countries
@@ -396,34 +397,42 @@ public class riskGUI extends JFrame {
 			}
 
 			drawFactions(g2);
-			//drawCurrentPlayer(g2);
+			if(theGame != null)
+				drawCurrentPlayer(g2);
 			// drawGridAndNumbers(g2);
 
 		}
 
 		private void drawCurrentPlayer(Graphics2D g2) {
-			if (theGame.getCurrentPlayer() != null) {
+			Player currentPlayer = theGame.getCurrentPlayer();
+			if(currentPlayer != null)
+			{
 				Faction playersFact = theGame.getCurrentPlayer().getFaction();
 				switch (playersFact) {
 				case STARK:
-					g2.drawImage(stark.getImage(), 500, 500, 100, 100, null);
+					g2.drawImage(stark.getImage(), 0, 0, 100, 100, null);
 					break;
 				case TARGARYEN:
-					g2.drawImage(targaryen.getImage(), 500, 500, 100, 100, null);
+					g2.drawImage(targaryen.getImage(), 0, 0, 100, 100, null);
 					break;
 				case LANNISTER:
-					g2.drawImage(lannister.getImage(), 500, 500, 100, 100, null);
+					g2.drawImage(lannister.getImage(), 0, 0, 100, 100, null);
 					break;
 				case DOTHRAKI:
-					g2.drawImage(dothraki.getImage(), 500, 500, 100, 100, null);
+					g2.drawImage(dothraki.getImage(), 0, 0, 100, 100, null);
 				case WHITEWALKERS:
-					g2.drawImage(whiteWalkers.getImage(), 500, 500, 100, 100,
-							null);
+					g2.drawImage(whiteWalkers.getImage(), 0, 0, 100, 100,null);
 					break;
 				case WILDLINGS:
-					g2.drawImage(wildlings.getImage(), 500, 500, 100, 100, null);
+					g2.drawImage(wildlings.getImage(), 0, 0, 100, 100, null);
+					break;
+					default:
+					break;
 				}
 			}
+			g2.setColor(Color.WHITE);
+			g2.setFont(new Font("Courier",Font.BOLD,20));
+			g2.drawString("Current Player: " + currentPlayer.getName(), 0, 110);
 
 		}
 
@@ -545,6 +554,7 @@ public class riskGUI extends JFrame {
 			makeAMoveButton = new JButton("Make your move!");
 			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
+			makeAMoveButton.addActionListener(new makeMoveListener());
 		}
 
 		public void updatePanel() {
@@ -578,7 +588,7 @@ public class riskGUI extends JFrame {
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
 
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
-				centerPanel.add(tradeButton, BorderLayout.NORTH);
+
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
 				neighPanel.setLayout(new GridLayout(neighs.size(), 0));
@@ -652,6 +662,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+
 			theGame.placeArmies(theGame.getSelectedCountry());
 
 			drawingPanel.repaint();
@@ -683,6 +694,7 @@ public class riskGUI extends JFrame {
 		}// end actionPerformed
 
 	}
+
 	
 	private class newGameListener implements ActionListener {
 
