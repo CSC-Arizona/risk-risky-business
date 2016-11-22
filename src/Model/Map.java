@@ -115,6 +115,10 @@ public class Map {
 		countries[49] = new Country("Qarth", 34.35, 32.75, black);
 
 		addAllNeighbors();
+		for(int i = 0; i < countries.length; i++)
+		{
+			
+		}
 	}
 
 	// Another terrible method
