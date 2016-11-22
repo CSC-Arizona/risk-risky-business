@@ -17,18 +17,19 @@ public class Country {
 	private double x;
 	private double y;
 	private int forcesVal;
-	private Continents continent;
+//	private Continent continent;
 	private Player occupier;
 	private JButton myButton;
 	private ArrayList<Country> neighbors;
 
-	public Country(String name, double x, double y, Continents continent){
+	public Country(String name, double x, double y, Continent continent){
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		x = -1;
 		y = -1;
-		this.continent = continent;
+		//Not great design, but it's easy!
+		continent.addCountry(this);
 		forcesVal = 0;
 		occupier = null;
 		neighbors = new ArrayList<Country>();
