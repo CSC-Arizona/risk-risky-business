@@ -60,7 +60,7 @@ public class riskGUI extends JFrame {
 	//private Map map; dont think this is needed anymore cause it is stored
 	// within theGame
 	private Game theGame;
-	private ImageIcon gameBoard;
+	private ImageIcon gameBoard, stark, targaryen, lannister, whiteWalkers, dothraki, wildlings;
 	private JButton checkButton;
 	private CountryPanel currCountryPanel;
 	private JButton moveButton;
@@ -263,7 +263,8 @@ public class riskGUI extends JFrame {
 
 	private void setUpDrawingPanel() {
 		// if(drawingPanel==null)
-		gameBoard = new ImageIcon("GoTMapRisk.jpg");
+		setUpImages();
+		
 		// System.out.println(gameBoard.toString());
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
@@ -289,6 +290,19 @@ public class riskGUI extends JFrame {
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
 
+	}
+
+	private void setUpImages()
+	{
+
+		gameBoard = new ImageIcon("GoTMapRisk.jpg");
+		stark = new ImageIcon("stark.jpg");
+		targaryen = new ImageIcon("targaryen.jpg");
+		lannister = new ImageIcon("lannister.jpg");
+		whiteWalkers = new ImageIcon();
+		dothraki = new ImageIcon("dothraki.jpg");
+		wildlings = new ImageIcon();
+		
 	}
 
 	private void setUpGameStatsPanel() {
@@ -348,12 +362,29 @@ public class riskGUI extends JFrame {
 				currCountryPanel.updatePanel();
 			}
 
+			drawFactions(g2);
 			// drawGridAndNumbers(g2);
 
 		}
 
 		// draws a 40X40 grid over the risk map. Used for determining where to
 		// place buttons.
+
+		private void drawFactions(Graphics2D g2)
+		{
+			Map temp = Map.getInstance();
+			Country[] allCountries = temp.getCountries();
+			for(Country country : allCountries)
+			{
+				if(country.getOccupier() != null)
+				{
+					String ownerFaction = country.returnMyOwnersFaction();
+					
+					
+				}
+			}
+			
+		}
 
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
@@ -392,17 +423,8 @@ public class riskGUI extends JFrame {
 		@Override
 		public void update(Observable arg0, Object arg1)
 		{
-			Map temp = Map.getInstance();
-			Country[] allCountries = temp.getCountries();
-			for(Country country : allCountries)
-			{
-				if(country.getOccupier() != null)
-				{
-					String ownerFaction = country.returnMyOwnersFaction();
-					//draw picture of faction
-					
-				}
-			}
+			repaint();
+
 			
 		}
 
