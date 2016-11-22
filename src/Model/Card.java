@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Card {
 	private String country;
 	private String unit;

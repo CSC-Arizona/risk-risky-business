@@ -6,9 +6,9 @@ import java.util.Random;
 public class AI extends Player {
 
 	private AIStrat myStrat;
-	public AI(AIStrat strat)
+	public AI(AIStrat strat, int numOfPlayers)
 	{
-		super();
+		super(numOfPlayers);
 		myStrat = strat;
 	}
 	
@@ -19,6 +19,14 @@ public class AI extends Player {
 		Random rand = new Random();
 		int randNum = rand.nextInt(50);
 		return countries[randNum];
+	}
+	
+	public Country pickRandomCountryFromOccupied()
+	{
+		Random rand = new Random();
+		int randNum = rand.nextInt(getCountries().size());
+		
+		return getCountries().get(randNum);
 	}
 	@Override
 	public ArrayList<Card> playCards()
