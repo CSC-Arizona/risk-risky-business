@@ -392,7 +392,6 @@ public class riskGUI extends JFrame {
 
 		}
 
-
 		private void drawCurrentPlayer(Graphics2D g2) {
 			Player currentPlayer = theGame.getCurrentPlayer();
 			if(currentPlayer != null)
@@ -549,7 +548,7 @@ public class riskGUI extends JFrame {
 		}
 
 		public void updatePanel() {
-			//ArrayList<Card> cards = currPlayer.getCards();
+			ArrayList<Card> cards = theGame.getCurrentPlayer().getCards();
 			this.remove(centerPanel);
 			
 			centerPanel = new JPanel();
@@ -563,10 +562,11 @@ public class riskGUI extends JFrame {
 			
 			Iterator itr;
 			Card card; 
-			//for(itr = cards.listIterator(); itr.hasNext();card = (Card) itr.next()){ 
+			for(itr = cards.listIterator(); itr.hasNext(); ){ 
+				card = (Card) itr.next();
 				//Add the JCheckBox for the card
-				
-			//}
+				System.out.println("Card: " + card.getCountry());
+			}
 			
 			Country curr = theGame.getSelectedCountry();
 			if (curr == null) {

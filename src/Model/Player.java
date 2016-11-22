@@ -85,6 +85,10 @@ public abstract class Player {
 
 	}
 	
+	public ArrayList<Card> getCards(){
+		return myCards;
+	}
+	
 	public Faction getFaction()
 	{
 		return faction;
