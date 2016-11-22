@@ -76,13 +76,27 @@ public class riskGUI extends JFrame {
 	private int ai = -1;
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
+	private ArrayList<String> possHouses;
+	private boolean decisionMakingPhase = false;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
 		splash = true;
 		setUpGui();
 		setUpMenu();
+		setUpHouseArray();
 		setUpSplash();
+		
+	}
+
+	private void setUpHouseArray() {
+		possHouses = new ArrayList<String>();
+		possHouses.add("Stark");
+		possHouses.add("Lannister");
+		possHouses.add("Targaryen");
+		possHouses.add("White Walkers");
+		possHouses.add("Dothraki");
+		possHouses.add("Wildlings");
 		
 	}
 
@@ -110,19 +124,11 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
-		setUpGameStatsPanel();
 		ArrayList<Player> players = theGame.getPlayers();
 		for(int i=0; i<humans; i++){
 			players.get(i).setFaction(houses.get(i));
 			players.get(i).setName(playerNames.get(i));
 		}
-		ArrayList<String> possHouses = new ArrayList<String>();
-		possHouses.add("Stark");
-		possHouses.add("Lannister");
-		possHouses.add("Targaryen");
-		possHouses.add("White Walkers");
-		possHouses.add("Dothraki");
-		possHouses.add("Wildlings");
 		for(String h : houses){
 			possHouses.remove(h);
 		}
@@ -153,7 +159,18 @@ public class riskGUI extends JFrame {
 			String house="";
 			while(illegalName==true){
 				Boolean check=true;
+				int num = 0;
 				house =JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
+				for(String s : possHouses){
+					if(s.compareTo(house)!=0){
+						num++;
+					}
+				}
+				if(num==6){
+					check=false;
+					JOptionPane.showMessageDialog(riskGUI.this, "Illegal Faction name. Please try again.");
+				}
+				
 				for(int j=0; j<houses.size();j++){
 					if(houses.get(j).compareTo(house)==0){
 						check=false;
@@ -175,8 +192,8 @@ public class riskGUI extends JFrame {
 		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
 		while (ai == -1){
 			ai = Integer.parseInt(JOptionPane.showInputDialog("How Many AI Players?"));
-			if((ai + humans) >6){
-				JOptionPane.showMessageDialog(riskGUI.this, "Illegal number of players. Must have 6 or less total players");
+			if((ai + humans) >6 || ai+humans<3){
+				JOptionPane.showMessageDialog(riskGUI.this, "Illegal number of players. Must have between 3 and 6 total players");
 				ai=-1;
 			}
 				
@@ -320,18 +337,6 @@ public class riskGUI extends JFrame {
 		wildlings = new ImageIcon("wildlings.jpg");
 		
 	}
-
-	private void setUpGameStatsPanel() {
-		// Currently there to print nothing useful, but see what the game board
-		// will look like
-		JPanel gameStatsPanel = new JPanel();
-		gameStatsPanel.setLayout(new GridLayout(1, 6));
-		gameStatsPanel.setPreferredSize(new Dimension(100, 100));
-		gameStatsPanel.setBackground(Color.pink);
-		this.add(gameStatsPanel, BorderLayout.EAST);
-	}// end
-		// setUpGameStatsPanel
-
 	// draws buttons over the name of all of the countries
 
 	private void drawCountryButtons() {
@@ -383,9 +388,8 @@ public class riskGUI extends JFrame {
 
 		}
 
-		// draws a 40X40 grid over the risk map. Used for determining where to
-		// place buttons.
 
+		//draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2)
 		{
 			Map temp = Map.getInstance();
@@ -398,24 +402,30 @@ public class riskGUI extends JFrame {
 					switch(ownerFaction)
 					{
 					case STARK:
-						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
-					default:
+						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
+					case WHITEWALKERS:
+						g2.drawImage(whiteWalkers.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight+5, 30, 30, null);
+						break;
+					case WILDLINGS:
+						g2.drawImage(wildlings.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight+5, 30, 30, null);
 					}
 
 				}
 			}
 			
 		}
+		// draws a 40X40 grid over the risk map. Used for determining where to
+		// place buttons.
 
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
@@ -482,6 +492,7 @@ public class riskGUI extends JFrame {
 			this.setSize(xWidth * 10, yHeight * 10);
 			centerPanel.add(new JLabel("Select a Country"));
 			makeAMoveButton = new JButton("Make your move!");
+			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
 		}
 
@@ -545,13 +556,21 @@ public class riskGUI extends JFrame {
 			// step through all countries until the same name as the
 			// actionCommand, then return that country
 
-			for (Country country : theGame.getGameMap().getCountries()) {
-				if (country.getName().compareTo(e.getActionCommand()) == 0)
-					theGame.setSelectedCountry(country);
-			}
+				for (Country country : theGame.getGameMap().getCountries()) {
+					if (country.getName().compareTo(e.getActionCommand()) == 0)
+						theGame.setSelectedCountry(country);
+				}
+				drawingPanel.repaint();
+		}
+	}//end class
+	
+	private class makeMoveListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
 			theGame.placeArmies(theGame.getSelectedCountry());
 
-			drawingPanel.repaint();
+			
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -563,17 +582,24 @@ public class riskGUI extends JFrame {
 			} else if (theGame.isAttackPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
+				// player can reinforce countries
+			
+			
 				if(theGame.getCurrentPlayer() instanceof AI)
 				{
 					while(theGame.getCurrentPlayer() instanceof AI)
 					{
 						theGame.aiReinforcePlacement();
-					}
-				}
-			}
-
-		}
-
+					}//end while
+				}//end if
+			}//end else if
+			theGame.setSelectedCountry(null);
+			drawingPanel.repaint();
+			
+			
+			
+		}//end actionPerformed
+		
 	}
 
 	private class newGameListener implements ActionListener {
@@ -597,3 +623,4 @@ public class riskGUI extends JFrame {
 		}
 	}
 }
+
