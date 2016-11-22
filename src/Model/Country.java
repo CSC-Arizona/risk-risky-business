@@ -135,6 +135,11 @@ public class Country {
 	public String toString(){
 		return name;
 	}
+
+
+	public String returnMyOwnersFaction() {
+		return occupier.getFaction().toString();
+	}
 	
 	
 }

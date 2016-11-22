@@ -425,7 +425,7 @@ public class riskGUI extends JFrame {
 
 	private class CountryPanel extends JPanel {
 		private JPanel centerPanel;
-		private JButton makeAMoveButton = new JButton();
+		private JButton makeAMoveButton;
 
 		/*
 		 * public void PaintComponent(Graphics g){ update(g);
@@ -435,16 +435,19 @@ public class riskGUI extends JFrame {
 		 */
 
 		public CountryPanel() {
+			this.setLayout(new BorderLayout());
 			centerPanel = new JPanel();
 			this.setLocation(17 * xWidth, 3 * yHeight);
 			this.setSize(xWidth * 10, yHeight * 10);
 			centerPanel.add(new JLabel("Select a Country"));
+			makeAMoveButton = new JButton("Make your move!");
 			this.add(centerPanel);
 		}
 
 		public void updatePanel() {
 			this.remove(centerPanel);
-			centerPanel = new JPanel();
+			this.remove(makeAMoveButton);
+			centerPanel.removeAll();
 
 			this.setLocation(17 * xWidth, 3 * yHeight);
 			this.setSize(xWidth * 10, yHeight * 10);
@@ -466,6 +469,7 @@ public class riskGUI extends JFrame {
 					neighPanel.add(new JLabel(neighs.get(i).getName()));
 				centerPanel.add(neighPanel, BorderLayout.CENTER);
 				this.add(centerPanel);
+				this.add(makeAMoveButton, BorderLayout.SOUTH);
 			}
 
 			centerPanel.revalidate();
