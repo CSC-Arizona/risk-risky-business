@@ -1,7 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
-
+import gui.riskGUI;
 public class Map {
 
 	private Country countries[] = new Country[50];
@@ -83,6 +83,10 @@ public class Map {
 		countries[49] = new Country("Qarth", 34.35, 32.75, Continents.BLACK);
 
 		addAllNeighbors();
+		for(int i = 0; i < countries.length; i++)
+		{
+			countries[i].addObserver(drawingPanel);
+		}
 	}
 
 	// Another terrible method
