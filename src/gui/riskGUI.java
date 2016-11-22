@@ -47,8 +47,7 @@ import Model.Player;
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
 
-	public static void main(String[] args) throws UnknownHostException, IOException
-	{
+	public static void main(String[] args) throws UnknownHostException, IOException {
 		new riskGUI().setVisible(true);
 	}
 
@@ -72,9 +71,11 @@ public class riskGUI extends JFrame {
 	private Font font = new Font("Goudy Old Style", Font.BOLD, 40);
 	private String gameType;
 	private Player nextPlayer;
+	private int humans;
+	private int total;
+	private ArrayList<String> houses;
 
-	public riskGUI()
-	{
+	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
 		splash = true;
 		setUpGui();
@@ -83,8 +84,7 @@ public class riskGUI extends JFrame {
 		
 	}
 
-	private void setUpSplash()
-	{
+	private void setUpSplash() {
 		// Still messing around with this.
 		splashScreen = new ImageIcon("SplashScreen.jpg");
 		drawingPanel = new BoardPanel();
@@ -98,8 +98,7 @@ public class riskGUI extends JFrame {
 		splashLoading1();
 	}
 
-	private void splashLoading2()
-	{
+	private void splashLoading2() {
 		// TODO Auto-generated method stub
 		System.out.println("Brace Yourselves, RISK is Coming...");
 		splash = false;
@@ -107,35 +106,43 @@ public class riskGUI extends JFrame {
 		this.remove(drawingPanel);
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
-		theGame = Game.getInstance(1, 3);
+		theGame = Game.getInstance(humans, total);
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
+		
+		System.out.println(humans);
+		System.out.println(total);
+		for(String s : houses)
+			System.out.println(s);
 	}
 
-	private void splashNames()
-	{
+	private void splashNames() {
 		// TODO Auto-generated method stub
 		System.out.println("What are the players names?");
 		splashLoading2();
 	}
 
-	private void splashHouses()
-	{
+	private void splashHouses() {
+		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("What will be your houses?");
+		houses = new ArrayList<String>();
+		for(int i=0; i<humans; i++){
+			houses.add(JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings"));
+		}
 		splashNames();
 	}
 
-	private void splashNumPlayers()
-	{
+	private void splashNumPlayers() {
 		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("How many players?");
+		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
+		total = Integer.parseInt(JOptionPane.showInputDialog("How Many Total Players?"));
 		splashHouses();
 	}
 
-	private void splashChooseGame()
-	{
+	private void splashChooseGame() {
 		drawingPanel.remove(splashInfo);
 		System.out.println("New Game or Load Game?");
 		splashInfo = new JPanel();
@@ -168,8 +175,7 @@ public class riskGUI extends JFrame {
 	 * and JPanel for information. Starts Theme Song, which will play until it
 	 * ends. This screen is shown for 10 seconds.
 	 */
-	private void splashLoading1()
-	{
+	private void splashLoading1() {
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
 		splashInfo.setSize(500, 150);
@@ -187,11 +193,9 @@ public class riskGUI extends JFrame {
 		// SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
-		try
-		{
+		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException ex)
-		{
+		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			System.out.println("nahhh");
 		}
@@ -199,8 +203,7 @@ public class riskGUI extends JFrame {
 		splashChooseGame();
 	}
 
-	private void setUpGui()
-	{
+	private void setUpGui() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLayout(new BorderLayout());
@@ -209,8 +212,7 @@ public class riskGUI extends JFrame {
 		this.setVisible(true);
 	}
 
-	private void setUpMenu()
-	{
+	private void setUpMenu() {
 		JMenu file = new JMenu("File");
 		JMenuItem newGame = new JMenuItem("New Game");
 		newGame.addActionListener(new newGameListener());
@@ -233,8 +235,7 @@ public class riskGUI extends JFrame {
 
 	}
 
-	private void setUpDrawingPanel()
-	{
+	private void setUpDrawingPanel() {
 		// if(drawingPanel==null)
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
 		// System.out.println(gameBoard.toString());
@@ -264,8 +265,7 @@ public class riskGUI extends JFrame {
 
 	}
 
-	private void setUpGameStatsPanel()
-	{
+	private void setUpGameStatsPanel() {
 		// Currently there to print nothing useful, but see what the game board
 		// will look like
 		JPanel gameStatsPanel = new JPanel();
@@ -278,10 +278,8 @@ public class riskGUI extends JFrame {
 
 	// draws buttons over the name of all of the countries
 
-	private void drawCountryButtons()
-	{
-		for (Country country : theGame.getGameMap().getCountries())
-		{
+	private void drawCountryButtons() {
+		for (Country country : theGame.getGameMap().getCountries()) {
 			// The Make button method has the same logic that was previously
 			// here
 			country.makeButton(xWidth, yHeight, new CountryClickListener());
@@ -295,18 +293,15 @@ public class riskGUI extends JFrame {
 
 	// Updates those buttons if the size of the panel changes
 
-	private void updateCountryButtons()
-	{
-		for (Country country : theGame.getGameMap().getCountries())
-		{
+	private void updateCountryButtons() {
+		for (Country country : theGame.getGameMap().getCountries()) {
 			country.updateButton(xWidth, yHeight);
 		}
 	}
 
 	private class BoardPanel extends JPanel implements Observer {
 		@Override
-		public void paintComponent(Graphics g)
-		{
+		public void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
@@ -322,8 +317,7 @@ public class riskGUI extends JFrame {
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
 
-			if (!splash)
-			{
+			if (!splash) {
 				updateCountryButtons();
 				currCountryPanel.updatePanel();
 			}
@@ -335,15 +329,12 @@ public class riskGUI extends JFrame {
 		// draws a 40X40 grid over the risk map. Used for determining where to
 		// place buttons.
 
-		private void drawGridAndNumbers(Graphics2D g2)
-		{
-			for (int i = xWidth; i < width - 40; i += xWidth)
-			{
+		private void drawGridAndNumbers(Graphics2D g2) {
+			for (int i = xWidth; i < width - 40; i += xWidth) {
 				g2.drawLine(i, 0, i, height - 70);
 			}
 
-			for (int i = yHeight; i < height - 70; i += yHeight)
-			{
+			for (int i = yHeight; i < height - 70; i += yHeight) {
 				g2.drawLine(0, i, width - 40, i);
 			}
 
@@ -355,14 +346,12 @@ public class riskGUI extends JFrame {
 			int y = 0;
 			// int x = 0;
 
-			for (int i = 1; i < 40; i++)
-			{
+			for (int i = 1; i < 40; i++) {
 				int x = 1;
 				y++;
 				startY = yCount;
 
-				for (int j = 1; j < 40; j++)
-				{
+				for (int j = 1; j < 40; j++) {
 					g2.drawString(Integer.toString(x), startX, startY);
 					startY += yHeight;
 
@@ -371,6 +360,7 @@ public class riskGUI extends JFrame {
 				startX += xWidth;
 			}
 		}
+
 
 		//update for drawing factions over occupied functions
 		@Override
@@ -396,6 +386,7 @@ public class riskGUI extends JFrame {
 	{
 		return drawingPanel;
 	}
+
 	private class CountryPanel extends JPanel {
 		private JPanel centerPanel;
 		private JButton makeAMoveButton = new JButton();
@@ -407,8 +398,7 @@ public class riskGUI extends JFrame {
 		 * }//end
 		 */
 
-		public CountryPanel()
-		{
+		public CountryPanel() {
 			centerPanel = new JPanel();
 			this.setLocation(17 * xWidth, 3 * yHeight);
 			this.setSize(xWidth * 10, yHeight * 10);
@@ -416,8 +406,7 @@ public class riskGUI extends JFrame {
 			this.add(centerPanel);
 		}
 
-		public void updatePanel()
-		{
+		public void updatePanel() {
 			this.remove(centerPanel);
 			centerPanel = new JPanel();
 
@@ -425,13 +414,11 @@ public class riskGUI extends JFrame {
 			this.setSize(xWidth * 10, yHeight * 10);
 
 			Country curr = theGame.getSelectedCountry();
-			if (curr == null)
-			{
+			if (curr == null) {
 				centerPanel.add(new JLabel("Select a Country"));
 				this.add(centerPanel);
 			} // end if
-			else
-			{
+			else {
 				centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
@@ -454,10 +441,8 @@ public class riskGUI extends JFrame {
 	// help button listener for opening the about
 	private class helpListener implements ActionListener {
 
-		public void actionPerformed(ActionEvent e)
-		{
-			if (e.getActionCommand().compareTo("rules") == 0)
-			{
+		public void actionPerformed(ActionEvent e) {
+			if (e.getActionCommand().compareTo("rules") == 0) {
 
 				JOptionPane.showMessageDialog(riskGUI.this, "Fill this out later, maybe with a hyperlink to the rules",
 						"Rules", JOptionPane.INFORMATION_MESSAGE);
@@ -474,40 +459,30 @@ public class riskGUI extends JFrame {
 	private class CountryClickListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent e)
-		{
+		public void actionPerformed(ActionEvent e) {
 			System.out.println(e.getActionCommand() + " pressed.");
 			// step through all countries until the same name as the
 			// actionCommand, then return that country
 
-			for (Country country : theGame.getGameMap().getCountries())
-			{
+			for (Country country : theGame.getGameMap().getCountries()) {
 				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
 			theGame.placeArmies(theGame.getSelectedCountry());
 
 			drawingPanel.repaint();
-			if (theGame.isPlacePhase())
-			{
+			if (theGame.isPlacePhase()) {
 				// next player place army
-				if (theGame.getCurrentPlayer() instanceof AI)
-				{
-					while (theGame.getCurrentPlayer() instanceof AI)
-					{
+				if (theGame.getCurrentPlayer() instanceof AI) {
+					while (theGame.getCurrentPlayer() instanceof AI) {
 						theGame.aiChoicePlacement();
 					}
 				}
 
-			} else if (theGame.isAttackPhase())
-			{
+			} else if (theGame.isAttackPhase()) {
 				// player chooses attacks
-			} else if (theGame.isReinforcePhase())
-			{
-				while(theGame.getCurrentPlayer() instanceof AI)
-				{
-					theGame.aiReinforcePlacement();
-				}
+			} else if (theGame.isReinforcePhase()) {
+				// player can reinforce countries
 			}
 
 		}
@@ -517,9 +492,8 @@ public class riskGUI extends JFrame {
 	private class newGameListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent arg0)
-		{
-			theGame.newGame();
+		public void actionPerformed(ActionEvent arg0) {
+			theGame.startGame(0);
 
 		}
 
@@ -528,8 +502,7 @@ public class riskGUI extends JFrame {
 	private class GameTypeListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent arg0)
-		{
+		public void actionPerformed(ActionEvent arg0) {
 			gameType = arg0.getActionCommand();
 			System.out.println(gameType);
 			splashNumPlayers();
