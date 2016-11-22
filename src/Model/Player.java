@@ -28,7 +28,8 @@ public abstract class Player {
 		
 		this.name = null;
 		this.faction = null;
-		this.availTroops = 43-((3-numOfPlayers)*5);
+		this.availTroops = 43-((numOfPlayers-3)*5);
+
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
 	}
@@ -54,6 +55,9 @@ public abstract class Player {
 		}
 	}
 
+	public void setName(String name){
+		this.name = name;
+	}
 	public void occupyCountry(Country occupyMe)
 	{
 		myCountries.add(occupyMe);

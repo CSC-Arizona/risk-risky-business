@@ -128,6 +128,7 @@ public class Country extends Observable{
 		occupier = player;
 		setChanged();
 		notifyObservers();
+		
 	}
 
 
@@ -140,11 +141,11 @@ public class Country extends Observable{
 	public String toString(){
 		return name;
 	}
-	
-	//used for updating pictures on map for owner of country
-	public String returnMyOwnersFaction()
+
+	public Faction returnMyOwnersFaction()
 	{
-		return occupier.getFaction().toString();
+		return this.getOccupier().getFaction();
 	}
+	
 	
 }

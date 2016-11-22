@@ -72,6 +72,7 @@ public class Game {
 		// doNextThing();
 
 	}
+	
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
@@ -99,6 +100,8 @@ public class Game {
 										// with 35 units, and 3 players
 
 		{
+			placePhase = false;
+			reinforcePhase = true;
 
 			if (countryToPlace.getOccupier().equals(players.get(0))) {
 				countryToPlace.setForcesVal(1);
@@ -144,6 +147,10 @@ public class Game {
 
 	public Map getGameMap() {
 		return gameMap;
+	}
+	
+	public ArrayList<Player> getPlayers(){
+		return players;
 	}
 
 	public Player nextPlayer() {
