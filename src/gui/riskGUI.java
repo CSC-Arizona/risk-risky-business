@@ -347,9 +347,6 @@ public class riskGUI extends JFrame {
 		wildlings = new ImageIcon("wildlings.jpg");
 	}
 
-
-	
-
 	// draws buttons over the name of all of the countries
 	private void drawCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
@@ -420,6 +417,7 @@ public class riskGUI extends JFrame {
 					break;
 				case DOTHRAKI:
 					g2.drawImage(dothraki.getImage(), 0, 0, 100, 100, null);
+					break;
 				case WHITEWALKERS:
 					g2.drawImage(whiteWalkers.getImage(), 0, 0, 100, 100,null);
 					break;
@@ -432,7 +430,7 @@ public class riskGUI extends JFrame {
 			}
 			g2.setColor(Color.WHITE);
 			g2.setFont(new Font("Courier",Font.BOLD,20));
-			g2.drawString("Current Player: " + currentPlayer.getName(), 0, 110);
+			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
 
 		}
 
@@ -558,7 +556,7 @@ public class riskGUI extends JFrame {
 		}
 
 		public void updatePanel() {
-			//ArrayList<Card> cards = currPlayer.getCards();
+			ArrayList<Card> cards = theGame.getCurrentPlayer().getCards();
 			this.remove(centerPanel);
 			
 			centerPanel = new JPanel();
@@ -572,10 +570,11 @@ public class riskGUI extends JFrame {
 			
 			Iterator itr;
 			Card card; 
-			//for(itr = cards.listIterator(); itr.hasNext();card = (Card) itr.next()){ 
+			for(itr = cards.listIterator(); itr.hasNext(); ){ 
+				card = (Card) itr.next();
 				//Add the JCheckBox for the card
-				
-			//}
+				System.out.println("Card: " + card.getCountry());
+			}
 			
 			Country curr = theGame.getSelectedCountry();
 			if (curr == null) {
@@ -588,6 +587,7 @@ public class riskGUI extends JFrame {
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
 
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
+				centerPanel.add(tradeButton, BorderLayout.WEST);
 
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
@@ -662,11 +662,9 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
 			theGame.placeArmies(theGame.getSelectedCountry());
 
 			drawingPanel.repaint();
-
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -676,7 +674,7 @@ public class riskGUI extends JFrame {
 					}
 				}
 				
-			} else if (theGame.isAttackPhase()) {
+			} else if (theGame.isPlayPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
 
@@ -693,7 +691,7 @@ public class riskGUI extends JFrame {
 
 		}// end actionPerformed
 
-	}
+	}//end class
 
 	
 	private class newGameListener implements ActionListener {
@@ -702,9 +700,9 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			theGame.newGame();
 
-		}
+		}//end action performed
 
-	}
+	}//end game listener
 
 	private class GameTypeListener implements ActionListener {
 
