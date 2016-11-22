@@ -116,6 +116,21 @@ public class riskGUI extends JFrame {
 			players.get(i).setFaction(houses.get(i));
 			players.get(i).setName(playerNames.get(i));
 		}
+		ArrayList<String> possHouses = new ArrayList<String>();
+		possHouses.add("Stark");
+		possHouses.add("Lannister");
+		possHouses.add("Targaryen");
+		possHouses.add("White Walkers");
+		possHouses.add("Dothraki");
+		possHouses.add("Wildlings");
+		for(String h : houses){
+			possHouses.remove(h);
+		}
+		int i=0;
+		for(int j=humans; j<(humans+ai);j++){
+			players.get(j).setFaction(possHouses.get(i));
+			i++;
+		}
 	}
 
 	private void splashNames() {
