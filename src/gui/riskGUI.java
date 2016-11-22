@@ -347,8 +347,9 @@ public class riskGUI extends JFrame {
 
 		public CountryPanel() {
 			centerPanel = new JPanel();
-			this.setLocation(12 * xWidth, 3 * yHeight);
-			this.setSize(xWidth * 18, yHeight * 12);
+			//this.setForeground(Color.OPAQUE);
+			this.setLocation(17 * xWidth, 3 * yHeight);
+			this.setSize(xWidth * 10, yHeight * 10);
 			centerPanel.add(new JLabel("Select a Country"));
 			this.add(centerPanel);
 		}

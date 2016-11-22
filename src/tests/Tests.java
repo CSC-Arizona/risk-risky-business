@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import Model.Card;
-import Model.Continents;
+import Model.Continent;
 import Model.Country;
 import Model.Deck;
 import Model.Dice;
@@ -59,8 +59,8 @@ public class Tests {
 	@Test
 	public void testCountry(){
 		// 90.6% coverage
-		Country wall = new Country("The Wall", 6.75, 3.5, Continents.BLUE);
-		Country skagos = new Country("Skagos", 10, 3, Continents.BLUE);
+		Country wall = new Country("The Wall", 6.75, 3.5, null);
+		Country skagos = new Country("Skagos", 10, 3, null);
 		wall.addNeighbor(skagos);
 		wall.drawMyButton();
 		
@@ -83,6 +83,7 @@ public class Tests {
 	@Test
 	public void testHumanPlayer(){
 		//TODO: 37.5% coverage (Player: 30% Coverage)
+<<<<<<< HEAD
 		Player human = new HumanPlayer(1);
 	}
 	
@@ -179,6 +180,9 @@ public class Tests {
 		int result = theGame.redeemCards(one, redeem);
 		System.out.println(result);
 		assertTrue(result == -1);
+=======
+//		Player human = new HumanPlayer();
+>>>>>>> 0cee50b190e262faca5f820f3ea144df272d47b1
 	}
 	
 	

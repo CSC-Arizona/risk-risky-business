@@ -6,22 +6,36 @@ import java.util.ArrayList;
 public class Map {
 
 	private Country countries[] = new Country[50];
-
+	private Continent blue;
+	private Continent green;
+	private Continent orange;
+	private Continent pink;
+	private Continent red;
+	private Continent black;
+	private Continent yellow;
 	public Map() {
+		blue = new Continent(0, "Blue");
+		green = new Continent(0, "Green");
+		orange = new Continent(0, "Orange");
+		pink = new Continent(0, "Pink");
+		red = new Continent(0, "Red");
+		black = new Continent(0, "Black");
+		yellow = new Continent(0, "Yellow");
+		
+		
 		fillCountries();
+		/*//Add this to a test?
+		System.out.println(blue.toString());
+		System.out.println("\n"+green.toString());
+		System.out.println("\n"+orange.toString());
+		System.out.println("\n"+pink.toString());
+		System.out.println("\n"+red.toString());
+		System.out.println("\n"+black.toString());
+		System.out.println("\n"+yellow.toString());*/
 	}
 
 	private void fillCountries() {
 		// this method is going to suck
-		Continents blue = new Continents(null, null, null); 
-		Continents green = new Continents(null, null, null);
-		Continents orange = new Continents(null, null, null);
-		Continents pink = new Continents(null, null, null);
-		Continents red = new Continents(null, null, null);
-		Continents yellow = new Continents(null, null, null);
-		Continents black = new Continents(null, null, null);
-		
-		//blue
 		countries[0] = new Country("The Wall", 6.5, 3, blue);
 		countries[1] = new Country("Skagos", 10, 2.5, blue);
 		countries[2] = new Country("Wolfswood", 3, 7, blue);
@@ -31,25 +45,19 @@ public class Map {
 		countries[6] = new Country("The Flint Cliffs", 2.5, 13.75,
 				blue);
 		countries[7] = new Country("The Grey Cliffs", 7.5, 5.5, blue);
-		countries[8] = new Country("The Vale", 6.5, 16, blue);
-		
-		//green
+		countries[8] = new Country("The Vale", 6.5, 16, green);
 		countries[9] = new Country("Riverlands", 3.5, 18.5, green);
 		countries[10] = new Country("Iron Islands", 1.5, 17, green);
 		countries[11] = new Country("Westerlands", 3, 21.25, green);
 		countries[12] = new Country("Crownlands", 6.25, 20.5, green);
-		countries[13] = new Country("The Reach", 5.25, 23.5, green);
-		countries[14] = new Country("Shield Lands", 2.5, 25, green);
-		
-		//orange
+		countries[13] = new Country("The Reach", 5.25, 23.5, orange);
+		countries[14] = new Country("Shield Lands", 2.5, 25, orange);
 		countries[15] = new Country("Whispering Sound", 1.75, 28.5,
 				orange);
 		countries[16] = new Country("Storm Lands", 7.75, 25, orange);
 		countries[17] = new Country("Red Mountains", 4.75, 28.5,
 				orange);
 		countries[18] = new Country("Dorne", 6, 30.5, orange);
-		
-		//pink
 		countries[19] = new Country("Braavosi Coastland", 13.5, 16.5,
 				pink);
 		countries[20] = new Country("Andalos", 13.25, 20.5, pink);
@@ -63,16 +71,12 @@ public class Map {
 				pink);
 		countries[25] = new Country("The Disputed Lands", 14, 29.5,
 				pink);
-		
-		//red
 		countries[26] = new Country("Rhoynian Veld", 19, 24.75, red);
 		countries[27] = new Country("Sar Mell", 18.75, 29.52, red);
 		countries[28] = new Country("Western Waste", 21, 27, red);
 		countries[29] = new Country("Sea of Sighs", 21.5, 29.75, red);
 		countries[30] = new Country("Elyria", 23, 33.5, red);
 		countries[31] = new Country("Valyria", 22, 37.5, red);
-		
-		//yellow
 		countries[32] = new Country("Sarnor", 22, 17.5, yellow);
 		countries[33] = new Country("Parched Fields", 23.25, 23,
 				yellow);
@@ -90,8 +94,6 @@ public class Map {
 		countries[40] = new Country("Realms of Jhogrvin", 36.7, 16.5,
 				yellow);
 		countries[41] = new Country("Ibben", 32.80, 8, yellow);
-		
-		//black
 		countries[42] = new Country("Painted Mountains", 24.25, 27.75,
 				black);
 		countries[43] = new Country("Slaver's Bay", 28, 30.25, black);
