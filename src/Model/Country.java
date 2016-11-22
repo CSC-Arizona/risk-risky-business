@@ -139,14 +139,8 @@ public class Country extends Observable{
 		return name;
 	}
 
-
-<<<<<<< HEAD
-	public Faction returnMyOwnersFaction() {
-=======
 	public Faction returnMyOwnersFaction()
 	{
-		
->>>>>>> 67b93362bc7eaa49ffffba1ba0c6a7995318666f
 		return this.getOccupier().getFaction();
 	}
 	
