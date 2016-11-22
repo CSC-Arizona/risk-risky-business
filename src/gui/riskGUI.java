@@ -562,7 +562,7 @@ public class riskGUI extends JFrame {
 					}
 				}
 				
-			} else if (theGame.isAttackPhase()) {
+			} else if (theGame.isPlayPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
 				// player can reinforce countries
