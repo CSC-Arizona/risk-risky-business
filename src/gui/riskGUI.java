@@ -39,6 +39,7 @@ import javax.swing.event.AncestorListener;
 
 import Model.AI;
 import Model.Country;
+import Model.Faction;
 import Model.Game;
 import Model.Map;
 import songplayer.SongPlayer;
@@ -111,11 +112,9 @@ public class riskGUI extends JFrame {
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
 		ArrayList<Player> players = theGame.getPlayers();
-		int i=0;
-		for(Player p : players){
-			p.setFaction(houses.get(i));
-			p.setName(playerNames.get(i));
-			i++;
+		for(int i=0; i<humans; i++){
+			players.get(i).setFaction(houses.get(i));
+			players.get(i).setName(playerNames.get(i));
 		}
 	}
 
@@ -135,7 +134,21 @@ public class riskGUI extends JFrame {
 		System.out.println("What will be your houses?");
 		houses = new ArrayList<String>();
 		for(int i=0; i<humans; i++){
-			houses.add(JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings"));
+			Boolean illegalName=true;
+			String house="";
+			while(illegalName==true){
+				Boolean check=true;
+				house =JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
+				for(int j=0; j<houses.size();j++){
+					if(houses.get(j).compareTo(house)==0){
+						check=false;
+						JOptionPane.showMessageDialog(riskGUI.this, "Faction has already been chosen. Please pick another.");
+					}
+				}
+				if(check)
+					illegalName=false;
+			}
+			houses.add(house);
 		}
 		splashNames();
 	}
@@ -366,9 +379,24 @@ public class riskGUI extends JFrame {
 			{
 				if(country.getOccupier() != null)
 				{
-					String ownerFaction = country.returnMyOwnersFaction();
-					
-					
+					Faction ownerFaction = country.returnMyOwnersFaction();
+					switch(ownerFaction)
+					{
+					case STARK:
+						g2.drawImage(stark.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						break;
+					case TARGARYEN:
+						g2.drawImage(targaryen.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						break;
+					case LANNISTER:
+						g2.drawImage(lannister.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						break;
+					case DOTHRAKI:
+						g2.drawImage(dothraki.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+					default:
+						break;
+					}
+
 				}
 			}
 			
@@ -412,8 +440,6 @@ public class riskGUI extends JFrame {
 		public void update(Observable arg0, Object arg1)
 		{
 			repaint();
-
-			
 		}
 
 	}
