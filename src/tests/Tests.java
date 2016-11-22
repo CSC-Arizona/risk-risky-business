@@ -75,7 +75,7 @@ public class Tests {
 	@Test
 	public void testMap(){
 		// 100% Coverage
-		Map map = new Map();
+		Map map = Map.getInstance();
 		
 		assertEquals(map.getCountries()[0].getName(), "The Wall" );
 	}

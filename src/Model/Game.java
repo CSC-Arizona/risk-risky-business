@@ -72,6 +72,7 @@ public class Game {
 		// doNextThing();
 
 	}
+	
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
@@ -144,6 +145,10 @@ public class Game {
 
 	public Map getGameMap() {
 		return gameMap;
+	}
+	
+	public ArrayList<Player> getPlayers(){
+		return players;
 	}
 
 	public Player nextPlayer() {
