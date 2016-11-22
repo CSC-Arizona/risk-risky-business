@@ -39,6 +39,7 @@ import javax.swing.event.AncestorListener;
 
 import Model.AI;
 import Model.Country;
+import Model.Faction;
 import Model.Game;
 import Model.Map;
 import songplayer.SongPlayer;
@@ -378,7 +379,7 @@ public class riskGUI extends JFrame {
 			{
 				if(country.getOccupier() != null)
 				{
-					String ownerFaction = country.returnMyOwnersFaction();
+					Faction ownerFaction = country.returnMyOwnersFaction();
 					
 					
 				}
