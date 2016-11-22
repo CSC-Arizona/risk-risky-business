@@ -392,7 +392,6 @@ public class riskGUI extends JFrame {
 
 		}
 
-
 		private void drawCurrentPlayer(Graphics2D g2) {
 			Player currentPlayer = theGame.getCurrentPlayer();
 			if(currentPlayer != null)
@@ -410,6 +409,7 @@ public class riskGUI extends JFrame {
 					break;
 				case DOTHRAKI:
 					g2.drawImage(dothraki.getImage(), 0, 0, 100, 100, null);
+					break;
 				case WHITEWALKERS:
 					g2.drawImage(whiteWalkers.getImage(), 0, 0, 100, 100,null);
 					break;
