@@ -87,13 +87,30 @@ public class riskGUI extends JFrame {
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
-		splash = true;
+		//splash = true;
+		splash = false; //for default mode
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash();
+		//setUpSplash();
+		defaultMode();
 
+	}
+
+	private void defaultMode() {
+		
+		drawingPanel = new BoardPanel();
+		theGame = Game.getInstance(2, 2);
+		setUpDrawingPanel();
+		ArrayList<Player> players = theGame.getPlayers();
+		players.get(0).setFaction("Stark");
+		players.get(1).setFaction("Dothraki");
+		players.get(2).setFaction("White Walkers");
+		players.get(3).setFaction("Lannister");
+		players.get(0).setName("Player1");
+		players.get(1).setName("Player2");
+		drawingPanel.repaint();
 	}
 
 	private void setUpHouseArray() {
