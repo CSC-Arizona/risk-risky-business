@@ -76,6 +76,7 @@ public class riskGUI extends JFrame {
 	private int ai = -1;
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
+	private boolean decisionMakingPhase = false;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -467,6 +468,7 @@ public class riskGUI extends JFrame {
 			this.setSize(xWidth * 10, yHeight * 10);
 			centerPanel.add(new JLabel("Select a Country"));
 			makeAMoveButton = new JButton("Make your move!");
+			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
 		}
 
@@ -530,13 +532,21 @@ public class riskGUI extends JFrame {
 			// step through all countries until the same name as the
 			// actionCommand, then return that country
 
-			for (Country country : theGame.getGameMap().getCountries()) {
-				if (country.getName().compareTo(e.getActionCommand()) == 0)
-					theGame.setSelectedCountry(country);
-			}
+				for (Country country : theGame.getGameMap().getCountries()) {
+					if (country.getName().compareTo(e.getActionCommand()) == 0)
+						theGame.setSelectedCountry(country);
+				}
+
+		}
+	}//end class
+	
+	private class makeMoveListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
 			theGame.placeArmies(theGame.getSelectedCountry());
 
-			drawingPanel.repaint();
+			
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -549,10 +559,11 @@ public class riskGUI extends JFrame {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
 				// player can reinforce countries
-			}
-
+			}//end else if
+			theGame.setSelectedCountry(null);
+			
 		}
-
+		
 	}
 
 	private class newGameListener implements ActionListener {
