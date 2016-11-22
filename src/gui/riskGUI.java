@@ -111,11 +111,9 @@ public class riskGUI extends JFrame {
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
 		ArrayList<Player> players = theGame.getPlayers();
-		int i=0;
-		for(Player p : players){
-			p.setFaction(houses.get(i));
-			p.setName(playerNames.get(i));
-			i++;
+		for(int i=0; i<humans; i++){
+			players.get(i).setFaction(houses.get(i));
+			players.get(i).setName(playerNames.get(i));
 		}
 	}
 
@@ -135,7 +133,21 @@ public class riskGUI extends JFrame {
 		System.out.println("What will be your houses?");
 		houses = new ArrayList<String>();
 		for(int i=0; i<humans; i++){
-			houses.add(JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings"));
+			Boolean illegalName=true;
+			String house="";
+			while(illegalName==true){
+				Boolean check=true;
+				house =JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
+				for(int j=0; j<houses.size();j++){
+					if(houses.get(j).compareTo(house)==0){
+						check=false;
+						JOptionPane.showMessageDialog(riskGUI.this, "Faction has already been chosen. Please pick another.");
+					}
+				}
+				if(check)
+					illegalName=false;
+			}
+			houses.add(house);
 		}
 		splashNames();
 	}
