@@ -87,14 +87,14 @@ public class riskGUI extends JFrame {
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
-		//splash = true;
-		splash = false; //for default mode
+		splash = true;  //comment me out for default mode
+		//splash = false; //comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		//setUpSplash();
-		defaultMode();
+		setUpSplash();  //comment me out for default mode
+		//defaultMode();  //comment me out for splash screens
 
 	}
 

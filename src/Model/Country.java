@@ -7,8 +7,6 @@ import java.util.Observable;
 
 import javax.swing.JButton;
 
-import com.sun.medialib.mlib.Constants;
-
 /*
  * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
  * 	File:		Country.java

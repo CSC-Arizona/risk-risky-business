@@ -89,11 +89,7 @@ public abstract class Player {
 		availTroops -= troops;
 
 	}
-	
-	public ArrayList<Card> getCards(){
-		return myCards;
-	}
-	
+
 	public Faction getFaction()
 	{
 		return faction;
