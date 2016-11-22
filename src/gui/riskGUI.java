@@ -300,9 +300,9 @@ public class riskGUI extends JFrame {
 		stark = new ImageIcon("stark.jpg");
 		targaryen = new ImageIcon("targaryen.jpg");
 		lannister = new ImageIcon("lannister.jpg");
-		whiteWalkers = new ImageIcon();
+		whiteWalkers = new ImageIcon("whiteWalkers.jpg");
 		dothraki = new ImageIcon("dothraki.jpg");
-		wildlings = new ImageIcon();
+		wildlings = new ImageIcon("wildlings.jpg");
 		
 	}
 
@@ -383,16 +383,16 @@ public class riskGUI extends JFrame {
 					switch(ownerFaction)
 					{
 					case STARK:
-						g2.drawImage(stark.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 					default:
 						break;
 					}
@@ -544,7 +544,13 @@ public class riskGUI extends JFrame {
 			} else if (theGame.isAttackPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
-				// player can reinforce countries
+				if(theGame.getCurrentPlayer() instanceof AI)
+				{
+					while(theGame.getCurrentPlayer() instanceof AI)
+					{
+						theGame.aiReinforcePlacement();
+					}
+				}
 			}
 
 		}
@@ -555,7 +561,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.startGame(0);
+			theGame.newGame();
 
 		}
 
