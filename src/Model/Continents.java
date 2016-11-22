@@ -5,6 +5,17 @@ package Model;
  */
 
 
-public enum Continents {
-	BLUE, GREEN, ORANGE, PINK, RED, YELLOW, BLACK;
+public class Continent {
+// 	BLUE, GREEN, ORANGE, PINK, RED, YELLOW, BLACK;
+	private String name; 
+	ArrayList<Country> countries
+	
+	public Continent(String name, ArrayList<Country> countries){ 
+		this.name = name;
+	}
+	
+	public boolean continentBonus(){
+		
+	}
+	
 }
