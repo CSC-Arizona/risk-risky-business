@@ -111,7 +111,6 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
-		setUpGameStatsPanel();
 		ArrayList<Player> players = theGame.getPlayers();
 		for(int i=0; i<humans; i++){
 			players.get(i).setFaction(houses.get(i));
@@ -321,18 +320,6 @@ public class riskGUI extends JFrame {
 		wildlings = new ImageIcon("wildlings.jpg");
 		
 	}
-
-	private void setUpGameStatsPanel() {
-		// Currently there to print nothing useful, but see what the game board
-		// will look like
-		JPanel gameStatsPanel = new JPanel();
-		gameStatsPanel.setLayout(new GridLayout(1, 6));
-		gameStatsPanel.setPreferredSize(new Dimension(100, 100));
-		gameStatsPanel.setBackground(Color.pink);
-		this.add(gameStatsPanel, BorderLayout.EAST);
-	}// end
-		// setUpGameStatsPanel
-
 	// draws buttons over the name of all of the countries
 
 	private void drawCountryButtons() {
