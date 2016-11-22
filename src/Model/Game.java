@@ -7,7 +7,7 @@ public class Game {
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, attackPhase, reinforcePhase;
+	private boolean placePhase, playPhase, reinforcePhase;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
@@ -19,7 +19,7 @@ public class Game {
 		totalPlayers = numOfHumanPlayers+numOfAIPlayers;
 		armiesPlaced = 0;
 		placePhase = true;
-		attackPhase = false;
+		playPhase = false;
 		reinforcePhase = false;
 		playerLocation = 0;
 		numRedemptions = 0;
@@ -106,13 +106,13 @@ public class Game {
 										// with 35 units, and 3 players
 
 		{
-			placePhase = false;
-			reinforcePhase = true;
+	//		placePhase = false;
+	//		reinforcePhase = true;
 
-			if (countryToPlace.getOccupier().equals(players.get(0))) {
+			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
-				System.out.println("Reinforced " + selectedCountry.getName());
+				System.out.println("Reinforced " + armiesPlaced);//selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
 
@@ -121,7 +121,7 @@ public class Game {
 
 		} else {
 			placePhase = false;
-			attackPhase = true;
+			playPhase = true;
 
 		}
 
@@ -172,8 +172,8 @@ public class Game {
 		return placePhase;
 	}
 
-	public boolean isAttackPhase() {
-		return attackPhase;
+	public boolean isPlayPhase() {
+		return playPhase;
 	}
 
 	public boolean isReinforcePhase() {

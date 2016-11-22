@@ -338,7 +338,6 @@ public class riskGUI extends JFrame {
 	}
 
 
-
 	// draws buttons over the name of all of the countries
 	private void drawCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
@@ -543,6 +542,7 @@ public class riskGUI extends JFrame {
 			this.setSize(xWidth * 18, yHeight * 12);
 			centerPanel.add(new JLabel("Select a Country"));
 			makeAMoveButton = new JButton("Make your move!");
+			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
 			makeAMoveButton.addActionListener(new makeMoveListener());
 		}
@@ -577,11 +577,11 @@ public class riskGUI extends JFrame {
 			else {
 				centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
-
 				centerPanel.add(new JLabel("" + curr.getForcesVal()),
 						BorderLayout.SOUTH);
 
-
+				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
+				centerPanel.add(tradeButton, BorderLayout.WEST);
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
 				neighPanel.setLayout(new GridLayout(neighs.size(), 0));
@@ -647,7 +647,6 @@ public class riskGUI extends JFrame {
 				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
-
 			drawingPanel.repaint();
 		}
 	}// end class
@@ -656,11 +655,9 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
 			theGame.placeArmies(theGame.getSelectedCountry());
 
 			drawingPanel.repaint();
-
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -670,7 +667,7 @@ public class riskGUI extends JFrame {
 					}
 				}
 				
-			} else if (theGame.isAttackPhase()) {
+			} else if (theGame.isPlayPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
 
@@ -687,8 +684,7 @@ public class riskGUI extends JFrame {
 
 		}// end actionPerformed
 
-	}
-
+	}//end ckass
 
 	
 	private class newGameListener implements ActionListener {
@@ -697,9 +693,9 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			theGame.newGame();
 
-		}
+		}//end action performed
 
-	}
+	}//end game listener
 
 	private class GameTypeListener implements ActionListener {
 
