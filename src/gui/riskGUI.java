@@ -282,7 +282,7 @@ public class riskGUI extends JFrame {
 
 	private void setUpImages()
 	{
-		// TODO Auto-generated method stub
+
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
 		stark = new ImageIcon("stark.jpg");
 		targaryen = new ImageIcon("targaryen.jpg");

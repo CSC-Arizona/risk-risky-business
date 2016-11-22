@@ -12,7 +12,8 @@ public class Map {
 	private Continent red;
 	private Continent black;
 	private Continent yellow;
-	public Map() {
+	private static Map gameMap;
+	private Map() {
 		blue = new Continent(0, "Blue");
 		green = new Continent(0, "Green");
 		orange = new Continent(0, "Orange");
@@ -31,6 +32,14 @@ public class Map {
 		System.out.println("\n"+red.toString());
 		System.out.println("\n"+black.toString());
 		System.out.println("\n"+yellow.toString());*/
+	}
+	
+	public static Map getInstance()
+	{
+		if(gameMap == null)
+			gameMap = new Map();
+		
+		return gameMap;
 	}
 
 	private void fillCountries() {
@@ -287,6 +296,8 @@ public class Map {
 	public Country[] getCountries() {
 		return countries;
 	}
+
+
 
 }
  
