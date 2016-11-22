@@ -22,6 +22,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -38,6 +39,7 @@ import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
 
 import Model.AI;
+import Model.Card;
 import Model.Country;
 import Model.Faction;
 import Model.Game;
@@ -75,12 +77,11 @@ public class riskGUI extends JFrame {
 	// my new favorite font...
 	private Font font = new Font("Goudy Old Style", Font.BOLD, 40);
 	private String gameType;
-	private Player nextPlayer;
+	private Player nextPlayer, currPlayer;
 	private int humans;
 	private int ai = -1;
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
-	private boolean decisionMakingPhase = false;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -116,6 +117,7 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
+
 		ArrayList<Player> players = theGame.getPlayers();
 		for (int i = 0; i < humans; i++) {
 			players.get(i).setFaction(houses.get(i));
@@ -334,9 +336,14 @@ public class riskGUI extends JFrame {
 		wildlings = new ImageIcon("wildlings.jpg");
 
 	}
+<<<<<<< HEAD
 
 	// draws buttons over the name of all of the countries
+=======
+>>>>>>> b9da9299a4f043a9422c88d7ebf70d602904338d
 
+
+	// draws buttons over the name of all of the countries
 	private void drawCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
 			// The Make button method has the same logic that was previously
@@ -388,6 +395,7 @@ public class riskGUI extends JFrame {
 
 		}
 
+<<<<<<< HEAD
 		private void drawCurrentPlayer(Graphics2D g2) {
 			if (theGame.getCurrentPlayer() != null) {
 				Faction playersFact = theGame.getCurrentPlayer().getFaction();
@@ -416,6 +424,8 @@ public class riskGUI extends JFrame {
 
 		// draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2) {
+
+
 			Map temp = Map.getInstance();
 			Country[] allCountries = temp.getCountries();
 			for (Country country : allCountries) {
@@ -423,6 +433,7 @@ public class riskGUI extends JFrame {
 					Faction ownerFaction = country.returnMyOwnersFaction();
 					switch (ownerFaction) {
 					case STARK:
+
 						g2.drawImage(stark.getImage(), (int) country.getX()
 								* xWidth, (int) country.getY() * yHeight + 5,
 								30, 30, null);
@@ -451,6 +462,7 @@ public class riskGUI extends JFrame {
 						g2.drawImage(wildlings.getImage(), (int) country.getX()
 								* xWidth, (int) country.getY() * yHeight + 5,
 								30, 30, null);
+
 					}
 
 				}
@@ -458,8 +470,10 @@ public class riskGUI extends JFrame {
 
 		}
 
+
 		// draws a 40X40 grid over the risk map. Used for determining where to
 		// place buttons.
+
 
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
@@ -519,33 +533,51 @@ public class riskGUI extends JFrame {
 		public CountryPanel() {
 			this.setLayout(new BorderLayout());
 			centerPanel = new JPanel();
-			this.setLocation(17 * xWidth, 3 * yHeight);
-			this.setSize(xWidth * 10, yHeight * 10);
+			//this.setForeground(Color.OPAQUE);
+			this.setLocation(12 * xWidth, 3 * yHeight);
+			this.setSize(xWidth * 18, yHeight * 12);
 			centerPanel.add(new JLabel("Select a Country"));
 			makeAMoveButton = new JButton("Make your move!");
-			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
 		}
 
 		public void updatePanel() {
+			//ArrayList<Card> cards = currPlayer.getCards();
 			this.remove(centerPanel);
+			
+			centerPanel = new JPanel();
+			JButton tradeButton = new JButton("Trade in Cards");
+
 			this.remove(makeAMoveButton);
 			centerPanel.removeAll();
 
-			this.setLocation(17 * xWidth, 3 * yHeight);
-			this.setSize(xWidth * 10, yHeight * 10);
-
+			this.setLocation(12 * xWidth, 3 * yHeight);
+			this.setSize(xWidth * 18, yHeight * 12);
+			
+			Iterator itr;
+			Card card; 
+			//for(itr = cards.listIterator(); itr.hasNext();card = (Card) itr.next()){ 
+				//Add the JCheckBox for the card
+				
+			//}
+			
 			Country curr = theGame.getSelectedCountry();
 			if (curr == null) {
 				centerPanel.add(new JLabel("Select a Country"));
+				centerPanel.add(tradeButton, BorderLayout.SOUTH);
 				this.add(centerPanel);
 			} // end if
 			else {
 				centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
+<<<<<<< HEAD
 				centerPanel.add(new JLabel("" + curr.getForcesVal()),
 						BorderLayout.SOUTH);
 
+=======
+				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
+				centerPanel.add(tradeButton, BorderLayout.NORTH);
+>>>>>>> b9da9299a4f043a9422c88d7ebf70d602904338d
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
 				neighPanel.setLayout(new GridLayout(neighs.size(), 0));
@@ -556,10 +588,24 @@ public class riskGUI extends JFrame {
 				this.add(makeAMoveButton, BorderLayout.SOUTH);
 			}
 
+			tradeButton.addActionListener(new TradeClickListener());
 			centerPanel.revalidate();
 			centerPanel.repaint();
 
 		}// end
+
+		private class TradeClickListener implements ActionListener {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("You wish to trade.");
+				
+				ArrayList cards = new ArrayList<Card>();
+				theGame.redeemCards(nextPlayer, cards);
+				//centerPanel.updatePanel();
+				repaint();
+			}
+		}
+		
 	}// end countryPanel
 
 	// help button listener for opening the about
@@ -597,6 +643,7 @@ public class riskGUI extends JFrame {
 				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
+<<<<<<< HEAD
 			drawingPanel.repaint();
 		}
 	}// end class
@@ -607,6 +654,11 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			theGame.placeArmies(theGame.getSelectedCountry());
 
+=======
+			theGame.placeArmies(theGame.getSelectedCountry());
+
+			drawingPanel.repaint();
+>>>>>>> b9da9299a4f043a9422c88d7ebf70d602904338d
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -619,6 +671,7 @@ public class riskGUI extends JFrame {
 			} else if (theGame.isAttackPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
+<<<<<<< HEAD
 				// player can reinforce countries
 
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -633,7 +686,21 @@ public class riskGUI extends JFrame {
 		}// end actionPerformed
 
 	}
+=======
+				if(theGame.getCurrentPlayer() instanceof AI)
+				{
+					while(theGame.getCurrentPlayer() instanceof AI)
+					{
+						theGame.aiReinforcePlacement();
+					}
+				}
+			}
 
+		}
+>>>>>>> b9da9299a4f043a9422c88d7ebf70d602904338d
+
+	}
+	
 	private class newGameListener implements ActionListener {
 
 		@Override
