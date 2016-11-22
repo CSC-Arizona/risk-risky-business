@@ -113,7 +113,6 @@ public class riskGUI extends JFrame {
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
 
-		setUpGameStatsPanel();
 		ArrayList<Player> players = theGame.getPlayers();
 		for(int i=0; i<humans; i++){
 			players.get(i).setFaction(houses.get(i));
@@ -324,16 +323,6 @@ public class riskGUI extends JFrame {
 		
 	}
 
-	private void setUpGameStatsPanel() {
-		// Currently there to print nothing useful, but see what the game board
-		// will look like
-		JPanel gameStatsPanel = new JPanel();
-		gameStatsPanel.setLayout(new GridLayout(1, 6));
-		gameStatsPanel.setPreferredSize(new Dimension(100, 100));
-		gameStatsPanel.setBackground(Color.pink);
-		this.add(gameStatsPanel, BorderLayout.EAST);
-	}// end
-		// setUpGameStatsPanel
 
 	// draws buttons over the name of all of the countries
 	private void drawCountryButtons() {
@@ -489,7 +478,7 @@ public class riskGUI extends JFrame {
 		}
 
 		public void updatePanel() {
-			ArrayList cards = currPlayer.getCards();
+			//ArrayList<Card> cards = currPlayer.getCards();
 			this.remove(centerPanel);
 			
 			centerPanel = new JPanel();
@@ -498,16 +487,15 @@ public class riskGUI extends JFrame {
 			this.remove(makeAMoveButton);
 			centerPanel.removeAll();
 
-
 			this.setLocation(12 * xWidth, 3 * yHeight);
 			this.setSize(xWidth * 18, yHeight * 12);
 			
 			Iterator itr;
 			Card card; 
-			for(itr = cards.listIterator(); itr.hasNext();card = (Card) itr.next()){ 
+			//for(itr = cards.listIterator(); itr.hasNext();card = (Card) itr.next()){ 
 				//Add the JCheckBox for the card
 				
-			}
+			//}
 			
 			Country curr = theGame.getSelectedCountry();
 			if (curr == null) {
