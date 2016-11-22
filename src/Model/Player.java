@@ -93,6 +93,11 @@ public abstract class Player {
 	{
 		return faction;
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
 	public abstract void rearrangeTroops();

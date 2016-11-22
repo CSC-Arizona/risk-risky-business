@@ -50,20 +50,24 @@ import Model.Player;
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
 
-	public static void main(String[] args) throws UnknownHostException, IOException {
+	public static void main(String[] args) throws UnknownHostException,
+			IOException {
 		new riskGUI().setVisible(true);
 	}
 
 	private static BoardPanel drawingPanel;
 	private JMenuBar menu;
-	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	private int width = java.awt.GraphicsEnvironment
+			.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+	private int height = java.awt.GraphicsEnvironment
+			.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
-	//private Map map; dont think this is needed anymore cause it is stored
+	// private Map map; dont think this is needed anymore cause it is stored
 	// within theGame
 	private Game theGame;
-	private ImageIcon gameBoard, stark, targaryen, lannister, whiteWalkers, dothraki, wildlings;
+	private ImageIcon gameBoard, stark, targaryen, lannister, whiteWalkers,
+			dothraki, wildlings;
 	private JButton checkButton;
 	private CountryPanel currCountryPanel;
 	private JButton moveButton;
@@ -82,10 +86,11 @@ public class riskGUI extends JFrame {
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
 		splash = true;
+		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpSplash();
-		
+
 	}
 
 	private void setUpSplash() {
@@ -114,7 +119,7 @@ public class riskGUI extends JFrame {
 		setUpDrawingPanel();
 
 		ArrayList<Player> players = theGame.getPlayers();
-		for(int i=0; i<humans; i++){
+		for (int i = 0; i < humans; i++) {
 			players.get(i).setFaction(houses.get(i));
 			players.get(i).setName(playerNames.get(i));
 		}
@@ -125,11 +130,11 @@ public class riskGUI extends JFrame {
 		possHouses.add("White Walkers");
 		possHouses.add("Dothraki");
 		possHouses.add("Wildlings");
-		for(String h : houses){
+		for (String h : houses) {
 			possHouses.remove(h);
 		}
-		int i=0;
-		for(int j=humans; j<(humans+ai);j++){
+		int i = 0;
+		for (int j = humans; j < (humans + ai); j++) {
 			players.get(j).setFaction(possHouses.get(i));
 			i++;
 		}
@@ -139,8 +144,9 @@ public class riskGUI extends JFrame {
 		// TODO Auto-generated method stub
 		System.out.println("What are the players names?");
 		playerNames = new ArrayList<String>();
-		for(int i=0; i<humans; i++){
-			playerNames.add(JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s Name?"));
+		for (int i = 0; i < humans; i++) {
+			playerNames.add(JOptionPane.showInputDialog("What will be Player "
+					+ (i + 1) + "'s Name?"));
 		}
 		splashLoading2();
 	}
@@ -150,20 +156,25 @@ public class riskGUI extends JFrame {
 		// TODO Auto-generated method stub
 		System.out.println("What will be your houses?");
 		houses = new ArrayList<String>();
-		for(int i=0; i<humans; i++){
-			Boolean illegalName=true;
-			String house="";
-			while(illegalName==true){
-				Boolean check=true;
-				house =JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
-				for(int j=0; j<houses.size();j++){
-					if(houses.get(j).compareTo(house)==0){
-						check=false;
-						JOptionPane.showMessageDialog(riskGUI.this, "Faction has already been chosen. Please pick another.");
+		for (int i = 0; i < humans; i++) {
+			Boolean illegalName = true;
+			String house = "";
+			while (illegalName == true) {
+				Boolean check = true;
+				house = JOptionPane
+						.showInputDialog("What will be Player "
+								+ (i + 1)
+								+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
+				for (int j = 0; j < houses.size(); j++) {
+					if (houses.get(j).compareTo(house) == 0) {
+						check = false;
+						JOptionPane
+								.showMessageDialog(riskGUI.this,
+										"Faction has already been chosen. Please pick another.");
 					}
 				}
-				if(check)
-					illegalName=false;
+				if (check)
+					illegalName = false;
 			}
 			houses.add(house);
 		}
@@ -174,14 +185,18 @@ public class riskGUI extends JFrame {
 		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("How many players?");
-		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
-		while (ai == -1){
-			ai = Integer.parseInt(JOptionPane.showInputDialog("How Many AI Players?"));
-			if((ai + humans) >6){
-				JOptionPane.showMessageDialog(riskGUI.this, "Illegal number of players. Must have 6 or less total players");
-				ai=-1;
+		humans = Integer.parseInt(JOptionPane
+				.showInputDialog("How Many Human Players?"));
+		while (ai == -1) {
+			ai = Integer.parseInt(JOptionPane
+					.showInputDialog("How Many AI Players?"));
+			if ((ai + humans) > 6) {
+				JOptionPane
+						.showMessageDialog(riskGUI.this,
+								"Illegal number of players. Must have 6 or less total players");
+				ai = -1;
 			}
-				
+
 		}
 		splashHouses();
 	}
@@ -281,8 +296,8 @@ public class riskGUI extends JFrame {
 
 	private void setUpDrawingPanel() {
 		// if(drawingPanel==null)
-		setUpImages();
 		
+
 		// System.out.println(gameBoard.toString());
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
@@ -310,8 +325,7 @@ public class riskGUI extends JFrame {
 
 	}
 
-	private void setUpImages()
-	{
+	private void setUpImages() {
 
 		gameBoard = new ImageIcon("GoTMapRisk.jpg");
 		stark = new ImageIcon("stark.jpg");
@@ -320,8 +334,9 @@ public class riskGUI extends JFrame {
 		whiteWalkers = new ImageIcon("whiteWalkers.jpg");
 		dothraki = new ImageIcon("dothraki.jpg");
 		wildlings = new ImageIcon("wildlings.jpg");
-		
+
 	}
+
 
 
 	// draws buttons over the name of all of the countries
@@ -358,7 +373,8 @@ public class riskGUI extends JFrame {
 				tmp = splashScreen.getImage();
 			else
 				tmp = gameBoard.getImage();
-			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(), drawingPanel.getHeight(), null);
+			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(),
+					drawingPanel.getHeight(), null);
 
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth() / 40);
@@ -370,43 +386,98 @@ public class riskGUI extends JFrame {
 			}
 
 			drawFactions(g2);
+			if(theGame != null)
+				drawCurrentPlayer(g2);
 			// drawGridAndNumbers(g2);
 
 		}
 
-		// draws a 40X40 grid over the risk map. Used for determining where to
-		// place buttons.
 
-		private void drawFactions(Graphics2D g2)
-		{
+		private void drawCurrentPlayer(Graphics2D g2) {
+			Player currentPlayer = theGame.getCurrentPlayer();
+			if(currentPlayer != null)
+			{
+				Faction playersFact = theGame.getCurrentPlayer().getFaction();
+				switch (playersFact) {
+				case STARK:
+					g2.drawImage(stark.getImage(), 0, 0, 100, 100, null);
+					break;
+				case TARGARYEN:
+					g2.drawImage(targaryen.getImage(), 0, 0, 100, 100, null);
+					break;
+				case LANNISTER:
+					g2.drawImage(lannister.getImage(), 0, 0, 100, 100, null);
+					break;
+				case DOTHRAKI:
+					g2.drawImage(dothraki.getImage(), 0, 0, 100, 100, null);
+				case WHITEWALKERS:
+					g2.drawImage(whiteWalkers.getImage(), 0, 0, 100, 100,null);
+					break;
+				case WILDLINGS:
+					g2.drawImage(wildlings.getImage(), 0, 0, 100, 100, null);
+					break;
+					default:
+					break;
+				}
+			}
+			g2.setColor(Color.WHITE);
+			g2.setFont(new Font("Courier",Font.BOLD,20));
+			g2.drawString("Current Player: " + currentPlayer.getName(), 0, 110);
+
+		}
+
+		// draws factions if a country is occupied
+		private void drawFactions(Graphics2D g2) {
+
+
 			Map temp = Map.getInstance();
 			Country[] allCountries = temp.getCountries();
-			for(Country country : allCountries)
-			{
-				if(country.getOccupier() != null)
-				{
+			for (Country country : allCountries) {
+				if (country.getOccupier() != null) {
 					Faction ownerFaction = country.returnMyOwnersFaction();
-					switch(ownerFaction)
-					{
+					switch (ownerFaction) {
 					case STARK:
-						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+
+						g2.drawImage(stark.getImage(), (int) country.getX()
+								* xWidth, (int) country.getY() * yHeight + 5,
+								30, 30, null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(targaryen.getImage(), (int) country.getX()
+								* xWidth, (int) country.getY() * yHeight + 5,
+								30, 30, null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(lannister.getImage(), (int) country.getX()
+								* xWidth, (int) country.getY() * yHeight + 5,
+								30, 30, null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
-					default:
+						g2.drawImage(dothraki.getImage(), (int) country.getX()
+								* xWidth, (int) country.getY() * yHeight + 5,
+								30, 30, null);
+					case WHITEWALKERS:
+						g2.drawImage(whiteWalkers.getImage(),
+								(int) country.getX() * xWidth,
+								(int) country.getY() * yHeight + 5, 30, 30,
+								null);
 						break;
+					case WILDLINGS:
+						g2.drawImage(wildlings.getImage(), (int) country.getX()
+								* xWidth, (int) country.getY() * yHeight + 5,
+								30, 30, null);
+
 					}
 
 				}
 			}
-			
+
 		}
+
+
+		// draws a 40X40 grid over the risk map. Used for determining where to
+		// place buttons.
+
 
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
@@ -440,18 +511,15 @@ public class riskGUI extends JFrame {
 			}
 		}
 
-
-		//update for drawing factions over occupied functions
+		// update for drawing factions over occupied functions
 		@Override
-		public void update(Observable arg0, Object arg1)
-		{
+		public void update(Observable arg0, Object arg1) {
 			repaint();
 		}
 
 	}
 
-	public static BoardPanel getBoardPanel()
-	{
+	public static BoardPanel getBoardPanel() {
 		return drawingPanel;
 	}
 
@@ -475,6 +543,7 @@ public class riskGUI extends JFrame {
 			centerPanel.add(new JLabel("Select a Country"));
 			makeAMoveButton = new JButton("Make your move!");
 			this.add(centerPanel);
+			makeAMoveButton.addActionListener(new makeMoveListener());
 		}
 
 		public void updatePanel() {
@@ -507,8 +576,11 @@ public class riskGUI extends JFrame {
 			else {
 				centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
-				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
-				centerPanel.add(tradeButton, BorderLayout.NORTH);
+
+				centerPanel.add(new JLabel("" + curr.getForcesVal()),
+						BorderLayout.SOUTH);
+
+
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
 				neighPanel.setLayout(new GridLayout(neighs.size(), 0));
@@ -545,13 +617,18 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().compareTo("rules") == 0) {
 
-				JOptionPane.showMessageDialog(riskGUI.this, "Fill this out later, maybe with a hyperlink to the rules",
-						"Rules", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane
+						.showMessageDialog(
+								riskGUI.this,
+								"Fill this out later, maybe with a hyperlink to the rules",
+								"Rules", JOptionPane.INFORMATION_MESSAGE);
 			} else
-				JOptionPane.showMessageDialog(riskGUI.this,
-						"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
-								+ "\nCreated for our CS335 class as our final project.",
-						"About", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane
+						.showMessageDialog(
+								riskGUI.this,
+								"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
+										+ "\nCreated for our CS335 class as our final project.",
+								"About", JOptionPane.INFORMATION_MESSAGE);
 
 		}
 
@@ -569,9 +646,20 @@ public class riskGUI extends JFrame {
 				if (country.getName().compareTo(e.getActionCommand()) == 0)
 					theGame.setSelectedCountry(country);
 			}
+
+			drawingPanel.repaint();
+		}
+	}// end class
+
+	private class makeMoveListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
 			theGame.placeArmies(theGame.getSelectedCountry());
 
 			drawingPanel.repaint();
+
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
@@ -584,18 +672,23 @@ public class riskGUI extends JFrame {
 			} else if (theGame.isAttackPhase()) {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
-				if(theGame.getCurrentPlayer() instanceof AI)
-				{
-					while(theGame.getCurrentPlayer() instanceof AI)
-					{
-						theGame.aiReinforcePlacement();
-					}
-				}
-			}
 
-		}
+				// player can reinforce countries
+
+				if (theGame.getCurrentPlayer() instanceof AI) {
+					while (theGame.getCurrentPlayer() instanceof AI) {
+						theGame.aiReinforcePlacement();
+					}// end while
+				}// end if
+			}// end else if
+			theGame.setSelectedCountry(null);
+			drawingPanel.repaint();
+
+		}// end actionPerformed
 
 	}
+
+
 	
 	private class newGameListener implements ActionListener {
 
