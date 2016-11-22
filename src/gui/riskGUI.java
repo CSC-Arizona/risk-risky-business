@@ -371,9 +371,8 @@ public class riskGUI extends JFrame {
 
 		}
 
-		// draws a 40X40 grid over the risk map. Used for determining where to
-		// place buttons.
 
+		//draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2)
 		{
 			Map temp = Map.getInstance();
@@ -407,6 +406,8 @@ public class riskGUI extends JFrame {
 			}
 			
 		}
+		// draws a 40X40 grid over the risk map. Used for determining where to
+		// place buttons.
 
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
