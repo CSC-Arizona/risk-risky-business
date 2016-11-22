@@ -27,10 +27,31 @@ public abstract class Player {
 	{
 		
 		this.name = null;
-		this.faction = Faction.BARATHEON;
+		this.faction = null;
 		this.availTroops = 43-((3-numOfPlayers)*5);
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
+	}
+	
+	public void setFaction(String house){
+		if(house.compareTo("Lannister")==0){
+			faction = Faction.LANNISTER;
+		}
+		else if(house.compareTo("Stark")==0){
+			faction = Faction.STARK;
+		}
+		else if(house.compareTo("Targaryen")==0){
+			faction = Faction.TARGARYEN;
+		}
+		else if(house.compareTo("White Walkers")==0){
+			faction = Faction.WHITEWALKERS;
+		}
+		else if(house.compareTo("Dothraki")==0){
+			faction = Faction.DOTHRAKI;
+		}
+		else if(house.compareTo("Wildlings")==0){
+			faction = Faction.WILDLINGS;
+		}
 	}
 
 	public void occupyCountry(Country occupyMe)
@@ -55,10 +76,19 @@ public abstract class Player {
 		return availTroops;
 	}
 	
-	public void setAvailableTroops(int troops)
+	public ArrayList getCards(){
+		return myCards; 
+	}
+	
+	public void subtractFromAvailableTroops(int troops)
 	{
 		availTroops -= troops;
 
+	}
+	
+	public Faction getFaction()
+	{
+		return faction;
 	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();

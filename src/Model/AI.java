@@ -20,6 +20,14 @@ public class AI extends Player {
 		int randNum = rand.nextInt(50);
 		return countries[randNum];
 	}
+	
+	public Country pickRandomCountryFromOccupied()
+	{
+		Random rand = new Random();
+		int randNum = rand.nextInt(getCountries().size());
+		
+		return getCountries().get(randNum);
+	}
 	@Override
 	public ArrayList<Card> playCards()
 	{
