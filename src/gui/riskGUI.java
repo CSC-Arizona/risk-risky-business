@@ -87,13 +87,30 @@ public class riskGUI extends JFrame {
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
-		splash = true;
+		splash = true;  //comment me out for default mode
+		//splash = false; //comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash();
+		setUpSplash();  //comment me out for default mode
+		//defaultMode();  //comment me out for splash screens
 
+	}
+
+	private void defaultMode() {
+		
+		drawingPanel = new BoardPanel();
+		theGame = Game.getInstance(2, 2);
+		setUpDrawingPanel();
+		ArrayList<Player> players = theGame.getPlayers();
+		players.get(0).setFaction("Stark");
+		players.get(1).setFaction("Dothraki");
+		players.get(2).setFaction("White Walkers");
+		players.get(3).setFaction("Lannister");
+		players.get(0).setName("Player1");
+		players.get(1).setName("Player2");
+		drawingPanel.repaint();
 	}
 
 	private void setUpHouseArray() {
@@ -555,7 +572,9 @@ public class riskGUI extends JFrame {
 		}
 
 		public void updatePanel() {
+
 			ArrayList<Card> cards = theGame.getCurrentPlayer().getCards();
+
 			this.remove(centerPanel);
 			
 			centerPanel = new JPanel();
@@ -574,6 +593,7 @@ public class riskGUI extends JFrame {
 				//Add the JCheckBox for the card
 				System.out.println("Card: " + card.getCountry());
 			}
+
 			
 			Country curr = theGame.getSelectedCountry();
 			if (curr == null) {
@@ -586,6 +606,7 @@ public class riskGUI extends JFrame {
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
 
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
+
 				centerPanel.add(tradeButton, BorderLayout.WEST);
 
 				ArrayList<Country> neighs = curr.getNeighbors();

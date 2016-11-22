@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
