@@ -29,7 +29,6 @@ public abstract class Player {
 		this.name = null;
 		this.faction = null;
 		this.availTroops = 43-((numOfPlayers-3)*5);
-		this.availTroops = 43-((numOfPlayers -3)*5);
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
 	}

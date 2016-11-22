@@ -117,6 +117,21 @@ public class riskGUI extends JFrame {
 			players.get(i).setFaction(houses.get(i));
 			players.get(i).setName(playerNames.get(i));
 		}
+		ArrayList<String> possHouses = new ArrayList<String>();
+		possHouses.add("Stark");
+		possHouses.add("Lannister");
+		possHouses.add("Targaryen");
+		possHouses.add("White Walkers");
+		possHouses.add("Dothraki");
+		possHouses.add("Wildlings");
+		for(String h : houses){
+			possHouses.remove(h);
+		}
+		int i=0;
+		for(int j=humans; j<(humans+ai);j++){
+			players.get(j).setFaction(possHouses.get(i));
+			i++;
+		}
 	}
 
 	private void splashNames() {
@@ -301,9 +316,9 @@ public class riskGUI extends JFrame {
 		stark = new ImageIcon("stark.jpg");
 		targaryen = new ImageIcon("targaryen.jpg");
 		lannister = new ImageIcon("lannister.jpg");
-		whiteWalkers = new ImageIcon();
+		whiteWalkers = new ImageIcon("whiteWalkers.jpg");
 		dothraki = new ImageIcon("dothraki.jpg");
-		wildlings = new ImageIcon();
+		wildlings = new ImageIcon("wildlings.jpg");
 		
 	}
 
@@ -384,16 +399,16 @@ public class riskGUI extends JFrame {
 					switch(ownerFaction)
 					{
 					case STARK:
-						g2.drawImage(stark.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
 					default:
 						break;
 					}
@@ -559,9 +574,17 @@ public class riskGUI extends JFrame {
 				// player chooses attacks
 			} else if (theGame.isReinforcePhase()) {
 				// player can reinforce countries
+			
+			
+				if(theGame.getCurrentPlayer() instanceof AI)
+				{
+					while(theGame.getCurrentPlayer() instanceof AI)
+					{
+						theGame.aiReinforcePlacement();
+					}//end while
+				}//end if
 			}//end else if
 			theGame.setSelectedCountry(null);
-			
 		}
 		
 	}
@@ -570,7 +593,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.startGame(0);
+			theGame.newGame();
 
 		}
 
