@@ -37,7 +37,7 @@ public class Game {
 	public void newGame() {
 		selectedCountry = null;
 		aiSelectedCountry = null;
-		gameMap = new Map();
+		gameMap = Map.getInstance();
 		deck = Deck.getInstance();
 		// deck.shuffle();
 		players = new ArrayList<>();

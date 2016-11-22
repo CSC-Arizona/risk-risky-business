@@ -5,11 +5,18 @@ import gui.riskGUI;
 public class Map {
 
 	private Country countries[] = new Country[50];
-
-	public Map() {
+	private static Map gameMap;
+	private Map() {
 		fillCountries();
 	}
 
+	public static Map getInstance()
+	{
+		if(gameMap == null)
+			gameMap = new Map();
+		
+		return gameMap;
+	}
 	private void fillCountries() {
 		// this method is going to suck
 		countries[0] = new Country("The Wall", 6.5, 3, Continents.BLUE);
@@ -85,8 +92,9 @@ public class Map {
 		addAllNeighbors();
 		for(int i = 0; i < countries.length; i++)
 		{
-			countries[i].addObserver(drawingPanel);
+			countries[i].addObserver(riskGUI.getBoardPanel());
 		}
+		
 	}
 
 	// Another terrible method
@@ -268,6 +276,8 @@ public class Map {
 	public Country[] getCountries() {
 		return countries;
 	}
+	
+
 
 }
  

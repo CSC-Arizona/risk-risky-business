@@ -22,6 +22,8 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -49,13 +51,13 @@ public class riskGUI extends JFrame {
 		new riskGUI().setVisible(true);
 	}
 
-	private BoardPanel drawingPanel;
+	private static BoardPanel drawingPanel;
 	private JMenuBar menu;
 	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
-	// private Map map; dont think this is needed anymore cause it is stored
+	//private Map map; dont think this is needed anymore cause it is stored
 	// within theGame
 	private Game theGame;
 	private ImageIcon gameBoard;
@@ -80,7 +82,7 @@ public class riskGUI extends JFrame {
 		setUpGui();
 		setUpMenu();
 		setUpSplash();
-
+		
 	}
 
 	private void setUpSplash() {
@@ -311,7 +313,7 @@ public class riskGUI extends JFrame {
 		}
 	}
 
-	private class BoardPanel extends JPanel {
+	private class BoardPanel extends JPanel implements Observer {
 		@Override
 		public void paintComponent(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
@@ -373,6 +375,30 @@ public class riskGUI extends JFrame {
 			}
 		}
 
+
+		//update for drawing factions over occupied functions
+		@Override
+		public void update(Observable arg0, Object arg1)
+		{
+			Map temp = Map.getInstance();
+			Country[] allCountries = temp.getCountries();
+			for(Country country : allCountries)
+			{
+				if(country.getOccupier() != null)
+				{
+					String ownerFaction = country.returnMyOwnersFaction();
+					//draw picture of faction
+					
+				}
+			}
+			
+		}
+
+	}
+
+	public static BoardPanel getBoardPanel()
+	{
+		return drawingPanel;
 	}
 
 	private class CountryPanel extends JPanel {
