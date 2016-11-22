@@ -2,6 +2,7 @@ package Model;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import javax.swing.JButton;
 
@@ -11,7 +12,7 @@ import javax.swing.JButton;
  * 	Purpose:	Represent a single country
  */
 
-public class Country {
+public class Country extends Observable{
 	
 	private String name;
 	private double x;
@@ -122,6 +123,8 @@ public class Country {
 	public void setOccupier(Player player)
 	{
 		occupier = player;
+		setChanged();
+		notifyObservers();
 		
 	}
 
@@ -137,7 +140,13 @@ public class Country {
 	}
 
 
+<<<<<<< HEAD
 	public Faction returnMyOwnersFaction() {
+=======
+	public Faction returnMyOwnersFaction()
+	{
+		
+>>>>>>> 67b93362bc7eaa49ffffba1ba0c6a7995318666f
 		return this.getOccupier().getFaction();
 	}
 	

@@ -380,8 +380,23 @@ public class riskGUI extends JFrame {
 				if(country.getOccupier() != null)
 				{
 					Faction ownerFaction = country.returnMyOwnersFaction();
-					
-					
+					switch(ownerFaction)
+					{
+					case STARK:
+						g2.drawImage(stark.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						break;
+					case TARGARYEN:
+						g2.drawImage(targaryen.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						break;
+					case LANNISTER:
+						g2.drawImage(lannister.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+						break;
+					case DOTHRAKI:
+						g2.drawImage(dothraki.getImage(), (int)country.getX(), (int)country.getY() + 5, 10, 10, null);
+					default:
+						break;
+					}
+
 				}
 			}
 			
@@ -425,8 +440,6 @@ public class riskGUI extends JFrame {
 		public void update(Observable arg0, Object arg1)
 		{
 			repaint();
-
-			
 		}
 
 	}

@@ -100,6 +100,8 @@ public class Game {
 										// with 35 units, and 3 players
 
 		{
+			placePhase = false;
+			reinforcePhase = true;
 
 			if (countryToPlace.getOccupier().equals(players.get(0))) {
 				countryToPlace.setForcesVal(1);
