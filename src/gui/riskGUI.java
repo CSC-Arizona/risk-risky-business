@@ -69,6 +69,9 @@ public class riskGUI extends JFrame {
 	private Font font = new Font("Goudy Old Style", Font.BOLD, 40);
 	private String gameType;
 	private Player nextPlayer;
+	private int humans;
+	private int total;
+	private ArrayList<String> houses;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -101,9 +104,13 @@ public class riskGUI extends JFrame {
 		this.remove(drawingPanel);
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
-		theGame = Game.getInstance(1, 3);
+		theGame = Game.getInstance(humans, total);
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
+		System.out.println(humans);
+		System.out.println(total);
+		for(String s : houses)
+			System.out.println(s);
 	}
 
 	private void splashNames() {
@@ -113,8 +120,13 @@ public class riskGUI extends JFrame {
 	}
 
 	private void splashHouses() {
+		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("What will be your houses?");
+		houses = new ArrayList<String>();
+		for(int i=0; i<humans; i++){
+			houses.add(JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings"));
+		}
 		splashNames();
 	}
 
@@ -122,6 +134,8 @@ public class riskGUI extends JFrame {
 		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("How many players?");
+		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
+		total = Integer.parseInt(JOptionPane.showInputDialog("How Many Total Players?"));
 		splashHouses();
 	}
 
