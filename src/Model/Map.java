@@ -13,6 +13,7 @@ public class Map {
 	private Continent black;
 	private Continent yellow;
 	private static Map gameMap;
+	
 	private Map() {
 		blue = new Continent(0, "Blue");
 		green = new Continent(0, "Green");
