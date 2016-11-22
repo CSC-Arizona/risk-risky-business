@@ -83,20 +83,21 @@ public class Tests {
 	@Test
 	public void testHumanPlayer(){
 		//TODO: 37.5% coverage (Player: 30% Coverage)
-<<<<<<< HEAD
+
 		Player human = new HumanPlayer(1);
 	}
 	
 	@Test
 	public void testRedeemCards(){
+		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
 		Card walCard = new Card("The Wall","cavalry");
 		Card someCard = new Card("Skagos","artillery");
 		Card nextCard = new Card("The Wall Else","infantry");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
-		Country wall = new Country("The Wall", 6.75, 3.5, Continents.BLUE);
-		Country skagos = new Country("Skagos", 10, 3, Continents.BLUE);
+		Country wall = new Country("The Wall", 6.75, 3.5, blue);
+		Country skagos = new Country("Skagos", 10, 3, blue);
 		skagos.setForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
@@ -117,14 +118,15 @@ public class Tests {
 	
 	@Test
 	public void testRedeemCards2(){
+		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
 		Card walCard = new Card("The Wall","cavalry");
 		Card someCard = new Card("Skagos","cavalry");
 		Card nextCard = new Card("The Wall Else","cavalry");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
-		Country wall = new Country("The Wall", 6.75, 3.5, Continents.BLUE);
-		Country skagos = new Country("Skagos", 10, 3, Continents.BLUE);
+		Country wall = new Country("The Wall", 6.75, 3.5, blue);
+		Country skagos = new Country("Skagos", 10, 3, blue);
 		skagos.setForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
@@ -139,14 +141,15 @@ public class Tests {
 	}
 	@Test
 	public void testRedeemCards3(){
+		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
 		Card walCard = new Card("The Wall","cavalry");
 		Card someCard = new Card("Skagos","artillery");
 		Card nextCard = new Card("WILD","WILD");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
-		Country wall = new Country("The Wall", 6.75, 3.5, Continents.BLUE);
-		Country skagos = new Country("Skagos", 10, 3, Continents.BLUE);
+		Country wall = new Country("The Wall", 6.75, 3.5, blue);
+		Country skagos = new Country("Skagos", 10, 3, blue);
 		skagos.setForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
@@ -161,14 +164,15 @@ public class Tests {
 	}
 	@Test
 	public void testRedeemCardsFail(){
+		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
 		Card walCard = new Card("The Wall","cavalry");
 		Card someCard = new Card("Skagos","artillery");
 		Card nextCard = new Card("Something","cavalry");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
-		Country wall = new Country("The Wall", 6.75, 3.5, Continents.BLUE);
-		Country skagos = new Country("Skagos", 10, 3, Continents.BLUE);
+		Country wall = new Country("The Wall", 6.75, 3.5, blue);
+		Country skagos = new Country("Skagos", 10, 3,blue);
 		skagos.setForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
@@ -180,9 +184,7 @@ public class Tests {
 		int result = theGame.redeemCards(one, redeem);
 		System.out.println(result);
 		assertTrue(result == -1);
-=======
-//		Player human = new HumanPlayer();
->>>>>>> 0cee50b190e262faca5f820f3ea144df272d47b1
+
 	}
 	
 	
