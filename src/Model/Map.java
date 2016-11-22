@@ -1,5 +1,7 @@
 package Model;
 
+import gui.riskGUI;
+
 import java.util.ArrayList;
 
 public class Map {
@@ -118,7 +120,7 @@ public class Map {
 		addAllNeighbors();
 		for(int i = 0; i < countries.length; i++)
 		{
-			
+			countries[i].addObserver(riskGUI.getBoardPanel());
 		}
 	}
 

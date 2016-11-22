@@ -399,18 +399,21 @@ public class riskGUI extends JFrame {
 					switch(ownerFaction)
 					{
 					case STARK:
-						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(stark.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(targaryen.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
+						g2.drawImage(lannister.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 10, 10, null);
-					default:
+						g2.drawImage(dothraki.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight + 5, 30, 30, null);
+					case WHITEWALKERS:
+						g2.drawImage(whiteWalkers.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight+5, 30, 30, null);
 						break;
+					case WILDLINGS:
+						g2.drawImage(wildlings.getImage(), (int)country.getX()*xWidth, (int)country.getY()*yHeight+5, 30, 30, null);
 					}
 
 				}
