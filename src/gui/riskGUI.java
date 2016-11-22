@@ -70,8 +70,9 @@ public class riskGUI extends JFrame {
 	private String gameType;
 	private Player nextPlayer;
 	private int humans;
-	private int total;
+	private int ai = -1;
 	private ArrayList<String> houses;
+	private ArrayList<String> playerNames;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -104,19 +105,25 @@ public class riskGUI extends JFrame {
 		this.remove(drawingPanel);
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
-		theGame = Game.getInstance(humans, total);
+		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
-		
-		System.out.println(humans);
-		System.out.println(total);
-		for(String s : houses)
-			System.out.println(s);
+		ArrayList<Player> players = theGame.getPlayers();
+		int i=0;
+		for(Player p : players){
+			p.setFaction(houses.get(i));
+			p.setName(playerNames.get(i));
+			i++;
+		}
 	}
 
 	private void splashNames() {
 		// TODO Auto-generated method stub
 		System.out.println("What are the players names?");
+		playerNames = new ArrayList<String>();
+		for(int i=0; i<humans; i++){
+			playerNames.add(JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s Name?"));
+		}
 		splashLoading2();
 	}
 
@@ -136,7 +143,14 @@ public class riskGUI extends JFrame {
 		// TODO Auto-generated method stub
 		System.out.println("How many players?");
 		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
-		total = Integer.parseInt(JOptionPane.showInputDialog("How Many Total Players?"));
+		while (ai == -1){
+			ai = Integer.parseInt(JOptionPane.showInputDialog("How Many AI Players?"));
+			if((ai + humans) >6){
+				JOptionPane.showMessageDialog(riskGUI.this, "Illegal number of players. Must have 6 or less total players");
+				ai=-1;
+			}
+				
+		}
 		splashHouses();
 	}
 
