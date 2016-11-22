@@ -18,6 +18,7 @@ public class Deck {
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
 		fillDeck(riskDeck);
+		shuffle();
 		size = 52;
 	}
 

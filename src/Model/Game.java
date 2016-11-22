@@ -45,6 +45,7 @@ public class Game {
 		players = new ArrayList<>();
 		addHumanPlayers(humans);
 		addAI(totalPlayers - humans);
+		numRedemptions =0;
 		int startingPlayer = 0; // this should change to a method that returns
 								// the number of the position in the players
 								// list of who is going first
@@ -251,12 +252,24 @@ public class Game {
 			}
 			
 			//if any one of the redeemable cards contains a country that the player has, add 2 armies to that country. 
-			for(int i=0; i<3; i++){
-				for(int j=0; j<player.getCountries().size(); j++){
-					
+			boolean added = false;
+			for(Card c : cardsToRedeem){
+				for(Country t : player.getCountries()){
+					if(c.getCountry().compareTo(t.getName())==0){
+						//add 2 armies to that country
+						added=true;
+						int currentForces = t.getForcesVal();
+						System.out.println("current Forces" + currentForces + t.getName());
+						t.setForcesVal(2);
+						System.out.println("updated Forces" + t.getForcesVal() + t.getName());
+					}
 				}
 			}
+			if(!added)
+				System.out.println("no country cards to redeem");
 		}
+		else
+			System.out.println("unable to redeem cards");
 		//TODO: check if cardsToRedeem are valid cards to redeem (as far as unit type)
 		
 		//if redeemable and a country that player owns, place 2 extra armies on that country.
