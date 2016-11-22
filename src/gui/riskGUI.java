@@ -383,7 +383,7 @@ public class riskGUI extends JFrame {
 			}
 
 			drawFactions(g2);
-			drawCurrentPlayer(g2);
+			//drawCurrentPlayer(g2);
 			// drawGridAndNumbers(g2);
 
 		}
