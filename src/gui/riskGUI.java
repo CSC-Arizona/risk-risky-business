@@ -542,7 +542,7 @@ public class riskGUI extends JFrame {
 					if (country.getName().compareTo(e.getActionCommand()) == 0)
 						theGame.setSelectedCountry(country);
 				}
-
+				drawingPanel.repaint();
 		}
 	}//end class
 	
@@ -576,7 +576,11 @@ public class riskGUI extends JFrame {
 				}//end if
 			}//end else if
 			theGame.setSelectedCountry(null);
-		}
+			drawingPanel.repaint();
+			
+			
+			
+		}//end actionPerformed
 		
 	}
 
