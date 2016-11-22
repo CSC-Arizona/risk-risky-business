@@ -107,6 +107,7 @@ public class riskGUI extends JFrame {
 		theGame = Game.getInstance(humans, total);
 		setUpDrawingPanel();
 		setUpGameStatsPanel();
+		
 		System.out.println(humans);
 		System.out.println(total);
 		for(String s : houses)
@@ -448,7 +449,7 @@ public class riskGUI extends JFrame {
 				// next player place army
 				if (theGame.getCurrentPlayer() instanceof AI) {
 					while (theGame.getCurrentPlayer() instanceof AI) {
-						theGame.aiChoice();
+						theGame.aiChoicePlacement();
 					}
 				}
 

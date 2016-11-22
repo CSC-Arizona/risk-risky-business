@@ -13,9 +13,10 @@ public class Game {
 	private static Game theGame;
 	private int numRedemptions;
 
-	private Game(int numOfHumanPlayers, int totalNumOfPlayers) {
+	private Game(int numOfHumanPlayers, int numOfAIPlayers)
+	{
 		humans = numOfHumanPlayers;
-		totalPlayers = totalNumOfPlayers;
+		totalPlayers = numOfHumanPlayers+numOfAIPlayers;
 		armiesPlaced = 0;
 		placePhase = true;
 		attackPhase = false;
@@ -165,16 +166,24 @@ public class Game {
 		return reinforcePhase;
 	}
 
-	public boolean aiChoice() {
+
+	public boolean aiChoicePlacement()
+	{
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
 		if (checkIfCountryAvailable(aiSelectedCountry)) {
 
 			placeArmies(aiSelectedCountry);
-			players.get(playerLocation).setAvailableTroops(1);
-			;
+			players.get(playerLocation).subtractFromAvailableTroops(1);
+
 			return true;
 		}
 		return false;
+	}
+	
+	public void aiReinforcePlacement(){
+		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountryFromOccupied();
+		placeArmies(aiSelectedCountry);
+		players.get(playerLocation).subtractFromAvailableTroops(1);
 	}
 
 	private boolean checkIfCountryAvailable(Country countryToCheck) {

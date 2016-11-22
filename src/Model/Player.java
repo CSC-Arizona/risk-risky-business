@@ -76,10 +76,15 @@ public abstract class Player {
 		return availTroops;
 	}
 	
-	public void setAvailableTroops(int troops)
+	public void subtractFromAvailableTroops(int troops)
 	{
 		availTroops -= troops;
 
+	}
+	
+	public Faction getFaction()
+	{
+		return faction;
 	}
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
