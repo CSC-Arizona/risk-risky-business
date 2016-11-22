@@ -52,13 +52,13 @@ public class riskGUI extends JFrame {
 		new riskGUI().setVisible(true);
 	}
 
-	private BoardPanel drawingPanel;
+	private static BoardPanel drawingPanel;
 	private JMenuBar menu;
 	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
-	// private Map map; dont think this is needed anymore cause it is stored
+	//private Map map; dont think this is needed anymore cause it is stored
 	// within theGame
 	private Game theGame;
 	private ImageIcon gameBoard;
@@ -80,7 +80,7 @@ public class riskGUI extends JFrame {
 		setUpGui();
 		setUpMenu();
 		setUpSplash();
-
+		
 	}
 
 	private void setUpSplash()
@@ -372,16 +372,27 @@ public class riskGUI extends JFrame {
 			}
 		}
 
+		//update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1)
 		{
-			// TODO Auto-generated method stub
+			Map temp = Map.getInstance();
+			Country[] allCountries = temp.getCountries();
+			for(Country country : allCountries)
+			{
+				if(country.getOccupier() != null)
+				{
+					String ownerFaction = country.returnMyOwnersFaction();
+					//draw picture of faction
+					
+				}
+			}
 			
 		}
 
 	}
 
-	public BoardPanel getBoardPanel()
+	public static BoardPanel getBoardPanel()
 	{
 		return drawingPanel;
 	}
