@@ -15,7 +15,6 @@ public class Map {
 	private Continent black;
 	private Continent yellow;
 	private static Map gameMap;
-	
 	private Map() {
 		blue = new Continent(0, "Blue");
 		green = new Continent(0, "Green");
@@ -24,8 +23,7 @@ public class Map {
 		red = new Continent(0, "Red");
 		black = new Continent(0, "Black");
 		yellow = new Continent(0, "Yellow");
-		
-		
+
 		fillCountries();
 		/*//Add this to a test?
 		System.out.println(blue.toString());

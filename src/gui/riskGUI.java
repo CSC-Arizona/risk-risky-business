@@ -573,7 +573,9 @@ public class riskGUI extends JFrame {
 		}
 
 		public void updatePanel() {
+
 			ArrayList<Card> cards = theGame.getCurrentPlayer().getCards();
+
 			this.remove(centerPanel);
 			
 			centerPanel = new JPanel();
@@ -592,6 +594,7 @@ public class riskGUI extends JFrame {
 				//Add the JCheckBox for the card
 				System.out.println("Card: " + card.getCountry());
 			}
+
 			
 			Country curr = theGame.getSelectedCountry();
 			if (curr == null) {
@@ -604,6 +607,7 @@ public class riskGUI extends JFrame {
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
 
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
+
 				centerPanel.add(tradeButton, BorderLayout.WEST);
 
 				ArrayList<Country> neighs = curr.getNeighbors();
