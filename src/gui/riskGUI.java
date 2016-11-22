@@ -82,6 +82,8 @@ public class riskGUI extends JFrame {
 	private int ai = -1;
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
+	private ArrayList<String> possHouses;
+	private boolean decisionMakingPhase = false;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -89,8 +91,20 @@ public class riskGUI extends JFrame {
 		setUpImages();
 		setUpGui();
 		setUpMenu();
+		setUpHouseArray();
 		setUpSplash();
 
+	}
+
+	private void setUpHouseArray() {
+		possHouses = new ArrayList<String>();
+		possHouses.add("Stark");
+		possHouses.add("Lannister");
+		possHouses.add("Targaryen");
+		possHouses.add("White Walkers");
+		possHouses.add("Dothraki");
+		possHouses.add("Wildlings");
+		
 	}
 
 	private void setUpSplash() {
@@ -123,14 +137,7 @@ public class riskGUI extends JFrame {
 			players.get(i).setFaction(houses.get(i));
 			players.get(i).setName(playerNames.get(i));
 		}
-		ArrayList<String> possHouses = new ArrayList<String>();
-		possHouses.add("Stark");
-		possHouses.add("Lannister");
-		possHouses.add("Targaryen");
-		possHouses.add("White Walkers");
-		possHouses.add("Dothraki");
-		possHouses.add("Wildlings");
-		for (String h : houses) {
+		for(String h : houses){
 			possHouses.remove(h);
 		}
 		int i = 0;
@@ -156,21 +163,27 @@ public class riskGUI extends JFrame {
 		// TODO Auto-generated method stub
 		System.out.println("What will be your houses?");
 		houses = new ArrayList<String>();
-		for (int i = 0; i < humans; i++) {
-			Boolean illegalName = true;
-			String house = "";
-			while (illegalName == true) {
-				Boolean check = true;
-				house = JOptionPane
-						.showInputDialog("What will be Player "
-								+ (i + 1)
-								+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
-				for (int j = 0; j < houses.size(); j++) {
-					if (houses.get(j).compareTo(house) == 0) {
-						check = false;
-						JOptionPane
-								.showMessageDialog(riskGUI.this,
-										"Faction has already been chosen. Please pick another.");
+		for(int i=0; i<humans; i++){
+			Boolean illegalName=true;
+			String house="";
+			while(illegalName==true){
+				Boolean check=true;
+				int num = 0;
+				house =JOptionPane.showInputDialog("What will be Player "+ (i+1)+ "'s House? \n Choose: Targaryen, Stark, Lannister, White Walkers, Dothraki, or Wildlings");
+				for(String s : possHouses){
+					if(s.compareTo(house)!=0){
+						num++;
+					}
+				}
+				if(num==6){
+					check=false;
+					JOptionPane.showMessageDialog(riskGUI.this, "Illegal Faction name. Please try again.");
+				}
+				
+				for(int j=0; j<houses.size();j++){
+					if(houses.get(j).compareTo(house)==0){
+						check=false;
+						JOptionPane.showMessageDialog(riskGUI.this, "Faction has already been chosen. Please pick another.");
 					}
 				}
 				if (check)
@@ -185,16 +198,14 @@ public class riskGUI extends JFrame {
 		drawingPanel.remove(splashInfo);
 		// TODO Auto-generated method stub
 		System.out.println("How many players?");
-		humans = Integer.parseInt(JOptionPane
-				.showInputDialog("How Many Human Players?"));
-		while (ai == -1) {
-			ai = Integer.parseInt(JOptionPane
-					.showInputDialog("How Many AI Players?"));
-			if ((ai + humans) > 6) {
-				JOptionPane
-						.showMessageDialog(riskGUI.this,
-								"Illegal number of players. Must have 6 or less total players");
-				ai = -1;
+
+		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
+		while (ai == -1){
+			ai = Integer.parseInt(JOptionPane.showInputDialog("How Many AI Players?"));
+			if((ai + humans) >6 || ai+humans<3){
+				JOptionPane.showMessageDialog(riskGUI.this, "Illegal number of players. Must have between 3 and 6 total players");
+				ai=-1;
+
 			}
 
 		}
@@ -334,9 +345,7 @@ public class riskGUI extends JFrame {
 		whiteWalkers = new ImageIcon("whiteWalkers.jpg");
 		dothraki = new ImageIcon("dothraki.jpg");
 		wildlings = new ImageIcon("wildlings.jpg");
-
 	}
-
 
 	// draws buttons over the name of all of the countries
 	private void drawCountryButtons() {
@@ -427,8 +436,6 @@ public class riskGUI extends JFrame {
 
 		// draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2) {
-
-
 			Map temp = Map.getInstance();
 			Country[] allCountries = temp.getCountries();
 			for (Country country : allCountries) {
@@ -436,7 +443,6 @@ public class riskGUI extends JFrame {
 					Faction ownerFaction = country.returnMyOwnersFaction();
 					switch (ownerFaction) {
 					case STARK:
-
 						g2.drawImage(stark.getImage(), (int) country.getX()
 								* xWidth, (int) country.getY() * yHeight + 5,
 								30, 30, null);
@@ -473,6 +479,8 @@ public class riskGUI extends JFrame {
 			}
 
 		}
+		// draws a 40X40 grid over the risk map. Used for determining where to
+		// place buttons.
 
 
 		// draws a 40X40 grid over the risk map. Used for determining where to
@@ -576,11 +584,10 @@ public class riskGUI extends JFrame {
 			else {
 				centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
-				centerPanel.add(new JLabel("" + curr.getForcesVal()),
-						BorderLayout.SOUTH);
 
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
 				centerPanel.add(tradeButton, BorderLayout.WEST);
+
 				ArrayList<Country> neighs = curr.getNeighbors();
 				JPanel neighPanel = new JPanel();
 				neighPanel.setLayout(new GridLayout(neighs.size(), 0));
@@ -683,7 +690,7 @@ public class riskGUI extends JFrame {
 
 		}// end actionPerformed
 
-	}//end ckass
+	}//end class
 
 	
 	private class NewGameListener implements ActionListener {
@@ -707,3 +714,4 @@ public class riskGUI extends JFrame {
 		}
 	}
 }
+
