@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
@@ -14,6 +15,7 @@ public class Game {
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
 	private int numRedemptions;
+	private boolean canPlace;
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers)
 	{
@@ -25,6 +27,7 @@ public class Game {
 		reinforcePhase = false;
 		playerLocation = 0;
 		numRedemptions = 0;
+		canPlace=false;
 		newGame();
 
 	}//end constructor
@@ -348,5 +351,64 @@ public class Game {
 			}
 		}
 		return unitsToReturn;
-	}//end getUnitsToMove
-}//end Game class
+
+	}//end unitsToReturn
+	
+	public boolean moveUnitsToCountry(int numUnits, Country fromCountry, Country toCountry, Player current){
+		boolean result = false;
+		ArrayList<Country> visited = new ArrayList<Country>();
+		visited.add(fromCountry);
+		findPath(fromCountry, visited, toCountry, current);
+		if(canPlace){
+			toCountry.setForcesVal(numUnits);
+			result= true;
+		}
+		canPlace=false;
+		return result;
+	}//end moveUnitsToCountry
+	
+	private void findPath(Country fromCountry, ArrayList<Country> visited, Country toCountry, Player currentP){
+		if(canPlace)
+			return;
+		ArrayList<Country> countries = visited.get(visited.size()-1).getNeighbors();
+		for(Country c : countries){
+			if(!(c.getOccupier().equals(currentP)))
+				continue;
+			if(visited.contains(c))
+				continue;
+			if(c.equals(toCountry)){
+				visited.add(c);
+				canPlace = true;
+				//for(Country v :visited){
+					//if(!(v.getOccupier().equals(currentP))){
+						//canPlace=false;
+					//}
+				//}
+				//if(!canPlace)
+					//break;
+				printPath(visited);
+				visited.remove(visited.size()-1);
+				break;
+			}
+		}
+		for(Country c: countries){
+			if(!(c.getOccupier().equals(currentP)))
+				continue;
+			if(visited.contains(c) || c.equals(toCountry)){
+				continue;
+			}
+			visited.add(c);
+			findPath(fromCountry, visited, toCountry, currentP);
+			visited.remove(visited.size()-1);
+				
+		}
+	}//end findPath
+	 private void printPath(ArrayList<Country> visited) {
+	        for (Country node : visited) {
+	            System.out.print(node);
+	            System.out.print(" ");
+	        }
+	        System.out.println();
+	    }//end printPath
+}//end GameClasss
+
