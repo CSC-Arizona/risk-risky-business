@@ -85,6 +85,7 @@ public class riskGUI extends JFrame {
 	private ArrayList<String> playerNames;
 	private ArrayList<String> possHouses;
 	private boolean decisionMakingPhase = false, moveUnitsFlag = false;
+	private Country moveUnitsFromCountry;
 
 	public riskGUI() {
 		System.out.println("Width = " + width + " Height = " + height);
@@ -140,7 +141,7 @@ public class riskGUI extends JFrame {
 	}
 
 	private void splashLoading2() {
-		// TODO Auto-generated method stub
+		
 		System.out.println("Brace Yourselves, RISK is Coming...");
 		splash = false;
 		drawingPanel.removeAll();
@@ -166,7 +167,7 @@ public class riskGUI extends JFrame {
 	}
 
 	private void splashNames() {
-		// TODO Auto-generated method stub
+
 		System.out.println("What are the players names?");
 		playerNames = new ArrayList<String>();
 		for (int i = 0; i < humans; i++) {
@@ -178,7 +179,7 @@ public class riskGUI extends JFrame {
 
 	private void splashHouses() {
 		drawingPanel.remove(splashInfo);
-		// TODO Auto-generated method stub
+
 		System.out.println("What will be your houses?");
 		houses = new ArrayList<String>();
 		for(int i=0; i<humans; i++){
@@ -214,7 +215,7 @@ public class riskGUI extends JFrame {
 
 	private void splashNumPlayers() {
 		drawingPanel.remove(splashInfo);
-		// TODO Auto-generated method stub
+
 		System.out.println("How many players?");
 
 		humans = Integer.parseInt(JOptionPane.showInputDialog("How Many Human Players?"));
@@ -278,7 +279,7 @@ public class riskGUI extends JFrame {
 
 		// play the song! Commented out for now in order to test without losing
 		// my mind
-		// SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+		SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
@@ -704,16 +705,24 @@ public class riskGUI extends JFrame {
 					if(!moveUnitsFlag)
 					{ 
 						numOfUnitsToMove = theGame.getUnitsToMove(theGame.getSelectedCountry());
-						if(numOfUnitsToMove > 0)
+						if(numOfUnitsToMove > 0){
 							moveUnitsFlag = true;
+							moveUnitsFromCountry = theGame.getSelectedCountry();
+						}
 					}
 					else
 					{
-						theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
-						moveUnitsFlag = false;
+						boolean result = theGame.moveUnitsToCountry(numOfUnitsToMove, moveUnitsFromCountry, theGame.getSelectedCountry(), theGame.getCurrentPlayer());
+						//theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
+						if(result)
+							moveUnitsFlag = false;
+						else
+							JOptionPane.showMessageDialog(null, "Invalid Country Choice. Please choose another", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				}
+				else
+					JOptionPane.showMessageDialog(null, "Invalid Country Choice. Please choose another", "Error", JOptionPane.ERROR_MESSAGE);
 			} else if (theGame.isReinforcePhase()) {
 
 				// player can reinforce countries
