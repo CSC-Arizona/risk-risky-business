@@ -410,5 +410,16 @@ public class Game {
 	        }
 	        System.out.println();
 	    }//end printPath
+
+	public String getPhase()
+	{
+		if(placePhase)
+			return "Place Phase";
+		else if(playPhase)
+			return "Play Phase";
+		else if(reinforcePhase)
+			return "Reinforce Phase";
+		return null;
+	}
 }//end GameClasss
 

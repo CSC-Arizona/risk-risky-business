@@ -500,7 +500,7 @@ public class riskGUI extends JFrame {
 			g2.setColor(Color.WHITE);
 			g2.setFont(new Font("Courier", Font.BOLD, 20));
 			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
-
+			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
 		}//end drawCurrentPlayer
 
 		// draws factions if a country is occupied
