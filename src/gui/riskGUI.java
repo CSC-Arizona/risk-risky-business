@@ -4,12 +4,33 @@
  * 	Purpose:	GUI for visual implementation of RISK
  */
 
+
+/*
+ * To-Dos for Iteration 3
+ * 
+ * Work on our wow factor - Jewell
+ * Make card images - Jewell
+ * Polish the GUI/Make sure everything is displayed - Abigail
+ * Set up flags for state changes during game - Abigail
+ * Adjust reinforcement phase adjustment - Abigail
+ * Decide order of players based on dice roll - Abigail
+ * Implement rules for army placement - Sydney
+ * Write some sort of attack (can be hard coded for now) - Sydney
+ * Change AIs during gameplay - Dylan
+ * Write AI strategies - Dylan
+ *
+ */
+
+
+
+
 package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
@@ -19,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -75,7 +97,13 @@ public class riskGUI extends JFrame {
 	private ImageIcon splashScreen;
 	private JPanel splashInfo;
 	// my new favorite font...
-	private Font font = new Font("Goudy Old Style", Font.BOLD, 40);
+	private Font goudyFontBig = new Font("Goudy Old Style", Font.BOLD, 40);
+	private Font gotFontHeader;
+	private Font gotFontBody;
+	
+	
+	
+	
 	private String gameType;
 	private Player nextPlayer, currPlayer;
 	private int humans;
@@ -87,20 +115,39 @@ public class riskGUI extends JFrame {
 	private boolean decisionMakingPhase = false, moveUnitsFlag = false;
 
 	public riskGUI() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		try {
+			gotFontHeader = Font.createFont(Font.TRUETYPE_FONT, new File("TrajanusBricks.ttf"));
+			gotFontHeader = gotFontHeader.deriveFont(36f);
+			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File("LibreBaskerville-Regular.otf"));
+			gotFontBody = gotFontBody.deriveFont(24f);
+		} catch (FontFormatException e) {
+			System.out.println("What'd you do???");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("What'd you do???");
+			e.printStackTrace();
+		}
+		
+		
+		ge.registerFont(gotFontHeader);
+
+		ge.registerFont(gotFontBody);
+		
+		
 		System.out.println("Width = " + width + " Height = " + height);
-		splash = true;  //comment me out for default mode
-		//splash = false; //comment me out for splash screens
+		//splash = true;  //comment me out for default mode
+		splash = false; //comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash();  //comment me out for default mode
-		//defaultMode();  //comment me out for splash screens
+		//setUpSplash();  //comment me out for default mode
+		defaultMode();  //comment me out for splash screens
 
 	}
 
 	private void defaultMode() {
-		
 		drawingPanel = new BoardPanel();
 		theGame = Game.getInstance(2, 2);
 		setUpDrawingPanel();
@@ -238,16 +285,16 @@ public class riskGUI extends JFrame {
 		splashInfo.setSize(700, 400);
 		splashInfo.setLocation(width / 2 - 350, height / 2 - 200);
 		JLabel load = new JLabel("New Game or Load Game?");
-		load.setFont(font);
+		load.setFont(gotFontHeader.deriveFont(24));
 		load.setLocation(150, 5);
 		load.setSize(600, 150);
 		JButton newG = new JButton("New Game!");
-		newG.setFont(font);
+		newG.setFont(gotFontHeader.deriveFont(24));
 		newG.setLocation(50, 200);
 		newG.addActionListener(new GameTypeListener());
 		newG.setSize(300, 100);
 		JButton loadG = new JButton("Load Game!");
-		loadG.setFont(font);
+		loadG.setFont(gotFontHeader.deriveFont(24));
 		loadG.setLocation(375, 200);
 		loadG.addActionListener(new GameTypeListener());
 		loadG.setSize(300, 100);
@@ -269,7 +316,7 @@ public class riskGUI extends JFrame {
 		splashInfo.setSize(500, 150);
 		splashInfo.setLocation(width / 2 - 250, height / 2 - 75);
 		JLabel load = new JLabel("LOADING...");
-		load.setFont(font);
+		load.setFont(gotFontHeader);
 		load.setLocation(150, 5);
 		load.setSize(300, 150);
 		splashInfo.add(load);
@@ -447,13 +494,15 @@ public class riskGUI extends JFrame {
 				}
 			}
 			g2.setColor(Color.WHITE);
-			g2.setFont(new Font("Courier",Font.BOLD,20));
-			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
+			g2.setFont(gotFontBody.deriveFont(20f));
+//			g2.setFont(new Font("Courier",Font.BOLD,20));
+			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 35);
 
 		}
 
 		// draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2) {
+			
 			Map temp = Map.getInstance();
 			Country[] allCountries = temp.getCountries();
 			for (Country country : allCountries) {
@@ -552,7 +601,8 @@ public class riskGUI extends JFrame {
 	private class CountryPanel extends JPanel {
 		private JPanel centerPanel;
 		private JButton makeAMoveButton;
-
+		private Country curr;
+		
 		/*
 		 * public void PaintComponent(Graphics g){ update(g);
 		 * super.paintComponent(g);
@@ -562,48 +612,184 @@ public class riskGUI extends JFrame {
 
 		public CountryPanel() {
 			this.setLayout(new BorderLayout());
-			centerPanel = new JPanel();
-			//this.setForeground(Color.OPAQUE);
+			curr = theGame.getSelectedCountry();
+			updatePanel();
+	/*		centerPanel = new JPanel();
+	//		this.setOpaque(false);
 			this.setLocation(12 * xWidth, 3 * yHeight);
 			this.setSize(xWidth * 18, yHeight * 12);
 			centerPanel.add(new JLabel("Select a Country"));
 			makeAMoveButton = new JButton("Make your move!");
 			makeAMoveButton.addActionListener(new makeMoveListener());
-			this.add(centerPanel);
+			this.add(centerPanel);*/
+		}//end constructor
+		
+		//Displays country's name and owner
+		public void makeTopLabel(){
+			JPanel top = new JPanel();
+			top.setLayout(new BorderLayout());
+			JLabel country = new JLabel(curr.getName());
+			country.setFont(gotFontHeader);
+			country.setHorizontalAlignment(JLabel.CENTER);
+			top.add(country, BorderLayout.CENTER);
+			JLabel owner = new JLabel();
+			owner.setFont(gotFontHeader.deriveFont(28f));
+			owner.setHorizontalAlignment(JLabel.CENTER);
+			if (curr.getOccupier()!=null)
+				owner.setText(curr.getOccupier().getName() + " " + curr.getOccupier().getFaction().getName());
+			else
+				owner.setText("None");
+			top.add(owner, BorderLayout.SOUTH);
+			
+			this.add(top, BorderLayout.NORTH);
+			top.revalidate();	
+		}//end makeTopLabel
+		
+		//will display a list of neighbors and the strength of the country's armies
+		public void makePlayingCenterPanel(){
+			JPanel center = new JPanel();
+			center.setLayout(new GridLayout(0,2));
+			JPanel neighbors = new JPanel();
+			//Make neighbors panel
+			ArrayList<Country> neighs = curr.getNeighbors();
+			neighbors.setLayout(new GridLayout(neighs.size(),0));
+			
+			//add all of the neighbors to that panel
+			for (int i=0; i < neighs.size(); i++){
+				JLabel lab = new JLabel();
+		//		lab.setForeground(Color.white);
+				lab.setFont(gotFontBody);
+				lab.setText(neighs.get(i).getName());
+				neighbors.add(lab);
+			}//end addneighbors loop
+			
+			center.add(neighbors);
+			
+			//Now, add the strength
+			JLabel streng = new JLabel();
+			streng.setFont(gotFontHeader);
+			streng.setText(""+curr.getForcesVal());
+			
+			center.add(streng);
+			
+			this.add(center, BorderLayout.CENTER);
+			center.revalidate();
+		}//end makeCenterPanel
+		
+		//displays the cards and has a button for trading in cards
+		public void makePlayingCardPanel(){
+			ArrayList<Card> myCards = theGame.getCurrentPlayer().getCards();
+			
+			JPanel cards = new JPanel();
+			cards.setLayout(new GridLayout(2,0));
+			JPanel showCards = new JPanel();
+			/*
+			 * TODO : Display card image icons
+			 */
+			cards.add(showCards);
+			JButton trade = new JButton("Trade in Cards");
+			trade.addActionListener(new TradeClickListener());
+			cards.add(trade);
+			this.add(cards, BorderLayout.EAST);
+			cards.revalidate();
+		}//end makeCardPanel
+		
+		public void makePlayingMyCountryBottomLabel(){
+			JPanel bott = new JPanel();
+			bott.setLayout(new BorderLayout(0,2));
+			JButton transfer = new JButton("Transfer Troops");
+			JButton war = new JButton("Go to war!");
+			bott.add(transfer);
+			bott.add(war);
+			this.add(bott, BorderLayout.SOUTH);
+			bott.revalidate();
+		}//end makeBottomLabel
+		
+		
+		public void makePlayingYourCountryBottomLabel(){
+			JButton attack = new JButton("Attack");
+			this.add(attack, BorderLayout.SOUTH);
+			this.revalidate();
+		}//end makePlayingYourCountryBottomLabel
+		
+		
+		
+		public void makePlacementBottomLabel(){
+			JButton place = new JButton("Place Troops Here");
+			place.addActionListener(new makeMoveListener());
+			this.add(place, BorderLayout.SOUTH);
+			this.revalidate();
+		}//end makeplacementbottom
+		
+		//Only displays neighbors
+		public void makePlacementCenterPanel(){
+			JPanel neighbors = new JPanel();
+			ArrayList<Country> neighs = curr.getNeighbors();
+			neighbors.setLayout(new GridLayout(neighs.size(),0));
+			
+			//add all of the neighbors to that panel
+			for (int i=0; i < neighs.size(); i++){
+				JLabel lab = new JLabel();
+				lab.setFont(gotFontBody);
+				lab.setText(neighs.get(i).getName());
+				neighbors.add(lab);
+			}//end addneighbors loop
+			this.add(neighbors, BorderLayout.CENTER);
+			neighbors.revalidate();
 		}
+		
+		
 
 		public void updatePanel() {
-
-			ArrayList<Card> cards = theGame.getCurrentPlayer().getCards();
-
-			this.remove(centerPanel);
-			
-			centerPanel = new JPanel();
-			JButton tradeButton = new JButton("Trade in Cards");
-
-			this.remove(makeAMoveButton);
-			centerPanel.removeAll();
+			curr = theGame.getSelectedCountry();
+			this.removeAll();
 
 			this.setLocation(12 * xWidth, 3 * yHeight);
 			this.setSize(xWidth * 18, yHeight * 12);
 			
 			Iterator itr;
 			Card card; 
-			for(itr = cards.listIterator(); itr.hasNext(); ){ 
+			/*for(itr = cards.listIterator(); itr.hasNext(); ){ 
 				card = (Card) itr.next();
 				//Add the JCheckBox for the card
 				System.out.println("Card: " + card.getCountry());
 			}
-
-			
-			Country curr = theGame.getSelectedCountry();
+			*/
 			if (curr == null) {
-				centerPanel.add(new JLabel("Select a Country"));
-				centerPanel.add(tradeButton, BorderLayout.SOUTH);
-				this.add(centerPanel);
+//				centerPanel.add(new JLabel("Select a Country"));
+				JLabel directions = new JLabel();
+				directions.setHorizontalAlignment(JLabel.CENTER);
+//				Font labFont = gotFontBody.deriveFont(Font.BOLD, 32);
+//				directions.setFont(labFont);
+				
+				if (theGame.isPlacePhase()){
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
+					directions.setText("Choose a Country to Claim");
+					this.add(directions, BorderLayout.CENTER);
+					
+				}//end if
+				else if (theGame.isReinforcePhase()){
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
+					directions.setText("Choose a Country to Reinforce");
+					this.add(directions, BorderLayout.CENTER);
+				}//end else if
+				else {
+					JLabel dir2 = new JLabel();
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
+					dir2.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
+					directions.setText("Choose a Country to Attack"); //or Reinforce");
+					dir2.setText("Or to Reinforce");
+					dir2.setHorizontalAlignment(JLabel.CENTER);
+					this.add(directions, BorderLayout.CENTER);
+					this.add(dir2, BorderLayout.SOUTH);
+					makePlayingCardPanel();
+				}//end else
+				
+				this.revalidate();
+				this.repaint();
 			} // end if
 			else {
-				centerPanel.setLayout(new BorderLayout());
+			/*	centerPanel.setLayout(new BorderLayout());
 				centerPanel.add(new JLabel(curr.getName()), BorderLayout.NORTH);
 
 				centerPanel.add(new JLabel("" + curr.getForcesVal()), BorderLayout.SOUTH);
@@ -617,12 +803,34 @@ public class riskGUI extends JFrame {
 					neighPanel.add(new JLabel(neighs.get(i).getName()));
 				centerPanel.add(neighPanel, BorderLayout.CENTER);
 				this.add(centerPanel);
-				this.add(makeAMoveButton, BorderLayout.SOUTH);
-			}
+				this.add(makeAMoveButton, BorderLayout.SOUTH);*/
+				
+				//This never changes - always displayed if a country is displayed!
+				makeTopLabel();
+				
+				if (theGame.isPlacePhase()){
+					makePlacementCenterPanel();
+					makePlacementBottomLabel();
+				}//end if
+				else if (theGame.isReinforcePhase()){
+					makePlayingCenterPanel();
+					makePlacementBottomLabel();
+				}//end else if
+				else{
+					makePlayingCenterPanel();
+					makePlayingCardPanel();
+					
+					if (currPlayer.equals(curr.getOccupier())){
+						makePlayingMyCountryBottomLabel();
+					}//end if
+					else {
+						makePlayingYourCountryBottomLabel();
+					}//end else
+				}//end outer else
+				
+				
+			}//end updatePanel
 
-			tradeButton.addActionListener(new TradeClickListener());
-			centerPanel.revalidate();
-			centerPanel.repaint();
 
 		}// end
 

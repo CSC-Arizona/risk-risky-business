@@ -23,6 +23,7 @@ public abstract class Player {
 		}*/
 	}//end getTroops
 	
+	
 	public Player(int numOfPlayers)
 	{
 		
@@ -52,6 +53,12 @@ public abstract class Player {
 		}
 		else if(house.compareTo("Wildlings")==0){
 			faction = Faction.WILDLINGS;
+		}
+		
+		//Automatically sets any null names to the defaults
+		//for each house that I chose and defined in Faction
+		if (name == null){
+			setName(faction.getDefaultPlayerName());
 		}
 	}
 
