@@ -2,12 +2,14 @@ package Model;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class Game {
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, attackPhase, reinforcePhase;
+	private boolean placePhase, playPhase, reinforcePhase;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
@@ -16,10 +18,10 @@ public class Game {
 	private Game(int numOfHumanPlayers, int numOfAIPlayers)
 	{
 		humans = numOfHumanPlayers;
-		totalPlayers = numOfHumanPlayers+numOfAIPlayers;
+		totalPlayers = numOfHumanPlayers + numOfAIPlayers;
 		armiesPlaced = 0;
 		placePhase = true;
-		attackPhase = false;
+		playPhase = false;
 		reinforcePhase = false;
 		playerLocation = 0;
 		numRedemptions = 0;
@@ -27,14 +29,16 @@ public class Game {
 
 	}
 
-	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers) {
+	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers)
+	{
 		if (theGame == null)
 			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers);
 
 		return theGame;
 	}
 
-	public void newGame() {
+	public void newGame()
+	{
 		selectedCountry = null;
 		aiSelectedCountry = null;
 		gameMap = Map.getInstance();
@@ -52,7 +56,8 @@ public class Game {
 
 	}
 
-	public void startGame(int startingPlayer) {
+	public void startGame(int startingPlayer)
+	{
 
 		// pick starting countries
 		// while (placePhase)
@@ -75,20 +80,31 @@ public class Game {
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
-	public Player placeArmies(Country countryToPlace) {
+	public void placeArmies(Country countryToPlace)
+	{
 		// place initial 50 armies
-		if (armiesPlaced < 50) {
-			if (countryToPlace.getOccupier() == null) {
+		if (armiesPlaced < 50)
+		{
+			if (countryToPlace.getOccupier() == null)
+			{
 				players.get(playerLocation).occupyCountry(countryToPlace);
 				countryToPlace.setOccupier(players.get(playerLocation));
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
+				if (armiesPlaced == 50)
+				{
+					placePhase = false;
+					reinforcePhase = true;
+				}
+
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
 				System.out.println("Army placed at : " + countryToPlace.toString());
+				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
 
-			} else {
+			} else
+			{
 				System.out.println("That country is already Occupied");
 				System.out.println(armiesPlaced);
 
@@ -99,26 +115,32 @@ public class Game {
 										// with 35 units, and 3 players
 
 		{
+			// placePhase = false;
+			// reinforcePhase = true;
 
-			if (countryToPlace.getOccupier().equals(players.get(0))) {
+			if (countryToPlace.getOccupier().equals(players.get(playerLocation)))
+			{
 				countryToPlace.setForcesVal(1);
 				armiesPlaced++;
-				System.out.println("Reinforced " + selectedCountry.getName());
+				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
+				players.get(playerLocation).subtractFromAvailableTroops(1);
 				nextPlayer();
 
 			} else
 				System.out.println("You don't occupy this country");
 
-		} else {
+		} else
+		{
 			placePhase = false;
-			attackPhase = true;
+			playPhase = true;
+			playerLocation = 0;
 
 		}
 
-		return players.get(playerLocation);
 	}
 
-	private void addAI(int numOfAI) {
+	private void addAI(int numOfAI)
+	{
 		for (int i = 0; i < numOfAI; i++)
 			players.add(new AI(AIStrat.EASY, totalPlayers));// this will change
 															// later,
@@ -127,26 +149,37 @@ public class Game {
 
 	}
 
-	public Country getSelectedCountry() {
+	public Country getSelectedCountry()
+	{
 		return selectedCountry;
 	}
 
-	public void setSelectedCountry(Country selectedCountry) {
+	public void setSelectedCountry(Country selectedCountry)
+	{
 		this.selectedCountry = selectedCountry;
 	}
 
-	private void addHumanPlayers(int numOfHumanPlayers) {
-		for (int i = 0; i < numOfHumanPlayers; i++) {
+	private void addHumanPlayers(int numOfHumanPlayers)
+	{
+		for (int i = 0; i < numOfHumanPlayers; i++)
+		{
 			players.add(new HumanPlayer(totalPlayers));
 		}
 
 	}
 
-	public Map getGameMap() {
+	public Map getGameMap()
+	{
 		return gameMap;
 	}
 
-	public Player nextPlayer() {
+	public ArrayList<Player> getPlayers()
+	{
+		return players;
+	}
+
+	public Player nextPlayer()
+	{
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
@@ -154,51 +187,57 @@ public class Game {
 		return players.get(playerLocation);
 	}
 
-	public boolean isPlacePhase() {
+	public boolean isPlacePhase()
+	{
 		return placePhase;
 	}
 
-	public boolean isAttackPhase() {
-		return attackPhase;
+	public boolean isPlayPhase()
+	{
+		return playPhase;
 	}
 
-	public boolean isReinforcePhase() {
+	public boolean isReinforcePhase()
+	{
 		return reinforcePhase;
 	}
-
 
 	public boolean aiChoicePlacement()
 	{
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
-		if (checkIfCountryAvailable(aiSelectedCountry)) {
+		if (checkIfCountryAvailable(aiSelectedCountry))
+		{
 
 			placeArmies(aiSelectedCountry);
-			players.get(playerLocation).subtractFromAvailableTroops(1);
 
 			return true;
 		}
 		return false;
 	}
-	
-	public void aiReinforcePlacement(){
+
+	public void aiReinforcePlacement()
+	{
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountryFromOccupied();
 		placeArmies(aiSelectedCountry);
-		players.get(playerLocation).subtractFromAvailableTroops(1);
+
 	}
 
-	private boolean checkIfCountryAvailable(Country countryToCheck) {
+	private boolean checkIfCountryAvailable(Country countryToCheck)
+	{
 
 		return countryToCheck.getOccupier() == null;
 	}
 
-	public Player getCurrentPlayer() {
+	public Player getCurrentPlayer()
+	{
 		return players.get(playerLocation);
 	}
 
 	// Main idea: player chooses which cards to redeem (max of 3)
 	// if player has 5 cards, he MUST have a match, so call this function until
 	// the player chooses the matching 3 cards
-	public int redeemCards(Player player, ArrayList<Card> cardsToRedeem) {
+	public int redeemCards(Player player, ArrayList<Card> cardsToRedeem)
+	{
 		int numArmies = -1;
 		if (cardsToRedeem.size() < 3) // if the user didn't select 3 cards
 			return -1;
@@ -215,10 +254,12 @@ public class Game {
 						&& three.getUnit().compareTo(two.getUnit()) != 0)
 				|| (one.getUnit().compareTo("WILD") == 0 && (two.getUnit().compareTo(three.getUnit()) != 0))
 				|| (two.getUnit().compareTo("WILD") == 0 && (one.getUnit().compareTo(three.getUnit()) != 0))
-				|| (three.getUnit().compareTo("WILD") == 0 && (one.getUnit().compareTo(two.getUnit()) != 0))) {
+				|| (three.getUnit().compareTo("WILD") == 0 && (one.getUnit().compareTo(two.getUnit()) != 0)))
+		{
 			numArmies = 0;
 			numRedemptions++;
-			switch (numRedemptions) {
+			switch (numRedemptions)
+			{
 			case 1:
 				numArmies = 4;
 				break;
@@ -245,9 +286,12 @@ public class Game {
 			// if any one of the redeemable cards contains a country that the
 			// player has, add 2 armies to that country.
 			boolean added = false;
-			for (Card c : cardsToRedeem) {
-				for (Country t : player.getCountries()) {
-					if (c.getCountry().compareTo(t.getName()) == 0) {
+			for (Card c : cardsToRedeem)
+			{
+				for (Country t : player.getCountries())
+				{
+					if (c.getCountry().compareTo(t.getName()) == 0)
+					{
 						// add 2 armies to that country
 						added = true;
 						int currentForces = t.getForcesVal();
@@ -263,5 +307,42 @@ public class Game {
 			System.out.println("unable to redeem cards");
 		return numArmies;
 		// if numArmies is -1 when returned, cards cannot be redeemed
+	}
+
+	//pops up a pane to ask how many units to move, which returns a string
+	//it then tries to parse that string into an int, and if it does compares it to the total
+	// number of units on a country. If it is larger, or equal to the total number, throws an error, otherwise returns that number
+	// to the gui
+	public int getUnitsToMove(Country countryToRemoveUnits)
+	{
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		;
+		String unitsToMove = "";
+
+		while (!moveFlag)
+		{
+			unitsToMove = JOptionPane.showInputDialog("How Many armies? You must leave 1.");
+			try
+			{
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e)
+			{
+				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag)
+			{
+				if (unitsToReturn >= totalUnits)
+				{
+					JOptionPane.showMessageDialog(null, "You must leave 1 army.", "Error", JOptionPane.ERROR_MESSAGE);
+				} else
+				{
+					theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
+				}
+			}
+		}
+		return unitsToReturn;
 	}
 }

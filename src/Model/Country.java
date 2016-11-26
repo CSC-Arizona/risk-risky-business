@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -12,136 +13,148 @@ import javax.swing.JButton;
  * 	Purpose:	Represent a single country
  */
 
-public class Country extends Observable{
-	
+public class Country extends Observable {
+
 	private String name;
 	private double x;
 	private double y;
 	private int forcesVal;
-//	private Continent continent;
+	// private Continent continent;
 	private Player occupier;
 	private JButton myButton;
 	private ArrayList<Country> neighbors;
 
-	public Country(String name, double x, double y, Continent continent){
+	public Country(String name, double x, double y, Continent continent)
+	{
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		x = -1;
 		y = -1;
-		//Not great design, but it's easy!
+		// Not great design, but it's easy!
 		continent.addCountry(this);
 		forcesVal = 0;
 		occupier = null;
 		neighbors = new ArrayList<Country>();
 		myButton = null;
-	}//end constructor
-	
-	
-	public void addNeighbor(Country neighbor){
+	}// end constructor
+
+	public void addNeighbor(Country neighbor)
+	{
 		neighbors.add(neighbor);
-	}//end addNeighbor
-	
-	public void drawMyButton(){
-		//TODO
-	}//end drawMyButton
-	
-	
-	public void makeButton(int xWidth, int yHeight, ActionListener act){
+	}// end addNeighbor
+
+	public void drawMyButton()
+	{
+		// TODO
+	}// end drawMyButton
+
+	public void makeButton(int xWidth, int yHeight, ActionListener act)
+	{
 		myButton = new JButton();
-		myButton.setLocation((int)(x * xWidth), (int)(y * yHeight));
+		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
 		myButton.setContentAreaFilled(false);
 		myButton.setActionCommand(name);
-		if (name.length()<5)
+		if (name.length() < 5)
 			myButton.setSize(75, 25);
 		else
 			myButton.setSize(name.length() * 8, 25);
-		
+
 		myButton.addActionListener(act);
-		
-	}//end makeButton
-	
-	public void updateButton(int xWidth, int yHeight){
-		myButton.setLocation((int)(x * xWidth), (int)(y * yHeight));
+
+	}// end makeButton
+
+	public void updateButton(int xWidth, int yHeight)
+	{
+		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
 	}
-	
-	public void changeButtonSize(int height, int width){
+
+	public void changeButtonSize(int height, int width)
+	{
 		myButton.setSize(width, height);
 	}
-	
-	public JButton getButton(){
+
+	public JButton getButton()
+	{
 		return myButton;
 	}
-	
-	public String getName() {
+
+	public String getName()
+	{
 		return name;
 	}
 
-
-	public double getX() {
+	public double getX()
+	{
 		return x;
 	}
 
-
-	public double getY() {
+	public double getY()
+	{
 		return y;
 	}
 
-
-	public int getForcesVal() {
+	public int getForcesVal()
+	{
 		return forcesVal;
 	}
 
-
-	public Player getOccupier() {
+	public Player getOccupier()
+	{
 		return occupier;
 	}
 
-
-	public JButton getMyButton() {
+	public JButton getMyButton()
+	{
 		return myButton;
 	}
 
-
-	public ArrayList<Country> getNeighbors() {
+	public ArrayList<Country> getNeighbors()
+	{
 		return neighbors;
 	}
-
 
 	/*
 	 * equals
 	 * 
-	 * Strictly used for finding if a country contains another
-	 * country as a neighbor. The arraylist's contains method
-	 * uses the equals method to do contains
+	 * Strictly used for finding if a country contains another country as a
+	 * neighbor. The arraylist's contains method uses the equals method to do
+	 * contains
 	 */
-	public boolean equals(Country comp){
+	public boolean equals(Country comp)
+	{
 		return name.equals(comp.getName());
-	}//end equals
-
+	}// end equals
 
 	public void setOccupier(Player player)
 	{
 		occupier = player;
 		setChanged();
 		notifyObservers();
-	}
 
+	}
 
 	public void setForcesVal(int i)
 	{
 		forcesVal += i;
-		
+
 	}
-	
-	public String toString(){
+
+	public String toString()
+	{
 		return name;
 	}
-	
-	//used for updating pictures on map for owner of country
-	public String returnMyOwnersFaction()
+
+	public Faction returnMyOwnersFaction()
 	{
-		return occupier.getFaction().toString();
+		return this.getOccupier().getFaction();
 	}
-	
+
+	public void removeUnits(int numOfUnitsToMove)
+	{
+		forcesVal -= numOfUnitsToMove;
+		
+	}
+
+
 }

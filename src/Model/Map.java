@@ -1,7 +1,9 @@
 package Model;
 
-import java.util.ArrayList;
 import gui.riskGUI;
+
+import java.util.ArrayList;
+
 public class Map {
 
 	private Country countries[] = new Country[50];
@@ -13,8 +15,8 @@ public class Map {
 	private Continent black;
 	private Continent yellow;
 	private static Map gameMap;
-	
-	public Map() {
+
+	private Map() {
 		blue = new Continent(0, "Blue");
 		green = new Continent(0, "Green");
 		orange = new Continent(0, "Orange");
@@ -22,6 +24,7 @@ public class Map {
 		red = new Continent(0, "Red");
 		black = new Continent(0, "Black");
 		yellow = new Continent(0, "Yellow");
+
 		fillCountries();
 		
 		/*//Add this to a test?
@@ -33,7 +36,7 @@ public class Map {
 		System.out.println("\n"+black.toString());
 		System.out.println("\n"+yellow.toString());*/
 	}
-
+	
 	public static Map getInstance()
 	{
 		if(gameMap == null)
@@ -41,6 +44,7 @@ public class Map {
 		
 		return gameMap;
 	}
+
 	private void fillCountries() {
 		// this method is going to suck
 		countries[0] = new Country("The Wall", 6.5, 3, blue);
@@ -118,7 +122,6 @@ public class Map {
 		{
 			countries[i].addObserver(riskGUI.getBoardPanel());
 		}
-		
 	}
 
 	// Another terrible method
@@ -300,7 +303,7 @@ public class Map {
 	public Country[] getCountries() {
 		return countries;
 	}
-	
+
 
 
 }
