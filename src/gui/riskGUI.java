@@ -753,7 +753,6 @@ public class riskGUI extends JFrame {
 					while (theGame.isPlacePhase() && theGame.getCurrentPlayer() instanceof AI)
 					{
 						theGame.aiChoicePlacement();
-						System.out.println("hi");
 					}
 				}
 
