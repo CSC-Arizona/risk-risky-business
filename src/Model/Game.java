@@ -207,7 +207,8 @@ public class Game {
 
 	public boolean aiChoicePlacement()
 	{
-		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		
+		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries() );
 		if (checkIfCountryAvailable(aiSelectedCountry))
 		{
 
