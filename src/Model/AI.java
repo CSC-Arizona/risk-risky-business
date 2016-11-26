@@ -1,10 +1,14 @@
 package Model;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JMenuItem;
+
 public class AI extends Player {
 
+	private JMenuItem myDiff;
 	private AIStrat myStrat;
 	public AI(AIStrat strat, int numOfPlayers)
 	{
@@ -72,5 +76,30 @@ public class AI extends Player {
 		//do this till I cannot attack any longer
 		
 	}
+	
+	public void setMyStrat(AIStrat strat)
+	{
+		myStrat = strat;
+	}
 
+	//creates the ai's menuItem for changing difficulty
+	public void makeMenuItem(int i, ActionListener aiDiffChangeListener)
+	{
+		myDiff = new JMenuItem("AI " + i );
+		myDiff.addActionListener(aiDiffChangeListener);
+		myDiff.setActionCommand(String.valueOf(i));
+	}
+	
+	//returns its jMenuItem
+	public JMenuItem getMenuItem()
+	{
+		return myDiff;
+	}
+
+	//returns the ai's current strategy as a string, used for checking if the ai difficulty menu in the gui was working
+	public String getStrat()
+	{
+		
+		return myStrat.toString();
+	}
 }

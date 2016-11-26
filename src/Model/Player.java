@@ -2,6 +2,10 @@ package Model;
 
 import java.util.ArrayList;
 
+import javax.swing.JMenuItem;
+
+
+
 public abstract class Player {
 	private String name;
 	private Faction faction;
@@ -102,4 +106,6 @@ public abstract class Player {
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
 	public abstract void rearrangeTroops();
+
+
 }
