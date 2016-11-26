@@ -147,7 +147,7 @@ public class riskGUI extends JFrame {
 	private void setUpSplash()
 	{
 		// Still messing around with this.
-		splashScreen = new ImageIcon("SplashScreen.jpg");
+		splashScreen = new ImageIcon("images/SplashScreen.jpg");
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
 		drawingPanel.setSize(width - 40, height - 70);
@@ -400,13 +400,13 @@ public class riskGUI extends JFrame {
 	private void setUpImages()
 	{
 
-		gameBoard = new ImageIcon("GoTMapRisk.jpg");
-		stark = new ImageIcon("stark.jpg");
-		targaryen = new ImageIcon("targaryen.jpg");
-		lannister = new ImageIcon("lannister.jpg");
-		whiteWalkers = new ImageIcon("whiteWalkers.jpg");
-		dothraki = new ImageIcon("dothraki.jpg");
-		wildlings = new ImageIcon("wildlings.jpg");
+		gameBoard = new ImageIcon("images/GoTMapRisk.jpg");
+		stark = new ImageIcon("images/stark.jpg");
+		targaryen = new ImageIcon("images/targaryen.jpg");
+		lannister = new ImageIcon("images/lannister.jpg");
+		whiteWalkers = new ImageIcon("images/whiteWalkers.jpg");
+		dothraki = new ImageIcon("images/dothraki.jpg");
+		wildlings = new ImageIcon("images/wildlings.jpg");
 	}//end setUpImages
 
 	// draws buttons over the name of all of the countries

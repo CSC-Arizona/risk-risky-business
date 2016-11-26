@@ -224,7 +224,7 @@ public class Game {
 
 	public void aiReinforcePlacement()
 	{
-		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountryFromOccupied();
+		aiSelectedCountry = ((AI) players.get(playerLocation)).reinforceCountry();
 		placeArmies(aiSelectedCountry);
 
 	}//end aiReinforcePlacement

@@ -69,13 +69,54 @@ public class AI extends Player {
 
 	}// end getRandomCountry
 
-	public Country pickRandomCountryFromOccupied()
+	public Country reinforceCountry()
+	{
+		Country selectedCountry = null;
+		if(myStrat == AIStrat.EASY)
+		{
+			selectedCountry = pickRandomOwnedCountry();
+		}
+		else
+		{
+			//look for countries I own who's neihbors are not owned by me, and reinforce that one
+			selectedCountry = findCountriesInDanger();
+			if(selectedCountry == null)
+				selectedCountry = pickRandomOwnedCountry();
+		}
+		
+
+		return selectedCountry;
+	}//end pickRandomCountryFromOccupied
+
+	private Country findCountriesInDanger()
+	{
+		int i = 0, j = 0;
+		//get my first countries neighbors
+		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
+		while (i < neighbors.size())
+		{
+			j = 0;
+			while (j < neighbors.size() && neighbors.get(j).getOccupier() != this)
+			{
+				j++;
+			}
+			
+			if(j < neighbors.size())
+				return neighbors.get(j);
+			
+			i++;
+			if(i < neighbors.size())
+				neighbors = getCountries().get(i).getNeighbors();
+		}
+		return null;
+	}//end findCountriesInDanger
+
+	private Country pickRandomOwnedCountry()
 	{
 		Random rand = new Random();
 		int randNum = rand.nextInt(getCountries().size());
-
 		return getCountries().get(randNum);
-	}//end pickRandomCountryFromOccupied
+	}//end pickRandomOwnedCountry
 
 	@Override
 	public ArrayList<Card> playCards()
@@ -100,11 +141,18 @@ public class AI extends Player {
 
 	public void myTurn()
 	{
-		if (myStrat == AIStrat.EASY)
-			easyMove();
-		else
-			hardMove();
+		placeNewTroops();
+		attack();
+		reinforceCountry();
+		
 	}//end myTurn
+
+	private void placeNewTroops(){
+		if(myStrat == AIStrat.EASY)
+		{
+			pickRandomOwnedCountry();
+		}
+	}
 
 	private void hardMove()
 	{
