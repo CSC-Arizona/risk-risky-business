@@ -62,6 +62,9 @@ public class Game {
 	public void startGame(int startingPlayer)
 	{
 
+		//roll dice to see who goes first,
+		//set them at players[0]
+		// shuffle players[1-however many]
 		// pick starting countries
 		// while (placePhase)
 		// {
@@ -207,7 +210,8 @@ public class Game {
 
 	public boolean aiChoicePlacement()
 	{
-		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		
+		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries() );
 		if (checkIfCountryAvailable(aiSelectedCountry))
 		{
 
