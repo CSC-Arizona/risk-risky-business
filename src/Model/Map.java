@@ -35,7 +35,7 @@ public class Map {
 		System.out.println("\n"+red.toString());
 		System.out.println("\n"+black.toString());
 		System.out.println("\n"+yellow.toString());*/
-	}
+	}//end constructor
 	
 	public static Map getInstance()
 	{
@@ -43,7 +43,7 @@ public class Map {
 			gameMap = new Map();
 		
 		return gameMap;
-	}
+	}//end getInstance
 
 	private void fillCountries() {
 		// this method is going to suck
@@ -122,7 +122,7 @@ public class Map {
 		{
 			countries[i].addObserver(riskGUI.getBoardPanel());
 		}
-	}
+	}//end fillCountries
 
 	// Another terrible method
 	private void addAllNeighbors() {
@@ -278,7 +278,7 @@ public class Map {
 		int[] qarth = {48, 46};
 		addMyNeighbors(index++, qarth);
 	//	printAllNeighbors();
-	}
+	}//end addAllNeighbors
 
 	private void printAllNeighbors() {
 		for (int i=0; i < countries.length; i++){
@@ -290,7 +290,7 @@ public class Map {
 			System.out.println();
 		}
 		
-	}
+	}//end printAllNeighbors
 
 	// Takes an array of ints, and adds all of the countries at those
 	// indices to be neighbors of the country at the first index
@@ -298,13 +298,13 @@ public class Map {
 		for (int i = 0; i < neighborsI.length; i++) {
 			countries[countryI].addNeighbor(countries[neighborsI[i]]);
 		}
-	}
+	}//end addMyNeighbors
 
 	public Country[] getCountries() {
 		return countries;
-	}
+	}//end getCountries
 
 
 
-}
+}//end Map clss
  

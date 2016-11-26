@@ -15,7 +15,7 @@ public class AI extends Player {
 	{
 		super(numOfPlayers);
 		myStrat = strat;
-	}
+	}//end AI constructor
 
 	// get a random number between from 0 and 49
 	// return that country in the array at index randomNumber
@@ -58,7 +58,7 @@ public class AI extends Player {
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 		return null;
-	}
+	}//end checkAllNeighbors
 
 	private Country getRandomCountry(Country[] countries)
 	{
@@ -75,28 +75,28 @@ public class AI extends Player {
 		int randNum = rand.nextInt(getCountries().size());
 
 		return getCountries().get(randNum);
-	}
+	}//end pickRandomCountryFromOccupied
 
 	@Override
 	public ArrayList<Card> playCards()
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}//end playCards
 
 	@Override
 	public Country attack()
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}//end attack
 
 	@Override
 	public void rearrangeTroops()
 	{
 		// TODO Auto-generated method stub
 
-	}
+	}//end rearrangeTroops
 
 	public void myTurn()
 	{
@@ -104,7 +104,7 @@ public class AI extends Player {
 			easyMove();
 		else
 			hardMove();
-	}
+	}//end myTurn
 
 	private void hardMove()
 	{
@@ -114,7 +114,7 @@ public class AI extends Player {
 		// then try to even out units on border countries, so that they all have
 		// close to the same amount at each one
 
-	}
+	}//end hardMove
 
 	private void easyMove()
 	{
@@ -123,12 +123,12 @@ public class AI extends Player {
 		// occupy
 		// do this till I cannot attack any longer
 
-	}
+	}//end easyMove
 
 	public void setMyStrat(AIStrat strat)
 	{
 		myStrat = strat;
-	}
+	}//end setMyStrat
 
 	// creates the ai's menuItem for changing difficulty
 	public void makeMenuItem(int i, ActionListener aiDiffChangeListener)
@@ -136,13 +136,13 @@ public class AI extends Player {
 		myDiff = new JMenuItem("AI " + i);
 		myDiff.addActionListener(aiDiffChangeListener);
 		myDiff.setActionCommand(String.valueOf(i));
-	}
+	}//end makeMenuItem
 
 	// returns its jMenuItem
 	public JMenuItem getMenuItem()
 	{
 		return myDiff;
-	}
+	}//end getMenuItem
 
 	// returns the ai's current strategy as a string, used for checking if the
 	// ai difficulty menu in the gui was working
@@ -150,5 +150,5 @@ public class AI extends Player {
 	{
 
 		return myStrat.toString();
-	}
+	}//end getStrat
 }

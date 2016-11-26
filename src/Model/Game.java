@@ -27,7 +27,7 @@ public class Game {
 		numRedemptions = 0;
 		newGame();
 
-	}
+	}//end constructor
 
 	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers)
 	{
@@ -35,7 +35,7 @@ public class Game {
 			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers);
 
 		return theGame;
-	}
+	}//end getInstance
 
 	public void newGame()
 	{
@@ -54,7 +54,7 @@ public class Game {
 		// or write a function that randomizes everyones position in the array,
 		// and start at 0
 
-	}
+	}//end newGame
 
 	public void startGame(int startingPlayer)
 	{
@@ -79,7 +79,7 @@ public class Game {
 		// }
 		// doNextThing();
 
-	}
+	}//end startGame
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
@@ -140,7 +140,7 @@ public class Game {
 
 		}
 
-	}
+	}//end placeArmies
 
 	private void addAI(int numOfAI)
 	{
@@ -150,17 +150,17 @@ public class Game {
 		// depending on what difficulty
 		// is chosen;
 
-	}
+	}//end addAi
 
 	public Country getSelectedCountry()
 	{
 		return selectedCountry;
-	}
+	}//end getSelectedCountry
 
 	public void setSelectedCountry(Country selectedCountry)
 	{
 		this.selectedCountry = selectedCountry;
-	}
+	}//end setSelectedCountry
 
 	private void addHumanPlayers(int numOfHumanPlayers)
 	{
@@ -169,17 +169,17 @@ public class Game {
 			players.add(new HumanPlayer(totalPlayers));
 		}
 
-	}
+	}//end addHumanPlayers
 
 	public Map getGameMap()
 	{
 		return gameMap;
-	}
+	}//end getGameMap
 
 	public ArrayList<Player> getPlayers()
 	{
 		return players;
-	}
+	}//end getPlayers
 
 	public Player nextPlayer()
 	{
@@ -188,22 +188,22 @@ public class Game {
 			playerLocation = 0;
 
 		return players.get(playerLocation);
-	}
+	}//end nextPlayer
 
 	public boolean isPlacePhase()
 	{
 		return placePhase;
-	}
+	}//end isPlacePhase
 
 	public boolean isPlayPhase()
 	{
 		return playPhase;
-	}
+	}//end isPlayPhase
 
 	public boolean isReinforcePhase()
 	{
 		return reinforcePhase;
-	}
+	}//end isReinforcePhase
 
 	public boolean aiChoicePlacement()
 	{
@@ -217,25 +217,25 @@ public class Game {
 			return true;
 		}
 		return false;
-	}
+	}//end aiChoicePlacement
 
 	public void aiReinforcePlacement()
 	{
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountryFromOccupied();
 		placeArmies(aiSelectedCountry);
 
-	}
+	}//end aiReinforcePlacement
 
 	private boolean checkIfCountryAvailable(Country countryToCheck)
 	{
 
 		return countryToCheck.getOccupier() == null;
-	}
+	}//end checkIfCountryAvailable
 
 	public Player getCurrentPlayer()
 	{
 		return players.get(playerLocation);
-	}
+	}//end getCurrentPlayer
 
 	// Main idea: player chooses which cards to redeem (max of 3)
 	// if player has 5 cards, he MUST have a match, so call this function until
@@ -311,7 +311,7 @@ public class Game {
 			System.out.println("unable to redeem cards");
 		return numArmies;
 		// if numArmies is -1 when returned, cards cannot be redeemed
-	}
+	}//end redeemCards
 
 	//pops up a pane to ask how many units to move, which returns a string
 	//it then tries to parse that string into an int, and if it does compares it to the total
@@ -348,5 +348,5 @@ public class Game {
 			}
 		}
 		return unitsToReturn;
-	}
-}
+	}//end getUnitsToMove
+}//end Game class
