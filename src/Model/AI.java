@@ -54,7 +54,7 @@ public class AI extends Player {
 				return neighbors.get(j);
 			
 			i++;
-			if(i < neighbors.size())
+			if(i < getCountries().size())
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 		return null;
@@ -69,24 +69,25 @@ public class AI extends Player {
 
 	}// end getRandomCountry
 
-	public Country reinforceCountry()
-	{
-		Country selectedCountry = null;
-		if(myStrat == AIStrat.EASY)
-		{
-			selectedCountry = pickRandomOwnedCountry();
-		}
-		else
-		{
-			//look for countries I own who's neihbors are not owned by me, and reinforce that one
-			selectedCountry = findCountriesInDanger();
-			if(selectedCountry == null)
-				selectedCountry = pickRandomOwnedCountry();
-		}
-		
-
-		return selectedCountry;
-	}//end pickRandomCountryFromOccupied
+	//find my countries that are surrounded by friendly countries, and move their units out
+//	public Country reinforceCountry()
+//	{
+//		Country selectedCountry = null;
+//		if(myStrat == AIStrat.EASY)
+//		{
+//			selectedCountry = pickRandomOwnedCountry();
+//		}
+//		else
+//		{
+//			//look for countries I own who's neihbors are not owned by me, and reinforce that one
+//			selectedCountry = findCountriesInDanger();
+//			if(selectedCountry == null)
+//				selectedCountry = pickRandomOwnedCountry();
+//		}
+//		
+//
+//		return selectedCountry;
+//	}//end pickRandomCountryFromOccupied
 
 	private Country findCountriesInDanger()
 	{
@@ -96,16 +97,19 @@ public class AI extends Player {
 		while (i < neighbors.size())
 		{
 			j = 0;
-			while (j < neighbors.size() && neighbors.get(j).getOccupier() != this)
+			while (j < neighbors.size() && neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) == 0)
 			{
 				j++;
 			}
 			
 			if(j < neighbors.size())
-				return neighbors.get(j);
+				if(j == 0)
+					return getCountries().get(i);
+				else
+					return neighbors.get(--j);
 			
 			i++;
-			if(i < neighbors.size())
+			if(i < getCountries().size())
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 		return null;
@@ -139,19 +143,17 @@ public class AI extends Player {
 
 	}//end rearrangeTroops
 
-	public void myTurn()
-	{
-		placeNewTroops();
-		attack();
-		reinforceCountry();
-		
-	}//end myTurn
 
-	private void placeNewTroops(){
+	public Country placeNewTroops(){
+		Country selectedCountry = null;
 		if(myStrat == AIStrat.EASY)
 		{
-			pickRandomOwnedCountry();
+			selectedCountry = pickRandomOwnedCountry();
 		}
+		else
+			selectedCountry = findCountriesInDanger();
+
+		return selectedCountry;
 	}
 
 	private void hardMove()

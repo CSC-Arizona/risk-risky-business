@@ -758,6 +758,9 @@ public class riskGUI extends JFrame {
 			} else if (theGame.isPlayPhase())
 			{
 				// for now just allow players to move armies
+				//player move then ai move if ai turn
+//				if(theGame.getCurrentPlayer() instanceof AI)
+//					((AI) theGame.getCurrentPlayer()).myTurn();
 				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer()))
 				{
 

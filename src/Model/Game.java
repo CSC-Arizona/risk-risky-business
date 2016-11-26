@@ -216,7 +216,7 @@ public class Game {
 		{
 
 			placeArmies(aiSelectedCountry);
-
+			aiSelectedCountry = null;
 			return true;
 		}
 		return false;
@@ -224,9 +224,12 @@ public class Game {
 
 	public void aiReinforcePlacement()
 	{
-		aiSelectedCountry = ((AI) players.get(playerLocation)).reinforceCountry();
+		while(aiSelectedCountry == null)
+		{
+		aiSelectedCountry = ((AI) players.get(playerLocation)).placeNewTroops();
+		}
 		placeArmies(aiSelectedCountry);
-
+		aiSelectedCountry = null;
 	}//end aiReinforcePlacement
 
 	private boolean checkIfCountryAvailable(Country countryToCheck)
