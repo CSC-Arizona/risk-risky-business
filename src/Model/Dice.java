@@ -10,7 +10,7 @@ public class Dice {
 	//initialize to 0 (has not been rolled)
 	public Dice(){
 		this.value = 0; 
-	}
+	}//end constructor
 	
 	//Rolls a given number of 6 sided die
 	//TODO: This just returns the total sum. I think this may need
@@ -27,11 +27,11 @@ public class Dice {
 		//System.out.println("Total: " + total);
 		this.value = total;
 		return total;
-	}
+	}//end roll
 	
 	//Returns the value of the die, 
 	//returns 0 if die has not been rolled once
 	public int getValue(){
 		return this.value;
-	}
+	}//end getValue
 }

@@ -67,52 +67,52 @@ public class Country extends Observable {
 	public void updateButton(int xWidth, int yHeight)
 	{
 		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
-	}
+	}//end updateButton
 
 	public void changeButtonSize(int height, int width)
 	{
 		myButton.setSize(width, height);
-	}
+	}//end changeButtonSize
 
 	public JButton getButton()
 	{
 		return myButton;
-	}
+	}//end getButton
 
 	public String getName()
 	{
 		return name;
-	}
+	}//end getName
 
 	public double getX()
 	{
 		return x;
-	}
+	}//end getX
 
 	public double getY()
 	{
 		return y;
-	}
+	}//end getY
 
 	public int getForcesVal()
 	{
 		return forcesVal;
-	}
+	}//end getForcesVal
 
 	public Player getOccupier()
 	{
 		return occupier;
-	}
+	}//end getOccupier
 
 	public JButton getMyButton()
 	{
 		return myButton;
-	}
+	}//end getMyButton
 
 	public ArrayList<Country> getNeighbors()
 	{
 		return neighbors;
-	}
+	}//end getNeighbors
 
 	/*
 	 * equals
@@ -132,29 +132,29 @@ public class Country extends Observable {
 		setChanged();
 		notifyObservers();
 
-	}
+	}//end setOccupier
 
 	public void setForcesVal(int i)
 	{
 		forcesVal += i;
 
-	}
+	}//end setForcesVal
 
 	public String toString()
 	{
 		return name;
-	}
+	}//end toString
 
 	public Faction returnMyOwnersFaction()
 	{
 		return this.getOccupier().getFaction();
-	}
+	}//end returnMyOwnersFaction
 
 	public void removeUnits(int numOfUnitsToMove)
 	{
 		forcesVal -= numOfUnitsToMove;
 		
-	}
+	}//end removeUnits
 
 
-}
+}//end countryClasss

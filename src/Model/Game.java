@@ -29,14 +29,14 @@ public class Game {
 		canPlace = false;
 		newGame();
 
-	}
+	}// end constructor
 
 	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers) {
 		if (theGame == null)
 			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers);
 
 		return theGame;
-	}
+	}// end getInstance
 
 	public void newGame() {
 		selectedCountry = null;
@@ -54,7 +54,7 @@ public class Game {
 		// or write a function that randomizes everyones position in the array,
 		// and start at 0
 
-	}
+	}// end newGame
 
 	public void startGame(int startingPlayer) {
 
@@ -78,7 +78,7 @@ public class Game {
 		// }
 		// doNextThing();
 
-	}
+	}// end startGame
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
@@ -132,7 +132,7 @@ public class Game {
 
 		}
 
-	}
+	}// end placeArmies
 
 	private void addAI(int numOfAI) {
 		for (int i = 0; i < numOfAI; i++)
@@ -141,30 +141,30 @@ public class Game {
 		// depending on what difficulty
 		// is chosen;
 
-	}
+	}// end addAi
 
 	public Country getSelectedCountry() {
 		return selectedCountry;
-	}
+	}// end getSelectedCountry
 
 	public void setSelectedCountry(Country selectedCountry) {
 		this.selectedCountry = selectedCountry;
-	}
+	}// end setSelectedCountry
 
 	private void addHumanPlayers(int numOfHumanPlayers) {
 		for (int i = 0; i < numOfHumanPlayers; i++) {
 			players.add(new HumanPlayer(totalPlayers));
 		}
 
-	}
+	}// end addHumanPlayers
 
 	public Map getGameMap() {
 		return gameMap;
-	}
+	}// end getGameMap
 
 	public ArrayList<Player> getPlayers() {
 		return players;
-	}
+	}// end getPlayers
 
 	public Player nextPlayer() {
 		playerLocation++;
@@ -172,19 +172,19 @@ public class Game {
 			playerLocation = 0;
 
 		return players.get(playerLocation);
-	}
+	}// end nextPlayer
 
 	public boolean isPlacePhase() {
 		return placePhase;
-	}
+	}// end isPlacePhase
 
 	public boolean isPlayPhase() {
 		return playPhase;
-	}
+	}// end isPlayPhase
 
 	public boolean isReinforcePhase() {
 		return reinforcePhase;
-	}
+	}// end isReinforcePhase
 
 	public boolean aiChoicePlacement() {
 
@@ -196,22 +196,22 @@ public class Game {
 			return true;
 		}
 		return false;
-	}
+	}// end aiChoicePlacement
 
 	public void aiReinforcePlacement() {
-		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountryFromOccupied();
+		aiSelectedCountry = ((AI) players.get(playerLocation)).reinforceCountry();
 		placeArmies(aiSelectedCountry);
 
-	}
+	}// end aiReinforcePlacement
 
 	private boolean checkIfCountryAvailable(Country countryToCheck) {
 
 		return countryToCheck.getOccupier() == null;
-	}
+	}// end checkIfCountryAvailable
 
 	public Player getCurrentPlayer() {
 		return players.get(playerLocation);
-	}
+	}// end getCurrentPlayer
 
 	// Main idea: player chooses which cards to redeem (max of 3)
 	// if player has 5 cards, he MUST have a match, so call this function until
@@ -281,7 +281,7 @@ public class Game {
 			System.out.println("unable to redeem cards");
 		return numArmies;
 		// if numArmies is -1 when returned, cards cannot be redeemed
-	}
+	}// end redeemCards
 
 	// pops up a pane to ask how many units to move, which returns a string
 	// it then tries to parse that string into an int, and if it does compares
@@ -313,9 +313,11 @@ public class Game {
 			}
 		}
 		return unitsToReturn;
-	}
+
+	}// end unitsToReturn
 
 	public boolean moveUnitsToCountry(int numUnits, Country fromCountry, Country toCountry, Player current) {
+
 		boolean result = false;
 		ArrayList<Country> visited = new ArrayList<Country>();
 		visited.add(fromCountry);
@@ -358,7 +360,6 @@ public class Game {
 		}
 	}// end findPath
 
-	
 	private void printPath(ArrayList<Country> visited) {
 		for (Country node : visited) {
 			System.out.print(node);
@@ -366,4 +367,14 @@ public class Game {
 		}
 		System.out.println();
 	}// end printPath
-}
+
+	public String getPhase() {
+		if (placePhase)
+			return "Place Phase";
+		else if (playPhase)
+			return "Play Phase";
+		else if (reinforcePhase)
+			return "Reinforce Phase";
+		return null;
+	}
+}// end GameClasss

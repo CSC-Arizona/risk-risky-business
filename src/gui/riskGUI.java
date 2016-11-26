@@ -97,7 +97,7 @@ public class riskGUI extends JFrame {
 		setUpSplash(); // comment me out for default mode
 		// defaultMode(); //comment me out for splash screens
 
-	}
+	}//end riskGui constructor
 
 	private void setUpAIMenu()
 	{
@@ -114,7 +114,7 @@ public class riskGUI extends JFrame {
 			}
 		}
 		menu.add(AIDiff);
-	}
+	}//end setUpAiMenu
 
 	private void defaultMode()
 	{
@@ -130,7 +130,7 @@ public class riskGUI extends JFrame {
 		players.get(0).setName("Player1");
 		players.get(1).setName("Player2");
 		drawingPanel.repaint();
-	}
+	}//end defualtMode
 
 	private void setUpHouseArray()
 	{
@@ -142,12 +142,12 @@ public class riskGUI extends JFrame {
 		possHouses.add("Dothraki");
 		possHouses.add("Wildlings");
 
-	}
+	}//end setUpHouseArray
 
 	private void setUpSplash()
 	{
 		// Still messing around with this.
-		splashScreen = new ImageIcon("SplashScreen.jpg");
+		splashScreen = new ImageIcon("images/SplashScreen.jpg");
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
 		drawingPanel.setSize(width - 40, height - 70);
@@ -157,7 +157,7 @@ public class riskGUI extends JFrame {
 		this.setVisible(true);
 		drawingPanel.repaint();
 		splashLoading1();
-	}
+	}//end setUpSplash
 
 	private void splashLoading2() {
 
@@ -186,7 +186,7 @@ public class riskGUI extends JFrame {
 			players.get(j).setFaction(possHouses.get(i));
 			i++;
 		}
-	}
+	}//end splashLoading2
 
 	private void splashNames() {
 
@@ -197,7 +197,7 @@ public class riskGUI extends JFrame {
 			playerNames.add(JOptionPane.showInputDialog("What will be Player " + (i + 1) + "'s Name?"));
 		}
 		splashLoading2();
-	}
+	}//end splash names
 
 	private void splashHouses()
 	{
@@ -243,7 +243,7 @@ public class riskGUI extends JFrame {
 			houses.add(house);
 		}
 		splashNames();
-	}
+	}//end splashHouses
 
 	private void splashNumPlayers()
 	{
@@ -265,7 +265,7 @@ public class riskGUI extends JFrame {
 
 		}
 		splashHouses();
-	}
+	}//end splahNumPlayers
 
 	private void splashChooseGame()
 	{
@@ -294,7 +294,7 @@ public class riskGUI extends JFrame {
 		splashInfo.add(load);
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
-	}
+	}//end splashChooseGame
 
 	/*
 	 * SplashLoading1 is the first loading page. Sets up the background image
@@ -330,7 +330,7 @@ public class riskGUI extends JFrame {
 		}
 		// move on to splash screen #2, choosing game play
 		splashChooseGame();
-	}
+	}//end splashLoading1
 
 	private void setUpGui()
 	{
@@ -340,7 +340,7 @@ public class riskGUI extends JFrame {
 		setTitle("GoT Risk");
 		setSize(width, height);
 		this.setVisible(true);
-	}
+	}//end setUpGui
 
 	private void setUpMenu()
 	{
@@ -364,7 +364,7 @@ public class riskGUI extends JFrame {
 		rules.addActionListener(new helpListener());
 		about.addActionListener(new helpListener());
 
-	}
+	}//end setUpMenu
 
 	private void setUpDrawingPanel()
 	{
@@ -395,19 +395,19 @@ public class riskGUI extends JFrame {
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
 
-	}
+	}//end setUpDrawingPanel
 
 	private void setUpImages()
 	{
 
-		gameBoard = new ImageIcon("GoTMapRisk.jpg");
-		stark = new ImageIcon("stark.jpg");
-		targaryen = new ImageIcon("targaryen.jpg");
-		lannister = new ImageIcon("lannister.jpg");
-		whiteWalkers = new ImageIcon("whiteWalkers.jpg");
-		dothraki = new ImageIcon("dothraki.jpg");
-		wildlings = new ImageIcon("wildlings.jpg");
-	}
+		gameBoard = new ImageIcon("images/GoTMapRisk.jpg");
+		stark = new ImageIcon("images/stark.jpg");
+		targaryen = new ImageIcon("images/targaryen.jpg");
+		lannister = new ImageIcon("images/lannister.jpg");
+		whiteWalkers = new ImageIcon("images/whiteWalkers.jpg");
+		dothraki = new ImageIcon("images/dothraki.jpg");
+		wildlings = new ImageIcon("images/wildlings.jpg");
+	}//end setUpImages
 
 	// draws buttons over the name of all of the countries
 	private void drawCountryButtons()
@@ -433,7 +433,7 @@ public class riskGUI extends JFrame {
 		{
 			country.updateButton(xWidth, yHeight);
 		}
-	}
+	}//end updateCountryButtons
 
 	private class BoardPanel extends JPanel implements Observer {
 		@Override
@@ -465,7 +465,7 @@ public class riskGUI extends JFrame {
 				drawCurrentPlayer(g2);
 			// drawGridAndNumbers(g2);
 
-		}
+		}//end paintComponenet
 
 		private void drawCurrentPlayer(Graphics2D g2)
 		{
@@ -500,8 +500,8 @@ public class riskGUI extends JFrame {
 			g2.setColor(Color.WHITE);
 			g2.setFont(new Font("Courier", Font.BOLD, 20));
 			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
-
-		}
+			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
+		}//end drawCurrentPlayer
 
 		// draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2)
@@ -544,7 +544,7 @@ public class riskGUI extends JFrame {
 				}
 			}
 
-		}
+		}//end drawFaction
 		// draws a 40X40 grid over the risk map. Used for determining where to
 		// place buttons.
 
@@ -586,21 +586,21 @@ public class riskGUI extends JFrame {
 				}
 				startX += xWidth;
 			}
-		}
+		}//end drawGridAndNumbers
 
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1)
 		{
 			repaint();
-		}
+		}//end update
 
-	}
+	}//end boardPanel
 
 	public static BoardPanel getBoardPanel()
 	{
 		return drawingPanel;
-	}
+	}//end getBoardPanel
 
 	private class CountryPanel extends JPanel {
 		private JPanel centerPanel;
@@ -624,7 +624,7 @@ public class riskGUI extends JFrame {
 			makeAMoveButton = new JButton("Make your move!");
 			makeAMoveButton.addActionListener(new makeMoveListener());
 			this.add(centerPanel);
-		}
+		}//end countryPanel constructor
 
 		public void updatePanel()
 		{
@@ -681,7 +681,7 @@ public class riskGUI extends JFrame {
 			centerPanel.revalidate();
 			centerPanel.repaint();
 
-		}// end
+		}// end updatePanel
 
 		private class TradeClickListener implements ActionListener {
 			@Override
@@ -693,8 +693,8 @@ public class riskGUI extends JFrame {
 				theGame.redeemCards(nextPlayer, cards);
 				// centerPanel.updatePanel();
 				repaint();
-			}
-		}
+			}//end actionPerformed
+		}//end tradeClickListener
 
 	}// end countryPanel
 
@@ -714,7 +714,7 @@ public class riskGUI extends JFrame {
 								+ "\nCreated for our CS335 class as our final project.",
 						"About", JOptionPane.INFORMATION_MESSAGE);
 
-		}
+		}//end helpListener
 
 	}// end helpListener
 
@@ -733,8 +733,8 @@ public class riskGUI extends JFrame {
 					theGame.setSelectedCountry(country);
 			}
 			drawingPanel.repaint();
-		}
-	}// end class
+		}//end actionperformed
+	}// end countryclicklistener
 
 	private class makeMoveListener implements ActionListener {
 
@@ -821,8 +821,8 @@ public class riskGUI extends JFrame {
 			System.out.println(gameType);
 			splashNumPlayers();
 
-		}
-	}
+		}//end actionperformed
+	}//end GameTypeListener
 
 	//listener for the AI Difficulty menu
 	private class aiDiffChangeListener implements ActionListener {
@@ -860,7 +860,7 @@ public class riskGUI extends JFrame {
 			
 		
 
-		}
+		}//end actionperformed
 
-	}
+	}//end aiDiffChangeListener
 }
