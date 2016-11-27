@@ -245,7 +245,6 @@ public class riskGUI extends JFrame {
 	private void splashHouses() {
 		drawingPanel.remove(splashInfo);
 
-		System.out.println("What will be your houses?");
 		houses = new ArrayList<String>();
 		for (int i = 0; i < humans; i++) {
 			Boolean illegalName = true;
@@ -269,7 +268,6 @@ public class riskGUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Must choose a House.", "Error",
 							JOptionPane.ERROR_MESSAGE);
 					check=false;
-					//illegalName = false;
 				}
 				else if(house!=null && check)
 					illegalName=false;
