@@ -104,6 +104,7 @@ public class riskGUI extends JFrame {
 	private ArrayList<String> possHouses;
 	private boolean decisionMakingPhase = false, moveUnitsFlag = false;
 	private Country moveUnitsFromCountry;
+	private ArrayList<AIStrat> strat = new ArrayList<AIStrat>();
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -216,6 +217,7 @@ public class riskGUI extends JFrame {
 		int i = 0;
 		for (int j = humans; j < (humans + ai); j++) {
 			players.get(j).setFaction(possHouses.get(i));
+			((AI)players.get(j)).setMyStrat(strat.get(i));
 			i++;
 		}
 	}// end splashLoading2
@@ -273,6 +275,36 @@ public class riskGUI extends JFrame {
 					illegalName=false;
 			}
 			houses.add(house);
+		}
+		for (int i = 0; i < ai; i++) {
+			Boolean illegalName = true;
+			String ais="";
+			while (illegalName == true) {
+				ais = (String) JOptionPane.showInputDialog(null, "Please choose AI " + (i + 1) + "'s Strategy", "Choose a Strategy",
+						JOptionPane.QUESTION_MESSAGE, null,
+						new Object[] {"Easy","Medium","Hard" },
+						"Easy");
+				if(ais==null){
+					JOptionPane.showMessageDialog(null, "Must choose a Strategy.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+				else{
+					illegalName=false;
+					switch (ais) {
+					case "Easy":
+						strat.add(AIStrat.EASY);
+						break;
+					case "Medium":
+						strat.add(AIStrat.MEDIUM);
+						break;
+					case "Hard":
+						strat.add(AIStrat.HARD);
+						break;
+					default:
+						break;
+					}
+				}
+			}
 		}
 		splashNames();
 	}// end splashHouses
