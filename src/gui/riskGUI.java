@@ -765,7 +765,7 @@ public class riskGUI extends JFrame {
 			// Now, add the strength
 			JLabel streng = new JLabel();
 			streng.setHorizontalAlignment(JLabel.CENTER);
-			streng.setFont(gotFontHeader.deriveFont(24f));
+			streng.setFont(gotFontHeader.deriveFont(48f));
 			streng.setText("" + curr.getForcesVal());
 			streng.setBorder(raisedWithColor);
 			center.add(streng);
