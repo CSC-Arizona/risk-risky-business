@@ -26,6 +26,6 @@ public enum Faction {
 	//So the AIs can have names associated with their factions
 	public String getDefaultPlayerName(){
 		return defaultPlayerName;
-	}
+	}//end defaultPlayerName
 	
-}
+}//end Faction

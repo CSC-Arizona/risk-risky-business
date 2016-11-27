@@ -2,6 +2,10 @@ package Model;
 
 import java.util.ArrayList;
 
+import javax.swing.JMenuItem;
+
+
+
 public abstract class Player {
 	private String name;
 	private Faction faction;
@@ -33,7 +37,7 @@ public abstract class Player {
 
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
-	}
+	}//end constructor
 	
 	public void setFaction(String house){
 		if(house.compareTo("Lannister")==0){
@@ -60,15 +64,15 @@ public abstract class Player {
 		if (name == null){
 			setName(faction.getDefaultPlayerName());
 		}
-	}
+	}//end setFaction
 
 	public void setName(String name){
 		this.name = name;
-	}
+	}//end setName
 	public void occupyCountry(Country occupyMe)
 	{
 		myCountries.add(occupyMe);
-	}
+	}//end occupyCountry
 	
 	public boolean equals(Player player)
 	{
@@ -77,36 +81,38 @@ public abstract class Player {
 		
 		return false;
 		
-	}
+	}//end equals
 	public ArrayList<Country> getCountries(){
 		return myCountries;
-	}
+	}//end getCountries
 	
 	public int getAvailableTroops()
 	{
 		return availTroops;
-	}
+	}//end getAvailableTrooops
 	
 	public ArrayList getCards(){
 		return myCards; 
-	}
+	}//end getCards
 	
 	public void subtractFromAvailableTroops(int troops)
 	{
 		availTroops -= troops;
 
-	}
+	}//end subtractFromAvailableTroops
 
 	public Faction getFaction()
 	{
 		return faction;
-	}
+	}//end getFaction
 	
 	public String getName()
 	{
 		return name;
-	}
+	}//end getName
 	public abstract ArrayList<Card> playCards();
 	public abstract Country attack();
 	public abstract void rearrangeTroops();
+
+
 }

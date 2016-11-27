@@ -23,14 +23,14 @@ public class Continent {
 		owner = null;
 		myCountries = new ArrayList<Country>();
 		ownerBonus = 0;
-	}
+	}//end continent constructor #1
 	
 	public Continent(int ownerBonus, String name){
 		this.name = name;
 		owner = null;
 		this.myCountries = new ArrayList<Country>();
 		this.ownerBonus = ownerBonus;
-	}//end constructor
+	}//end constructor #2
 	
 	
 	//returns 0 if the player is not the owner of this country,
@@ -40,12 +40,12 @@ public class Continent {
 			return ownerBonus;
 		else
 			return 0;
-	}
+	}//end payOwnerbonus
 	
 	
 	public void addCountry(Country country){
 		myCountries.add(country);
-	}
+	}//end addCountry
 	
 	
 	public Player findOwner(){
@@ -58,7 +58,7 @@ public class Continent {
 			i++;
 		}
 		return owner;
-	}
+	}//end findOwner
 	
 	
 	
@@ -72,7 +72,7 @@ public class Continent {
 		}
 		
 		return str;
-	}
+	}//end toString
 	
 	
 	
