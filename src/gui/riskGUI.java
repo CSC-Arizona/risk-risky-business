@@ -109,6 +109,7 @@ public class riskGUI extends JFrame {
 	private ArrayList<AIStrat> strat = new ArrayList<AIStrat>();
 	private boolean attackFromFlag = false, attackFlag = false;
 	private Country attackFrom, attack;
+	private int numOfArmies=0;
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -1012,10 +1013,11 @@ public class riskGUI extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					}
 					else{
+						int numArmies = theGame.getArmiesToAttack(attackFrom);
 						String attackResult ="";
 						System.out.println(theGame.getSelectedCountry()+ " " + theGame.getSelectedCountry().getForcesVal());
 						System.out.println(attackFrom+ " " + attackFrom.getForcesVal());
-						attackResult = theGame.attack(attackFrom,theGame.getSelectedCountry());
+						attackResult = theGame.attack(attackFrom, theGame.getSelectedCountry(), numArmies);
 						if(attackResult.compareTo("")!=0){
 							System.out.println(theGame.getSelectedCountry()+ " " + theGame.getSelectedCountry().getForcesVal());
 							System.out.println(attackFrom+ " " + attackFrom.getForcesVal());
@@ -1034,10 +1036,11 @@ public class riskGUI extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					}
 					else{
+						int numArmies = theGame.getArmiesToAttack(theGame.getSelectedCountry());
 						String attackResult ="";
 						System.out.println(theGame.getSelectedCountry()+ " " + theGame.getSelectedCountry().getForcesVal());
 						System.out.println(attack+ " " + attack.getForcesVal());
-						attackResult = theGame.attack(attack,theGame.getSelectedCountry());
+						attackResult = theGame.attack(theGame.getSelectedCountry(), attack, numArmies);
 						if(attackResult.compareTo("")!=0){
 							System.out.println(theGame.getSelectedCountry()+ " " + theGame.getSelectedCountry().getForcesVal());
 							System.out.println(attack+ " " + attack.getForcesVal());

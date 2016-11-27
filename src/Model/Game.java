@@ -322,6 +322,32 @@ public class Game {
 		return unitsToReturn;
 
 	}// end unitsToReturn
+	
+	public int getArmiesToAttack(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		String unitsToMove = "";
+
+		while (!moveFlag) {
+			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn > totalUnits) {
+					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					//theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
+				}
+			}
+		}
+		return unitsToReturn;
+
+	}// end getArmiesToAttack
 
 	public boolean moveUnitsToCountry(int numUnits, Country fromCountry, Country toCountry, Player current) {
 
@@ -386,17 +412,25 @@ public class Game {
 		return null;
 	}
 
-	public String attack(Country c1, Country c2) {
+	public String attack(Country yours, Country theirs, int numArmies) {
 		String result="";
-		if(c1.getForcesVal() <= c2.getForcesVal()){
-			c2.setForcesVal(c1.getForcesVal()-1);
-			c1.removeUnits(c1.getForcesVal()-1);
-			result = c2.toString();
+		if(numArmies <= theirs.getForcesVal()){
+			if(numArmies == yours.getForcesVal()){ //if you lose, and the num of armies to attacked with== total forces
+				theirs.setForcesVal(numArmies-1); 
+				yours.removeUnits(numArmies-1);
+				yours.setOccupier(theirs.getOccupier());
+			}
+			else{
+				//theirs.setForcesVal(numArmies);
+				yours.removeUnits(numArmies); //you lose the armies fought with
+			}
+			result = theirs.toString();
 		}
-		else if(c2.getForcesVal() < c1.getForcesVal()){
-			c1.setForcesVal(c2.getForcesVal()-1);
-			c2.removeUnits(c2.getForcesVal()-1);
-			result = c1.toString();
+		else if(theirs.getForcesVal() < numArmies){
+			yours.setForcesVal(theirs.getForcesVal()-1);
+			theirs.removeUnits(theirs.getForcesVal()-1);
+			theirs.setOccupier(yours.getOccupier());
+			result = yours.toString();
 		}
 		return result;
 	}
