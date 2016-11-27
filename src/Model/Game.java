@@ -127,6 +127,7 @@ public class Game {
 
 		} else {
 			placePhase = false;
+			reinforcePhase = false;
 			playPhase = true;
 			playerLocation = 0;
 
@@ -313,7 +314,7 @@ public class Game {
 				if (unitsToReturn >= totalUnits) {
 					JOptionPane.showMessageDialog(null, "You must leave 1 army.", "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
-					theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					//theGame.getSelectedCountry().removeUnits(unitsToReturn);
 					moveFlag = true;
 				}
 			}
@@ -330,6 +331,7 @@ public class Game {
 		findPath(fromCountry, visited, toCountry, current);
 		if (canPlace) {
 			toCountry.setForcesVal(numUnits);
+			fromCountry.removeUnits(numUnits);
 			result = true;
 		}
 		canPlace = false;
@@ -382,5 +384,20 @@ public class Game {
 		else if (reinforcePhase)
 			return "Reinforce Phase";
 		return null;
+	}
+
+	public String attack(Country c1, Country c2) {
+		String result="";
+		if(c1.getForcesVal() <= c2.getForcesVal()){
+			c2.setForcesVal(c1.getForcesVal()-1);
+			c1.removeUnits(c1.getForcesVal()-1);
+			result = c2.toString();
+		}
+		else if(c2.getForcesVal() < c1.getForcesVal()){
+			c1.setForcesVal(c2.getForcesVal()-1);
+			c2.removeUnits(c2.getForcesVal()-1);
+			result = c1.toString();
+		}
+		return result;
 	}
 }// end GameClasss
