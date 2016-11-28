@@ -199,7 +199,7 @@ public class Game {
 			// we should now be back at the beginning of the players list
 			// already,
 			// so we need to give
-			// that player unit for the first turn
+			// that player units for the first turn
 			players.get(playerLocation).getTroops();// gives player new troops
 		}
 

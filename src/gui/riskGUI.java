@@ -389,11 +389,11 @@ public class riskGUI extends JFrame {
 			try
 			{
 				humans = Integer.parseInt(human);
+				continueFlag = true;
 
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null,
 						"Must choose a valid number between 0 and 6.", "Error",
-
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -678,6 +678,8 @@ public class riskGUI extends JFrame {
 			g2.setFont(gotFontBody.deriveFont(20f));
 			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
 			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
+			if(theGame.isDeployPhase())
+				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110, 65);
 		}// end drawCurrentPlayer
 
 		// draws factions if a country is occupied
@@ -983,6 +985,12 @@ public class riskGUI extends JFrame {
 					this.add(directions, BorderLayout.CENTER);
 
 				} // end if
+				else if (theGame.isDeployPhase())
+				{
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 20));
+					directions.setText("Choose a country to Deploy new units");
+					this.add(directions, BorderLayout.CENTER);
+				}
 				else if (theGame.isReinforcePhase())
 				{
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
@@ -1038,7 +1046,12 @@ public class riskGUI extends JFrame {
 				{
 					makePlayingCenterPanel();
 					makePlacementBottomLabel();
-				} // end else if
+				}
+				else if(theGame.isDeployPhase())
+				{
+					makePlayingCenterPanel();
+					makePlacementBottomLabel();
+				}//end elseif
 					// we should make a specific panel for if a transfer is in
 					// progress.
 				else
