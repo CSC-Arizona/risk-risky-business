@@ -3,29 +3,27 @@ package Model;
 import java.util.ArrayList;
 
 public class HumanPlayer extends Player {
-	
-	public HumanPlayer(int numOfPlayers){ 
+
+	public HumanPlayer(int numOfPlayers) {
 		super(numOfPlayers);
-	}//end constructor
+	}// end constructor
 
 	@Override
 	public ArrayList<Card> playCards() {
 		// TODO Auto-generated method stub
 		return null;
-	}//end playCards
+	}// end playCards
 
 	@Override
 	public Country attack() {
 		// TODO Auto-generated method stub
 		return null;
-	}//end attack
+	}// end attack
 
 	@Override
 	public void rearrangeTroops() {
 		// TODO Auto-generated method stub
 
-	}//end rearrangeTropps
-	
-	
+	}// end rearrangeTropps
 
-}//end HumanPlayer class
+}// end HumanPlayer class

@@ -28,16 +28,16 @@ public class AudioFilePlayer extends Thread {
 
 	private String fileName;
 
-	//private ArrayList<EndOfSongListener> listeners = new ArrayList<EndOfSongListener>();
+	// private ArrayList<EndOfSongListener> listeners = new
+	// ArrayList<EndOfSongListener>();
 
 	public AudioFilePlayer(String audioFileName) {
 		fileName = audioFileName;
 	}
-/*
-	public void addEndOfSongListener(EndOfSongListener listener) {
-		if (listener != null)
-			this.listeners.add(listener);
-	}*/
+	/*
+	 * public void addEndOfSongListener(EndOfSongListener listener) { if
+	 * (listener != null) this.listeners.add(listener); }
+	 */
 
 	@Override
 	public void run() {
@@ -104,20 +104,15 @@ public class AudioFilePlayer extends Thread {
 
 				// Notify the listeners if there are any objects waiting for
 				// this message.
-				/*for (EndOfSongListener listener : listeners) {
-					EndOfSongEvent eose = new EndOfSongEvent(fileName, LocalDate.now(), LocalTime.now());
-					if (!EventQueue.isDispatchThread()) {
-						try {
-							EventQueue.invokeAndWait(new EDTListener(eose, listener));
-						} catch (InvocationTargetException e) {
-							e.printStackTrace();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					} else {
-						listener.songFinishedPlaying(eose);
-					}
-				}*/
+				/*
+				 * for (EndOfSongListener listener : listeners) { EndOfSongEvent
+				 * eose = new EndOfSongEvent(fileName, LocalDate.now(),
+				 * LocalTime.now()); if (!EventQueue.isDispatchThread()) { try {
+				 * EventQueue.invokeAndWait(new EDTListener(eose, listener)); }
+				 * catch (InvocationTargetException e) { e.printStackTrace(); }
+				 * catch (InterruptedException e) { e.printStackTrace(); } }
+				 * else { listener.songFinishedPlaying(eose); } }
+				 */
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -131,20 +126,14 @@ public class AudioFilePlayer extends Thread {
 		res.open(audioFormat);
 		return res;
 	}
-/*
-	private class EDTListener implements Runnable {
-
-		private EndOfSongEvent eose;
-		private EndOfSongListener listener;
-
-		public EDTListener(EndOfSongEvent eose, EndOfSongListener listener) {
-			this.eose = eose;
-			this.listener = listener;
-		}
-
-		@Override
-		public void run() {
-			listener.songFinishedPlaying(eose);
-		}
-	}*/
+	/*
+	 * private class EDTListener implements Runnable {
+	 * 
+	 * private EndOfSongEvent eose; private EndOfSongListener listener;
+	 * 
+	 * public EDTListener(EndOfSongEvent eose, EndOfSongListener listener) {
+	 * this.eose = eose; this.listener = listener; }
+	 * 
+	 * @Override public void run() { listener.songFinishedPlaying(eose); } }
+	 */
 }

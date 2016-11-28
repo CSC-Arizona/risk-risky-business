@@ -20,39 +20,39 @@ public class Deck {
 		fillDeck(riskDeck);
 		shuffle();
 		size = 52;
-	}//end constructor
+	}// end constructor
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
 			uniqueDeck = new Deck();
 		return uniqueDeck;
-	}//end getInstance
+	}// end getInstance
 
 	public void shuffle() {
 		riskDeck.clear();
 		fillDeck(riskDeck);
 		Collections.shuffle(riskDeck);
 		size = 52;
-	}//end shuffle
+	}// end shuffle
 
-	//returns null if the deck has run out of cards.
+	// returns null if the deck has run out of cards.
 	public Card deal() {
-		if(size>0){
+		if (size > 0) {
 			Card result;
-			result = riskDeck.get(size-1);
-			riskDeck.remove(size-1);
+			result = riskDeck.get(size - 1);
+			riskDeck.remove(size - 1);
 			size--;
 			return result;
-		}
-		else
+		} else
 			return null;
-	}//end deal
-	
-	public int getSize(){
-		return size;
-	}//end getSize
+	}// end deal
 
-	//possible units: infantry, cavalry, artillery. Add all territories (countries) and 2 wild cards. 
+	public int getSize() {
+		return size;
+	}// end getSize
+
+	// possible units: infantry, cavalry, artillery. Add all territories
+	// (countries) and 2 wild cards.
 	private void fillDeck(ArrayList<Card> deck) {
 		deck.add(new Card("The Wall", "infantry"));
 		deck.add(new Card("Skagos", "cavalry"));
@@ -106,6 +106,6 @@ public class Deck {
 		deck.add(new Card("Qarth", "cavalry"));
 		deck.add(new Card("WILD", "WILD"));
 		deck.add(new Card("WILD", "WILD"));
-	}//end fillDeck
+	}// end fillDeck
 
-}//end Deck Class
+}// end Deck Class

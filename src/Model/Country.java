@@ -24,8 +24,7 @@ public class Country extends Observable {
 	private JButton myButton;
 	private ArrayList<Country> neighbors;
 
-	public Country(String name, double x, double y, Continent continent)
-	{
+	public Country(String name, double x, double y, Continent continent) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
@@ -39,18 +38,15 @@ public class Country extends Observable {
 		myButton = null;
 	}// end constructor
 
-	public void addNeighbor(Country neighbor)
-	{
+	public void addNeighbor(Country neighbor) {
 		neighbors.add(neighbor);
 	}// end addNeighbor
 
-	public void drawMyButton()
-	{
+	public void drawMyButton() {
 		// TODO
 	}// end drawMyButton
 
-	public void makeButton(int xWidth, int yHeight, ActionListener act)
-	{
+	public void makeButton(int xWidth, int yHeight, ActionListener act) {
 		myButton = new JButton();
 		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
 		myButton.setContentAreaFilled(false);
@@ -64,55 +60,45 @@ public class Country extends Observable {
 
 	}// end makeButton
 
-	public void updateButton(int xWidth, int yHeight)
-	{
+	public void updateButton(int xWidth, int yHeight) {
 		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
-	}//end updateButton
+	}// end updateButton
 
-	public void changeButtonSize(int height, int width)
-	{
+	public void changeButtonSize(int height, int width) {
 		myButton.setSize(width, height);
-	}//end changeButtonSize
+	}// end changeButtonSize
 
-	public JButton getButton()
-	{
+	public JButton getButton() {
 		return myButton;
-	}//end getButton
+	}// end getButton
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
-	}//end getName
+	}// end getName
 
-	public double getX()
-	{
+	public double getX() {
 		return x;
-	}//end getX
+	}// end getX
 
-	public double getY()
-	{
+	public double getY() {
 		return y;
-	}//end getY
+	}// end getY
 
-	public int getForcesVal()
-	{
+	public int getForcesVal() {
 		return forcesVal;
-	}//end getForcesVal
+	}// end getForcesVal
 
-	public Player getOccupier()
-	{
+	public Player getOccupier() {
 		return occupier;
-	}//end getOccupier
+	}// end getOccupier
 
-	public JButton getMyButton()
-	{
+	public JButton getMyButton() {
 		return myButton;
-	}//end getMyButton
+	}// end getMyButton
 
-	public ArrayList<Country> getNeighbors()
-	{
+	public ArrayList<Country> getNeighbors() {
 		return neighbors;
-	}//end getNeighbors
+	}// end getNeighbors
 
 	/*
 	 * equals
@@ -121,40 +107,33 @@ public class Country extends Observable {
 	 * neighbor. The arraylist's contains method uses the equals method to do
 	 * contains
 	 */
-	public boolean equals(Country comp)
-	{
+	public boolean equals(Country comp) {
 		return name.equals(comp.getName());
 	}// end equals
 
-	public void setOccupier(Player player)
-	{
+	public void setOccupier(Player player) {
 		occupier = player;
 		setChanged();
 		notifyObservers();
 
-	}//end setOccupier
+	}// end setOccupier
 
-	public void setForcesVal(int i)
-	{
+	public void setForcesVal(int i) {
 		forcesVal += i;
 
-	}//end setForcesVal
+	}// end setForcesVal
 
-	public String toString()
-	{
+	public String toString() {
 		return name;
-	}//end toString
+	}// end toString
 
-	public Faction returnMyOwnersFaction()
-	{
+	public Faction returnMyOwnersFaction() {
 		return this.getOccupier().getFaction();
-	}//end returnMyOwnersFaction
+	}// end returnMyOwnersFaction
 
-	public void removeUnits(int numOfUnitsToMove)
-	{
+	public void removeUnits(int numOfUnitsToMove) {
 		forcesVal -= numOfUnitsToMove;
-		
-	}//end removeUnits
 
+	}// end removeUnits
 
-}//end countryClasss
+}// end countryClasss
