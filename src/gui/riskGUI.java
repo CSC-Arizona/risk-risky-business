@@ -135,14 +135,14 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		// splash = true; //comment me out for default mode
-		splash = false; // comment me out for splash screens
+		splash = true; //comment me out for default mode
+		//splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		// setUpSplash(); // comment me out for default mode
-		defaultMode(); // comment me out for splash screens
+		setUpSplash(); // comment me out for default mode
+		//defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
