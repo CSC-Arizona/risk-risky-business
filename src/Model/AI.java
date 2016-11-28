@@ -180,24 +180,21 @@ public class AI extends Player {
 		return fringeCountries.get(randNum);
 	}
 
-	private void hardMove()
+	//returns a country it can attack
+	private Country aiAttack(){
+		
+		Country attackMe = pickRandomFromList(findCountriesToAttack());
+		return attackMe;
+	}//end aiAttack
+
+	
+	//picks a random country from the list of countries to attack
+	private Country pickRandomFromList(ArrayList<Country> countriesToAttack)
 	{
-		// place units on outside countries, then try to
-		// take whole continent first, then pick random neighbor, take that
-		// continent, etc
-		// then try to even out units on border countries, so that they all have
-		// close to the same amount at each one
-
-	}// end hardMove
-
-	private void easyMove()
-	{
-		// place new units in random occupied countries then
-		// pick random country, if a neighbor to one of my own countries, try to
-		// occupy
-		// do this till I cannot attack any longer
-
-	}// end easyMove
+		Random rand = new Random();
+		int randInt = rand.nextInt(countriesToAttack.size());
+		return countriesToAttack.get(randInt);
+	}//end pickRandomFromList
 
 	public void setMyStrat(AIStrat strat)
 	{
@@ -251,4 +248,26 @@ public class AI extends Player {
 		}
 		return countries;
 	}//end pickSetOfRandomOwnedCountry
+	
+	//gets all fringe countries, then for each neihbor that fringe country has, if it isn't owned by me
+	// check if i have more units on my country than that country, if I do, add that country to my list of countriesWorthAttacking
+	private ArrayList<Country> findCountriesToAttack()
+	{
+		ArrayList<Country> fringeCountries = findFringeCountries();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		for(Country country : fringeCountries)
+		{
+			ArrayList<Country> neighbors = country.getNeighbors();
+			for(Country neighboringCountry : neighbors)
+			{
+				if(neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0)
+				{
+					if(country.getForcesVal() > neighboringCountry.getForcesVal())
+						countriesWorthAttacking.add(neighboringCountry);
+				}
+			}
+		}
+		
+		return countriesWorthAttacking;
+	}//end findCountriesToAttack
 }

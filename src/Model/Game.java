@@ -551,7 +551,7 @@ public class Game {
 		else if(playPhase && attackPhase)
 			return "Attack Phase";
 		return null;
-	}
+	}//end getPhase
 
 	public String attack(Country yours, Country theirs, int numArmies)
 	{
@@ -578,5 +578,10 @@ public class Game {
 			result = yours.toString();
 		}
 		return result;
-	}
+	}//end attack
+
+	public boolean isAttackPhase()
+	{
+		return attackPhase;
+	}// end isAttackPhase
 }// end GameClasss
