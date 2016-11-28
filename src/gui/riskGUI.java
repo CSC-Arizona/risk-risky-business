@@ -110,6 +110,7 @@ public class riskGUI extends JFrame {
 	private boolean attackFromFlag = false, attackFlag = false;
 	private Country attackFrom, attack;
 	private int numOfArmies=0;
+	private boolean musicOn = true;
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -423,11 +424,21 @@ public class riskGUI extends JFrame {
 		JMenuItem newGame = new JMenuItem("New Game");
 		newGame.addActionListener(new NewGameListener());
 		file.add(newGame);
+		JMenu settings = new JMenu("Settings");
+		String music = "";
+		if(musicOn)
+			music = "Mute Music";
+		else
+			music = "Unmute Music";
+		JMenuItem musicStatus = new JMenuItem(music);
+		musicStatus.addActionListener(new musicListener());
+		settings.add(musicStatus);
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
 		menu.add(file);
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
+		menu.add(settings);
 
 		JMenuItem rules = new JMenuItem("Rules");
 		help.add(rules);
@@ -1160,4 +1171,14 @@ public class riskGUI extends JFrame {
 			drawingPanel.repaint();
 		}// end actionperformed
 	}// end clearButtonListener
+	private class musicListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			//TODO
+			musicOn = !musicOn;
+			setUpMenu();
+			setUpAIMenu();
+		}// end actionperformed
+	}// end musicListener
 }
