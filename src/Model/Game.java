@@ -2,7 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-
+import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Game {
@@ -53,38 +53,73 @@ public class Game {
 		addHumanPlayers(humans);
 		addAI(totalPlayers - humans);
 		numRedemptions = 0;
-		int startingPlayer = 0; // this should change to a method that returns
-								// the number of the position in the players
-								// list of who is going first
-		// or write a function that randomizes everyones position in the array,
-		// and start at 0
+		
 
 	}// end newGame
 
-	public void startGame(int startingPlayer)
-	{
 
-		// roll dice to see who goes first,
-		// set them at players[0]
-		// shuffle players[1-however many]
-		// pick starting countries
-		// while (placePhase)
-		// {
-		// if (players.get(playerLocation) instanceof AI)
-		// {
-		// selectedCountry = ((AI)
-		// players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
-		// placeArmies();
-		// } else
-		// {
-		// // do nothing because the player needs to select a country
-		//
-		// }
-		// // this loop just does nothing until all armies are placed!
-		// }
-		// doNextThing();
 
+	public void setPlayers(ArrayList<Player> thePlayers){
+		players = thePlayers;
+	}
+	
+	
+	/*
+	 * Shuffles the players so they're not always in the same old boring
+	 * order.
+	 * 
+	 * This method works, but, because we never actually set the names
+	 * or factions of the players inside of this class, the order is not
+	 * accurately reflected in the GUI. I'm working on fixing it now
+	 */
+	public void startGame() {
+		for (int i=0; i < players.size(); i++){
+			System.out.print(players.get(i).getName() + " ");
+		}
+		System.out.println();
+		//Randomly picks a player from the total number of players
+		int firstPlayer = (int)(Math.random() * totalPlayers);
+		
+		Player first = players.remove(firstPlayer);
+		
+		for (int i=0; i < players.size(); i++){
+			//For a bit of extra randomness, shuffles the players!
+			int ranToMove = (int)(Math.random() * totalPlayers-1);
+			//Remove a random player
+			Player tmp = players.remove(ranToMove);
+			//And reinsert him at the end
+			players.add(tmp);
+		}//end for
+		
+		//And lets the lucky winner go first!
+		players.add(0, first);
+		
+		//calls roundOfPlacement to let any AIs who may have been set to
+		//go first play their parts
+		roundOfPlacement();
+		
+		for (int i=0; i < players.size(); i++){
+			System.out.print(players.get(i).getName() + " ");
+		}
 	}// end startGame
+	
+	public void roundOfPlacement(){		
+		while (isPlacePhase() && getCurrentPlayer() instanceof AI)		
+			aiChoicePlacement();		
+				
+		//Just in case the switch between placing and reinforcing happened		
+		//in between two AIs		
+		if (isReinforcePhase())		
+			roundOfReinforcement();		
+	}//end roundOfPlacement		
+			
+	public void roundOfReinforcement(){		
+		while (isReinforcePhase() && getCurrentPlayer() instanceof AI)		
+			aiReinforcePlacement();		
+	}
+	
+	
+	
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
