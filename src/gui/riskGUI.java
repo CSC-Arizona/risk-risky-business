@@ -66,6 +66,7 @@ import Model.Faction;
 import Model.Game;
 import Model.Map;
 import songplayer.SongPlayer;
+import songplayer.SoundClipPlayer;
 import Model.Player;
 
 //just a simple GUI to start, with a drawingPanel for map stuff
@@ -111,6 +112,7 @@ public class riskGUI extends JFrame {
 	private Country attackFrom, attack;
 	private int numOfArmies=0;
 	private boolean musicOn = true;
+	private SoundClipPlayer player= new SoundClipPlayer();
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -228,6 +230,9 @@ public class riskGUI extends JFrame {
 			((AI) players.get(j)).setMyStrat(strat.get(i));
 			i++;
 		}
+		//player.stopTheme();
+		//player.startTheme();
+		//musicOn=true;
 	}// end splashLoading2
 
 	private void splashNames() {
@@ -397,8 +402,10 @@ public class riskGUI extends JFrame {
 
 		// play the song! Commented out for now in order to test without losing
 		// my mind
-		SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+		//SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 
+		player.startTheme();
+		
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
 			Thread.sleep(5000);
@@ -1177,8 +1184,15 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			//TODO
 			musicOn = !musicOn;
+			if(musicOn){
+				player.notifyPause();
+			}
+			else{
+				player.pause();
+			}
 			setUpMenu();
-			setUpAIMenu();
+			if(!splash)
+				setUpAIMenu();
 		}// end actionperformed
 	}// end musicListener
 }
