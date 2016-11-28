@@ -106,8 +106,8 @@ public class Game {
 				System.out.println(armiesPlaced);
 
 			}
-
-		} else if (armiesPlaced < 107)// place remaining armies on own
+//this may have broken it
+		} else if (players.get(playerLocation).getAvailableTroops() > 0)// place remaining armies on own
 										// countires, this number is if we start
 										// with 35 units, and 3 players
 
@@ -129,7 +129,6 @@ public class Game {
 			placePhase = false;
 			reinforcePhase = false;
 			playPhase = true;
-			playerLocation = 0;
 
 		}
 
@@ -172,6 +171,10 @@ public class Game {
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
 
+		if(isPlayPhase())
+		{
+			players.get(playerLocation).getTroops();
+		}
 		return players.get(playerLocation);
 	}// end nextPlayer
 
@@ -202,13 +205,29 @@ public class Game {
 
 	public void aiReinforcePlacement()
 	{
+		Country aiSelectedCountry = null;
 		while(aiSelectedCountry == null)
 		{
-		aiSelectedCountry = ((AI) players.get(playerLocation)).placeNewTroops();
+		 aiSelectedCountry = ((AI) players.get(playerLocation)).placeNewTroops();
 		}
 		placeArmies(aiSelectedCountry);
 		aiSelectedCountry = null;
 	}//end aiReinforcePlacement
+	
+	public void aiUnitPlacement()
+	{
+		ArrayList<Country> selectedCountries = new ArrayList<>();
+		while(selectedCountries.get(0) == null)
+		{
+			selectedCountries = ((AI) players.get(playerLocation)).countriesToReinforce(); 
+		}
+		int i = 0;
+		while(i < selectedCountries.size())
+		{
+			placeArmies(selectedCountries.get(i));
+			i++;
+		}
+	}
 
 
 	private boolean checkIfCountryAvailable(Country countryToCheck) {

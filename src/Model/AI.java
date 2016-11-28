@@ -15,7 +15,7 @@ public class AI extends Player {
 	{
 		super(numOfPlayers);
 		myStrat = strat;
-	}//end AI constructor
+	}// end AI constructor
 
 	// get a random number between from 0 and 49
 	// return that country in the array at index randomNumber
@@ -29,18 +29,19 @@ public class AI extends Player {
 		} else
 		{
 			countryToSelect = checkAllNeighbors();
-			if(countryToSelect == null)
+			if (countryToSelect == null)
 				countryToSelect = getRandomCountry(countries);
 		}
 		return countryToSelect;
 	}// end pickRandomCountry
 
-	//checks an ai's countries neighbors, to see if they are occupied. if they are, go to the next one, otherwise
-	// return that country as a selection
+	// checks an ai's countries neighbors, to see if they are occupied. if they
+	// are, go to the next one, otherwise
+	// return that country as a selection. Used for placement in the first turn.
 	private Country checkAllNeighbors()
 	{
 		int i = 0, j = 0;
-		//get my first countries neighbors
+		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size())
 		{
@@ -49,16 +50,16 @@ public class AI extends Player {
 			{
 				j++;
 			}
-			
-			if(j < neighbors.size())
+
+			if (j < neighbors.size())
 				return neighbors.get(j);
-			
+
 			i++;
-			if(i < getCountries().size())
+			if (i < getCountries().size())
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 		return null;
-	}//end checkAllNeighbors
+	}// end checkAllNeighbors
 
 	private Country getRandomCountry(Country[] countries)
 	{
@@ -69,92 +70,114 @@ public class AI extends Player {
 
 	}// end getRandomCountry
 
-	//find my countries that are surrounded by friendly countries, and move their units out
-//	public Country reinforceCountry()
-//	{
-//		Country selectedCountry = null;
-//		if(myStrat == AIStrat.EASY)
-//		{
-//			selectedCountry = pickRandomOwnedCountry();
-//		}
-//		else
-//		{
-//			//look for countries I own who's neihbors are not owned by me, and reinforce that one
-//			selectedCountry = findCountriesInDanger();
-//			if(selectedCountry == null)
-//				selectedCountry = pickRandomOwnedCountry();
-//		}
-//		
-//
-//		return selectedCountry;
-//	}//end pickRandomCountryFromOccupied
+	// find my countries that are surrounded by friendly countries, and move
+	// their units out
+	// public Country reinforceCountry()
+	// {
+	// Country selectedCountry = null;
+	// if(myStrat == AIStrat.EASY)
+	// {
+	// selectedCountry = pickRandomOwnedCountry();
+	// }
+	// else
+	// {
+	// //look for countries I own who's neihbors are not owned by me, and
+	// reinforce that one
+	// selectedCountry = findCountriesInDanger();
+	// if(selectedCountry == null)
+	// selectedCountry = pickRandomOwnedCountry();
+	// }
+	//
+	//
+	// return selectedCountry;
+	// }//end pickRandomCountryFromOccupied
+
+	// return an arraylist of all countries that have neighbors that arent owned
+	// by me
+	private ArrayList<Country> findFringeCountries()
+	{
+		ArrayList<Country> fringeCountries = new ArrayList<>();
+
+		int i = 0, j = 0;
+		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
+		while (i < getCountries().size())
+		{
+			j = 0;
+			while (j < neighbors.size())
+			{
+				if (neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) != 0)
+				{
+					fringeCountries.add(getCountries().get(i));
+					j = neighbors.size();
+				}
+				j++;
+			}
+			i++;
+			if (i < getCountries().size())
+				neighbors = getCountries().get(i).getNeighbors();
+		}
+
+		return fringeCountries;
+	}
 
 	private Country findCountriesInDanger()
 	{
 		int i = 0, j = 0;
-		//get my first countries neighbors
-		//create a function to find a list of all owned countries who's neighbors are not owned by me, and use it instead
-		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
-		while (i < neighbors.size())
-		{
-			j = 0;
-			while (j < neighbors.size() && neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) == 0)
-			{
-				j++;
-			}
-			
-			if(j < neighbors.size())
-				if(j == 0)
-					return getCountries().get(i);
-				else
-					return neighbors.get(--j);
-			
-			i++;
-			if(i < getCountries().size())
-				neighbors = getCountries().get(i).getNeighbors();
-		}
+		// get my first countries neighbors
+		// create a function to find a list of all owned countries who's
+		// neighbors are not owned by me, and use it instead
+		ArrayList<Country> outsideCountries = findFringeCountries();
+	
 		return null;
-	}//end findCountriesInDanger
+	}// end findCountriesInDanger
 
 	private Country pickRandomOwnedCountry()
 	{
 		Random rand = new Random();
 		int randNum = rand.nextInt(getCountries().size());
 		return getCountries().get(randNum);
-	}//end pickRandomOwnedCountry
+	}// end pickRandomOwnedCountry
 
 	@Override
 	public ArrayList<Card> playCards()
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}//end playCards
+	}// end playCards
 
 	@Override
 	public Country attack()
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}//end attack
+	}// end attack
 
 	@Override
 	public void rearrangeTroops()
 	{
 		// TODO Auto-generated method stub
 
-	}//end rearrangeTroops
+	}// end rearrangeTroops
 
-
-	public Country placeNewTroops(){
+	public Country placeNewTroops()
+	{
 		Country selectedCountry = null;
-		if(myStrat == AIStrat.EASY)
+		if (myStrat == AIStrat.EASY)
 		{
 			selectedCountry = pickRandomOwnedCountry();
-		}
-		else
-			selectedCountry = findCountriesInDanger();
+		} else
+			selectedCountry = pickRandomFromFringe();
 
 		return selectedCountry;
+	}
+
+	private Country pickRandomFromFringe()
+	{
+		ArrayList<Country> fringeCountries = findFringeCountries();
+		Random rand = new Random();
+		int randNum = 0;
+		randNum = rand.nextInt(fringeCountries.size());
+		return fringeCountries.get(randNum);
 	}
 
 	private void hardMove()
@@ -165,7 +188,7 @@ public class AI extends Player {
 		// then try to even out units on border countries, so that they all have
 		// close to the same amount at each one
 
-	}//end hardMove
+	}// end hardMove
 
 	private void easyMove()
 	{
@@ -174,12 +197,12 @@ public class AI extends Player {
 		// occupy
 		// do this till I cannot attack any longer
 
-	}//end easyMove
+	}// end easyMove
 
 	public void setMyStrat(AIStrat strat)
 	{
 		myStrat = strat;
-	}//end setMyStrat
+	}// end setMyStrat
 
 	// creates the ai's menuItem for changing difficulty
 	public void makeMenuItem(int i, ActionListener aiDiffChangeListener)
@@ -187,13 +210,13 @@ public class AI extends Player {
 		myDiff = new JMenuItem("AI " + i);
 		myDiff.addActionListener(aiDiffChangeListener);
 		myDiff.setActionCommand(String.valueOf(i));
-	}//end makeMenuItem
+	}// end makeMenuItem
 
 	// returns its jMenuItem
 	public JMenuItem getMenuItem()
 	{
 		return myDiff;
-	}//end getMenuItem
+	}// end getMenuItem
 
 	// returns the ai's current strategy as a string, used for checking if the
 	// ai difficulty menu in the gui was working
@@ -201,5 +224,31 @@ public class AI extends Player {
 	{
 
 		return myStrat.toString();
-	}//end getStrat
+	}// end getStrat
+
+	public ArrayList<Country> countriesToReinforce()
+	{
+		ArrayList<Country> selectedCountries = new ArrayList<>();
+		if (myStrat == AIStrat.EASY)
+		{
+			selectedCountries = pickSetOfRandomOwnedCountry();
+		} else
+			selectedCountries = findFringeCountries();
+
+		return selectedCountries;
+	}
+
+	//returns a randomlist of countries to add units to out of the ai's owned countries
+	private ArrayList<Country> pickSetOfRandomOwnedCountry()
+	{
+		ArrayList<Country> countries = new ArrayList<>();
+		Random rand = new Random();
+		int randNum = 0;
+		while(getAvailableTroops() > 0)
+		{
+			randNum = rand.nextInt(getCountries().size());
+			countries.add(getCountries().get(randNum));
+		}
+		return countries;
+	}//end pickSetOfRandomOwnedCountry
 }

@@ -16,8 +16,8 @@ public abstract class Player {
 //  private Continent[] allContinents; TODO	
 	
 
-	private void getTroops(){
-		int addedTroops = myCountries.size()/3;
+	public void getTroops(){
+		availTroops = myCountries.size()/3;
 		//For when the continent class is finished
 		//the added troops changes based on how many
 		//continents you play
