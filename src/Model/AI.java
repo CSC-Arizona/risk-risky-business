@@ -124,24 +124,6 @@ public class AI extends Player {
 		return getCountries().get(randNum);
 	}// end pickRandomOwnedCountry
 
-	@Override
-	public ArrayList<Card> playCards() {
-		// TODO Auto-generated method stub
-		return null;
-	}// end playCards
-
-	@Override
-	public Country attack() {
-		// TODO Auto-generated method stub
-		return null;
-	}// end attack
-
-	@Override
-	public void rearrangeTroops() {
-		// TODO Auto-generated method stub
-
-	}// end rearrangeTroops
-
 	public Country placeNewTroops() {
 		Country selectedCountry = null;
 		if (myStrat == AIStrat.EASY) {

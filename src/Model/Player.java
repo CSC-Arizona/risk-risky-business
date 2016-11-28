@@ -99,10 +99,4 @@ public abstract class Player {
 		return name;
 	}// end getName
 
-	public abstract ArrayList<Card> playCards();
-
-	public abstract Country attack();
-
-	public abstract void rearrangeTroops();
-
 }
