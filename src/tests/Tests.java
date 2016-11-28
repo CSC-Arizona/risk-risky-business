@@ -62,7 +62,6 @@ public class Tests {
 		Country wall = new Country("The Wall", 6.75, 3.5, null);
 		Country skagos = new Country("Skagos", 10, 3, null);
 		wall.addNeighbor(skagos);
-		wall.drawMyButton();
 		
 		assertEquals(wall.getName(), "The Wall");
 		assertEquals(wall.getX(), 6.75, 0);

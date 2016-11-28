@@ -18,7 +18,11 @@ public class Country extends Observable {
 	private String name;
 	private double x;
 	private double y;
+	private int xWidth;
+	private int yHeight;
 	private int forcesVal;
+	private double buttonWidth;
+	private double buttonHeight;
 	// private Continent continent;
 	private Player occupier;
 	private JButton myButton;
@@ -29,14 +33,24 @@ public class Country extends Observable {
 		this.name = name;
 		this.x = x;
 		this.y = y;
-		x = -1;
-		y = -1;
+		xWidth = 1;
+		yHeight = 1;
 		// Not great design, but it's easy!
 		continent.addCountry(this);
 		forcesVal = 0;
 		occupier = null;
 		neighbors = new ArrayList<Country>();
 		myButton = null;
+		
+		//Determine default button size
+		if (name.length() < 5){
+			buttonWidth = 1;
+			buttonHeight = 1;
+		}
+		else{
+			buttonWidth = name.length()/4;
+			buttonHeight = 1;
+		}
 	}// end constructor
 
 	public void addNeighbor(Country neighbor)
@@ -44,35 +58,43 @@ public class Country extends Observable {
 		neighbors.add(neighbor);
 	}// end addNeighbor
 
-	public void drawMyButton()
-	{
-		// TODO
-	}// end drawMyButton
 
 	public void makeButton(int xWidth, int yHeight, ActionListener act)
 	{
+		this.xWidth = xWidth;
+		this.yHeight = yHeight;
 		myButton = new JButton();
 		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
 		myButton.setContentAreaFilled(false);
 		myButton.setActionCommand(name);
-		if (name.length() < 5)
-			myButton.setSize(75, 25);
-		else
-			myButton.setSize(name.length() * 8, 25);
-
+		myButton.setSize((int)(buttonWidth * xWidth), (int)(buttonHeight * yHeight));
 		myButton.addActionListener(act);
-
+		updateButtonSize();
 	}// end makeButton
 
 	public void updateButton(int xWidth, int yHeight)
 	{
+		this.xWidth = xWidth;
+		this.yHeight = yHeight;
 		myButton.setLocation((int) (x * xWidth), (int) (y * yHeight));
+		updateButtonSize();
 	}//end updateButton
 
-	public void changeButtonSize(int height, int width)
+	
+	public void changeButtonSize(double width, double height)
 	{
-		myButton.setSize(width, height);
+		//To be lazy - if the default was already good enough, I can enter
+		//0 to have one of the changes ignored
+		if (width>0)
+			this.buttonWidth = width;
+		if (height>0)
+			this.buttonHeight = height;
+//		updateButtonSize();
 	}//end changeButtonSize
+	
+	private void updateButtonSize(){
+		myButton.setSize((int) (buttonWidth * xWidth), (int) (buttonHeight * yHeight));
+	}//end updateButtonSize
 
 	public JButton getButton()
 	{

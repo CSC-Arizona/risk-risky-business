@@ -49,7 +49,7 @@ public class Map {
 		// this method is going to suck
 		countries[0] = new Country("The Wall", 6.5, 3, blue);
 		countries[1] = new Country("Skagos", 10, 2.5, blue);
-		countries[2] = new Country("Wolfswood", 3, 7, blue);
+		countries[2] = new Country("Wolfswood", 3, 6.75, blue);
 		countries[3] = new Country("Winterfell", 6, 7.5, blue);
 		countries[4] = new Country("The Rills", 1.5, 9, blue);
 		countries[5] = new Country("The Neck", 5.5, 11.25, blue);
@@ -57,7 +57,7 @@ public class Map {
 				blue);
 		countries[7] = new Country("The Grey Cliffs", 7.5, 5.5, blue);
 		countries[8] = new Country("The Vale", 6.5, 16, green);
-		countries[9] = new Country("Riverlands", 3.5, 18.5, green);
+		countries[9] = new Country("Riverlands", 3, 18.5, green);
 		countries[10] = new Country("Iron Islands", 1.5, 17, green);
 		countries[11] = new Country("Westerlands", 3, 21.25, green);
 		countries[12] = new Country("Crownlands", 6.25, 20.5, green);
@@ -116,13 +116,71 @@ public class Map {
 		countries[48] = new Country("The Red Waste", 30.1, 31.75,
 				black);
 		countries[49] = new Country("Qarth", 34.35, 32.75, black);
-
+		updateAllButtonSizes();
 		addAllNeighbors();
 		for(int i = 0; i < countries.length; i++)
 		{
 			countries[i].addObserver(riskGUI.getBoardPanel());
 		}
 	}//end fillCountries
+	
+	
+	private void updateAllButtonSizes(){
+		//	public void changeButtonSize(double width, double height)
+		countries[0].changeButtonSize(2, 1.75);
+		countries[1].changeButtonSize(0,0);
+		countries[2].changeButtonSize(2.5, 1.5);
+		countries[3].changeButtonSize(3, 2.5);
+		countries[4].changeButtonSize(3, 3);
+		countries[5].changeButtonSize(1.5, 2.75);
+		countries[6].changeButtonSize(3, 0);
+		countries[7].changeButtonSize(0, 1.5);
+		countries[8].changeButtonSize(4, 3);
+		countries[9].changeButtonSize(2.5, 0);
+		countries[10].changeButtonSize(2, 1.25);
+		countries[11].changeButtonSize(3, 2);
+		countries[12].changeButtonSize(3, 2);
+		countries[13].changeButtonSize(0, 3);
+		countries[14].changeButtonSize(2.5, 2);
+		countries[15].changeButtonSize(2.5, 2);
+		countries[16].changeButtonSize(2.25, 3);
+		countries[17].changeButtonSize(2.25, 1.75);
+//		countries[18].changeButtonSize(2.5, 1.5);
+//		countries[19].changeButtonSize(2.5, 1.5);
+//		countries[20].changeButtonSize(2.5, 1.5);
+//		countries[21].changeButtonSize(2.5, 1.5);
+//		countries[22].changeButtonSize(2.5, 1.5);
+//		countries[23].changeButtonSize(2.5, 1.5);
+//		countries[24].changeButtonSize(2.5, 1.5);
+//		countries[25].changeButtonSize(2.5, 1.5);
+//		countries[26].changeButtonSize(2.5, 1.5);
+//		countries[27].changeButtonSize(2.5, 1.5);
+//		countries[28].changeButtonSize(2.5, 1.5);
+//		countries[29].changeButtonSize(2.5, 1.5);
+//		countries[30].changeButtonSize(2.5, 1.5);
+//		countries[31].changeButtonSize(2.5, 1.5);
+//		countries[32].changeButtonSize(2.5, 1.5);
+//		countries[33].changeButtonSize(2.5, 1.5);
+//		countries[34].changeButtonSize(2.5, 1.5);
+//		countries[35].changeButtonSize(2.5, 1.5);
+//		countries[36].changeButtonSize(2.5, 1.5);
+//		countries[37].changeButtonSize(2.5, 1.5);
+//		countries[38].changeButtonSize(2.5, 1.5);
+//		countries[39].changeButtonSize(2.5, 1.5);
+//		countries[40].changeButtonSize(2.5, 1.5);
+//		countries[41].changeButtonSize(2.5, 1.5);
+//		countries[41].changeButtonSize(2.5, 1.5);
+//		countries[42].changeButtonSize(2.5, 1.5);
+//		countries[43].changeButtonSize(2.5, 1.5);
+//		countries[44].changeButtonSize(2.5, 1.5);
+//		countries[45].changeButtonSize(2.5, 1.5);
+//		countries[46].changeButtonSize(2.5, 1.5);
+//		countries[47].changeButtonSize(2.5, 1.5);
+//		countries[48].changeButtonSize(2.5, 1.5);
+//		countries[49].changeButtonSize(2.5, 1.5);
+		
+		
+	}
 
 	// Another terrible method
 	private void addAllNeighbors() {
