@@ -98,5 +98,10 @@ public abstract class Player {
 	public String getName() {
 		return name;
 	}// end getName
+	
+	public void loseCountry(Country loser)
+	{
+		myCountries.remove(loser);
+	}//end loseCountry
 
 }

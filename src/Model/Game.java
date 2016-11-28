@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
@@ -97,7 +98,7 @@ public class Game {
 
 	public void roundOfPlacement() {
 		while (isPlacePhase() && getCurrentPlayer() instanceof AI)
-			aiChoicePlacement();
+			aiTurn();
 
 		// Just in case the switch between placing and reinforcing happened
 		// in between two AIs
@@ -107,7 +108,7 @@ public class Game {
 
 	public void roundOfReinforcement() {
 		while (isReinforcePhase() && getCurrentPlayer() instanceof AI)
-			aiReinforcePlacement();
+			aiTurn();
 	}
 
 	// this is called by the countryClickListener, and "places" an army in a
@@ -129,7 +130,6 @@ public class Game {
 				System.out.println("Next players turn");
 				System.out.println("Army placed at : " + countryToPlace.toString());
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
-				nextPlayer();
 
 			} else {
 				System.out.println("That country is already Occupied");
@@ -163,10 +163,8 @@ public class Game {
 
 			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
 				countryToPlace.setForcesVal(numToPlace);
-				armiesPlaced++;
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
-				nextPlayer();
 
 			} else
 				System.out.println("You don't occupy this country");
@@ -218,16 +216,57 @@ public class Game {
 		return players;
 	}// end getPlayers
 
-	public Player nextPlayer() {
+	public void nextPlayer() {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
 
-		if (isPlayPhase()) {
+		if (players.get(playerLocation) instanceof AI) {
+			aiTurn();
+		} else if(isDeployPhase())
 			players.get(playerLocation).getTroops();
-		}
-		return players.get(playerLocation);
+
 	}// end nextPlayer
+
+	private void aiTurn() {
+		boolean done = false;
+		while (!done) {
+			if (isPlacePhase()) {
+				boolean placed = false;
+				while(!placed)
+				{
+					placed = aiChoicePlacement();
+				}
+				done = true;
+			} else if (isReinforcePhase()) {
+				aiReinforcePlacement();
+				done = true;
+			} else if (isPlayPhase() && isDeployPhase()) {
+				players.get(playerLocation).getTroops();
+				while (players.get(playerLocation).getAvailableTroops() > 0) {
+					aiReinforcePlacement();
+				}
+				deployPhase = false;
+				attackPhase = true;
+			} else if (isPlayPhase() && isAttackPhase()) {
+				boolean finishedAttacking = false;
+				while (!finishedAttacking) {
+					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
+				}
+				attackPhase = false;
+				reinforcePhase = true;
+			} else if (isPlayPhase() && isReinforcePhase()) {
+				aiPlayReinforce();
+				done = true;
+			}
+		}
+		nextPlayer();
+	}
+
+	private void aiPlayReinforce() {
+		// TODO Auto-generated method stub
+
+	}
 
 	public boolean isPlacePhase() {
 		return placePhase;
@@ -488,9 +527,8 @@ public class Game {
 														// of armies to attacked
 														// with== total
 														// forces
-				theirs.setForcesVal(numArmies - 1);
+
 				yours.removeUnits(numArmies - 1);
-				yours.setOccupier(theirs.getOccupier());
 			} else {
 				// theirs.setForcesVal(numArmies);
 				yours.removeUnits(numArmies); // you lose the armies fought with
@@ -498,8 +536,10 @@ public class Game {
 			result = theirs.toString();
 		} else if (theirs.getForcesVal() < numArmies) {
 			yours.setForcesVal(theirs.getForcesVal() - 1);
+			theirs.getOccupier().loseCountry(theirs);
 			theirs.removeUnits(theirs.getForcesVal() - 1);
 			theirs.setOccupier(yours.getOccupier());
+			yours.getOccupier().occupyCountry(theirs);
 			result = yours.toString();
 		}
 		return result;

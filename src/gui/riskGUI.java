@@ -933,6 +933,7 @@ public class riskGUI extends JFrame {
 					// progress.
 				else if (theGame.isAttackPhase()) {
 
+					
 				} else {
 					makePlayingCenterPanel();
 					makePlayingCardPanel();
@@ -1123,13 +1124,13 @@ public class riskGUI extends JFrame {
 				theGame.placeArmies(theGame.getSelectedCountry(), 1);
 				drawingPanel.repaint();
 				theGame.roundOfPlacement();
-
+				theGame.nextPlayer();
 			} else if (theGame.isReinforcePhase()) {
 				theGame.placeArmies(theGame.getSelectedCountry(), 1);
 				drawingPanel.repaint();
 				// player can reinforce countries
 				theGame.roundOfReinforcement();
-
+				theGame.nextPlayer();
 			} // end if
 			else if (theGame.isDeployPhase()) {
 				deployFlag = false;

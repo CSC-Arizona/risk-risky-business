@@ -123,6 +123,7 @@ public class Country extends Observable {
 
 	}// end setForcesVal
 
+
 	public String toString() {
 		return name;
 	}// end toString
