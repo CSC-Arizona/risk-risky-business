@@ -127,6 +127,7 @@ public class Game {
 
 		} else {
 			placePhase = false;
+			reinforcePhase = false;
 			playPhase = true;
 			playerLocation = 0;
 
@@ -313,7 +314,7 @@ public class Game {
 				if (unitsToReturn >= totalUnits) {
 					JOptionPane.showMessageDialog(null, "You must leave 1 army.", "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
-					theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					//theGame.getSelectedCountry().removeUnits(unitsToReturn);
 					moveFlag = true;
 				}
 			}
@@ -321,6 +322,32 @@ public class Game {
 		return unitsToReturn;
 
 	}// end unitsToReturn
+	
+	public int getArmiesToAttack(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		String unitsToMove = "";
+
+		while (!moveFlag) {
+			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn > totalUnits) {
+					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					//theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
+				}
+			}
+		}
+		return unitsToReturn;
+
+	}// end getArmiesToAttack
 
 	public boolean moveUnitsToCountry(int numUnits, Country fromCountry, Country toCountry, Player current) {
 
@@ -330,6 +357,7 @@ public class Game {
 		findPath(fromCountry, visited, toCountry, current);
 		if (canPlace) {
 			toCountry.setForcesVal(numUnits);
+			fromCountry.removeUnits(numUnits);
 			result = true;
 		}
 		canPlace = false;
@@ -382,5 +410,28 @@ public class Game {
 		else if (reinforcePhase)
 			return "Reinforce Phase";
 		return null;
+	}
+
+	public String attack(Country yours, Country theirs, int numArmies) {
+		String result="";
+		if(numArmies <= theirs.getForcesVal()){
+			if(numArmies == yours.getForcesVal()){ //if you lose, and the num of armies to attacked with== total forces
+				theirs.setForcesVal(numArmies-1); 
+				yours.removeUnits(numArmies-1);
+				yours.setOccupier(theirs.getOccupier());
+			}
+			else{
+				//theirs.setForcesVal(numArmies);
+				yours.removeUnits(numArmies); //you lose the armies fought with
+			}
+			result = theirs.toString();
+		}
+		else if(theirs.getForcesVal() < numArmies){
+			yours.setForcesVal(theirs.getForcesVal()-1);
+			theirs.removeUnits(theirs.getForcesVal()-1);
+			theirs.setOccupier(yours.getOccupier());
+			result = yours.toString();
+		}
+		return result;
 	}
 }// end GameClasss
