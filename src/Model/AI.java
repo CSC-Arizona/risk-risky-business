@@ -93,6 +93,7 @@ public class AI extends Player {
 	{
 		int i = 0, j = 0;
 		//get my first countries neighbors
+		//create a function to find a list of all owned countries who's neighbors are not owned by me, and use it instead
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size())
 		{
