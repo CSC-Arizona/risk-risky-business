@@ -65,7 +65,6 @@ import Model.Country;
 import Model.Faction;
 import Model.Game;
 import Model.Map;
-import songplayer.SongPlayer;
 import songplayer.SoundClipPlayer;
 import Model.Player;
 
@@ -602,6 +601,8 @@ public class riskGUI extends JFrame {
 			g2.setFont(gotFontBody.deriveFont(20f));
 			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
 			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
+			if(!theGame.isPlacePhase() && theGame.isReinforcePhase())
+				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units left to place.", 110,65);
 			if (theGame.isDeployPhase())
 				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110,
 						65);

@@ -207,7 +207,8 @@ public class Game {
 
 		if (players.get(playerLocation) instanceof AI) {
 			aiTurn();
-		} else if (isDeployPhase())
+		}
+		if (isDeployPhase() && players.get(playerLocation) instanceof HumanPlayer)
 			players.get(playerLocation).getTroops();
 
 	}// end nextPlayer
@@ -221,7 +222,7 @@ public class Game {
 					placed = aiChoicePlacement();
 				}
 				done = true;
-			} else if (isReinforcePhase()) {
+			} else if (isReinforcePhase() && !isPlayPhase()) {
 				aiReinforcePlacement();
 				done = true;
 			} else if (isPlayPhase() && isDeployPhase()) {
@@ -241,6 +242,8 @@ public class Game {
 				reinforcePhase = true;
 			} else if (isPlayPhase() && isReinforcePhase()) {
 				aiPlayReinforce();
+				reinforcePhase = false;
+				deployPhase = true;
 				done = true;
 			}
 		}
