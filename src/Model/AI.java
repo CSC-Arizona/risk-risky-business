@@ -129,7 +129,7 @@ public class AI extends Player {
 			attacking.removeUnits(oldForces);
 			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
 			attacking.setOccupier(this);
-			System.out.println(this.getFaction() + " Took " + attacking.getName());
+			System.out.println(this.getName() + " Took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			return false;
 		}
@@ -140,7 +140,7 @@ public class AI extends Player {
 
 	private Country findAttackingCountry(Country attacking) {
 
-		//System.out.println("find attacking");
+		// System.out.println("find attacking");
 		for (Country c1 : findFringeCountries()) {
 			for (Country c2 : c1.getNeighbors()) {
 				if (c2.equals(attacking)) {
@@ -153,7 +153,7 @@ public class AI extends Player {
 
 	// returns a country it can attack
 	private Country getCountryToAttack() {
-		//System.out.println("get country to attack");
+		// System.out.println("get country to attack");
 		Country attackMe = pickRandomFromList(findCountriesToAttack());
 		return attackMe;
 	}// end
@@ -223,7 +223,7 @@ public class AI extends Player {
 	// check if i have more units on my country than that country, if I do, add
 	// that country to my list of countriesWorthAttacking
 	private ArrayList<Country> findCountriesToAttack() {
-		//System.out.println("find countries to attack");
+		// System.out.println("find countries to attack");
 		ArrayList<Country> fringeCountries = findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
 		for (Country country : fringeCountries) {
@@ -241,4 +241,57 @@ public class AI extends Player {
 
 		return countriesWorthAttacking;
 	}// end findCountriesToAttack
+
+	// starts at first country, checks if it is surrounded by friendlies, if it
+	// is
+	// moves all of its units except for one to its neighbors
+	public void reinforce() {
+
+		int surroundCounter = 0;
+		if (myStrat == AIStrat.MEDIUM || myStrat == AIStrat.HARD) {
+			for (Country country : getCountries()) {
+
+				surroundCounter = 0;
+				ArrayList<Country> neighbors = country.getNeighbors();
+				for (Country neighbor : neighbors) {
+					if (neighbor.getOccupier().equals(this))
+						surroundCounter++;
+				}
+
+				if (surroundCounter == neighbors.size() && country.getForcesVal() > 1) {
+					while (country.getForcesVal() > 1) {
+						for (Country neighbor : neighbors) {
+							country.removeUnits(1);
+							neighbor.setForcesVal(1);
+							if (country.getForcesVal() == 1)
+								break;
+						}
+					}
+
+				}
+			}
+		}
+
+	}// end reinforce
+		// moves units to other countries if it has more than 2 units occupying
+
+	public void reinforce2() {
+
+		if (myStrat == AIStrat.MEDIUM || myStrat == AIStrat.HARD) {
+			for (Country country : getCountries()) {
+				if (country.getForcesVal() > 2) {
+					while (country.getForcesVal() > 2) {
+						for (Country neighbor : country.getNeighbors()) {
+							if (neighbor.getOccupier().equals(this)) {
+								neighbor.setForcesVal(1);
+								country.removeUnits(1);
+							}
+							if (country.getForcesVal() == 2)
+								break;
+						}
+					}
+				}
+			}
+		}
+	}// end reinforce2
 }

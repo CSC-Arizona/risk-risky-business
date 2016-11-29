@@ -115,20 +115,18 @@ public class Game {
 				if (armiesPlaced == 50) {
 					placePhase = false;
 					reinforcePhase = true;
-				}//end if
+				} // end if
 
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
-				System.out.println("Army placed at : "
-						+ countryToPlace.toString());
-				players.get(playerLocation).subtractFromAvailableTroops(
-						numToPlace);
+				System.out.println("Army placed at : " + countryToPlace.toString());
+				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
 
 			} else {
 				System.out.println("That country is already Occupied");
 				System.out.println(armiesPlaced);
 
-			}//end else
+			} // end else
 		} else if (isDeployPhase()) {
 			if (players.get(playerLocation).getAvailableTroops() > 0
 					&& countryToPlace.getOccupier().equals(players.get(playerLocation))) {
@@ -156,7 +154,7 @@ public class Game {
 				System.out.println("You don't occupy this country");
 
 		} else {
-			
+
 			placePhase = false;
 			reinforcePhase = false;
 			playPhase = true;
@@ -238,6 +236,7 @@ public class Game {
 				while (!finishedAttacking) {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
+				removeLosers();
 				attackPhase = false;
 				reinforcePhase = true;
 			} else if (isPlayPhase() && isReinforcePhase()) {
@@ -248,10 +247,11 @@ public class Game {
 		nextPlayer();
 	}
 
+	// calls the ai's reinforce method
 	private void aiPlayReinforce() {
-		// TODO Auto-generated method stub
+		((AI) players.get(playerLocation)).reinforce();
 
-	}
+	}// end aiPlayReinforce
 
 	public boolean isPlacePhase() {
 		return placePhase;
@@ -525,16 +525,48 @@ public class Game {
 	public boolean isAttackPhase() {
 		return attackPhase;
 	}// end isAttackPhase
-	
-	public void skipAttackPhase(){
+
+	public void skipAttackPhase() {
 		attackPhase = false;
 		reinforcePhase = true;
-	}//end skipAttackPhase
-	
-	public void finishTurn(){
+	}// end skipAttackPhase
+
+	public void finishTurn() {
 		deployPhase = true;
 		attackPhase = false;
 		reinforcePhase = false;
 		nextPlayer();
-	}//end finishTurn
+	}// end finishTurn
+
+	//checks if all countries are occupied by the same player, if so returns true, otherwise returns false
+	public boolean isFinished() {
+		int countryCounter = 0, i = 0, j = 1;
+		Country countries[] = getGameMap().getCountries();
+		while (j < 50) {
+			if (countries[i].getOccupier().equals(countries[j].getOccupier())) {
+				countryCounter++;
+			}
+			i++;
+			j++;
+		}
+
+		if (countryCounter == 50)
+			return true;
+
+		return false;
+	}// end isFinished
+
+	//checks if all players have at least one country. If they do not, remove them from the game.
+	public void removeLosers() {
+		ArrayList<Player> playersToRemove = new ArrayList<>();
+		for (Player player : players) {
+			if (player.getCountries().size() == 0) {
+				System.out.println(player.getName() + " has been defeated.");
+				playersToRemove.add(player);
+			}
+		}
+
+		players.removeAll(playersToRemove);
+		//TODO add cards that players that lost had into the discard pile, if there is one
+	}// end removeLosers
 }// end GameClasss
