@@ -181,7 +181,7 @@ public class riskGUI extends JFrame {
 		theGame.setPlayers(players);
 		// Starting the game...
 		theGame.startGame();
-
+		player.startTheme();
 		drawingPanel.repaint();
 	}// end defualtMode
 
@@ -239,7 +239,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players); // player.startTheme();
 		theGame.startGame();
-
+		player.startTheme();
 		// player.stopTheme();
 		// player.startTheme();
 		// musicOn=true;
