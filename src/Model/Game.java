@@ -132,7 +132,6 @@ public class Game {
 						+ countryToPlace.toString());
 				players.get(playerLocation).subtractFromAvailableTroops(
 						numToPlace);
-				nextPlayer();
 
 			} else {
 				System.out.println("That country is already Occupied");
@@ -174,7 +173,7 @@ public class Game {
 						+ armiesPlaced);// selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(
 						numToPlace);
-				nextPlayer();
+
 
 			} else
 				System.out.println("You don't occupy this country");
@@ -188,7 +187,6 @@ public class Game {
 			// already,
 			// so we need to give
 			// that player units for the first turn
-			players.get(playerLocation).getTroops();// gives player new troops
 		}
 
 	}// end placeArmies
@@ -230,6 +228,7 @@ public class Game {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
+		
 		if (players.get(playerLocation) instanceof AI) {
 			aiTurn();
 		} else if (isDeployPhase())
@@ -552,16 +551,8 @@ public class Game {
 	public String attack(Country yours, Country theirs, int numArmies) {
 		String result = "";
 		if (numArmies <= theirs.getForcesVal()) {
-			if (numArmies == yours.getForcesVal()) { // if you lose, and the num
-														// of armies to attacked
-														// with== total
-														// forces
-				yours.removeUnits(numArmies - 1);
-			} else {
 				// theirs.setForcesVal(numArmies);
 				yours.removeUnits(numArmies); // you lose the armies fought with
-			}
-			result = theirs.toString();
 		} else if (theirs.getForcesVal() < numArmies) {
 			yours.setForcesVal(theirs.getForcesVal() - 1);
 			theirs.getOccupier().loseCountry(theirs);
