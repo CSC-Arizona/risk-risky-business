@@ -42,8 +42,7 @@ public class AI extends Player {
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size()) {
 			j = 0;
-			while (j < neighbors.size()
-					&& neighbors.get(j).getOccupier() != null) {
+			while (j < neighbors.size() && neighbors.get(j).getOccupier() != null) {
 				j++;
 			}
 
@@ -75,8 +74,7 @@ public class AI extends Player {
 		while (i < getCountries().size()) {
 			j = 0;
 			while (j < neighbors.size()) {
-				if (neighbors.get(j).getOccupier().getFaction()
-						.compareTo(this.getFaction()) != 0) {
+				if (neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
 					fringeCountries.add(getCountries().get(i));
 					j = neighbors.size();
 				}
@@ -131,6 +129,7 @@ public class AI extends Player {
 			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
 			attacking.setOccupier(this);
 			System.out.println("Took " + attacking.getName());
+			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			return false;
 		} else {
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
@@ -232,15 +231,17 @@ public class AI extends Player {
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				if (neighboringCountry.getOccupier().getFaction()
-						.compareTo(this.getFaction()) != 0) {
-					if (country.getForcesVal() > neighboringCountry
-							.getForcesVal())
+				if (neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
+					if (country.getForcesVal() -1 > neighboringCountry.getForcesVal()){
 						countriesWorthAttacking.add(neighboringCountry);
+					}
 				}
 			}
 		}
 
+		if(countriesWorthAttacking.size() ==0 )
+			return null;
+		
 		return countriesWorthAttacking;
 	}// end findCountriesToAttack
 }
