@@ -65,7 +65,7 @@ import Model.Country;
 import Model.Faction;
 import Model.Game;
 import Model.Map;
-import songplayer.SongPlayer;
+
 import songplayer.SoundClipPlayer;
 import Model.Player;
 
@@ -239,7 +239,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players); // player.startTheme();
 		theGame.startGame();
-		player.startTheme();
+
 		// player.stopTheme();
 		// player.startTheme();
 		// musicOn=true;
