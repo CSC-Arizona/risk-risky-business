@@ -238,7 +238,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players); // player.startTheme();
 		theGame.startGame();
-		player.startTheme();
+
 		// player.stopTheme();
 		// player.startTheme();
 		// musicOn=true;
