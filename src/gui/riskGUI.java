@@ -134,14 +134,14 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		splash = true; // comment me out for default mode
-		// splash = false; // comment me out for splash screens
+		//splash = true; // comment me out for default mode
+		splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash(); // comment me out for default mode
-		// defaultMode(); // comment me out for splash screens
+		//setUpSplash(); // comment me out for default mode
+		defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -165,7 +165,8 @@ public class riskGUI extends JFrame {
 		// splashLoading2();
 		theGame = Game.getInstance(1, 5);
 		setUpDrawingPanel();
-		setUpClearButton();
+//		setUpClearButton();
+//		setUpPassButton();
 		setUpAIMenu();
 		ArrayList<Player> players = theGame.getPlayers();
 		players.get(0).setFaction("Stark");
@@ -219,7 +220,8 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
-		setUpClearButton();
+//		setUpClearButton();
+//		setUpPassButton();
 		setUpAIMenu();
 		ArrayList<Player> players = theGame.getPlayers();
 		for (int i = 0; i < humans; i++) {
@@ -376,16 +378,17 @@ public class riskGUI extends JFrame {
 		splashInfo.setSize(700, 400);
 		splashInfo.setLocation(width / 2 - 350, height / 2 - 200);
 		JLabel load = new JLabel("New Game or Load Game?");
-		load.setFont(gotFontHeader.deriveFont(24));
-		load.setLocation(150, 5);
+		load.setFont(gotFontHeader.deriveFont(28f));
+//		load.setHorizontalAlignment(JLabel.CENTER);
+		load.setLocation(100, 5);
 		load.setSize(600, 150);
 		JButton newG = new JButton("New Game!");
-		newG.setFont(gotFontHeader.deriveFont(24));
+		newG.setFont(gotFontHeader.deriveFont(24f));
 		newG.setLocation(50, 200);
 		newG.addActionListener(new GameTypeListener());
 		newG.setSize(300, 100);
 		JButton loadG = new JButton("Load Game!");
-		loadG.setFont(gotFontHeader.deriveFont(24));
+		loadG.setFont(gotFontHeader.deriveFont(24f));
 		loadG.setLocation(375, 200);
 		loadG.addActionListener(new GameTypeListener());
 		loadG.setSize(300, 100);
@@ -477,11 +480,19 @@ public class riskGUI extends JFrame {
 
 		JButton clearButton = new JButton("Clear Move Selections");
 		clearButton.addActionListener(new clearButtonListener());
-		clearButton.setSize(200, 100);
-		clearButton.setLocation(width - 200, 0);
+		clearButton.setSize(4*xWidth, 2 * yHeight);
+		clearButton.setLocation(width - (int)(4.25 * xWidth) , (int)(0.25 * yHeight));
 		drawingPanel.add(clearButton);
 	}
 
+	private void setUpPassButton(){
+		JButton passButton = new JButton("Finished Attacking");
+		passButton.addActionListener(new PassButtonListener());
+		passButton.setSize(4 * xWidth, 2 * yHeight);
+		passButton.setLocation(width - (int)(4.25 * xWidth) , (int)(2.75 * yHeight));
+		drawingPanel.add(passButton);
+	}
+	
 	private void setUpDrawingPanel() {
 		// if(drawingPanel==null)
 
@@ -698,8 +709,9 @@ public class riskGUI extends JFrame {
 	}// end getBoardPanel
 
 	private class CountryPanel extends JPanel {
-		private JPanel centerPanel;
-		private JButton makeAMoveButton;
+	//	private JPanel centerPanel;
+	//	private JButton makeAMoveButton;
+		private boolean isFirstAttackPhase = true;
 		private Country curr;
 		// Here while I play with various borders!
 		Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
@@ -897,6 +909,12 @@ public class riskGUI extends JFrame {
 					this.add(directions, BorderLayout.CENTER);
 				} // end else if
 				else if (attackFromFlag) {
+					if (isFirstAttackPhase){
+						setUpPassButton();
+						isFirstAttackPhase = false;
+					}
+						
+					
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
 					directions.setText("Choose a Country to Attack");
 					this.add(directions, BorderLayout.CENTER);
@@ -911,6 +929,12 @@ public class riskGUI extends JFrame {
 					this.add(directions, BorderLayout.CENTER);
 				} // end else if
 				else {
+					if (isFirstAttackPhase){
+						System.out.println("lallaa");
+						setUpPassButton();
+						setUpClearButton();
+						isFirstAttackPhase = false;
+					}
 					JLabel dir2 = new JLabel();
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
 					dir2.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
@@ -986,6 +1010,16 @@ public class riskGUI extends JFrame {
 			}// end actionPerformed
 		}// end tradeClickListener
 	}// end countryPanel
+	
+	private class PassButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// do stuff, but I be tired :)
+			System.out.println("PASS!");
+			
+		}//end actionperformed
+	}//end passbuttonlistener
 
 	/*
 	 * help button listener for opening the about
@@ -1101,8 +1135,11 @@ public class riskGUI extends JFrame {
 	 * Handles two teams going to war against each other!
 	 */
 	private class AttackListener implements ActionListener {
+		private boolean firstAttackPast = false;
+		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
 			if (attackFromFlag == false && attackFlag == false) {
 				if (theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier())) {
 					attackFromFlag = true;
@@ -1221,6 +1258,7 @@ public class riskGUI extends JFrame {
 				theGame.roundOfReinforcement();
 				if (remainingTroops > theGame.getCurrentPlayer().getAvailableTroops())
 					theGame.nextPlayer();
+					
 			} // end if
 			else if (theGame.isDeployPhase()) {
 				deployFlag = false;
