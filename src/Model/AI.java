@@ -99,15 +99,22 @@ public class AI extends Player {
 		if (myStrat == AIStrat.EASY) {
 			selectedCountry = pickRandomOwnedCountry();
 		} else
-			selectedCountry = pickRandomFromFringe();
-
+		{	selectedCountry = pickRandomFromFringe();
+			if(selectedCountry == null)
+				selectedCountry = pickRandomOwnedCountry();
+		
+		}
 		return selectedCountry;
 	}
 
 	private Country pickRandomFromFringe() {
 		ArrayList<Country> fringeCountries = findFringeCountries();
+		
 		Random rand = new Random();
 		int randNum = 0;
+		System.out.println(fringeCountries.size() + " size of list to choose from");
+		if(fringeCountries.size() == 0)
+			return null;
 		randNum = rand.nextInt(fringeCountries.size());
 		return fringeCountries.get(randNum);
 	}

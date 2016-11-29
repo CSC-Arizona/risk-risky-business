@@ -134,13 +134,13 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		//splash = true; // comment me out for default mode
+		// splash = true; // comment me out for default mode
 		splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		//setUpSplash(); // comment me out for default mode
+		// setUpSplash(); // comment me out for default mode
 		defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
@@ -165,8 +165,8 @@ public class riskGUI extends JFrame {
 		// splashLoading2();
 		theGame = Game.getInstance(1, 5);
 		setUpDrawingPanel();
-//		setUpClearButton();
-//		setUpPassButton();
+		// setUpClearButton();
+		// setUpPassButton();
 		setUpAIMenu();
 		ArrayList<Player> players = theGame.getPlayers();
 		players.get(0).setFaction("Stark");
@@ -220,8 +220,8 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
-//		setUpClearButton();
-//		setUpPassButton();
+		// setUpClearButton();
+		// setUpPassButton();
 		setUpAIMenu();
 		ArrayList<Player> players = theGame.getPlayers();
 		for (int i = 0; i < humans; i++) {
@@ -379,7 +379,7 @@ public class riskGUI extends JFrame {
 		splashInfo.setLocation(width / 2 - 350, height / 2 - 200);
 		JLabel load = new JLabel("New Game or Load Game?");
 		load.setFont(gotFontHeader.deriveFont(28f));
-//		load.setHorizontalAlignment(JLabel.CENTER);
+		// load.setHorizontalAlignment(JLabel.CENTER);
 		load.setLocation(100, 5);
 		load.setSize(600, 150);
 		JButton newG = new JButton("New Game!");
@@ -480,19 +480,19 @@ public class riskGUI extends JFrame {
 
 		JButton clearButton = new JButton("Clear Move Selections");
 		clearButton.addActionListener(new clearButtonListener());
-		clearButton.setSize(4*xWidth, 2 * yHeight);
-		clearButton.setLocation(width - (int)(4.25 * xWidth) , (int)(0.25 * yHeight));
+		clearButton.setSize(4 * xWidth, 2 * yHeight);
+		clearButton.setLocation(width - (int) (4.25 * xWidth), (int) (0.25 * yHeight));
 		drawingPanel.add(clearButton);
 	}
 
-	private void setUpPassButton(){
+	private void setUpPassButton() {
 		JButton passButton = new JButton("Finished Attacking");
 		passButton.addActionListener(new PassButtonListener());
 		passButton.setSize(4 * xWidth, 2 * yHeight);
-		passButton.setLocation(width - (int)(4.25 * xWidth) , (int)(2.75 * yHeight));
+		passButton.setLocation(width - (int) (4.25 * xWidth), (int) (2.75 * yHeight));
 		drawingPanel.add(passButton);
 	}
-	
+
 	private void setUpDrawingPanel() {
 		// if(drawingPanel==null)
 
@@ -612,8 +612,9 @@ public class riskGUI extends JFrame {
 			g2.setFont(gotFontBody.deriveFont(20f));
 			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
 			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
-			if(!theGame.isPlacePhase() && theGame.isReinforcePhase())
-				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units left to place.", 110,65);
+			if (!theGame.isPlacePhase() && theGame.isReinforcePhase())
+				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units left to place.",
+						110, 65);
 			if (theGame.isDeployPhase())
 				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110,
 						65);
@@ -709,8 +710,8 @@ public class riskGUI extends JFrame {
 	}// end getBoardPanel
 
 	private class CountryPanel extends JPanel {
-	//	private JPanel centerPanel;
-	//	private JButton makeAMoveButton;
+		// private JPanel centerPanel;
+		// private JButton makeAMoveButton;
 		private boolean isFirstAttackPhase = true;
 		private Country curr;
 		// Here while I play with various borders!
@@ -852,6 +853,7 @@ public class riskGUI extends JFrame {
 		public void makePlacementBottomLabel() {
 			JButton place = new JButton("Place Troops Here");
 			place.addActionListener(new PlaceAndReinforceListener());
+			place.addActionListener(new TransferTroopListener());
 			this.add(place, BorderLayout.SOUTH);
 			this.revalidate();
 		}// end makeplacementbottom
@@ -909,12 +911,11 @@ public class riskGUI extends JFrame {
 					this.add(directions, BorderLayout.CENTER);
 				} // end else if
 				else if (attackFromFlag) {
-					if (isFirstAttackPhase){
+					if (isFirstAttackPhase) {
 						setUpPassButton();
 						isFirstAttackPhase = false;
 					}
-						
-					
+
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
 					directions.setText("Choose a Country to Attack");
 					this.add(directions, BorderLayout.CENTER);
@@ -929,7 +930,7 @@ public class riskGUI extends JFrame {
 					this.add(directions, BorderLayout.CENTER);
 				} // end else if
 				else {
-					if (isFirstAttackPhase){
+					if (isFirstAttackPhase) {
 						System.out.println("lallaa");
 						setUpPassButton();
 						setUpClearButton();
@@ -1010,26 +1011,24 @@ public class riskGUI extends JFrame {
 			}// end actionPerformed
 		}// end tradeClickListener
 	}// end countryPanel
-	
+
 	private class PassButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// do stuff, but I be tired :)
-	
-			if(theGame.isAttackPhase()){
+
+			if (theGame.isAttackPhase()) {
 				theGame.skipAttackPhase();
 				System.out.println("Passed attack phase");
-			}
-			else if(theGame.isReinforcePhase())
-			{
+			} else if (theGame.isReinforcePhase()) {
 				theGame.finishTurn();
 				System.out.println("Ended turn");
 			}
 			drawingPanel.repaint();
-			
-		}//end actionperformed
-	}//end passbuttonlistener
+
+		}// end actionperformed
+	}// end passbuttonlistener
 
 	/*
 	 * help button listener for opening the about
@@ -1077,31 +1076,32 @@ public class riskGUI extends JFrame {
 			// player move then ai move if ai turn
 			// if(theGame.getCurrentPlayer() instanceof AI)
 			// ((AI) theGame.getCurrentPlayer()).myTurn();
+			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
+				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
 
-			if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
-
-				if (!moveUnitsFlag) {
-					if (theGame.getSelectedCountry().getForcesVal() <= 1) {
-						JOptionPane.showMessageDialog(null, "You must choose a country with more than one army.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+					if (!moveUnitsFlag) {
+						if (theGame.getSelectedCountry().getForcesVal() <= 1) {
+							JOptionPane.showMessageDialog(null, "You must choose a country with more than one army.",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						} else {
+							numOfUnitsToMove = getUnitsToMove(theGame.getSelectedCountry());
+							moveUnitsFlag = true;
+							moveUnitsFromCountry = theGame.getSelectedCountry();
+						}
 					} else {
-						numOfUnitsToMove = getUnitsToMove(theGame.getSelectedCountry());
-						moveUnitsFlag = true;
-						moveUnitsFromCountry = theGame.getSelectedCountry();
-					}
-				} else {
-					boolean result = theGame.moveUnitsToCountry(numOfUnitsToMove, moveUnitsFromCountry,
-							theGame.getSelectedCountry(), theGame.getCurrentPlayer());
-					// theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
-					if (result)
-						moveUnitsFlag = false;
-					else
-						JOptionPane.showMessageDialog(null, "Invalid Country Choice. Please choose another", "Error",
-								JOptionPane.ERROR_MESSAGE);
-				} // end else
-			} // end if
-			theGame.setSelectedCountry(null);
-			drawingPanel.repaint();
+						boolean result = theGame.moveUnitsToCountry(numOfUnitsToMove, moveUnitsFromCountry,
+								theGame.getSelectedCountry(), theGame.getCurrentPlayer());
+						// theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
+						if (result)
+							moveUnitsFlag = false;
+						else
+							JOptionPane.showMessageDialog(null, "Invalid Country Choice. Please choose another",
+									"Error", JOptionPane.ERROR_MESSAGE);
+					} // end else
+				} // end if
+				theGame.setSelectedCountry(null);
+				drawingPanel.repaint();
+			}
 		}// end actionPerformed
 
 		// pops up a pane to ask how many units to move, which returns a string
@@ -1146,10 +1146,10 @@ public class riskGUI extends JFrame {
 	 */
 	private class AttackListener implements ActionListener {
 		private boolean firstAttackPast = false;
-		
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+
 			if (attackFromFlag == false && attackFlag == false) {
 				if (theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier())) {
 					attackFromFlag = true;
@@ -1205,6 +1205,7 @@ public class riskGUI extends JFrame {
 							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
 							attackFlag = false;
 							theGame.removeLosers();
+							theGame.isFinished();
 						}
 					}
 				}
@@ -1260,7 +1261,7 @@ public class riskGUI extends JFrame {
 				theGame.roundOfPlacement();
 				if (numOfOwnedCountries < theGame.getCurrentPlayer().getCountries().size())
 					theGame.nextPlayer();
-			} else if (theGame.isReinforcePhase()) {
+			} else if (theGame.isReinforcePhase() && !theGame.isPlayPhase()) {
 				int remainingTroops = theGame.getCurrentPlayer().getAvailableTroops();
 				theGame.placeArmies(theGame.getSelectedCountry(), 1);
 				drawingPanel.repaint();
@@ -1268,7 +1269,7 @@ public class riskGUI extends JFrame {
 				theGame.roundOfReinforcement();
 				if (remainingTroops > theGame.getCurrentPlayer().getAvailableTroops())
 					theGame.nextPlayer();
-					
+
 			} // end if
 			else if (theGame.isDeployPhase()) {
 				deployFlag = false;

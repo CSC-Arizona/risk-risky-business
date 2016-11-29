@@ -11,7 +11,7 @@ public class Game {
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase;
+	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
@@ -27,6 +27,7 @@ public class Game {
 		attackPhase = false;
 		reinforcePhase = false;
 		deployPhase = false;
+		gameOver = false;
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
@@ -238,6 +239,7 @@ public class Game {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
 				removeLosers();
+				isFinished();
 				attackPhase = false;
 				reinforcePhase = true;
 			} else if (isPlayPhase() && isReinforcePhase()) {
@@ -246,6 +248,10 @@ public class Game {
 				deployPhase = true;
 				done = true;
 			}
+		}
+		if(gameOver)
+		{
+			//TODO call a function that tells everything the game is over, and who won
 		}
 		nextPlayer();
 	}
@@ -542,21 +548,24 @@ public class Game {
 	}// end finishTurn
 
 	//checks if all countries are occupied by the same player, if so returns true, otherwise returns false
-	public boolean isFinished() {
-		int countryCounter = 0, i = 0, j = 1;
-		Country countries[] = getGameMap().getCountries();
-		while (j < 50) {
-			if (countries[i].getOccupier().equals(countries[j].getOccupier())) {
-				countryCounter++;
-			}
-			i++;
-			j++;
-		}
+	public void isFinished() {
+//		int countryCounter = 0, i = 0, j = 1;
+//		Country countries[] = getGameMap().getCountries();
+//		while (j < 50) {
+//			if (countries[i].getOccupier().equals(countries[j].getOccupier())) {
+//				countryCounter++;
+//			}
+//			i++;
+//			j++;
+//		}
+//
+//		if (countryCounter == 50)
+//			return true;
 
-		if (countryCounter == 50)
-			return true;
-
-		return false;
+		if(players.size() == 1)
+			gameOver = true;
+		else
+			gameOver = false;
 	}// end isFinished
 
 	//checks if all players have at least one country. If they do not, remove them from the game.
@@ -570,6 +579,7 @@ public class Game {
 		}
 
 		players.removeAll(playersToRemove);
+		totalPlayers -= playersToRemove.size();
 		//TODO add cards that players that lost had into the discard pile, if there is one
 	}// end removeLosers
 }// end GameClasss
