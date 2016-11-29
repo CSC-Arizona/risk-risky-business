@@ -136,13 +136,13 @@ public class riskGUI extends JFrame {
 
 		System.out.println("Width = " + width + " Height = " + height);
 		splash = true; // comment me out for default mode
-		//splash = false; // comment me out for splash screens
+		// splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
 		setUpSplash(); // comment me out for default mode
-		//defaultMode(); // comment me out for splash screens
+		// defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -567,7 +567,7 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 			if (theGame != null)
 				drawCurrentPlayer(g2);
-		//	drawGridAndNumbers(g2);
+			// drawGridAndNumbers(g2);
 
 		}// end paintComponenet
 
@@ -803,37 +803,32 @@ public class riskGUI extends JFrame {
 			this.add(cards, BorderLayout.EAST);
 			cards.revalidate();
 		}// end makeCardPanel
-		
-		
-		
 
 		public void makePlayingMyCountryBottomLabel() {
-	/*		JPanel bott = new JPanel();
-			bott.setLayout(new GridLayout(0, 2));
-			JButton transfer = new JButton("Transfer Troops");
-			transfer.addActionListener(new TransferTroopListener());
-			JButton war = new JButton("Go to war!");
-			war.addActionListener(new AttackListener());
-			bott.add(transfer);
-			bott.add(war);
-			this.add(bott, BorderLayout.SOUTH);*/
+			/*
+			 * JPanel bott = new JPanel(); bott.setLayout(new GridLayout(0, 2));
+			 * JButton transfer = new JButton("Transfer Troops");
+			 * transfer.addActionListener(new TransferTroopListener()); JButton
+			 * war = new JButton("Go to war!"); war.addActionListener(new
+			 * AttackListener()); bott.add(transfer); bott.add(war);
+			 * this.add(bott, BorderLayout.SOUTH);
+			 */
 			JButton butt = new JButton("Go to War!");
 			butt.addActionListener(new AttackListener());
 			this.add(butt, BorderLayout.SOUTH);
 			this.revalidate();
-		//	if (theGame.isDeployPhase())
-		//		butt.setText("Deploy Troops Here");
-		//	bott.revalidate();
+			// if (theGame.isDeployPhase())
+			// butt.setText("Deploy Troops Here");
+			// bott.revalidate();
 		}// end makeBottomLabel
 
-		public void makeTransferMyCountryBottomLabel(){
+		public void makeTransferMyCountryBottomLabel() {
 			JButton trans = new JButton("Transfer Troops");
 			trans.addActionListener(new TransferTroopListener());
 			this.add(trans, BorderLayout.SOUTH);
 			this.revalidate();
-		}//end makeTransferMyCountryBottomLabel
-		
-		
+		}// end makeTransferMyCountryBottomLabel
+
 		public void makePlayingYourCountryBottomLabel() {
 			JButton attack = new JButton("Attack");
 			attack.addActionListener(new AttackListener());
@@ -847,7 +842,6 @@ public class riskGUI extends JFrame {
 			this.add(place, BorderLayout.SOUTH);
 			this.revalidate();
 		}// end makeplacementbottom
-
 
 		// Only displays neighbors
 		public void makePlacementCenterPanel() {
@@ -943,14 +937,14 @@ public class riskGUI extends JFrame {
 				else if (theGame.isReinforcePhase()) {
 					makePlayingCenterPanel();
 					makePlacementBottomLabel();
-					
+
 				} else if (theGame.isDeployPhase()) {
 					makePlayingCardPanel();
 					makePlayingCenterPanel();
-					//Only give this option if the country is yours
+					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
 						makePlacementBottomLabel();
-				}// end elseif
+				} // end elseif
 					// we should make a specific panel for if a transfer is in
 					// progress.
 					// we should make a specific panel for if a transfer is in
@@ -969,11 +963,11 @@ public class riskGUI extends JFrame {
 				} else {
 					makePlayingCardPanel();
 					makePlayingCenterPanel();
-					//Only give this option if the country is yours
+					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
 						makeTransferMyCountryBottomLabel();
 				} // end outer else
-		
+
 			} // end updatePanel
 
 		}// end updatePanel
@@ -1204,22 +1198,27 @@ public class riskGUI extends JFrame {
 	 */
 	private class PlaceAndReinforceListener implements ActionListener {
 		boolean continueFlag = false, deployFlag = false;
+		int numOfOwnedCountries;
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
 			if (theGame.isPlacePhase()) {
 				// next player place army
+				numOfOwnedCountries = theGame.getCurrentPlayer().getCountries().size();
 				theGame.placeArmies(theGame.getSelectedCountry(), 1);
 				drawingPanel.repaint();
 				theGame.roundOfPlacement();
-				theGame.nextPlayer();
+				if (numOfOwnedCountries < theGame.getCurrentPlayer().getCountries().size())
+					theGame.nextPlayer();
 			} else if (theGame.isReinforcePhase()) {
+				int remainingTroops = theGame.getCurrentPlayer().getAvailableTroops();
 				theGame.placeArmies(theGame.getSelectedCountry(), 1);
 				drawingPanel.repaint();
 				// player can reinforce countries
 				theGame.roundOfReinforcement();
-				theGame.nextPlayer();
+				if (remainingTroops > theGame.getCurrentPlayer().getAvailableTroops())
+					theGame.nextPlayer();
 			} // end if
 			else if (theGame.isDeployPhase()) {
 				deployFlag = false;

@@ -511,11 +511,12 @@ public class Game {
 			// theirs.setForcesVal(numArmies);
 			yours.removeUnits(numArmies); // you lose the armies fought with
 		} else if (theirs.getForcesVal() < numArmies) {
-			yours.setForcesVal(theirs.getForcesVal() - 1);
 			theirs.getOccupier().loseCountry(theirs);
-			theirs.removeUnits(theirs.getForcesVal() - 1);
+			theirs.removeUnits(theirs.getForcesVal());
+			theirs.setForcesVal(numArmies);
 			theirs.setOccupier(yours.getOccupier());
 			yours.getOccupier().occupyCountry(theirs);
+			yours.removeUnits(numArmies);
 			result = yours.toString();
 		}
 		return result;
@@ -524,4 +525,16 @@ public class Game {
 	public boolean isAttackPhase() {
 		return attackPhase;
 	}// end isAttackPhase
+	
+	public void skipAttackPhase(){
+		attackPhase = false;
+		reinforcePhase = true;
+	}//end skipAttackPhase
+	
+	public void finishTurn(){
+		deployPhase = true;
+		attackPhase = false;
+		reinforcePhase = false;
+		nextPlayer();
+	}//end finishTurn
 }// end GameClasss

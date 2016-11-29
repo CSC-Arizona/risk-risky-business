@@ -10,7 +10,7 @@ public class AI extends Player {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
-//	private Game theGame;
+	// private Game theGame;
 
 	public AI(AIStrat strat, int numOfPlayers) {
 		super(numOfPlayers);
@@ -118,33 +118,29 @@ public class AI extends Player {
 	// there are still other countries it can attack
 	public boolean aiAttack() {
 		Country attacking = getCountryToAttack();
-		Country attackingFrom = findAttackingCountry(attacking);
 		if (attacking == null)
 			return true;
+		Country attackingFrom = findAttackingCountry(attacking);
+
 		// change this for dice roll later, but for now, just take over
-		else {//if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
 			int oldForces = attacking.getForcesVal();
 			attacking.getOccupier().loseCountry(attacking);
 			attacking.removeUnits(oldForces);
 			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
 			attacking.setOccupier(this);
-			System.out.println("Took " + attacking.getName());
+			System.out.println(this.getFaction() + " Took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			return false;
-		} /*else {
-			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
-			// now check if you can still attack countries
-			attacking = getCountryToAttack();
-			if (attacking != null)
-				return false;
 		}
 
-		return true;*/
+		return true;
+
 	}// end aiAttack
 
 	private Country findAttackingCountry(Country attacking) {
 
-		System.out.println("find attacking");
+		//System.out.println("find attacking");
 		for (Country c1 : findFringeCountries()) {
 			for (Country c2 : c1.getNeighbors()) {
 				if (c2.equals(attacking)) {
@@ -157,19 +153,21 @@ public class AI extends Player {
 
 	// returns a country it can attack
 	private Country getCountryToAttack() {
-		System.out.println("get country to attack");
+		//System.out.println("get country to attack");
 		Country attackMe = pickRandomFromList(findCountriesToAttack());
 		return attackMe;
-	}// end getCountryToAttack
+	}// end
+		// getCountryToAttack
 
 	// picks a random country from the list of countries to attack
 	private Country pickRandomFromList(ArrayList<Country> countriesToAttack) {
+		if (countriesToAttack == null)
+			return null;
+
 		Random rand = new Random();
 		int randInt = 0;
-		if (countriesToAttack.size() != 0)
-			randInt = rand.nextInt(countriesToAttack.size());
-		else
-			return null;
+
+		randInt = rand.nextInt(countriesToAttack.size());
 
 		return countriesToAttack.get(randInt);
 	}// end pickRandomFromList
@@ -225,24 +223,22 @@ public class AI extends Player {
 	// check if i have more units on my country than that country, if I do, add
 	// that country to my list of countriesWorthAttacking
 	private ArrayList<Country> findCountriesToAttack() {
-		System.out.println("find countries to attack");
+		//System.out.println("find countries to attack");
 		ArrayList<Country> fringeCountries = findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				if (neighboringCountry.getOccupier().getFaction()
-						.compareTo(this.getFaction()) != 0) {
-					if (country.getForcesVal()-1 > neighboringCountry
-							.getForcesVal())
+				if (neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
+					if (country.getForcesVal() - 1 > neighboringCountry.getForcesVal())
 						countriesWorthAttacking.add(neighboringCountry);
-					}//end if
-				}//end for
-			}//end for
+				} // end if
+			} // end for
+		} // end for
 
-		if(countriesWorthAttacking.size() ==0 )
+		if (countriesWorthAttacking.size() == 0)
 			return null;
-		
+
 		return countriesWorthAttacking;
 	}// end findCountriesToAttack
 }
