@@ -22,13 +22,13 @@ public class SongPlayer {
 	 * @param audioFileName
 	 *            The name of the file to be written to your output device.
 	 */
-	public static void playFile( String audioFileName) {
+	public static void playFile(String audioFileName) {
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 
 				Thread player = new AudioFilePlayer(audioFileName);
 
-				//((AudioFilePlayer) player).addEndOfSongListener(waiter);
+				// ((AudioFilePlayer) player).addEndOfSongListener(waiter);
 
 				// AudioFilePlayer extends Thread. When start is called,
 				// the overridden run method in AudioFilePlayer executes.

@@ -11,7 +11,7 @@ public class SoundClipPlayer extends JFrame {
 
 	private Clip clip;
 	private long clipTime;
-	
+
 	// Constructor
 	public SoundClipPlayer() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,20 +39,25 @@ public class SoundClipPlayer extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	public void pause(){
-		clipTime= clip.getMicrosecondPosition();
+
+	public void pause() {
+		clipTime = clip.getMicrosecondPosition();
 		clip.stop();
 	}
-	public void notifyPause(){
+
+	public void notifyPause() {
 		clip.setMicrosecondPosition(clipTime);
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
-	public void stopTheme(){
+
+	public void stopTheme() {
 		clip.stop();
 	}
-	public void exitFrame(){
-		
+
+	public void exitFrame() {
+
 	}
+
 	public void startPlay() {
 		try {
 			// Open an audio input stream.
@@ -72,7 +77,8 @@ public class SoundClipPlayer extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	public void stopPlay(){
+
+	public void stopPlay() {
 		clip.stop();
 	}
 }

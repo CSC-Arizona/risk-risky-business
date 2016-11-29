@@ -17,20 +17,19 @@ import Model.Map;
 import Model.Player;
 
 public class Tests {
-	
-	//No tests for Faction or Continents enums
 
-	
-	@Test 
-	public void testCard(){ 
+	// No tests for Faction or Continents enums
+
+	@Test
+	public void testCard() {
 		// 100% coverage
 		Card us = new Card("murrica", "infantry");
 		assertEquals(us.getCountry(), "murrica");
 		assertEquals(us.getUnit(), "infantry");
 	}
-	
-	@Test 
-	public void testDeck(){ 
+
+	@Test
+	public void testDeck() {
 		Deck testDeck = Deck.getInstance();
 		assertEquals(52, testDeck.getSize());
 		testDeck.shuffle();
@@ -40,29 +39,27 @@ public class Tests {
 		assertEquals(50, testDeck.getSize());
 		testDeck.shuffle();
 		assertEquals(52, testDeck.getSize());
-		
-		
+
 	}
-	
+
 	@Test
-	public void testDice(){
-		//100% Coverage
+	public void testDice() {
+		// 100% Coverage
 		Dice die = new Dice();
 		assertEquals(die.getValue(), 0);
 		die.roll(1);
 		die.roll(3);
-		//Not currently testing the roll values here, but used prints to 
-		//make sure it was working properly. 
+		// Not currently testing the roll values here, but used prints to
+		// make sure it was working properly.
 	}
-	
-	
+
 	@Test
-	public void testCountry(){
+	public void testCountry() {
 		// 90.6% coverage
 		Country wall = new Country("The Wall", 6.75, 3.5, null);
 		Country skagos = new Country("Skagos", 10, 3, null);
 		wall.addNeighbor(skagos);
-		
+
 		assertEquals(wall.getName(), "The Wall");
 		assertEquals(wall.getX(), 6.75, 0);
 		assertEquals(wall.getY(), 3.5, 0);
@@ -70,29 +67,29 @@ public class Tests {
 		assertEquals(wall.getOccupier(), null);
 		assertEquals(wall.equals(wall), true);
 	}
-	
+
 	@Test
-	public void testMap(){
+	public void testMap() {
 		// 100% Coverage
 		Map map = Map.getInstance();
-		
-		assertEquals(map.getCountries()[0].getName(), "The Wall" );
+
+		assertEquals(map.getCountries()[0].getName(), "The Wall");
 	}
-	
+
 	@Test
-	public void testHumanPlayer(){
-		//TODO: 37.5% coverage (Player: 30% Coverage)
+	public void testHumanPlayer() {
+		// TODO: 37.5% coverage (Player: 30% Coverage)
 
 		Player human = new HumanPlayer(1);
 	}
-	
+
 	@Test
-	public void testRedeemCards(){
+	public void testRedeemCards() {
 		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
-		Card walCard = new Card("The Wall","cavalry");
-		Card someCard = new Card("Skagos","artillery");
-		Card nextCard = new Card("The Wall Else","infantry");
+		Card walCard = new Card("The Wall", "cavalry");
+		Card someCard = new Card("Skagos", "artillery");
+		Card nextCard = new Card("The Wall Else", "infantry");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
@@ -114,14 +111,14 @@ public class Tests {
 		System.out.println(result4);
 		assertTrue(result == 4);
 	}
-	
+
 	@Test
-	public void testRedeemCards2(){
+	public void testRedeemCards2() {
 		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
-		Card walCard = new Card("The Wall","cavalry");
-		Card someCard = new Card("Skagos","cavalry");
-		Card nextCard = new Card("The Wall Else","cavalry");
+		Card walCard = new Card("The Wall", "cavalry");
+		Card someCard = new Card("Skagos", "cavalry");
+		Card nextCard = new Card("The Wall Else", "cavalry");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
@@ -138,13 +135,14 @@ public class Tests {
 		System.out.println(result);
 		assertTrue(result == 4);
 	}
+
 	@Test
-	public void testRedeemCards3(){
+	public void testRedeemCards3() {
 		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
-		Card walCard = new Card("The Wall","cavalry");
-		Card someCard = new Card("Skagos","artillery");
-		Card nextCard = new Card("WILD","WILD");
+		Card walCard = new Card("The Wall", "cavalry");
+		Card someCard = new Card("Skagos", "artillery");
+		Card nextCard = new Card("WILD", "WILD");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
@@ -161,17 +159,18 @@ public class Tests {
 		System.out.println(result);
 		assertTrue(result == 4);
 	}
+
 	@Test
-	public void testRedeemCardsFail(){
+	public void testRedeemCardsFail() {
 		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
-		Card walCard = new Card("The Wall","cavalry");
-		Card someCard = new Card("Skagos","artillery");
-		Card nextCard = new Card("Something","cavalry");
+		Card walCard = new Card("The Wall", "cavalry");
+		Card someCard = new Card("Skagos", "artillery");
+		Card nextCard = new Card("Something", "cavalry");
 		Player one = new HumanPlayer(1);
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
-		Country skagos = new Country("Skagos", 10, 3,blue);
+		Country skagos = new Country("Skagos", 10, 3, blue);
 		skagos.setForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
@@ -185,6 +184,5 @@ public class Tests {
 		assertTrue(result == -1);
 
 	}
-	
-	
+
 }

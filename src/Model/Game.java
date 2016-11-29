@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
@@ -98,8 +99,7 @@ public class Game {
 
 	public void roundOfPlacement() {
 		while (isPlacePhase() && getCurrentPlayer() instanceof AI)
-			aiChoicePlacement();
-
+			aiTurn();
 		// Just in case the switch between placing and reinforcing happened
 		// in between two AIs
 		if (isReinforcePhase())
@@ -108,7 +108,7 @@ public class Game {
 
 	public void roundOfReinforcement() {
 		while (isReinforcePhase() && getCurrentPlayer() instanceof AI)
-			aiReinforcePlacement();
+			aiTurn();
 	}
 
 	// this is called by the countryClickListener, and "places" an army in a
@@ -226,16 +226,56 @@ public class Game {
 		return players;
 	}// end getPlayers
 
-	public Player nextPlayer() {
+	public void nextPlayer() {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
-
-		if (isPlayPhase()) {
+		if (players.get(playerLocation) instanceof AI) {
+			aiTurn();
+		} else if (isDeployPhase())
 			players.get(playerLocation).getTroops();
-		}
-		return players.get(playerLocation);
+
 	}// end nextPlayer
+
+	private void aiTurn() {
+		boolean done = false;
+		while (!done) {
+			if (isPlacePhase()) {
+				boolean placed = false;
+				while (!placed) {
+					placed = aiChoicePlacement();
+				}
+				done = true;
+			} else if (isReinforcePhase()) {
+				aiReinforcePlacement();
+				done = true;
+			} else if (isPlayPhase() && isDeployPhase()) {
+				players.get(playerLocation).getTroops();
+				while (players.get(playerLocation).getAvailableTroops() > 0) {
+					aiReinforcePlacement();
+				}
+				deployPhase = false;
+				attackPhase = true;
+			} else if (isPlayPhase() && isAttackPhase()) {
+				boolean finishedAttacking = false;
+				while (!finishedAttacking) {
+					finishedAttacking = ((AI) players.get(playerLocation))
+							.aiAttack();
+				}
+				attackPhase = false;
+				reinforcePhase = true;
+			} else if (isPlayPhase() && isReinforcePhase()) {
+				aiPlayReinforce();
+				done = true;
+			}
+		}
+		nextPlayer();
+	}
+
+	private void aiPlayReinforce() {
+		// TODO Auto-generated method stub
+
+	}
 
 	public boolean isPlacePhase() {
 		return placePhase;
@@ -254,7 +294,6 @@ public class Game {
 	}// end isDeplyPhase;
 
 	public boolean aiChoicePlacement() {
-
 		aiSelectedCountry = ((AI) players.get(playerLocation))
 				.pickRandomCountry(gameMap.getCountries());
 		if (checkIfCountryAvailable(aiSelectedCountry)) {
@@ -324,6 +363,7 @@ public class Game {
 						.compareTo(three.getUnit()) != 0))
 				|| (three.getUnit().compareTo("WILD") == 0 && (one.getUnit()
 						.compareTo(two.getUnit()) != 0))) {
+
 			numArmies = 0;
 			numRedemptions++;
 			switch (numRedemptions) {
@@ -374,6 +414,72 @@ public class Game {
 		return numArmies;
 		// if numArmies is -1 when returned, cards cannot be redeemed
 	}// end redeemCards
+
+	// pops up a pane to ask how many units to move, which returns a string
+	// it then tries to parse that string into an int, and if it does compares
+	// it to the total
+	// number of units on a country. If it is larger, or equal to the total
+	// number, throws an error, otherwise returns that number
+	// to the gui
+	public int getUnitsToMove(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		;
+		String unitsToMove = "";
+
+		while (!moveFlag) {
+			unitsToMove = JOptionPane
+					.showInputDialog("How Many armies? You must leave 1.");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn >= totalUnits) {
+					JOptionPane.showMessageDialog(null,
+							"You must leave 1 army.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
+				}
+			}
+		}
+		return unitsToReturn;
+
+	}// end unitsToReturn
+
+	public int getArmiesToAttack(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		String unitsToMove = "";
+
+		while (!moveFlag) {
+			unitsToMove = JOptionPane
+					.showInputDialog("How many armies do you want to attack with?");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn > totalUnits) {
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
+				}
+			}
+		}
+		return unitsToReturn;
+
+	}// end getArmiesToAttack
 
 	public boolean moveUnitsToCountry(int numUnits, Country fromCountry,
 			Country toCountry, Player current) {
@@ -441,7 +547,7 @@ public class Game {
 		else if (playPhase && attackPhase)
 			return "Attack Phase";
 		return null;
-	}
+	}// end getPhase
 
 	public String attack(Country yours, Country theirs, int numArmies) {
 		String result = "";
@@ -450,9 +556,7 @@ public class Game {
 														// of armies to attacked
 														// with== total
 														// forces
-				theirs.setForcesVal(numArmies - 1);
 				yours.removeUnits(numArmies - 1);
-				yours.setOccupier(theirs.getOccupier());
 			} else {
 				// theirs.setForcesVal(numArmies);
 				yours.removeUnits(numArmies); // you lose the armies fought with
@@ -460,10 +564,16 @@ public class Game {
 			result = theirs.toString();
 		} else if (theirs.getForcesVal() < numArmies) {
 			yours.setForcesVal(theirs.getForcesVal() - 1);
+			theirs.getOccupier().loseCountry(theirs);
 			theirs.removeUnits(theirs.getForcesVal() - 1);
 			theirs.setOccupier(yours.getOccupier());
+			yours.getOccupier().occupyCountry(theirs);
 			result = yours.toString();
 		}
 		return result;
-	}
+	}// end attack
+
+	public boolean isAttackPhase() {
+		return attackPhase;
+	}// end isAttackPhase
 }// end GameClasss
