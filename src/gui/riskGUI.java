@@ -1016,7 +1016,17 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			// do stuff, but I be tired :)
-			System.out.println("PASS!");
+	
+			if(theGame.isAttackPhase()){
+				theGame.skipAttackPhase();
+				System.out.println("Passed attack phase");
+			}
+			else if(theGame.isReinforcePhase())
+			{
+				theGame.finishTurn();
+				System.out.println("Ended turn");
+			}
+			drawingPanel.repaint();
 			
 		}//end actionperformed
 	}//end passbuttonlistener
