@@ -10,7 +10,7 @@ public class AI extends Player {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
-	private Game theGame;
+//	private Game theGame;
 
 	public AI(AIStrat strat, int numOfPlayers) {
 		super(numOfPlayers);
@@ -124,7 +124,7 @@ public class AI extends Player {
 		if (attacking == null)
 			return true;
 		// change this for dice roll later, but for now, just take over
-		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+		else {//if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
 			int oldForces = attacking.getForcesVal();
 			attacking.getOccupier().loseCountry(attacking);
 			attacking.removeUnits(oldForces);
@@ -132,7 +132,7 @@ public class AI extends Player {
 			attacking.setOccupier(this);
 			System.out.println("Took " + attacking.getName());
 			return false;
-		} else {
+		} /*else {
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			// now check if you can still attack countries
 			attacking = getCountryToAttack();
@@ -140,7 +140,7 @@ public class AI extends Player {
 				return false;
 		}
 
-		return true;
+		return true;*/
 	}// end aiAttack
 
 	private Country findAttackingCountry(Country attacking) {
@@ -234,7 +234,7 @@ public class AI extends Player {
 			for (Country neighboringCountry : neighbors) {
 				if (neighboringCountry.getOccupier().getFaction()
 						.compareTo(this.getFaction()) != 0) {
-					if (country.getForcesVal() > neighboringCountry
+					if (country.getForcesVal()-1 > neighboringCountry
 							.getForcesVal())
 						countriesWorthAttacking.add(neighboringCountry);
 				}

@@ -67,10 +67,6 @@ public class Game {
 	 * reflected in the GUI. I'm working on fixing it now
 	 */
 	public void startGame() {
-		for (int i = 0; i < players.size(); i++) {
-			System.out.print(players.get(i).getName() + " ");
-		}
-		System.out.println();
 		// Randomly picks a player from the total number of players
 		int firstPlayer = (int) (Math.random() * totalPlayers);
 
@@ -91,10 +87,6 @@ public class Game {
 		// calls roundOfPlacement to let any AIs who may have been set to
 		// go first play their parts
 		roundOfPlacement();
-
-		for (int i = 0; i < players.size(); i++) {
-			System.out.print(players.get(i).getName() + " ");
-		}
 	}// end startGame
 
 	public void roundOfPlacement() {
@@ -124,7 +116,7 @@ public class Game {
 				if (armiesPlaced == 50) {
 					placePhase = false;
 					reinforcePhase = true;
-				}
+				}//end if
 
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
@@ -132,13 +124,12 @@ public class Game {
 						+ countryToPlace.toString());
 				players.get(playerLocation).subtractFromAvailableTroops(
 						numToPlace);
-				nextPlayer();
 
 			} else {
 				System.out.println("That country is already Occupied");
 				System.out.println(armiesPlaced);
 
-			}
+			}//end else
 		} else if (isDeployPhase()) {
 			if (players.get(playerLocation).getAvailableTroops() > 0
 					&& countryToPlace.getOccupier().equals(
@@ -152,16 +143,8 @@ public class Game {
 				}
 
 			}
-
-			// this may have broken it
-		} else if (players.get(playerLocation).getAvailableTroops() > 0)// place
-																		// remaining
-																		// armies
-																		// on
-																		// own
-		// countires, this number is if we start
-		// with 35 units, and 3 players
-
+		} else if (players.get(playerLocation).getAvailableTroops() > 0)
+		// place remaining armies
 		{
 			// placePhase = false;
 			// reinforcePhase = true;
@@ -180,6 +163,7 @@ public class Game {
 				System.out.println("You don't occupy this country");
 
 		} else {
+			
 			placePhase = false;
 			reinforcePhase = false;
 			playPhase = true;
