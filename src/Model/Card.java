@@ -17,41 +17,39 @@ public class Card {
 		this.filename = this.findMyFileName();
 		myImage = new ImageIcon(filename);
 	}// end card constructor
-	
-	
-	public Image getMyImage(){
+
+	public Image getMyImage() {
 		return myImage.getImage();
 	}
-	
-	private String findMyFileName(){
+
+	private String findMyFileName() {
 		return "RiskCards//" + removeWhiteSpace(country) + "Card.png";
-	}//end findMyFileName
-	
-	private String removeWhiteSpace(String orig){
+	}// end findMyFileName
+
+	private String removeWhiteSpace(String orig) {
 		String str = "";
-		int i=0;
-		
-		while (i<orig.length()){
-			//add non-white-space
-			while (i < orig.length() && orig.charAt(i) != ' '){
+		int i = 0;
+
+		while (i < orig.length()) {
+			// add non-white-space
+			while (i < orig.length() && orig.charAt(i) != ' ') {
 				str += orig.charAt(i);
 				i++;
-			}//end while
-			
-			//move past white space
-			while (i < orig.length() && orig.charAt(i) == ' '){
-				i++;
-			}//end while
-		}//end outer while
-		
-		return str;
-	}//removeWhiteSpace
+			} // end while
 
-	
-	public String getFilename(){
+			// move past white space
+			while (i < orig.length() && orig.charAt(i) == ' ') {
+				i++;
+			} // end while
+		} // end outer while
+
+		return str;
+	}// removeWhiteSpace
+
+	public String getFilename() {
 		return filename;
 	}
-	
+
 	public String getCountry() {
 		return country;
 	}// end getCountry

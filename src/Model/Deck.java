@@ -15,7 +15,7 @@ public class Deck {
 	private int size;
 	private static Deck uniqueDeck;
 	private static ArrayList<Card> discardPile;
-	
+
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
 		discardPile = new ArrayList<>();
@@ -23,9 +23,9 @@ public class Deck {
 		shuffle();
 		size = 52;
 	}// end constructor
-	
-	//USed only for testing card
-	public ArrayList<Card> getDeck(){
+
+	// USed only for testing card
+	public ArrayList<Card> getDeck() {
 		return riskDeck;
 	}
 
@@ -36,14 +36,13 @@ public class Deck {
 	}// end getInstance
 
 	public void shuffle() {
-		if(size==0 && discardPile.size()>0){
+		if (size == 0 && discardPile.size() > 0) {
 			riskDeck.clear();
 			riskDeck = discardPile;
 			Collections.shuffle(riskDeck);
 			size = riskDeck.size();
 			discardPile.clear();
-		}
-		else{
+		} else {
 			riskDeck.clear();
 			fillDeck(riskDeck);
 			Collections.shuffle(riskDeck);
@@ -59,7 +58,7 @@ public class Deck {
 			riskDeck.remove(size - 1);
 			size--;
 			return result;
-		} else{
+		} else {
 			shuffle();
 			return deal();
 		}
@@ -68,15 +67,15 @@ public class Deck {
 	public int getSize() {
 		return size;
 	}// end getSize
-	
-	public boolean isEmpty(){
-		if(size==0)
+
+	public boolean isEmpty() {
+		if (size == 0)
 			return true;
 		else
 			return false;
 	}
-	
-	public void discard(Card c){
+
+	public void discard(Card c) {
 		discardPile.add(c);
 	}
 
@@ -137,8 +136,7 @@ public class Deck {
 		deck.add(new Card("WILD", "WILD"));
 	}// end fillDeck
 
-	public void addToDiscardPile(ArrayList<Card> cards)
-	{
+	public void addToDiscardPile(ArrayList<Card> cards) {
 		discardPile.addAll(cards);
 	}
 }// end Deck Class
