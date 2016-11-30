@@ -8,6 +8,7 @@ FIXED//Every time you click for reinforcement, the AIs will all claim a country,
 -After removing losing players, it seems that the ArrayList might resort, but I think I know what the problem is -DT
   -This bug also breaks the endgame print screen, but I think I know how to fix it -DT
 -Default mode cant find faction (not important as default mode probably wont be in final release)
+-When attacking, you are capable of leaving ZERO units on your old country
 
 
 --TODO--
@@ -27,3 +28,4 @@ Brainstorming elements needed to be saved/loaded when ending/starting a game:
 - Map 
 - Deck
 - 
+
