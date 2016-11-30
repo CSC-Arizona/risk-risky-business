@@ -14,45 +14,73 @@ public class Deck {
 	private ArrayList<Card> riskDeck;
 	private int size;
 	private static Deck uniqueDeck;
+	private static ArrayList<Card> discardPile;
 
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
+		discardPile = new ArrayList<>();
 		fillDeck(riskDeck);
 		shuffle();
 		size = 52;
+	}// end constructor
+
+	// USed only for testing card
+	public ArrayList<Card> getDeck() {
+		return riskDeck;
 	}
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
 			uniqueDeck = new Deck();
 		return uniqueDeck;
-	}
+	}// end getInstance
 
 	public void shuffle() {
-		riskDeck.clear();
-		fillDeck(riskDeck);
-		Collections.shuffle(riskDeck);
-		size = 52;
-	}
+		if (size == 0 && discardPile.size() > 0) {
+			riskDeck.clear();
+			riskDeck = discardPile;
+			Collections.shuffle(riskDeck);
+			size = riskDeck.size();
+			discardPile.clear();
+		} else {
+			riskDeck.clear();
+			fillDeck(riskDeck);
+			Collections.shuffle(riskDeck);
+			size = 52;
+		}
+	}// end shuffle
 
-	//returns null if the deck has run out of cards.
+	// returns null if the deck has run out of cards.
 	public Card deal() {
-		if(size>0){
+		if (size > 0) {
 			Card result;
-			result = riskDeck.get(size-1);
-			riskDeck.remove(size-1);
+			result = riskDeck.get(size - 1);
+			riskDeck.remove(size - 1);
 			size--;
 			return result;
+		} else {
+			shuffle();
+			return deal();
 		}
-		else
-			return null;
-	}
-	
-	public int getSize(){
+	}// end deal
+
+	public int getSize() {
 		return size;
+	}// end getSize
+
+	public boolean isEmpty() {
+		if (size == 0)
+			return true;
+		else
+			return false;
 	}
 
-	//possible units: infantry, cavalry, artillery. Add all territories (countries) and 2 wild cards. 
+	public void discard(Card c) {
+		discardPile.add(c);
+	}
+
+	// possible units: infantry, cavalry, artillery. Add all territories
+	// (countries) and 2 wild cards.
 	private void fillDeck(ArrayList<Card> deck) {
 		deck.add(new Card("The Wall", "infantry"));
 		deck.add(new Card("Skagos", "cavalry"));
@@ -106,6 +134,9 @@ public class Deck {
 		deck.add(new Card("Qarth", "cavalry"));
 		deck.add(new Card("WILD", "WILD"));
 		deck.add(new Card("WILD", "WILD"));
-	}
+	}// end fillDeck
 
-}
+	public void addToDiscardPile(ArrayList<Card> cards) {
+		discardPile.addAll(cards);
+	}
+}// end Deck Class
