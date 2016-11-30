@@ -85,6 +85,7 @@ public class HumanPlayer extends Player {
 				System.out.println("no country cards to redeem");
 		} else
 			System.out.println("unable to redeem cards");
+		
 		return numArmies;
 		// if numArmies is -1 when returned, cards cannot be redeemed
 	}// end redeemCards

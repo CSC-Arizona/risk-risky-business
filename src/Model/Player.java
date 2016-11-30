@@ -115,6 +115,16 @@ public abstract class Player {
 		myCards.removeAll(cardsToDiscard);
 		return cardsToDiscard;
 	}
+	
+	public ArrayList<Card> discardCards(ArrayList<Card> cards) {
+		ArrayList<Card> cardsToDiscard = new ArrayList<>();
+		for (Card card : cards) {
+			cardsToDiscard.add(card);
+		}
+
+		myCards.removeAll(cardsToDiscard);
+		return cardsToDiscard;
+	}
 
 	public abstract int redeemCards();
 }
