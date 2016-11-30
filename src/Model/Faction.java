@@ -1,9 +1,8 @@
 package Model;
 
 public enum Faction {
-	STARK("Stark", "Jon"), TARGARYEN("Targaryen", "Danaerys"), LANNISTER(
-			"Lannister", "Joffrey"), WHITEWALKERS("White Walker", "Night King"), DOTHRAKI(
-			"Dothraki", "Khal Drogo"), WILDLINGS("Wildling", "Mance Rayder");
+	STARK("Stark", "Jon"), TARGARYEN("Targaryen", "Danaerys"), LANNISTER("Lannister", "Joffrey"), WHITEWALKERS(
+			"White Walker", "Night King"), DOTHRAKI("Dothraki", "Khal Drogo"), WILDLINGS("Wildling", "Mance Rayder");
 
 	private String myName;
 	private String defaultPlayerName;

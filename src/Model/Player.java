@@ -16,18 +16,13 @@ public abstract class Player {
 	// private Continent[] allContinents; TODO
 
 	public void getTroops() {
-		if(myCountries.size() <= 9)
+		if (myCountries.size() <= 9)
 			availTroops = 3;
 		else
 			availTroops = myCountries.size() / 3;
-		// For when the continent class is finished
-		// the added troops changes based on how many
-		// continents you play
-		/*
-		 * for (Continent con : allContinents){ if
-		 * (this.equals(con.getOccupier())) addedTroops +=
-		 * con.getOwnershipBonus(); }
-		 */
+
+		redeemCards();
+		// TODO continent stuff
 	}// end getTroops
 
 	public Player(int numOfPlayers) {
@@ -107,4 +102,19 @@ public abstract class Player {
 		myCountries.remove(loser);
 	}// end loseCountry
 
+	public void addCard(Card cardToAdd) {
+		myCards.add(cardToAdd);
+	}
+
+	public ArrayList<Card> discardCards() {
+		ArrayList<Card> cardsToDiscard = new ArrayList<>();
+		for (Card card : myCards) {
+			cardsToDiscard.add(card);
+		}
+
+		myCards.removeAll(cardsToDiscard);
+		return cardsToDiscard;
+	}
+
+	public abstract void redeemCards();
 }

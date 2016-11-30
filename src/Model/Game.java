@@ -11,7 +11,7 @@ public class Game {
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver;
+	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, aiFirstAttack;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
@@ -31,6 +31,7 @@ public class Game {
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
+		aiFirstAttack = false;
 		newGame();
 
 	}// end constructor
@@ -43,6 +44,8 @@ public class Game {
 	}// end getInstance
 
 	public void newGame() {
+		if (players != null)
+			players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
 		gameMap = Map.getInstance();
@@ -54,6 +57,15 @@ public class Game {
 		numRedemptions = 0;
 
 	}// end newGame
+
+	// makes sure all country buttons are enabled
+	private void turnOnCountryButtons() {
+		for (Country country : gameMap.getCountries()) {
+			if (country.getMyButton() != null)
+				country.getMyButton().setEnabled(true);
+		}
+
+	}// end turnOnCountryButtons
 
 	public void setPlayers(ArrayList<Player> thePlayers) {
 		players = thePlayers;
@@ -207,6 +219,7 @@ public class Game {
 			playerLocation = 0;
 
 		if (players.get(playerLocation) instanceof AI) {
+			aiFirstAttack = false;
 			aiTurn();
 		}
 		if (isDeployPhase() && players.get(playerLocation) instanceof HumanPlayer)
@@ -216,6 +229,10 @@ public class Game {
 
 	private void aiTurn() {
 		boolean done = false;
+		if (gameOver) {// for now do nothing
+			System.out.println("looping in ai turn");
+			return;
+		}
 		while (!done) {
 			if (isPlacePhase()) {
 				boolean placed = false;
@@ -235,9 +252,13 @@ public class Game {
 				attackPhase = true;
 			} else if (isPlayPhase() && isAttackPhase()) {
 				boolean finishedAttacking = false;
+				int aiCountries = players.get(playerLocation).getCountries().size();
 				while (!finishedAttacking) {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
+				if (aiCountries < players.get(playerLocation).getCountries().size())
+					players.get(playerLocation).addCard(deck.deal());
+
 				removeLosers();
 				isFinished();
 				attackPhase = false;
@@ -248,10 +269,6 @@ public class Game {
 				deployPhase = true;
 				done = true;
 			}
-		}
-		if(gameOver)
-		{
-			//TODO call a function that tells everything the game is over, and who won
 		}
 		nextPlayer();
 	}
@@ -547,28 +564,27 @@ public class Game {
 		nextPlayer();
 	}// end finishTurn
 
-	//checks if all countries are occupied by the same player, if so returns true, otherwise returns false
-	public void isFinished() {
-//		int countryCounter = 0, i = 0, j = 1;
-//		Country countries[] = getGameMap().getCountries();
-//		while (j < 50) {
-//			if (countries[i].getOccupier().equals(countries[j].getOccupier())) {
-//				countryCounter++;
-//			}
-//			i++;
-//			j++;
-//		}
-//
-//		if (countryCounter == 50)
-//			return true;
+	// checks if all countries are occupied by the same player, if so returns
+	// true, otherwise returns false
+	public boolean isFinished() {
 
-		if(players.size() == 1)
+		if (players.size() == 1) {
 			gameOver = true;
-		else
+			playPhase = false;
+			attackPhase = false;
+			reinforcePhase = false;
+			deployPhase = false;
+		} else
 			gameOver = false;
+
+		return gameOver;
+		// TODO notify gui somehow so that it knows who won, and display that
+		// player's victory, as well is turn off all
+		// buttons
 	}// end isFinished
 
-	//checks if all players have at least one country. If they do not, remove them from the game.
+	// checks if all players have at least one country. If they do not, remove
+	// them from the game.
 	public void removeLosers() {
 		ArrayList<Player> playersToRemove = new ArrayList<>();
 		for (Player player : players) {
@@ -577,14 +593,13 @@ public class Game {
 				playersToRemove.add(player);
 			}
 		}
-
+		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
+		for (Player player : playersToRemove) {
+			cardsToAddToDiscard.addAll(player.discardCards());
+		}
+		deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
-		for(Player p : playersToRemove){
-			ArrayList<Card> remove = p.getCards();
-			for(Card r : remove){
-				deck.discard(r);
-			}
-		}
+
 	}// end removeLosers
 }// end GameClasss

@@ -12,16 +12,22 @@ import Model.Card;
 public class Deck {
 
 	private ArrayList<Card> riskDeck;
-	private ArrayList<Card> discardPile = new ArrayList<Card>();
 	private int size;
 	private static Deck uniqueDeck;
-
+	private static ArrayList<Card> discardPile;
+	
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
+		discardPile = new ArrayList<>();
 		fillDeck(riskDeck);
 		shuffle();
 		size = 52;
 	}// end constructor
+	
+	//USed only for testing card
+	public ArrayList<Card> getDeck(){
+		return riskDeck;
+	}
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
@@ -30,10 +36,11 @@ public class Deck {
 	}// end getInstance
 
 	public void shuffle() {
-		if(discardPile.size()>0){
+		if(size==0 && discardPile.size()>0){
 			riskDeck.clear();
 			riskDeck = discardPile;
 			Collections.shuffle(riskDeck);
+			size = riskDeck.size();
 			discardPile.clear();
 		}
 		else{
@@ -52,8 +59,10 @@ public class Deck {
 			riskDeck.remove(size - 1);
 			size--;
 			return result;
-		} else
-			return null;
+		} else{
+			shuffle();
+			return deal();
+		}
 	}// end deal
 
 	public int getSize() {
@@ -128,4 +137,8 @@ public class Deck {
 		deck.add(new Card("WILD", "WILD"));
 	}// end fillDeck
 
+	public void addToDiscardPile(ArrayList<Card> cards)
+	{
+		discardPile.addAll(cards);
+	}
 }// end Deck Class
