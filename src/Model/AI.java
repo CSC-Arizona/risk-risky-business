@@ -10,58 +10,53 @@ public class AI extends Player {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
+	// private Game theGame;
 
-	public AI(AIStrat strat, int numOfPlayers)
-	{
+	public AI(AIStrat strat, int numOfPlayers) {
 		super(numOfPlayers);
 		myStrat = strat;
-	}//end AI constructor
+
+	}// end AI constructor
 
 	// get a random number between from 0 and 49
 	// return that country in the array at index randomNumber
-	public Country pickRandomCountry(Country[] countries)
-	{
+	public Country pickRandomCountry(Country[] countries) {
 		Country countryToSelect = null;
 
-		if (myStrat == AIStrat.EASY || getCountries().size() == 0)
-		{
+		if (myStrat == AIStrat.EASY || getCountries().size() == 0) {
 			countryToSelect = getRandomCountry(countries);
-		} else
-		{
+		} else {
 			countryToSelect = checkAllNeighbors();
-			if(countryToSelect == null)
+			if (countryToSelect == null)
 				countryToSelect = getRandomCountry(countries);
 		}
 		return countryToSelect;
 	}// end pickRandomCountry
 
-	//checks an ai's countries neighbors, to see if they are occupied. if they are, go to the next one, otherwise
-	// return that country as a selection
-	private Country checkAllNeighbors()
-	{
+	// checks an ai's countries neighbors, to see if they are occupied. if they
+	// are, go to the next one, otherwise
+	// return that country as a selection. Used for placement in the first turn.
+	private Country checkAllNeighbors() {
 		int i = 0, j = 0;
-		//get my first countries neighbors
+		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
-		while (i < neighbors.size())
-		{
+		while (i < neighbors.size()) {
 			j = 0;
-			while (j < neighbors.size() && neighbors.get(j).getOccupier() != null)
-			{
+			while (j < neighbors.size() && neighbors.get(j).getOccupier() != null) {
 				j++;
 			}
-			
-			if(j < neighbors.size())
+
+			if (j < neighbors.size())
 				return neighbors.get(j);
-			
+
 			i++;
-			if(i < getCountries().size())
+			if (i < getCountries().size())
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 		return null;
-	}//end checkAllNeighbors
+	}// end checkAllNeighbors
 
-	private Country getRandomCountry(Country[] countries)
-	{
+	private Country getRandomCountry(Country[] countries) {
 		Random rand = new Random();
 		int randNum = rand.nextInt(50);
 
@@ -69,137 +64,346 @@ public class AI extends Player {
 
 	}// end getRandomCountry
 
-	//find my countries that are surrounded by friendly countries, and move their units out
-//	public Country reinforceCountry()
-//	{
-//		Country selectedCountry = null;
-//		if(myStrat == AIStrat.EASY)
-//		{
-//			selectedCountry = pickRandomOwnedCountry();
-//		}
-//		else
-//		{
-//			//look for countries I own who's neihbors are not owned by me, and reinforce that one
-//			selectedCountry = findCountriesInDanger();
-//			if(selectedCountry == null)
-//				selectedCountry = pickRandomOwnedCountry();
-//		}
-//		
-//
-//		return selectedCountry;
-//	}//end pickRandomCountryFromOccupied
+	// return an arraylist of all countries that have neighbors that arent owned
+	// by me
+	private ArrayList<Country> findFringeCountries() {
+		ArrayList<Country> fringeCountries = new ArrayList<>();
 
-	private Country findCountriesInDanger()
-	{
 		int i = 0, j = 0;
-		//get my first countries neighbors
-		//create a function to find a list of all owned countries who's neighbors are not owned by me, and use it instead
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
-		while (i < neighbors.size())
-		{
+		while (i < getCountries().size()) {
 			j = 0;
-			while (j < neighbors.size() && neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) == 0)
-			{
+			while (j < neighbors.size()) {
+				if (neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
+					fringeCountries.add(getCountries().get(i));
+					j = neighbors.size();
+				}
 				j++;
 			}
-			
-			if(j < neighbors.size())
-				if(j == 0)
-					return getCountries().get(i);
-				else
-					return neighbors.get(--j);
-			
 			i++;
-			if(i < getCountries().size())
+			if (i < getCountries().size())
 				neighbors = getCountries().get(i).getNeighbors();
 		}
-		return null;
-	}//end findCountriesInDanger
 
-	private Country pickRandomOwnedCountry()
-	{
+		return fringeCountries;
+	}// end findFringeCountries
+
+	private Country pickRandomOwnedCountry() {
 		Random rand = new Random();
 		int randNum = rand.nextInt(getCountries().size());
 		return getCountries().get(randNum);
-	}//end pickRandomOwnedCountry
+	}// end pickRandomOwnedCountry
 
-	@Override
-	public ArrayList<Card> playCards()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}//end playCards
-
-	@Override
-	public Country attack()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}//end attack
-
-	@Override
-	public void rearrangeTroops()
-	{
-		// TODO Auto-generated method stub
-
-	}//end rearrangeTroops
-
-
-	public Country placeNewTroops(){
+	public Country placeNewTroops() {
 		Country selectedCountry = null;
-		if(myStrat == AIStrat.EASY)
-		{
+		if (myStrat == AIStrat.EASY) {
 			selectedCountry = pickRandomOwnedCountry();
-		}
-		else
-			selectedCountry = findCountriesInDanger();
+		} else {
+			selectedCountry = pickRandomFromFringe();
+			if (selectedCountry == null)
+				selectedCountry = pickRandomOwnedCountry();
 
+		}
 		return selectedCountry;
 	}
 
-	private void hardMove()
-	{
-		// place units on outside countries, then try to
-		// take whole continent first, then pick random neighbor, take that
-		// continent, etc
-		// then try to even out units on border countries, so that they all have
-		// close to the same amount at each one
+	private Country pickRandomFromFringe() {
+		ArrayList<Country> fringeCountries = findFringeCountries();
 
-	}//end hardMove
+		Random rand = new Random();
+		int randNum = 0;
+		System.out.println(fringeCountries.size() + " size of list to choose from");
+		if (fringeCountries.size() == 0)
+			return null;
+		randNum = rand.nextInt(fringeCountries.size());
+		return fringeCountries.get(randNum);
+	}
 
-	private void easyMove()
-	{
-		// place new units in random occupied countries then
-		// pick random country, if a neighbor to one of my own countries, try to
-		// occupy
-		// do this till I cannot attack any longer
+	// returns true if it is finished attacking, and false otherwise
+	// grabs a country to attack, and the country that it is attacking from
+	// if there is no country to attack, return. if it loses a battle, check if
+	// there are still other countries it can attack
+	public boolean aiAttack() {
+		Country attacking = getCountryToAttack();
+		if (attacking == null)
+			return true;
+		Country attackingFrom = findAttackingCountry(attacking);
 
-	}//end easyMove
+		// change this for dice roll later, but for now, just take over
+		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+			int oldForces = attacking.getForcesVal();
+			attacking.getOccupier().loseCountry(attacking);
+			attacking.removeUnits(oldForces);
+			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
+			attacking.setOccupier(this);
+			System.out.println(this.getName() + " Took " + attacking.getName());
+			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
+			return false;
+		}
 
-	public void setMyStrat(AIStrat strat)
-	{
+		return true;
+
+	}// end aiAttack
+
+	private Country findAttackingCountry(Country attacking) {
+
+		// System.out.println("find attacking");
+		for (Country c1 : findFringeCountries()) {
+			for (Country c2 : c1.getNeighbors()) {
+				if (c2.equals(attacking)) {
+					return c1;
+				}
+			}
+		}
+		return null;
+	}
+
+	// returns a country it can attack
+	private Country getCountryToAttack() {
+		// System.out.println("get country to attack");
+		Country attackMe = pickRandomFromList(findCountriesToAttack());
+		return attackMe;
+	}// end
+		// getCountryToAttack
+
+	// picks a random country from the list of countries to attack
+	private Country pickRandomFromList(ArrayList<Country> countriesToAttack) {
+		if (countriesToAttack == null)
+			return null;
+
+		Random rand = new Random();
+		int randInt = 0;
+
+		randInt = rand.nextInt(countriesToAttack.size());
+
+		return countriesToAttack.get(randInt);
+	}// end pickRandomFromList
+
+	public void setMyStrat(AIStrat strat) {
 		myStrat = strat;
-	}//end setMyStrat
+	}// end setMyStrat
 
 	// creates the ai's menuItem for changing difficulty
-	public void makeMenuItem(int i, ActionListener aiDiffChangeListener)
-	{
+	public void makeMenuItem(int i, ActionListener aiDiffChangeListener) {
 		myDiff = new JMenuItem("AI " + i);
 		myDiff.addActionListener(aiDiffChangeListener);
 		myDiff.setActionCommand(String.valueOf(i));
-	}//end makeMenuItem
+	}// end makeMenuItem
 
 	// returns its jMenuItem
-	public JMenuItem getMenuItem()
-	{
+	public JMenuItem getMenuItem() {
 		return myDiff;
-	}//end getMenuItem
+	}// end getMenuItem
 
 	// returns the ai's current strategy as a string, used for checking if the
 	// ai difficulty menu in the gui was working
-	public String getStrat()
-	{
+	public String getStrat() {
 
 		return myStrat.toString();
-	}//end getStrat
+	}// end getStrat
+
+	public ArrayList<Country> countriesToReinforce() {
+		ArrayList<Country> selectedCountries = new ArrayList<>();
+		if (myStrat == AIStrat.EASY) {
+			selectedCountries = pickSetOfRandomOwnedCountry();
+		} else
+			selectedCountries = findFringeCountries();
+
+		return selectedCountries;
+	}
+
+	// returns a randomlist of countries to add units to out of the ai's owned
+	// countries
+	private ArrayList<Country> pickSetOfRandomOwnedCountry() {
+		ArrayList<Country> countries = new ArrayList<>();
+		Random rand = new Random();
+		int randNum = 0;
+		while (getAvailableTroops() > 0) {
+			randNum = rand.nextInt(getCountries().size());
+			countries.add(getCountries().get(randNum));
+		}
+		return countries;
+	}// end pickSetOfRandomOwnedCountry
+
+	// gets all fringe countries, then for each neihbor that fringe country has,
+	// if it isn't owned by me
+	// check if i have more units on my country than that country, if I do, add
+	// that country to my list of countriesWorthAttacking
+	private ArrayList<Country> findCountriesToAttack() {
+		// System.out.println("find countries to attack");
+		ArrayList<Country> fringeCountries = findFringeCountries();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		for (Country country : fringeCountries) {
+			ArrayList<Country> neighbors = country.getNeighbors();
+			for (Country neighboringCountry : neighbors) {
+				if (neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
+					if (country.getForcesVal() - 1 > neighboringCountry.getForcesVal())
+						countriesWorthAttacking.add(neighboringCountry);
+				} // end if
+			} // end for
+		} // end for
+
+		if (countriesWorthAttacking.size() == 0)
+			return null;
+
+		return countriesWorthAttacking;
+	}// end findCountriesToAttack
+
+	// starts at first country, checks if it is surrounded by friendlies, if it
+	// is
+	// moves all of its units except for one to its neighbors
+	public void reinforce() {
+
+		int surroundCounter = 0;
+		if (myStrat == AIStrat.HARD) {
+			for (Country country : getCountries()) {
+
+				surroundCounter = 0;
+				ArrayList<Country> neighbors = country.getNeighbors();
+				for (Country neighbor : neighbors) {
+					if (neighbor.getOccupier().equals(this))
+						surroundCounter++;
+				}
+
+				if (surroundCounter == neighbors.size() && country.getForcesVal() > 1) {
+					while (country.getForcesVal() > 1) {
+						for (Country neighbor : neighbors) {
+							country.removeUnits(1);
+							neighbor.setForcesVal(1);
+							if (country.getForcesVal() == 1)
+								break;
+						}
+					}
+
+				}
+			}
+		}
+
+	}// end reinforce
+		// moves units to other countries if it has more than 2 units occupying
+
+	public void reinforce2() {
+
+		if (myStrat == AIStrat.HARD) {
+			for (Country country : getCountries()) {
+				if (country.getForcesVal() > 2) {
+					while (country.getForcesVal() > 2) {
+						for (Country neighbor : country.getNeighbors()) {
+							if (neighbor.getOccupier().equals(this)) {
+								neighbor.setForcesVal(1);
+								country.removeUnits(1);
+							}
+							if (country.getForcesVal() == 2)
+								break;
+						}
+					}
+				}
+			}
+		}
+	}// end reinforce2
+
+	public int redeemCards() {
+		if (getCards().size() == 5) {
+			ArrayList<Card> myCardsToRedeem = findCardsToRedeem();
+			// TODO turn in cards
+			// TODO discardCards to deck
+		}
+		return 0;
+	}
+
+	private ArrayList<Card> findCardsToRedeem() {
+
+		ArrayList<Card> myThreeCards = new ArrayList<>();
+		int infantryCount = 0, calvaryCount = 0, artilleryCount = 0;
+		// step through 5 cards, and count how many of each
+		for (Card card : getCards()) {
+			switch (card.getUnit()) {
+			case "infantry":
+				infantryCount++;
+				break;
+			case "calvary":
+				calvaryCount++;
+				break;
+			case "artillery":
+				artilleryCount++;
+				break;
+			}
+		}
+
+		if (infantryCount >= 3) {
+			myThreeCards = findThreeInfantry();
+		} else if (calvaryCount >= 3) {
+			myThreeCards = findThreeCalvary();
+		} else if (artilleryCount >= 3) {
+			myThreeCards = findThreeArtillery();
+		} else {
+			myThreeCards = findThreeOfEach();
+		}
+		return myThreeCards;
+	}// end findCardsToRedeem
+
+	private ArrayList<Card> findThreeOfEach() {
+		ArrayList<Card> myThreeCards = new ArrayList<>();
+		boolean infantry = false, calvary = false, artillery = false;
+		for (Card card : getCards()) {
+			if (!infantry && card.getUnit().compareTo("infantry") == 0) {
+				myThreeCards.add(card);
+				infantry = true;
+			}
+
+			if (!calvary && card.getUnit().compareTo("calvary") == 0) {
+				myThreeCards.add(card);
+				calvary = true;
+			}
+
+			if (!artillery && card.getUnit().compareTo("artillery") == 0) {
+				myThreeCards.add(card);
+				artillery = true;
+			}
+		}
+		return myThreeCards;
+	}// end findThreeofEach
+
+	private ArrayList<Card> findThreeArtillery() {
+		ArrayList<Card> threeArtillery = new ArrayList<>();
+		for (Card card : getCards()) {
+			if (card.getUnit().compareTo("artillery") == 0) {
+				threeArtillery.add(card);
+			}
+
+			if (threeArtillery.size() == 3) {
+				break;
+			}
+		}
+		return threeArtillery;
+	}// end findThreeArtillery
+
+	private ArrayList<Card> findThreeCalvary() {
+		ArrayList<Card> threeCalvary = new ArrayList<>();
+		for (Card card : getCards()) {
+			if (card.getUnit().compareTo("calvary") == 0) {
+				threeCalvary.add(card);
+			}
+
+			if (threeCalvary.size() == 3) {
+				break;
+			}
+		}
+		return threeCalvary;
+	}// end findThreeCalvary
+
+	private ArrayList<Card> findThreeInfantry() {
+
+		ArrayList<Card> threeInfantry = new ArrayList<>();
+		for (Card card : getCards()) {
+			if (card.getUnit().compareTo("infantry") == 0) {
+				threeInfantry.add(card);
+			}
+
+			if (threeInfantry.size() == 3) {
+				break;
+			}
+		}
+		return threeInfantry;
+	}// end findThreeInfantry
 }
