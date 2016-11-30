@@ -17,13 +17,13 @@ public class Map {
 	private static Map gameMap;
 
 	private Map() {
-		blue = new Continent(0, "Blue");
-		green = new Continent(0, "Green");
-		orange = new Continent(0, "Orange");
-		pink = new Continent(0, "Pink");
-		red = new Continent(0, "Red");
-		black = new Continent(0, "Black");
-		yellow = new Continent(0, "Yellow");
+		blue = new Continent(4, "Blue");
+		green = new Continent(2, "Green");
+		orange = new Continent(3, "Orange");
+		pink = new Continent(3, "Pink");
+		red = new Continent(2, "Red");
+		black = new Continent(5, "Black");
+		yellow = new Continent(7, "Yellow");
 
 		fillCountries();
 
@@ -45,6 +45,23 @@ public class Map {
 		return gameMap;
 	}// end getInstance
 
+	
+	
+	public int getContinentBonuses(Player player){
+		int totalBonus = 0;
+		
+		totalBonus += blue.payOwnerBonus(player);
+		totalBonus += green.payOwnerBonus(player);
+		totalBonus += pink.payOwnerBonus(player);
+		totalBonus += red.payOwnerBonus(player);
+		totalBonus += black.payOwnerBonus(player);
+		totalBonus += yellow.payOwnerBonus(player);
+		
+		return totalBonus;
+	}//end getContinentBonuses
+	
+	
+	
 	private void fillCountries() {
 		// this method is going to suck
 		countries[0] = new Country("The Wall", 6.5, 3, blue);
