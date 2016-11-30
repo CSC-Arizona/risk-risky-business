@@ -1070,6 +1070,9 @@ public class riskGUI extends JFrame {
 					theGame.getCurrentPlayer().discardCards(cards);
 					theGame.getDeck().addToDiscardPile(cards);
 				}
+				else
+					JOptionPane.showMessageDialog(riskGUI.this, "Illegal amount of cards set to redeem.",
+							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
 				repaint();
 			}// end actionPerformed
 		}// end tradeClickListener
