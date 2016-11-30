@@ -571,7 +571,7 @@ public class riskGUI extends JFrame {
 			if(!gameOver){
 			if (!splash) {
 				updateCountryButtons();
-				currCountryPanel.updatePanel();
+				currCountryPanel.updatePanel(g);
 			}
 
 			
@@ -813,15 +813,25 @@ public class riskGUI extends JFrame {
 		}// end makeCenterPanel
 
 		// displays the cards and has a button for trading in cards
-		public void makePlayingCardPanel() {
+		public void makePlayingCardPanel(Graphics g) {
 			ArrayList<Card> myCards = theGame.getCurrentPlayer().getCards();
 
 			JPanel cards = new JPanel();
 			cards.setLayout(new GridLayout(2, 0));
 			JPanel showCards = new JPanel();
-			/*
-			 * TODO : Display card image icons
-			 */
+			showCards.setLayout(new GridLayout(3,2));
+			ArrayList<Card> currCards = theGame.getCurrentPlayer().getCards();
+			
+			
+			//Get the image for this card
+			for (int i=0; i < currCards.size(); i++){
+				JPanel oneCard = new JPanel();
+				Image im = currCards.get(i).getMyImage();
+				g.drawImage(im, 0,0,null);
+				showCards.add(oneCard);
+			}//end for
+			
+			
 			cards.add(showCards);
 			JButton trade = new JButton("Trade in Cards");
 			trade.addActionListener(new TradeClickListener());
@@ -890,7 +900,11 @@ public class riskGUI extends JFrame {
 			neighbors.revalidate();
 		}
 
-		public void updatePanel() {
+		public void updatePanel(){
+			updatePanel(null);
+		}
+		
+		public void updatePanel(Graphics g) {
 			curr = theGame.getSelectedCountry();
 			this.removeAll();
 			this.setLocation(12 * xWidth, 1 * yHeight);
@@ -958,7 +972,7 @@ public class riskGUI extends JFrame {
 					dir2.setHorizontalAlignment(JLabel.CENTER);
 					this.add(directions, BorderLayout.CENTER);
 					this.add(dir2, BorderLayout.SOUTH);
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 				} // end else
 
 				this.revalidate();
@@ -978,7 +992,7 @@ public class riskGUI extends JFrame {
 					makePlacementBottomLabel();
 
 				} else if (theGame.isDeployPhase()) {
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 					makePlayingCenterPanel();
 					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
@@ -989,9 +1003,9 @@ public class riskGUI extends JFrame {
 					// we should make a specific panel for if a transfer is in
 					// progress.
 				else if (theGame.isAttackPhase()) {
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 					makePlayingCenterPanel();
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier())) {
 						makePlayingMyCountryBottomLabel();
@@ -1000,7 +1014,7 @@ public class riskGUI extends JFrame {
 						makePlayingYourCountryBottomLabel();
 					}
 				} else {
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 					makePlayingCenterPanel();
 					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
