@@ -21,6 +21,11 @@ public class Deck {
 		shuffle();
 		size = 52;
 	}// end constructor
+	
+	//USed only for testing card
+	public ArrayList<Card> getDeck(){
+		return riskDeck;
+	}
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
