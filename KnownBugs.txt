@@ -1,3 +1,7 @@
 Known Bugs:
 
 FIXED//Every time you click for reinforcement, the AIs will all claim a country, even if you didn't actually claim one yet
+
+
+-Weird Deployment bug where user has 0 units to deploy (The fuck, amirite???)
+-Default mode cant find faction (not important as default mode probably wont be in final release)
