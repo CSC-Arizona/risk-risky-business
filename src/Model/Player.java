@@ -86,7 +86,7 @@ public abstract class Player {
 		return availTroops;
 	}// end getAvailableTrooops
 
-	public ArrayList getCards() {
+	public ArrayList<Card> getCards() {
 		return myCards;
 	}// end getCards
 

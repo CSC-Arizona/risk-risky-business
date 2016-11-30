@@ -12,6 +12,7 @@ import Model.Card;
 public class Deck {
 
 	private ArrayList<Card> riskDeck;
+	private ArrayList<Card> discardPile = new ArrayList<Card>();
 	private int size;
 	private static Deck uniqueDeck;
 
@@ -29,10 +30,18 @@ public class Deck {
 	}// end getInstance
 
 	public void shuffle() {
-		riskDeck.clear();
-		fillDeck(riskDeck);
-		Collections.shuffle(riskDeck);
-		size = 52;
+		if(discardPile.size()>0){
+			riskDeck.clear();
+			riskDeck = discardPile;
+			Collections.shuffle(riskDeck);
+			discardPile.clear();
+		}
+		else{
+			riskDeck.clear();
+			fillDeck(riskDeck);
+			Collections.shuffle(riskDeck);
+			size = 52;
+		}
 	}// end shuffle
 
 	// returns null if the deck has run out of cards.
@@ -50,6 +59,17 @@ public class Deck {
 	public int getSize() {
 		return size;
 	}// end getSize
+	
+	public boolean isEmpty(){
+		if(size==0)
+			return true;
+		else
+			return false;
+	}
+	
+	public void discard(Card c){
+		discardPile.add(c);
+	}
 
 	// possible units: infantry, cavalry, artillery. Add all territories
 	// (countries) and 2 wild cards.
