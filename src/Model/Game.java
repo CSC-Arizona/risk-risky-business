@@ -544,6 +544,7 @@ public class Game {
 			yours.getOccupier().occupyCountry(theirs);
 			yours.removeUnits(numArmies);
 			result = yours.toString();
+			players.get(playerLocation).addCard(deck.deal());
 		}
 		return result;
 	}// end attack
