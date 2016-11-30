@@ -255,6 +255,11 @@ public class Game {
 				done = true;
 			} else if (isPlayPhase() && isDeployPhase()) {
 				players.get(playerLocation).getTroops();
+				((AI)players.get(playerLocation)).setRedemptions(numRedemptions);
+				int redeem = players.get(playerLocation).redeemCards(); //redeem cards to get more troops
+				players.get(playerLocation).addTroops(redeem); //add redeemed troops
+				if(redeem>0)
+					numRedemptions++;
 				while (players.get(playerLocation).getAvailableTroops() > 0) {
 					aiReinforcePlacement();
 				}
