@@ -17,7 +17,6 @@ public class Game {
 	private static Game theGame;
 	private int numRedemptions;
 	private boolean canPlace;
-	
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers) {
 		humans = numOfHumanPlayers;
@@ -45,7 +44,7 @@ public class Game {
 	}// end getInstance
 
 	public void newGame() {
-		if(players != null)
+		if (players != null)
 			players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
@@ -56,18 +55,17 @@ public class Game {
 		addHumanPlayers(humans);
 		addAI(totalPlayers - humans);
 		numRedemptions = 0;
-		
+
 	}// end newGame
 
-	//makes sure all country buttons are enabled
+	// makes sure all country buttons are enabled
 	private void turnOnCountryButtons() {
-		for(Country country : gameMap.getCountries())
-		{
-			if(country.getMyButton() != null)
+		for (Country country : gameMap.getCountries()) {
+			if (country.getMyButton() != null)
 				country.getMyButton().setEnabled(true);
 		}
-		
-	}//end turnOnCountryButtons
+
+	}// end turnOnCountryButtons
 
 	public void setPlayers(ArrayList<Player> thePlayers) {
 		players = thePlayers;
@@ -231,8 +229,7 @@ public class Game {
 
 	private void aiTurn() {
 		boolean done = false;
-		if(gameOver)
-		{// for now do nothing 
+		if (gameOver) {// for now do nothing
 			System.out.println("looping in ai turn");
 			return;
 		}
@@ -256,12 +253,12 @@ public class Game {
 			} else if (isPlayPhase() && isAttackPhase()) {
 				boolean finishedAttacking = false;
 				int aiCountries = players.get(playerLocation).getCountries().size();
-						while (!finishedAttacking) {
+				while (!finishedAttacking) {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
-				if(aiCountries < players.get(playerLocation).getCountries().size())
+				if (aiCountries < players.get(playerLocation).getCountries().size())
 					players.get(playerLocation).addCard(deck.deal());
-				
+
 				removeLosers();
 				isFinished();
 				attackPhase = false;
@@ -547,6 +544,7 @@ public class Game {
 			yours.getOccupier().occupyCountry(theirs);
 			yours.removeUnits(numArmies);
 			result = yours.toString();
+			players.get(playerLocation).addCard(deck.deal());
 		}
 		return result;
 	}// end attack
@@ -597,13 +595,12 @@ public class Game {
 			}
 		}
 		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
-		for(Player player : playersToRemove)
-		{
+		for (Player player : playersToRemove) {
 			cardsToAddToDiscard.addAll(player.discardCards());
 		}
 		deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
-		
+
 	}// end removeLosers
 }// end GameClasss

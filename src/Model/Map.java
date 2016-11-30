@@ -83,8 +83,7 @@ public class Map {
 		countries[33] = new Country("Parched Fields", 23.25, 23, yellow);
 		countries[34] = new Country("Abandoned Lands", 25.5, 18.75, yellow);
 		countries[35] = new Country("Western Grass Sea", 26.5, 24.75, yellow);
-		countries[36] = new Country("Kingdoms of the Jfeqevron", 28.75, 19.5,
-				yellow);
+		countries[36] = new Country("Kingdoms of the Jfeqevron", 28.75, 19.5, yellow);
 		countries[37] = new Country("Eastern Grass Sea", 31, 23.5, yellow);
 		countries[38] = new Country("The Footprint", 31, 16, yellow);
 		countries[39] = new Country("Vaes Dothrak", 32.25, 19.5, yellow);
@@ -128,7 +127,7 @@ public class Map {
 		countries[18].changeButtonSize(4, 2);
 		countries[19].changeButtonSize(2, 2.5);
 		countries[20].changeButtonSize(1.75, 4);
-		countries[21].changeButtonSize(2,2);
+		countries[21].changeButtonSize(2, 2);
 		countries[22].changeButtonSize(1.5, 3.75);
 		countries[23].changeButtonSize(3, 3);
 		countries[24].changeButtonSize(2.5, 3);
@@ -139,11 +138,11 @@ public class Map {
 		countries[29].changeButtonSize(1.5, 1.5);
 		countries[30].changeButtonSize(1.5, 2.5);
 		countries[31].changeButtonSize(0, 2.5);
-		countries[32].changeButtonSize(3,3);
+		countries[32].changeButtonSize(3, 3);
 		countries[33].changeButtonSize(0, 3);
 		countries[34].changeButtonSize(0, 4);
-		countries[35].changeButtonSize(0,2);
-		countries[36].changeButtonSize(3,3);
+		countries[35].changeButtonSize(0, 2);
+		countries[36].changeButtonSize(3, 3);
 		countries[37].changeButtonSize(4, 1.75);
 		countries[38].changeButtonSize(5, 2.5);
 		countries[39].changeButtonSize(3.5, 2.5);
