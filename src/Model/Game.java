@@ -17,6 +17,8 @@ public class Game {
 	private static Game theGame;
 	private int numRedemptions;
 	private boolean canPlace;
+	private int countriesBefore;
+	private int countriesAfter;
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers) {
 		humans = numOfHumanPlayers;
@@ -70,6 +72,14 @@ public class Game {
 	public void setPlayers(ArrayList<Player> thePlayers) {
 		players = thePlayers;
 	}
+	
+	public int getNumRedemptions(){
+		return numRedemptions;
+	}//end getNumRemptions
+	
+	public void incrementNumRedemptions(){
+		numRedemptions++;
+	}//end incrementNumRedemptions
 
 	/*
 	 * Shuffles the players so they're not always in the same old boring order.
@@ -339,73 +349,7 @@ public class Game {
 	// Main idea: player chooses which cards to redeem (max of 3)
 	// if player has 5 cards, he MUST have a match, so call this function until
 	// the player chooses the matching 3 cards
-	public int redeemCards(Player player, ArrayList<Card> cardsToRedeem) {
-		int numArmies = -1;
-		if (cardsToRedeem.size() < 3) // if the user didn't select 3 cards
-			return -1;
-		Card one = cardsToRedeem.get(0);
-		Card two = cardsToRedeem.get(1);
-		Card three = cardsToRedeem.get(2);
-
-		// redeemable: three of the same unit type, one of each type, two
-		// different cards + wild
-		// if can redeem:
-		if ((one.getUnit().compareTo(two.getUnit()) == 0 && one.getUnit().compareTo(three.getUnit()) == 0
-				&& three.getUnit().compareTo(two.getUnit()) == 0)
-				|| (one.getUnit().compareTo(two.getUnit()) != 0 && one.getUnit().compareTo(three.getUnit()) != 0
-						&& three.getUnit().compareTo(two.getUnit()) != 0)
-				|| (one.getUnit().compareTo("WILD") == 0 && (two.getUnit().compareTo(three.getUnit()) != 0))
-				|| (two.getUnit().compareTo("WILD") == 0 && (one.getUnit().compareTo(three.getUnit()) != 0))
-				|| (three.getUnit().compareTo("WILD") == 0 && (one.getUnit().compareTo(two.getUnit()) != 0))) {
-
-			numArmies = 0;
-			numRedemptions++;
-			switch (numRedemptions) {
-			case 1:
-				numArmies = 4;
-				break;
-			case 2:
-				numArmies = 6;
-				break;
-			case 3:
-				numArmies = 8;
-				break;
-			case 4:
-				numArmies = 10;
-				break;
-			case 5:
-				numArmies = 12;
-				break;
-			case 6:
-				numArmies = 15;
-				break;
-			default:
-				numArmies = 15 + 5 * (numRedemptions - 6);
-				break;
-			}
-
-			// if any one of the redeemable cards contains a country that the
-			// player has, add 2 armies to that country.
-			boolean added = false;
-			for (Card c : cardsToRedeem) {
-				for (Country t : player.getCountries()) {
-					if (c.getCountry().compareTo(t.getName()) == 0) {
-						// add 2 armies to that country
-						added = true;
-						int currentForces = t.getForcesVal();
-						System.out.println("current Forces" + currentForces + t.getName());
-						t.setForcesVal(2);
-						System.out.println("updated Forces" + t.getForcesVal() + t.getName());
-					}
-				}
-			}
-			if (!added)
-				System.out.println("no country cards to redeem");
-		} else
-			System.out.println("unable to redeem cards");
-		return numArmies;
-		// if numArmies is -1 when returned, cards cannot be redeemed
-	}// end redeemCards
+	
 
 	// pops up a pane to ask how many units to move, which returns a string
 	// it then tries to parse that string into an int, and if it does compares
@@ -537,6 +481,7 @@ public class Game {
 			// theirs.setForcesVal(numArmies);
 			yours.removeUnits(numArmies); // you lose the armies fought with
 		} else if (theirs.getForcesVal() < numArmies) {
+			countriesBefore = getCurrentPlayer().getCountries().size();
 			theirs.getOccupier().loseCountry(theirs);
 			theirs.removeUnits(theirs.getForcesVal());
 			theirs.setForcesVal(numArmies);
@@ -544,7 +489,8 @@ public class Game {
 			yours.getOccupier().occupyCountry(theirs);
 			yours.removeUnits(numArmies);
 			result = yours.toString();
-			players.get(playerLocation).addCard(deck.deal());
+			countriesAfter = getCurrentPlayer().getCountries().size();
+			//players.get(playerLocation).addCard(deck.deal());
 		}
 		return result;
 	}// end attack
@@ -554,8 +500,12 @@ public class Game {
 	}// end isAttackPhase
 
 	public void skipAttackPhase() {
+		if(countriesBefore < countriesAfter)
+			getCurrentPlayer().addCard(deck.deal());
 		attackPhase = false;
 		reinforcePhase = true;
+		countriesBefore=0;
+		countriesAfter=0;
 	}// end skipAttackPhase
 
 	public void finishTurn() {

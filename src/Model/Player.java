@@ -116,5 +116,5 @@ public abstract class Player {
 		return cardsToDiscard;
 	}
 
-	public abstract void redeemCards();
+	public abstract int redeemCards();
 }

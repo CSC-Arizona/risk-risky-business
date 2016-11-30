@@ -302,12 +302,13 @@ public class AI extends Player {
 		}
 	}// end reinforce2
 
-	public void redeemCards() {
+	public int redeemCards() {
 		if (getCards().size() == 5) {
 			ArrayList<Card> myCardsToRedeem = findCardsToRedeem();
 			// TODO turn in cards
 			// TODO discardCards to deck
 		}
+		return 0;
 	}
 
 	private ArrayList<Card> findCardsToRedeem() {

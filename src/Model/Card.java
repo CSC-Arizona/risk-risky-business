@@ -57,5 +57,9 @@ public class Card {
 	public String getUnit() {
 		return unit;
 	}// end getUnit
+	
+	public String toString(){
+		return country + ", " + unit;
+	}//end toString
 
 }
