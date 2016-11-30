@@ -577,7 +577,7 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 			if (theGame != null)
 				drawCurrentPlayer(g2);
-			// drawGridAndNumbers(g2);
+			 drawGridAndNumbers(g2);
 
 		}// end paintComponenet
 
