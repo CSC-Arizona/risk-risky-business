@@ -88,14 +88,14 @@ public class riskGUI extends JFrame {
 	private JButton checkButton;
 	private CountryPanel currCountryPanel;
 	private JButton moveButton;
-	private boolean splash;
+	private boolean splash, gameOver = false;
 	private ImageIcon splashScreen;
 	private JPanel splashInfo;
 	// my new favorite font...
 	private Font goudyFontBig = new Font("Goudy Old Style", Font.BOLD, 40);
 	private Font gotFontHeader;
 	private Font gotFontBody;
-
+	
 	private String gameType;
 	private Player nextPlayer, currPlayer;
 	private int humans;
@@ -142,7 +142,6 @@ public class riskGUI extends JFrame {
 		setUpHouseArray();
 		// setUpSplash(); // comment me out for default mode
 		defaultMode(); // comment me out for splash screens
-
 	}// end riskGui constructor
 
 	private void setUpAIMenu() {
@@ -557,7 +556,7 @@ public class riskGUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
-
+			
 			Image tmp;
 			if (splash)
 				tmp = splashScreen.getImage();
@@ -568,17 +567,29 @@ public class riskGUI extends JFrame {
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
-
+			
+			if(!gameOver){
 			if (!splash) {
 				updateCountryButtons();
 				currCountryPanel.updatePanel();
 			}
 
+			
 			drawFactions(g2);
 			if (theGame != null)
 				drawCurrentPlayer(g2);
-			 drawGridAndNumbers(g2);
-
+			 //drawGridAndNumbers(g2);
+			}else
+			{
+				g2.setFont(gotFontBody.deriveFont(30f));
+				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.", drawingPanel.getWidth()/2, drawingPanel.getHeight()/2);
+				for(Country country : theGame.getGameMap().getCountries())
+				{
+					country.getButton().setEnabled(false);
+				}
+				
+			}
+		
 		}// end paintComponenet
 
 		private void drawCurrentPlayer(Graphics2D g2) {
@@ -1207,7 +1218,7 @@ public class riskGUI extends JFrame {
 							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
 							attackFlag = false;
 							theGame.removeLosers();
-							theGame.isFinished();
+							gameOver = theGame.isFinished();
 						}
 					}
 				}

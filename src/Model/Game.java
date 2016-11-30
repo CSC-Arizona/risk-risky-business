@@ -43,7 +43,8 @@ public class Game {
 	}// end getInstance
 
 	public void newGame() {
-		players.removeAll(players);
+		if(players != null)
+			players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
 		gameMap = Map.getInstance();
@@ -53,8 +54,18 @@ public class Game {
 		addHumanPlayers(humans);
 		addAI(totalPlayers - humans);
 		numRedemptions = 0;
-
+		
 	}// end newGame
+
+	//makes sure all country buttons are enabled
+	private void turnOnCountryButtons() {
+		for(Country country : gameMap.getCountries())
+		{
+			if(country.getMyButton() != null)
+				country.getMyButton().setEnabled(true);
+		}
+		
+	}//end turnOnCountryButtons
 
 	public void setPlayers(ArrayList<Player> thePlayers) {
 		players = thePlayers;
@@ -217,6 +228,11 @@ public class Game {
 
 	private void aiTurn() {
 		boolean done = false;
+		if(gameOver)
+		{// for now do nothing 
+			System.out.println("looping in ai turn");
+			return;
+		}
 		while (!done) {
 			if (isPlacePhase()) {
 				boolean placed = false;
@@ -249,10 +265,6 @@ public class Game {
 				deployPhase = true;
 				done = true;
 			}
-		}
-		if(gameOver)
-		{
-			//TODO call a function that tells everything the game is over, and who won
 		}
 		nextPlayer();
 	}
@@ -548,27 +560,27 @@ public class Game {
 		nextPlayer();
 	}// end finishTurn
 
-	//checks if all countries are occupied by the same player, if so returns true, otherwise returns false
+	// checks if all countries are occupied by the same player, if so returns
+	// true, otherwise returns false
 	public boolean isFinished() {
 
-
-		if(players.size() == 1){
+		if (players.size() == 1) {
 			gameOver = true;
 			playPhase = false;
 			attackPhase = false;
 			reinforcePhase = false;
 			deployPhase = false;
-		}
-		else
+		} else
 			gameOver = false;
-		
-		
+
 		return gameOver;
-		//TODO notify gui somehow so that it knows who won, and display that player's victory, as well is turn off all
-		//buttons
+		// TODO notify gui somehow so that it knows who won, and display that
+		// player's victory, as well is turn off all
+		// buttons
 	}// end isFinished
 
-	//checks if all players have at least one country. If they do not, remove them from the game.
+	// checks if all players have at least one country. If they do not, remove
+	// them from the game.
 	public void removeLosers() {
 		ArrayList<Player> playersToRemove = new ArrayList<>();
 		for (Player player : players) {
@@ -580,6 +592,7 @@ public class Game {
 
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
-		//TODO add cards that players that lost had into the discard pile, if there is one
+		// TODO add cards that players that lost had into the discard pile, if
+		// there is one
 	}// end removeLosers
 }// end GameClasss
