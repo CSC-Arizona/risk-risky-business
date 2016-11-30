@@ -596,7 +596,7 @@ public class riskGUI extends JFrame {
 			Player currentPlayer = theGame.getCurrentPlayer();
 			if (currentPlayer != null) {
 				Faction playersFact = theGame.getCurrentPlayer().getFaction();
-				switch (playersFact) {
+					switch (playersFact) {
 				case STARK:
 					g2.drawImage(stark.getImage(), 0, 0, 100, 100, null);
 					break;

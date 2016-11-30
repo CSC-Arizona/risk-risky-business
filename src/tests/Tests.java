@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import Model.Card;
 import Model.Continent;
 import Model.Country;
@@ -26,6 +30,28 @@ public class Tests {
 		Card us = new Card("murrica", "infantry");
 		assertEquals(us.getCountry(), "murrica");
 		assertEquals(us.getUnit(), "infantry");
+	}
+	
+	@Test
+	public void testCardsInDeck(){
+		int incorrectlyNamed = 0;
+		Deck test = Deck.getInstance();
+		ArrayList<Card> cards = test.getDeck();
+		for (int i=0; i < cards.size(); i++){
+			
+			try {
+				Scanner read = new Scanner(new File(cards.get(i).getFilename()));
+			} catch (FileNotFoundException e) {
+				System.out.println("Bad file name: "+ cards.get(i).getFilename());
+				incorrectlyNamed++;
+			}
+		}//end for
+		assertEquals(incorrectlyNamed, 0);
+	}
+
+	private Object File(String filename) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Test

@@ -191,7 +191,7 @@ public class Map {
 		int[] vale = { 5, 6, 9, 12 };
 		addMyNeighbors(index++, vale);
 		// riverlands
-		int[] river = { 6, 10, 8, 12, 11 };
+		int[] river = { 6, 10, 8, 12, 11, 40 };
 		addMyNeighbors(index++, river);
 		// iron islands
 		int[] iron = { 6, 9 };
