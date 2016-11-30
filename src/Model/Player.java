@@ -21,6 +21,7 @@ public abstract class Player {
 		else
 			availTroops = myCountries.size() / 3;
 	
+		redeemCards();
 		//TODO continent stuff
 	}// end getTroops
 
@@ -80,7 +81,7 @@ public abstract class Player {
 		return availTroops;
 	}// end getAvailableTrooops
 
-	public ArrayList getCards() {
+	public ArrayList<Card> getCards() {
 		return myCards;
 	}// end getCards
 
@@ -101,4 +102,10 @@ public abstract class Player {
 		myCountries.remove(loser);
 	}// end loseCountry
 
+	public void addCard(Card cardToAdd)
+	{
+		myCards.add(cardToAdd);
+	}
+	
+	public abstract void redeemCards();
 }

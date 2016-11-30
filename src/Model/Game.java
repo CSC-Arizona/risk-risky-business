@@ -11,12 +11,13 @@ public class Game {
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver;
+	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, aiFirstAttack;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
 	private int numRedemptions;
 	private boolean canPlace;
+	
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers) {
 		humans = numOfHumanPlayers;
@@ -31,6 +32,7 @@ public class Game {
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
+		aiFirstAttack = false;
 		newGame();
 
 	}// end constructor
@@ -219,6 +221,7 @@ public class Game {
 			playerLocation = 0;
 
 		if (players.get(playerLocation) instanceof AI) {
+			aiFirstAttack = false;
 			aiTurn();
 		}
 		if (isDeployPhase() && players.get(playerLocation) instanceof HumanPlayer)
@@ -252,9 +255,13 @@ public class Game {
 				attackPhase = true;
 			} else if (isPlayPhase() && isAttackPhase()) {
 				boolean finishedAttacking = false;
-				while (!finishedAttacking) {
+				int aiCountries = players.get(playerLocation).getCountries().size();
+						while (!finishedAttacking) {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
+				if(aiCountries < players.get(playerLocation).getCountries().size())
+					players.get(playerLocation).addCard(deck.deal());
+				
 				removeLosers();
 				isFinished();
 				attackPhase = false;
