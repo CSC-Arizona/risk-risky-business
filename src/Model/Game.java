@@ -411,7 +411,7 @@ public class Game {
 				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if (continueFlag) {
-				if (unitsToReturn > totalUnits) {
+				if (unitsToReturn >= totalUnits || unitsToReturn < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
@@ -551,11 +551,14 @@ public class Game {
 	// them from the game.
 	public void removeLosers() {
 		ArrayList<Player> playersToRemove = new ArrayList<>();
+		ArrayList<Integer> playersToRemoveLocations = new ArrayList<>();
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
 				System.out.println(player.getName() + " has been defeated.");
 				playersToRemove.add(player);
+				playersToRemoveLocations.add(players.indexOf(player));
 			}
+
 		}
 		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
 		for (Player player : playersToRemove) {
@@ -564,6 +567,13 @@ public class Game {
 		deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
+		for(Integer removedPlayersLoc : playersToRemoveLocations)
+		{
+			if(removedPlayersLoc < playerLocation)
+			{
+				playerLocation--;
+			}
+		}
 
 	}// end removeLosers
 
