@@ -15,7 +15,7 @@ public class Game {
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
-	private int numRedemptions;
+	private int numRedemptions; 
 	private boolean canPlace;
 	private int countriesBefore;
 	private int countriesAfter;
