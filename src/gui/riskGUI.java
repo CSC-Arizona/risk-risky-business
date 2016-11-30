@@ -618,6 +618,8 @@ public class riskGUI extends JFrame {
 			if (theGame.isDeployPhase())
 				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110,
 						65);
+			
+			//TODO display amount of troops "Picked up" when moving troops around at end of turn
 		}// end drawCurrentPlayer
 
 		// draws factions if a country is occupied

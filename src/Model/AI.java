@@ -301,4 +301,9 @@ public class AI extends Player {
 			}
 		}
 	}// end reinforce2
+	
+	private void redeemCards()
+	{
+		//TODO well, all of this
+	}
 }
