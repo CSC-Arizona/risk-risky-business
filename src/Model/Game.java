@@ -43,6 +43,7 @@ public class Game {
 	}// end getInstance
 
 	public void newGame() {
+		players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
 		gameMap = Map.getInstance();
@@ -548,14 +549,21 @@ public class Game {
 	}// end finishTurn
 
 	//checks if all countries are occupied by the same player, if so returns true, otherwise returns false
-	public void isFinished() {
+	public boolean isFinished() {
 
 
-		if(players.size() == 1)
+		if(players.size() == 1){
 			gameOver = true;
+			playPhase = false;
+			attackPhase = false;
+			reinforcePhase = false;
+			deployPhase = false;
+		}
 		else
 			gameOver = false;
 		
+		
+		return gameOver;
 		//TODO notify gui somehow so that it knows who won, and display that player's victory, as well is turn off all
 		//buttons
 	}// end isFinished
