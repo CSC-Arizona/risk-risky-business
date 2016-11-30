@@ -14,9 +14,10 @@ public class Deck {
 	private ArrayList<Card> riskDeck;
 	private int size;
 	private static Deck uniqueDeck;
-
+	private static ArrayList<Card> discardPile;
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
+		discardPile = new ArrayList<>();
 		fillDeck(riskDeck);
 		shuffle();
 		size = 52;
@@ -108,4 +109,8 @@ public class Deck {
 		deck.add(new Card("WILD", "WILD"));
 	}// end fillDeck
 
+	public void addToDiscardPile(ArrayList<Card> cards)
+	{
+		discardPile.addAll(cards);
+	}
 }// end Deck Class

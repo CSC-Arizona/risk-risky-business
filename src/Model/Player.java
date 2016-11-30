@@ -107,5 +107,16 @@ public abstract class Player {
 		myCards.add(cardToAdd);
 	}
 	
+	public ArrayList<Card> discardCards()
+	{
+		ArrayList<Card> cardsToDiscard = new ArrayList<>();
+		for(Card card : myCards)
+		{
+			cardsToDiscard.add(card);
+		}
+		
+		myCards.removeAll(cardsToDiscard);
+		return cardsToDiscard;
+	}
 	public abstract void redeemCards();
 }

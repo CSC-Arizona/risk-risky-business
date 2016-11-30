@@ -596,10 +596,14 @@ public class Game {
 				playersToRemove.add(player);
 			}
 		}
-
+		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
+		for(Player player : playersToRemove)
+		{
+			cardsToAddToDiscard.addAll(player.discardCards());
+		}
+		deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
-		// TODO add cards that players that lost had into the discard pile, if
-		// there is one
+		
 	}// end removeLosers
 }// end GameClasss
