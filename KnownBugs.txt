@@ -16,3 +16,14 @@ FIXED//Every time you click for reinforcement, the AIs will all claim a country,
 3. fix GUI so that card trade button can only be pressed before deploy phase
 4. find a way for users to select cards to redeem
 5. force players to redeem cards if they have 5 cards
+If there's time:
+6. Allow pause of music on splash screen
+
+
+Brainstorming elements needed to be saved/loaded when ending/starting a game:
+
+- Game
+- Player array
+- Map 
+- Deck
+- 
