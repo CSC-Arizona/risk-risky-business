@@ -585,9 +585,11 @@ public class riskGUI extends JFrame {
 			}
 
 				drawFactions(g2);
-				drawUnits(g2);
-				if (theGame != null)
+				
+				if (theGame != null){
 					drawCurrentPlayer(g2);
+					drawUnits(g2);
+				}
 				// drawGridAndNumbers(g2);
 			} else {
 				g2.setFont(gotFontBody.deriveFont(30f));
