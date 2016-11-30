@@ -305,8 +305,8 @@ public class AI extends Player {
 	public void redeemCards() {
 		if (getCards().size() == 5) {
 			ArrayList<Card> myCardsToRedeem = findCardsToRedeem();
-			//TODO turn in cards
-			//TODO discardCards to deck
+			// TODO turn in cards
+			// TODO discardCards to deck
 		}
 	}
 
