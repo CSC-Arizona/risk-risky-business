@@ -52,7 +52,7 @@ public abstract class Player {
 
 		// Automatically sets any null names to the defaults
 		// for each house that I chose and defined in Faction
-		if (name == null) {
+		if (name == null || name.equals("")) {
 			setName(faction.getDefaultPlayerName());
 		}
 	}// end setFaction
