@@ -98,22 +98,22 @@ public class AI extends Player {
 		Country selectedCountry = null;
 		if (myStrat == AIStrat.EASY) {
 			selectedCountry = pickRandomOwnedCountry();
-		} else
-		{	selectedCountry = pickRandomFromFringe();
-			if(selectedCountry == null)
+		} else {
+			selectedCountry = pickRandomFromFringe();
+			if (selectedCountry == null)
 				selectedCountry = pickRandomOwnedCountry();
-		
+
 		}
 		return selectedCountry;
 	}
 
 	private Country pickRandomFromFringe() {
 		ArrayList<Country> fringeCountries = findFringeCountries();
-		
+
 		Random rand = new Random();
 		int randNum = 0;
 		System.out.println(fringeCountries.size() + " size of list to choose from");
-		if(fringeCountries.size() == 0)
+		if (fringeCountries.size() == 0)
 			return null;
 		randNum = rand.nextInt(fringeCountries.size());
 		return fringeCountries.get(randNum);
@@ -301,9 +301,107 @@ public class AI extends Player {
 			}
 		}
 	}// end reinforce2
-	
-	private void redeemCards()
-	{
-		//TODO well, all of this
+
+	public void redeemCards() {
+		if (getCards().size() == 5) {
+			ArrayList<Card> myCardsToRedeem = findCardsToRedeem();
+
+		}
 	}
+
+	private ArrayList<Card> findCardsToRedeem() {
+
+		ArrayList<Card> myThreeCards = new ArrayList<>();
+		int infantryCount = 0, calvaryCount = 0, artilleryCount = 0;
+		// step through 5 cards, and count how many of each
+		for (Card card : getCards()) {
+			switch (card.getUnit()) {
+			case "infantry":
+				infantryCount++;
+				break;
+			case "calvary":
+				calvaryCount++;
+				break;
+			case "artillery":
+				artilleryCount++;
+				break;
+			}
+		}
+
+		if (infantryCount >= 3) {
+			myThreeCards = findThreeInfantry();
+		} else if (calvaryCount >= 3) {
+			myThreeCards = findThreeCalvary();
+		} else if (artilleryCount >= 3) {
+			myThreeCards = findThreeArtillery();
+		} else {
+			myThreeCards = findThreeOfEach();
+		}
+		return myThreeCards;
+	}//end findCardsToRedeem
+
+	private ArrayList<Card> findThreeOfEach() {
+		ArrayList<Card> myThreeCards = new ArrayList<>();
+		boolean infantry = false, calvary = false, artillery = false;
+		for (Card card : getCards()) {
+			if (!infantry && card.getUnit().compareTo("infantry") == 0) {
+				myThreeCards.add(card);
+				infantry = true;
+			}
+
+			if (!calvary && card.getUnit().compareTo("calvary") == 0) {
+				myThreeCards.add(card);
+				calvary = true;
+			}
+
+			if (!artillery && card.getUnit().compareTo("artillery") == 0) {
+				myThreeCards.add(card);
+				artillery = true;
+			}
+		}
+		return myThreeCards;
+	}//end findThreeofEach
+
+	private ArrayList<Card> findThreeArtillery() {
+		ArrayList<Card> threeArtillery = new ArrayList<>();
+		for (Card card : getCards()) {
+			if (card.getUnit().compareTo("artillery") == 0) {
+				threeArtillery.add(card);
+			}
+
+			if (threeArtillery.size() == 3) {
+				break;
+			}
+		}
+		return threeArtillery;
+	}//end findThreeArtillery
+
+	private ArrayList<Card> findThreeCalvary() {
+		ArrayList<Card> threeCalvary = new ArrayList<>();
+		for (Card card : getCards()) {
+			if (card.getUnit().compareTo("calvary") == 0) {
+				threeCalvary.add(card);
+			}
+
+			if (threeCalvary.size() == 3) {
+				break;
+			}
+		}
+		return threeCalvary;
+	}//end findThreeCalvary
+
+	private ArrayList<Card> findThreeInfantry() {
+		
+		ArrayList<Card> threeInfantry = new ArrayList<>();
+		for (Card card : getCards()) {
+			if (card.getUnit().compareTo("infantry") == 0) {
+				threeInfantry.add(card);
+			}
+
+			if (threeInfantry.size() == 3) {
+				break;
+			}
+		}
+		return threeInfantry;
+	}//end findThreeInfantry
 }
