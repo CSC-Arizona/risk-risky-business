@@ -553,4 +553,8 @@ public class Game {
 		totalPlayers -= playersToRemove.size();
 
 	}// end removeLosers
+	
+	public Deck getDeck(){
+		return deck;
+	}
 }// end GameClasss
