@@ -11,11 +11,11 @@ public class Game {
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, aiFirstAttack;
+	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
-	private int numRedemptions; 
+	private int numRedemptions;
 	private boolean canPlace;
 	private int countriesBefore;
 	private int countriesAfter;
@@ -33,7 +33,6 @@ public class Game {
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
-		aiFirstAttack = false;
 		newGame();
 
 	}// end constructor
@@ -72,14 +71,14 @@ public class Game {
 	public void setPlayers(ArrayList<Player> thePlayers) {
 		players = thePlayers;
 	}
-	
-	public int getNumRedemptions(){
+
+	public int getNumRedemptions() {
 		return numRedemptions;
-	}//end getNumRemptions
-	
-	public void incrementNumRedemptions(){
+	}// end getNumRemptions
+
+	public void incrementNumRedemptions() {
 		numRedemptions++;
-	}//end incrementNumRedemptions
+	}// end incrementNumRedemptions
 
 	/*
 	 * Shuffles the players so they're not always in the same old boring order.
@@ -227,18 +226,16 @@ public class Game {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
-		
-		//If it's the play phase, apply any continent bonuses
-		if (isPlayPhase()){
+
+		// If it's the play phase, apply any continent bonuses
+		if (isPlayPhase()) {
 			players.get(playerLocation).addAvailableTroops(gameMap.getContinentBonuses(getCurrentPlayer()));
 			System.out.println("Continent bonus applied:" + gameMap.getContinentBonuses(getCurrentPlayer()));
 		}
 
 		if (players.get(playerLocation) instanceof AI) {
-			aiFirstAttack = false;
 			aiTurn();
-		}
-		if (isDeployPhase() && players.get(playerLocation) instanceof HumanPlayer)
+		} else if (isDeployPhase() && players.get(playerLocation) instanceof HumanPlayer)
 			players.get(playerLocation).getTroops();
 
 	}// end nextPlayer
@@ -261,10 +258,16 @@ public class Game {
 				done = true;
 			} else if (isPlayPhase() && isDeployPhase()) {
 				players.get(playerLocation).getTroops();
-				((AI)players.get(playerLocation)).setRedemptions(numRedemptions);
-				int redeem = players.get(playerLocation).redeemCards(); //redeem cards to get more troops
-				players.get(playerLocation).addTroops(redeem); //add redeemed troops
-				if(redeem>0)
+				((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
+				int redeem = players.get(playerLocation).redeemCards(); // redeem
+																		// cards
+																		// to
+																		// get
+																		// more
+																		// troops
+				players.get(playerLocation).addTroops(redeem); // add redeemed
+																// troops
+				if (redeem > 0)
 					numRedemptions++;
 				while (players.get(playerLocation).getAvailableTroops() > 0) {
 					aiReinforcePlacement();
@@ -360,7 +363,6 @@ public class Game {
 	// Main idea: player chooses which cards to redeem (max of 3)
 	// if player has 5 cards, he MUST have a match, so call this function until
 	// the player chooses the matching 3 cards
-	
 
 	// pops up a pane to ask how many units to move, which returns a string
 	// it then tries to parse that string into an int, and if it does compares
@@ -501,7 +503,7 @@ public class Game {
 			yours.removeUnits(numArmies);
 			result = yours.toString();
 			countriesAfter = getCurrentPlayer().getCountries().size();
-			//players.get(playerLocation).addCard(deck.deal());
+			// players.get(playerLocation).addCard(deck.deal());
 		}
 		return result;
 	}// end attack
@@ -511,12 +513,12 @@ public class Game {
 	}// end isAttackPhase
 
 	public void skipAttackPhase() {
-		if(countriesBefore < countriesAfter)
+		if (countriesBefore < countriesAfter)
 			getCurrentPlayer().addCard(deck.deal());
 		attackPhase = false;
 		reinforcePhase = true;
-		countriesBefore=0;
-		countriesAfter=0;
+		countriesBefore = 0;
+		countriesAfter = 0;
 	}// end skipAttackPhase
 
 	public void finishTurn() {
@@ -564,8 +566,8 @@ public class Game {
 		totalPlayers -= playersToRemove.size();
 
 	}// end removeLosers
-	
-	public Deck getDeck(){
+
+	public Deck getDeck() {
 		return deck;
 	}
 }// end GameClasss

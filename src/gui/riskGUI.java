@@ -135,14 +135,14 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		//splash = true; // comment me out for default mode
-		splash = false; // comment me out for splash screens
+		splash = true; // comment me out for default mode
+		//splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		//setUpSplash(); // comment me out for default mode
-		defaultMode(); // comment me out for splash screens
+		setUpSplash(); // comment me out for default mode
+		//defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -1272,6 +1272,8 @@ public class riskGUI extends JFrame {
 							System.out.println(attackFrom + " " + attackFrom.getForcesVal());
 							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
 							attackFromFlag = false;
+							theGame.removeLosers();
+							gameOver = theGame.isFinished();
 						}
 					}
 				} else if (attackFlag) {
@@ -1295,8 +1297,7 @@ public class riskGUI extends JFrame {
 							System.out.println(attack + " " + attack.getForcesVal());
 							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
 							attackFlag = false;
-							theGame.removeLosers();
-							gameOver = theGame.isFinished();
+							
 						}
 					}
 				}

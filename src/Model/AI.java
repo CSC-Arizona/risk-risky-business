@@ -139,6 +139,7 @@ public class AI extends Player {
 			attacking.removeUnits(oldForces);
 			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
 			attacking.setOccupier(this);
+			this.occupyCountry(attacking);
 			System.out.println(this.getName() + " Took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			return false;

@@ -17,9 +17,9 @@ public abstract class Player {
 
 	public void getTroops() {
 		if (myCountries.size() <= 9)
-			availTroops = 3;
+			availTroops += 3;
 		else
-			availTroops = myCountries.size() / 3;
+			availTroops += (myCountries.size() / 3);
 
 		//redeemCards(); //this will mess up how human players need to redeem cards, calling it in the GUI for AI and in the button listener for the human player instead
 		// TODO continent stuff
