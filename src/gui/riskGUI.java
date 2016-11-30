@@ -1067,6 +1067,8 @@ public class riskGUI extends JFrame {
 				int additionalTroups = ((HumanPlayer)theGame.getCurrentPlayer()).redeemCards();
 				if(additionalTroups > 0){
 					theGame.incrementNumRedemptions();
+					theGame.getCurrentPlayer().discardCards(cards);
+					theGame.getDeck().addToDiscardPile(cards);
 				}
 				repaint();
 			}// end actionPerformed
