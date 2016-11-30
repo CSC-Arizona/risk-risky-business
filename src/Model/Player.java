@@ -21,10 +21,7 @@ public abstract class Player {
 		else
 			availTroops = myCountries.size() / 3;
 	
-		if(myCards.size() == 5)
-		{
-			//make user redeem cards
-		}
+		redeemCards();
 		//TODO continent stuff
 	}// end getTroops
 
@@ -109,4 +106,6 @@ public abstract class Player {
 	{
 		myCards.add(cardToAdd);
 	}
+	
+	public abstract void redeemCards();
 }

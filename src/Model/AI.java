@@ -305,7 +305,6 @@ public class AI extends Player {
 	public void redeemCards() {
 		if (getCards().size() == 5) {
 			ArrayList<Card> myCardsToRedeem = findCardsToRedeem();
-
 		}
 	}
 
