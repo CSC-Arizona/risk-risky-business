@@ -411,7 +411,7 @@ public class Game {
 				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if (continueFlag) {
-				if (unitsToReturn > totalUnits) {
+				if (unitsToReturn >= totalUnits || unitsToReturn < 0) {
 					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
