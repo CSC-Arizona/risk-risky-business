@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.Image;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -16,6 +17,11 @@ public class Card {
 		this.filename = this.findMyFileName();
 		myImage = new ImageIcon(filename);
 	}// end card constructor
+	
+	
+	public Image getMyImage(){
+		return myImage.getImage();
+	}
 	
 	private String findMyFileName(){
 		return "RiskCards//" + removeWhiteSpace(country) + "Card.png";

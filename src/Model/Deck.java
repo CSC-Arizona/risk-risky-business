@@ -15,6 +15,7 @@ public class Deck {
 	private int size;
 	private static Deck uniqueDeck;
 	private static ArrayList<Card> discardPile;
+	
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
 		discardPile = new ArrayList<>();
@@ -35,10 +36,19 @@ public class Deck {
 	}// end getInstance
 
 	public void shuffle() {
-		riskDeck.clear();
-		fillDeck(riskDeck);
-		Collections.shuffle(riskDeck);
-		size = 52;
+		if(size==0 && discardPile.size()>0){
+			riskDeck.clear();
+			riskDeck = discardPile;
+			Collections.shuffle(riskDeck);
+			size = riskDeck.size();
+			discardPile.clear();
+		}
+		else{
+			riskDeck.clear();
+			fillDeck(riskDeck);
+			Collections.shuffle(riskDeck);
+			size = 52;
+		}
 	}// end shuffle
 
 	// returns null if the deck has run out of cards.
@@ -49,13 +59,26 @@ public class Deck {
 			riskDeck.remove(size - 1);
 			size--;
 			return result;
-		} else
-			return null;
+		} else{
+			shuffle();
+			return deal();
+		}
 	}// end deal
 
 	public int getSize() {
 		return size;
 	}// end getSize
+	
+	public boolean isEmpty(){
+		if(size==0)
+			return true;
+		else
+			return false;
+	}
+	
+	public void discard(Card c){
+		discardPile.add(c);
+	}
 
 	// possible units: infantry, cavalry, artillery. Add all territories
 	// (countries) and 2 wild cards.

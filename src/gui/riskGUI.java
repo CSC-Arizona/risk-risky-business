@@ -134,14 +134,15 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		// splash = true; // comment me out for default mode
-		splash = false; // comment me out for splash screens
+		splash = true; // comment me out for default mode
+		//splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		// setUpSplash(); // comment me out for default mode
-		defaultMode(); // comment me out for splash screens
+		setUpSplash(); // comment me out for default mode
+		//defaultMode(); // comment me out for splash screens
+
 	}// end riskGui constructor
 
 	private void setUpAIMenu() {
@@ -164,6 +165,7 @@ public class riskGUI extends JFrame {
 		// splashLoading2();
 		theGame = Game.getInstance(1, 5);
 		setUpDrawingPanel();
+		setUpMenu();
 		// setUpClearButton();
 		// setUpPassButton();
 		setUpAIMenu();
@@ -175,12 +177,17 @@ public class riskGUI extends JFrame {
 		players.get(4).setFaction("Targaryen");
 		players.get(5).setFaction("Wildlings");
 		players.get(0).setName("Player1");
+		((AI)players.get(1)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(2)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(3)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(4)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(5)).setMyStrat(AIStrat.EASY);
 
 		// Updating the arraylist in the game
 		theGame.setPlayers(players);
 		// Starting the game...
 		theGame.startGame();
-		player.startTheme();
+		//player.startPlay();
 		drawingPanel.repaint();
 	}// end defualtMode
 
@@ -206,6 +213,7 @@ public class riskGUI extends JFrame {
 		this.add(drawingPanel);
 		this.setVisible(true);
 		drawingPanel.repaint();
+		player.startTheme();
 		splashLoading1();
 	}// end setUpSplash
 
@@ -219,6 +227,7 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
+		setUpMenu();
 		// setUpClearButton();
 		// setUpPassButton();
 		setUpAIMenu();
@@ -417,7 +426,7 @@ public class riskGUI extends JFrame {
 		// my mind
 		// SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 
-		player.startTheme();
+		//player.startTheme();
 
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
@@ -458,7 +467,8 @@ public class riskGUI extends JFrame {
 		menu.add(file);
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
-		menu.add(settings);
+		if(!splash)
+			menu.add(settings);
 
 		JMenuItem rules = new JMenuItem("Rules");
 		help.add(rules);
@@ -511,6 +521,9 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
+		
+		player.stopTheme();
+		player.startPlay();
 
 	}// end setUpDrawingPanel
 
@@ -564,12 +577,12 @@ public class riskGUI extends JFrame {
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
-
-			if (!gameOver) {
-				if (!splash) {
-					updateCountryButtons();
-					currCountryPanel.updatePanel();
-				}
+		
+			if(!gameOver){
+			if (!splash) {
+				updateCountryButtons();
+				currCountryPanel.updatePanel(g);
+			}
 
 				drawFactions(g2);
 				drawUnits(g2);
@@ -824,15 +837,25 @@ public class riskGUI extends JFrame {
 		}// end makeCenterPanel
 
 		// displays the cards and has a button for trading in cards
-		public void makePlayingCardPanel() {
+		public void makePlayingCardPanel(Graphics g) {
 			ArrayList<Card> myCards = theGame.getCurrentPlayer().getCards();
 
 			JPanel cards = new JPanel();
 			cards.setLayout(new GridLayout(2, 0));
 			JPanel showCards = new JPanel();
-			/*
-			 * TODO : Display card image icons
-			 */
+			showCards.setLayout(new GridLayout(3,2));
+			ArrayList<Card> currCards = theGame.getCurrentPlayer().getCards();
+			
+			
+			//Get the image for this card
+			for (int i=0; i < currCards.size(); i++){
+				JPanel oneCard = new JPanel();
+				Image im = currCards.get(i).getMyImage();
+				g.drawImage(im, 0,0,null);
+				showCards.add(oneCard);
+			}//end for
+			
+			
 			cards.add(showCards);
 			JButton trade = new JButton("Trade in Cards");
 			trade.addActionListener(new TradeClickListener());
@@ -901,7 +924,11 @@ public class riskGUI extends JFrame {
 			neighbors.revalidate();
 		}
 
-		public void updatePanel() {
+		public void updatePanel(){
+			updatePanel(null);
+		}
+		
+		public void updatePanel(Graphics g) {
 			curr = theGame.getSelectedCountry();
 			this.removeAll();
 			this.setLocation(12 * xWidth, 1 * yHeight);
@@ -969,7 +996,7 @@ public class riskGUI extends JFrame {
 					dir2.setHorizontalAlignment(JLabel.CENTER);
 					this.add(directions, BorderLayout.CENTER);
 					this.add(dir2, BorderLayout.SOUTH);
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 				} // end else
 
 				this.revalidate();
@@ -989,7 +1016,7 @@ public class riskGUI extends JFrame {
 					makePlacementBottomLabel();
 
 				} else if (theGame.isDeployPhase()) {
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 					makePlayingCenterPanel();
 					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
@@ -1000,9 +1027,9 @@ public class riskGUI extends JFrame {
 					// we should make a specific panel for if a transfer is in
 					// progress.
 				else if (theGame.isAttackPhase()) {
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 					makePlayingCenterPanel();
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier())) {
 						makePlayingMyCountryBottomLabel();
@@ -1011,7 +1038,7 @@ public class riskGUI extends JFrame {
 						makePlayingYourCountryBottomLabel();
 					}
 				} else {
-					makePlayingCardPanel();
+					makePlayingCardPanel(g);
 					makePlayingCenterPanel();
 					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
@@ -1401,6 +1428,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
 			musicOn = !musicOn;
 			if (musicOn) {
 				player.notifyPause();
