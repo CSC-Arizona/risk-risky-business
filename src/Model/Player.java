@@ -23,6 +23,7 @@ public abstract class Player {
 
 		//redeemCards(); //this will mess up how human players need to redeem cards, calling it in the GUI for AI and in the button listener for the human player instead
 		// TODO continent stuff
+
 	}// end getTroops
 	
 	public void addTroops(int numTroops){
@@ -62,7 +63,11 @@ public abstract class Player {
 	}// end setFaction
 
 	public void setName(String name) {
-		this.name = name;
+		if ((name == null || name.equals("")) && faction != null) {
+			this.name = faction.getDefaultPlayerName();
+		}
+		else
+			this.name = name;
 	}// end setName
 
 	public void occupyCountry(Country occupyMe) {
@@ -93,6 +98,11 @@ public abstract class Player {
 		availTroops -= troops;
 
 	}// end subtractFromAvailableTroops
+	
+	
+	public void addAvailableTroops(int troops){
+		availTroops += troops;
+	}//end addAvailTroops
 
 	public Faction getFaction() {
 		return faction;

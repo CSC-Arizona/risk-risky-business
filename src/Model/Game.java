@@ -15,7 +15,7 @@ public class Game {
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
-	private int numRedemptions;
+	private int numRedemptions; 
 	private boolean canPlace;
 	private int countriesBefore;
 	private int countriesAfter;
@@ -227,6 +227,11 @@ public class Game {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
+		
+		//If it's the play phase, apply any continent bonuses
+		if (isPlayPhase()){
+			players.get(playerLocation).addAvailableTroops(gameMap.getContinentBonuses(getCurrentPlayer()));
+		}
 
 		if (players.get(playerLocation) instanceof AI) {
 			aiFirstAttack = false;

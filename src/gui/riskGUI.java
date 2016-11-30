@@ -73,7 +73,7 @@ import Model.Player;
 public class riskGUI extends JFrame {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		new riskGUI().setVisible(true);
+		new riskGUI().setVisible(true); 
 	}
 
 	private static BoardPanel drawingPanel;
@@ -135,14 +135,14 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		splash = true; // comment me out for default mode
-		//splash = false; // comment me out for splash screens
+		//splash = true; // comment me out for default mode
+		splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash(); // comment me out for default mode
-		//defaultMode(); // comment me out for splash screens
+		//setUpSplash(); // comment me out for default mode
+		defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -1067,11 +1067,10 @@ public class riskGUI extends JFrame {
 			public CardPanel(Image im){
 				super();
 				myImage = im;
-				
 			}//end constructor
 			
 			public void paintComponent(Graphics g){
-				g.drawImage(myImage, 0, 0, (int)(0.75 * xWidth), (int)(1.5 * yHeight), null);
+				g.drawImage(myImage, 0, 0, (int)(0.5 * xWidth), (int)(1.5 * yHeight), null);
 			}//end paintComponent
 		}//end CardPanel
 
