@@ -852,9 +852,13 @@ public class riskGUI extends JFrame {
 			
 			//Get the image for this card
 			for (int i=0; i < currCards.size(); i++){
-				JPanel oneCard = new JPanel();
+				
 				Image im = currCards.get(i).getMyImage();
-				g.drawImage(im, 0,0,null);
+				JPanel oneCard = new CardPanel(im);
+			//	g.drawImage(im, 0,0,null);
+				Dimension myD = new Dimension((int)(0.75 * xWidth), (int)(1.5 * yHeight));
+				oneCard.setPreferredSize(myD);
+				oneCard.repaint();
 				showCards.add(oneCard);
 			}//end for
 			
@@ -865,6 +869,8 @@ public class riskGUI extends JFrame {
 			cards.add(trade);
 			cards.setBorder(raisedWithColor);
 			this.add(cards, BorderLayout.EAST);
+			showCards.repaint();
+			showCards.revalidate();
 			cards.revalidate();
 			this.revalidate();
 		}// end makeCardPanel
@@ -1052,6 +1058,22 @@ public class riskGUI extends JFrame {
 			} // end updatePanel
 
 		}// end updatePanel
+		
+		
+		private class CardPanel extends JPanel{
+			
+			private Image myImage;
+			
+			public CardPanel(Image im){
+				super();
+				myImage = im;
+				
+			}//end constructor
+			
+			public void paintComponent(Graphics g){
+				g.drawImage(myImage, 0, 0, (int)(0.75 * xWidth), (int)(1.5 * yHeight), null);
+			}//end paintComponent
+		}//end CardPanel
 
 		/*
 		 * Handles the logic for trading in cards!
