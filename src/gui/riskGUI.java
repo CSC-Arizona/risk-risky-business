@@ -1381,7 +1381,6 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO
 			musicOn = !musicOn;
 			if (musicOn) {
 				player.notifyPause();
