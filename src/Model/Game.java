@@ -231,6 +231,7 @@ public class Game {
 		//If it's the play phase, apply any continent bonuses
 		if (isPlayPhase()){
 			players.get(playerLocation).addAvailableTroops(gameMap.getContinentBonuses(getCurrentPlayer()));
+			System.out.println("Continent bonus applied:" + gameMap.getContinentBonuses(getCurrentPlayer()));
 		}
 
 		if (players.get(playerLocation) instanceof AI) {
