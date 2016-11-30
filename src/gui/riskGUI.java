@@ -134,14 +134,15 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
-		// splash = true; // comment me out for default mode
-		splash = false; // comment me out for splash screens
+		splash = true; // comment me out for default mode
+		//splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		// setUpSplash(); // comment me out for default mode
-		defaultMode(); // comment me out for splash screens
+		setUpSplash(); // comment me out for default mode
+		//defaultMode(); // comment me out for splash screens
+
 	}// end riskGui constructor
 
 	private void setUpAIMenu() {
@@ -164,6 +165,7 @@ public class riskGUI extends JFrame {
 		// splashLoading2();
 		theGame = Game.getInstance(1, 5);
 		setUpDrawingPanel();
+		setUpMenu();
 		// setUpClearButton();
 		// setUpPassButton();
 		setUpAIMenu();
@@ -175,12 +177,17 @@ public class riskGUI extends JFrame {
 		players.get(4).setFaction("Targaryen");
 		players.get(5).setFaction("Wildlings");
 		players.get(0).setName("Player1");
+		((AI)players.get(1)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(2)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(3)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(4)).setMyStrat(AIStrat.EASY);
+		((AI)players.get(5)).setMyStrat(AIStrat.EASY);
 
 		// Updating the arraylist in the game
 		theGame.setPlayers(players);
 		// Starting the game...
 		theGame.startGame();
-		player.startTheme();
+		//player.startPlay();
 		drawingPanel.repaint();
 	}// end defualtMode
 
@@ -206,6 +213,7 @@ public class riskGUI extends JFrame {
 		this.add(drawingPanel);
 		this.setVisible(true);
 		drawingPanel.repaint();
+		player.startTheme();
 		splashLoading1();
 	}// end setUpSplash
 
@@ -219,6 +227,7 @@ public class riskGUI extends JFrame {
 		// human players, second is total number of players
 		theGame = Game.getInstance(humans, ai);
 		setUpDrawingPanel();
+		setUpMenu();
 		// setUpClearButton();
 		// setUpPassButton();
 		setUpAIMenu();
@@ -417,7 +426,7 @@ public class riskGUI extends JFrame {
 		// my mind
 		// SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 
-		player.startTheme();
+		//player.startTheme();
 
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
@@ -458,7 +467,8 @@ public class riskGUI extends JFrame {
 		menu.add(file);
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
-		menu.add(settings);
+		if(!splash)
+			menu.add(settings);
 
 		JMenuItem rules = new JMenuItem("Rules");
 		help.add(rules);
@@ -511,6 +521,9 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
+		
+		player.stopTheme();
+		player.startPlay();
 
 	}// end setUpDrawingPanel
 
@@ -1431,6 +1444,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
 			musicOn = !musicOn;
 			if (musicOn) {
 				player.notifyPause();

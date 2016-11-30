@@ -20,7 +20,7 @@ public class SoundClipPlayer extends JFrame {
 		this.setVisible(false);
 	}
 
-	public void startTheme() {
+	public void startPlay() {
 		try {
 			// Open an audio input stream.
 			File soundFile = new File("The Rains of Castamere (Instrumental.wav");
@@ -31,6 +31,26 @@ public class SoundClipPlayer extends JFrame {
 			clip.open(audioIn);
 			// clip.start();
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void startTheme() {
+		try {
+			// Open an audio input stream.
+			File soundFile = new File("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+			// Get a sound clip resource.
+			clip = AudioSystem.getClip();
+			// Open audio clip and load samples from the audio input stream.
+			clip.open(audioIn);
+			// clip.start();
+			clip.start();
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -51,7 +71,8 @@ public class SoundClipPlayer extends JFrame {
 	}
 
 	public void stopTheme() {
-		clip.stop();
+		if(clip !=null)
+			clip.stop();
 	}
 
 }
