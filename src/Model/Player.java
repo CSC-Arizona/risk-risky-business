@@ -69,6 +69,9 @@ public abstract class Player {
 	}// end occupyCountry
 
 	public boolean equals(Player player) {
+		if (player == null)
+			return false;
+		
 		if (this.faction.compareTo(player.faction) == 0)
 			return true;
 
