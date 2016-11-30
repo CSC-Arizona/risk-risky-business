@@ -549,23 +549,15 @@ public class Game {
 
 	//checks if all countries are occupied by the same player, if so returns true, otherwise returns false
 	public void isFinished() {
-//		int countryCounter = 0, i = 0, j = 1;
-//		Country countries[] = getGameMap().getCountries();
-//		while (j < 50) {
-//			if (countries[i].getOccupier().equals(countries[j].getOccupier())) {
-//				countryCounter++;
-//			}
-//			i++;
-//			j++;
-//		}
-//
-//		if (countryCounter == 50)
-//			return true;
+
 
 		if(players.size() == 1)
 			gameOver = true;
 		else
 			gameOver = false;
+		
+		//TODO notify gui somehow so that it knows who won, and display that player's victory, as well is turn off all
+		//buttons
 	}// end isFinished
 
 	//checks if all players have at least one country. If they do not, remove them from the game.

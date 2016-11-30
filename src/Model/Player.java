@@ -20,14 +20,8 @@ public abstract class Player {
 			availTroops = 3;
 		else
 			availTroops = myCountries.size() / 3;
-		// For when the continent class is finished
-		// the added troops changes based on how many
-		// continents you play
-		/*
-		 * for (Continent con : allContinents){ if
-		 * (this.equals(con.getOccupier())) addedTroops +=
-		 * con.getOwnershipBonus(); }
-		 */
+	
+		//TODO continent stuff
 	}// end getTroops
 
 	public Player(int numOfPlayers) {
