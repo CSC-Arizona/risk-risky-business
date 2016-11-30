@@ -141,7 +141,7 @@ public class riskGUI extends JFrame {
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash(); // comment me out for default mode
+		setUpSplash(); // comment me out for default mode 
 		//defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
