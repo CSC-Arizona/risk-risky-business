@@ -95,7 +95,7 @@ public class riskGUI extends JFrame {
 	private Font goudyFontBig = new Font("Goudy Old Style", Font.BOLD, 40);
 	private Font gotFontHeader;
 	private Font gotFontBody;
-	
+
 	private String gameType;
 	private Player nextPlayer, currPlayer;
 	private int humans;
@@ -304,8 +304,8 @@ public class riskGUI extends JFrame {
 
 			while (illegalName == true) {
 				ais = (String) JOptionPane.showInputDialog(null, "Please choose AI " + (i + 1) + "'s Strategy",
-						"Choose a Strategy", JOptionPane.QUESTION_MESSAGE, null,
-						new Object[] { "Easy", "Medium", "Hard" }, "Easy");
+						"Choose a Strategy", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Hard" },
+						"Easy");
 				if (ais == null) {
 					JOptionPane.showMessageDialog(null, "Must choose a Strategy.", "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
@@ -313,9 +313,6 @@ public class riskGUI extends JFrame {
 					switch (ais) {
 					case "Easy":
 						strat.add(AIStrat.EASY);
-						break;
-					case "Medium":
-						strat.add(AIStrat.MEDIUM);
 						break;
 					case "Hard":
 						strat.add(AIStrat.HARD);
@@ -556,7 +553,7 @@ public class riskGUI extends JFrame {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
-			
+
 			Image tmp;
 			if (splash)
 				tmp = splashScreen.getImage();
@@ -567,36 +564,49 @@ public class riskGUI extends JFrame {
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
-			
-			if(!gameOver){
-			if (!splash) {
-				updateCountryButtons();
-				currCountryPanel.updatePanel();
-			}
 
-			
-			drawFactions(g2);
-			if (theGame != null)
-				drawCurrentPlayer(g2);
-			 //drawGridAndNumbers(g2);
-			}else
-			{
+			if (!gameOver) {
+				if (!splash) {
+					updateCountryButtons();
+					currCountryPanel.updatePanel();
+				}
+
+				drawFactions(g2);
+				drawUnits(g2);
+				if (theGame != null)
+					drawCurrentPlayer(g2);
+				// drawGridAndNumbers(g2);
+			} else {
 				g2.setFont(gotFontBody.deriveFont(30f));
-				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.", drawingPanel.getWidth()/2, drawingPanel.getHeight()/2);
-				for(Country country : theGame.getGameMap().getCountries())
-				{
+				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
+						drawingPanel.getWidth() / 2, drawingPanel.getHeight() / 2);
+				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
 				}
-				
+
 			}
-		
+
 		}// end paintComponenet
+
+		private void drawUnits(Graphics2D g2) {
+
+			g2.setColor(Color.BLACK);
+			g2.setFont(gotFontBody.deriveFont(Font.BOLD, 35f));
+			for (Country country : theGame.getGameMap().getCountries()) {
+				if (country.getForcesVal() > 0) {
+					g2.drawString("" + country.getForcesVal(), ((int) country.getX() * xWidth) + 22,
+							((int) country.getY() * yHeight) + 17);
+				}
+
+			}
+
+		}// end drawUnits
 
 		private void drawCurrentPlayer(Graphics2D g2) {
 			Player currentPlayer = theGame.getCurrentPlayer();
 			if (currentPlayer != null) {
 				Faction playersFact = theGame.getCurrentPlayer().getFaction();
-					switch (playersFact) {
+				switch (playersFact) {
 				case STARK:
 					g2.drawImage(stark.getImage(), 0, 0, 100, 100, null);
 					break;
@@ -629,8 +639,9 @@ public class riskGUI extends JFrame {
 			if (theGame.isDeployPhase())
 				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110,
 						65);
-			
-			//TODO display amount of troops "Picked up" when moving troops around at end of turn
+
+			// TODO display amount of troops "Picked up" when moving troops
+			// around at end of turn
 		}// end drawCurrentPlayer
 
 		// draws factions if a country is occupied
@@ -1348,8 +1359,7 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String newDifficulty = (String) JOptionPane.showInputDialog(null, "Please choose a Difficulty",
-					"Set Difficulty", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Medium", "Hard" },
-					"Easy");
+					"Set Difficulty", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Hard" }, "Easy");
 
 			for (Player ai : theGame.getPlayers()) {
 				if (ai instanceof AI) {
@@ -1358,9 +1368,6 @@ public class riskGUI extends JFrame {
 
 						case "Easy":
 							((AI) ai).setMyStrat(AIStrat.EASY);
-							break;
-						case "Medium":
-							((AI) ai).setMyStrat(AIStrat.MEDIUM);
 							break;
 						case "Hard":
 							((AI) ai).setMyStrat(AIStrat.HARD);

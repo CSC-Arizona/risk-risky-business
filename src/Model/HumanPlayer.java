@@ -10,9 +10,9 @@ public class HumanPlayer extends Player {
 
 	@Override
 	public void redeemCards() {
-		// TODO this just makes more sense to do this here, and to tell the game, somehow
-		
-		
+		// TODO this just makes more sense to do this here, and to tell the
+		// game, somehow
+
 	}
 
 }// end HumanPlayer class

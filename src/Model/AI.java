@@ -255,7 +255,7 @@ public class AI extends Player {
 	public void reinforce() {
 
 		int surroundCounter = 0;
-		if (myStrat == AIStrat.MEDIUM || myStrat == AIStrat.HARD) {
+		if (myStrat == AIStrat.HARD) {
 			for (Country country : getCountries()) {
 
 				surroundCounter = 0;
@@ -284,7 +284,7 @@ public class AI extends Player {
 
 	public void reinforce2() {
 
-		if (myStrat == AIStrat.MEDIUM || myStrat == AIStrat.HARD) {
+		if (myStrat == AIStrat.HARD) {
 			for (Country country : getCountries()) {
 				if (country.getForcesVal() > 2) {
 					while (country.getForcesVal() > 2) {
@@ -337,7 +337,7 @@ public class AI extends Player {
 			myThreeCards = findThreeOfEach();
 		}
 		return myThreeCards;
-	}//end findCardsToRedeem
+	}// end findCardsToRedeem
 
 	private ArrayList<Card> findThreeOfEach() {
 		ArrayList<Card> myThreeCards = new ArrayList<>();
@@ -359,7 +359,7 @@ public class AI extends Player {
 			}
 		}
 		return myThreeCards;
-	}//end findThreeofEach
+	}// end findThreeofEach
 
 	private ArrayList<Card> findThreeArtillery() {
 		ArrayList<Card> threeArtillery = new ArrayList<>();
@@ -373,7 +373,7 @@ public class AI extends Player {
 			}
 		}
 		return threeArtillery;
-	}//end findThreeArtillery
+	}// end findThreeArtillery
 
 	private ArrayList<Card> findThreeCalvary() {
 		ArrayList<Card> threeCalvary = new ArrayList<>();
@@ -387,10 +387,10 @@ public class AI extends Player {
 			}
 		}
 		return threeCalvary;
-	}//end findThreeCalvary
+	}// end findThreeCalvary
 
 	private ArrayList<Card> findThreeInfantry() {
-		
+
 		ArrayList<Card> threeInfantry = new ArrayList<>();
 		for (Card card : getCards()) {
 			if (card.getUnit().compareTo("infantry") == 0) {
@@ -402,5 +402,5 @@ public class AI extends Player {
 			}
 		}
 		return threeInfantry;
-	}//end findThreeInfantry
+	}// end findThreeInfantry
 }

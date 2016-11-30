@@ -16,13 +16,13 @@ public abstract class Player {
 	// private Continent[] allContinents; TODO
 
 	public void getTroops() {
-		if(myCountries.size() <= 9)
+		if (myCountries.size() <= 9)
 			availTroops = 3;
 		else
 			availTroops = myCountries.size() / 3;
-	
+
 		redeemCards();
-		//TODO continent stuff
+		// TODO continent stuff
 	}// end getTroops
 
 	public Player(int numOfPlayers) {
@@ -102,21 +102,19 @@ public abstract class Player {
 		myCountries.remove(loser);
 	}// end loseCountry
 
-	public void addCard(Card cardToAdd)
-	{
+	public void addCard(Card cardToAdd) {
 		myCards.add(cardToAdd);
 	}
-	
-	public ArrayList<Card> discardCards()
-	{
+
+	public ArrayList<Card> discardCards() {
 		ArrayList<Card> cardsToDiscard = new ArrayList<>();
-		for(Card card : myCards)
-		{
+		for (Card card : myCards) {
 			cardsToDiscard.add(card);
 		}
-		
+
 		myCards.removeAll(cardsToDiscard);
 		return cardsToDiscard;
 	}
+
 	public abstract void redeemCards();
 }
