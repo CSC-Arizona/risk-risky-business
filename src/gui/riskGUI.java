@@ -72,7 +72,7 @@ import Model.Player;
 public class riskGUI extends JFrame {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		new riskGUI().setVisible(true);
+		new riskGUI().setVisible(true); 
 	}
 
 	private static BoardPanel drawingPanel;
