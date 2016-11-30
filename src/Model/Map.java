@@ -198,7 +198,7 @@ public class Map {
 		int[] neck = { 8, 6, 4, 2, 3 };
 		addMyNeighbors(index++, neck);
 		// flint
-		int[] flint = { 5, 8, 9, 10 };
+		int[] flint = { 5, 8, 9, 10, 4 };
 		addMyNeighbors(index++, flint);
 		// grey
 		int[] grey = { 2, 0, 1, 3 };
@@ -285,7 +285,7 @@ public class Map {
 		int[] abandoned = { 32, 33, 35, 36 };
 		addMyNeighbors(index++, abandoned);
 		// western grass sea
-		int[] westGrass = { 33, 36, 37, 44, 42 };
+		int[] westGrass = { 33, 36, 37, 44, 42, 34 };
 		addMyNeighbors(index++, westGrass);
 		// kingdoms of jfeqevron
 		int[] jfeqv = { 38, 39, 37, 35, 34 };
