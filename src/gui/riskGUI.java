@@ -612,9 +612,10 @@ public class riskGUI extends JFrame {
 				}
 				// drawGridAndNumbers(g2);
 			} else {
-				g2.setFont(gotFontBody.deriveFont(30f));
+				g2.setColor(Color.BLACK);
+				g2.setFont(gotFontBody.deriveFont(Font.BOLD,30f));
 				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
-						drawingPanel.getWidth() / 2, drawingPanel.getHeight() / 2);
+						(drawingPanel.getWidth() / 2)-100, drawingPanel.getHeight() / 2);
 				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
 				}
