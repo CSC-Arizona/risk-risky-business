@@ -161,6 +161,11 @@ public class riskGUI extends JFrame {
 		}
 		menu.add(AIDiff);
 	}// end setUpAiMenu
+	
+	public void loadGame(){
+		//TODO
+		splashNumPlayers(); //here for now so that we don't break things. 
+	}
 
 	private void defaultMode() {
 		humans = 1;
@@ -1434,7 +1439,10 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			gameType = arg0.getActionCommand();
 			System.out.println(gameType);
-			splashNumPlayers();
+			if(gameType.compareTo("New Game!")==0)
+				splashNumPlayers();
+			else
+				loadGame();
 		}// end actionperformed
 	}// end GameTypeListener
 
