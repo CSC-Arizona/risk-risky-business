@@ -3,7 +3,9 @@ package Model;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
+
 import javax.swing.JOptionPane;
 
 public class Game {
