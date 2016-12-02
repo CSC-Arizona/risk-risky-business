@@ -249,7 +249,6 @@ public class Game {
 	private void aiTurn() {
 		boolean done = false;
 		if (gameOver) {// for now do nothing
-			System.out.println("looping in ai turn");
 			return;
 		}
 		while (!done) {

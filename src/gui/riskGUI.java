@@ -611,17 +611,19 @@ public class riskGUI extends JFrame {
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
 
+			drawFactions(g2);
 			if (!gameOver) {
 				if (!splash) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
 
-				drawFactions(g2);
+				
 
 				if (theGame != null) {
 					drawCurrentPlayer(g2);
 					drawUnits(g2);
+					gameOver = theGame.isFinished();
 				}
 				// drawGridAndNumbers(g2);
 			} else {
@@ -919,6 +921,7 @@ public class riskGUI extends JFrame {
 			butt.addActionListener(new AttackListener());
 			this.add(butt, BorderLayout.SOUTH);
 			this.revalidate();
+
 			// if (theGame.isDeployPhase())
 			// butt.setText("Deploy Troops Here");
 			// bott.revalidate();
@@ -1198,6 +1201,7 @@ public class riskGUI extends JFrame {
 			// player move then ai move if ai turn
 			// if(theGame.getCurrentPlayer() instanceof AI)
 			// ((AI) theGame.getCurrentPlayer()).myTurn();
+			//System.out.println("Place clicked");
 			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
 				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
 
@@ -1375,7 +1379,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
+			System.out.println("Place clicked");
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				numOfOwnedCountries = theGame.getCurrentPlayer().getCountries().size();
