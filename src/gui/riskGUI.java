@@ -36,6 +36,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -73,7 +75,7 @@ import Model.Player;
 public class riskGUI extends JFrame {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		new riskGUI().setVisible(true); 
+		new riskGUI().setVisible(true);
 	}
 
 	private static BoardPanel drawingPanel;
@@ -135,14 +137,15 @@ public class riskGUI extends JFrame {
 		ge.registerFont(gotFontBody);
 
 		System.out.println("Width = " + width + " Height = " + height);
+
 		splash = true; // comment me out for default mode
-		//splash = false; // comment me out for splash screens
+		// splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
 		setUpSplash(); // comment me out for default mode
-		//defaultMode(); // comment me out for splash screens
+		// defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -158,6 +161,11 @@ public class riskGUI extends JFrame {
 		}
 		menu.add(AIDiff);
 	}// end setUpAiMenu
+	
+	public void loadGame(){
+		//TODO
+		splashNumPlayers(); //here for now so that we don't break things. 
+	}
 
 	private void defaultMode() {
 		humans = 1;
@@ -178,17 +186,17 @@ public class riskGUI extends JFrame {
 		players.get(4).setFaction("Targaryen");
 		players.get(5).setFaction("Wildlings");
 		players.get(0).setName("Player1");
-		((AI)players.get(1)).setMyStrat(AIStrat.EASY);
-		((AI)players.get(2)).setMyStrat(AIStrat.EASY);
-		((AI)players.get(3)).setMyStrat(AIStrat.EASY);
-		((AI)players.get(4)).setMyStrat(AIStrat.EASY);
-		((AI)players.get(5)).setMyStrat(AIStrat.EASY);
+		((AI) players.get(1)).setMyStrat(AIStrat.EASY);
+		((AI) players.get(2)).setMyStrat(AIStrat.EASY);
+		((AI) players.get(3)).setMyStrat(AIStrat.EASY);
+		((AI) players.get(4)).setMyStrat(AIStrat.EASY);
+		((AI) players.get(5)).setMyStrat(AIStrat.EASY);
 
 		// Updating the arraylist in the game
 		theGame.setPlayers(players);
 		// Starting the game...
 		theGame.startGame();
-		//player.startPlay();
+		// player.startPlay();
 		drawingPanel.repaint();
 	}// end defualtMode
 
@@ -427,7 +435,7 @@ public class riskGUI extends JFrame {
 		// my mind
 		// SongPlayer.playFile("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 
-		//player.startTheme();
+		// player.startTheme();
 
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
@@ -447,6 +455,22 @@ public class riskGUI extends JFrame {
 		setTitle("GoT Risk");
 		setSize(width, height);
 		this.setVisible(true);
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int confirm = JOptionPane.showConfirmDialog(null, "Save Data?", "End",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				// If the user wants to save before quit, then save!
+				if (confirm == JOptionPane.OK_OPTION) {
+					System.out.println("SAVE GAME?");
+					System.exit(0);
+				} else if (confirm == JOptionPane.NO_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
+
 	}// end setUpGui
 
 	private void setUpMenu() {
@@ -468,7 +492,7 @@ public class riskGUI extends JFrame {
 		menu.add(file);
 		JMenuItem about = new JMenuItem("About");
 		menu.add(help);
-		if(!splash)
+		if (!splash)
 			menu.add(settings);
 
 		JMenuItem rules = new JMenuItem("Rules");
@@ -522,7 +546,7 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
-		
+
 		player.stopTheme();
 		player.startPlay();
 
@@ -578,24 +602,25 @@ public class riskGUI extends JFrame {
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
-		
-			if(!gameOver){
-			if (!splash) {
-				updateCountryButtons();
-				currCountryPanel.updatePanel(g);
-			}
+
+			if (!gameOver) {
+				if (!splash) {
+					updateCountryButtons();
+					currCountryPanel.updatePanel(g);
+				}
 
 				drawFactions(g2);
-				
-				if (theGame != null){
+
+				if (theGame != null) {
 					drawCurrentPlayer(g2);
 					drawUnits(g2);
 				}
 				// drawGridAndNumbers(g2);
 			} else {
-				g2.setFont(gotFontBody.deriveFont(30f));
+				g2.setColor(Color.BLACK);
+				g2.setFont(gotFontBody.deriveFont(Font.BOLD,30f));
 				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
-						drawingPanel.getWidth() / 2, drawingPanel.getHeight() / 2);
+						(drawingPanel.getWidth() / 2)-100, drawingPanel.getHeight() / 2);
 				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
 				}
@@ -846,23 +871,21 @@ public class riskGUI extends JFrame {
 			JPanel cards = new JPanel();
 			cards.setLayout(new GridLayout(2, 0));
 			JPanel showCards = new JPanel();
-			showCards.setLayout(new GridLayout(3,2));
+			showCards.setLayout(new GridLayout(3, 2));
 			ArrayList<Card> currCards = theGame.getCurrentPlayer().getCards();
-			
-			
-			//Get the image for this card
-			for (int i=0; i < currCards.size(); i++){
-				
+
+			// Get the image for this card
+			for (int i = 0; i < currCards.size(); i++) {
+
 				Image im = currCards.get(i).getMyImage();
 				JPanel oneCard = new CardPanel(im);
-			//	g.drawImage(im, 0,0,null);
-				Dimension myD = new Dimension((int)(0.75 * xWidth), (int)(1.5 * yHeight));
+				// g.drawImage(im, 0,0,null);
+				Dimension myD = new Dimension((int) (0.75 * xWidth), (int) (1.5 * yHeight));
 				oneCard.setPreferredSize(myD);
 				oneCard.repaint();
 				showCards.add(oneCard);
-			}//end for
-			
-			
+			} // end for
+
 			cards.add(showCards);
 			JButton trade = new JButton("Trade in Cards");
 			trade.addActionListener(new TradeClickListener());
@@ -934,10 +957,10 @@ public class riskGUI extends JFrame {
 			neighbors.revalidate();
 		}
 
-		public void updatePanel(){
+		public void updatePanel() {
 			updatePanel(null);
 		}
-		
+
 		public void updatePanel(Graphics g) {
 			curr = theGame.getSelectedCountry();
 			this.removeAll();
@@ -1058,21 +1081,20 @@ public class riskGUI extends JFrame {
 			} // end updatePanel
 
 		}// end updatePanel
-		
-		
-		private class CardPanel extends JPanel{
-			
+
+		private class CardPanel extends JPanel {
+
 			private Image myImage;
-			
-			public CardPanel(Image im){
+
+			public CardPanel(Image im) {
 				super();
 				myImage = im;
-			}//end constructor
-			
-			public void paintComponent(Graphics g){
-				g.drawImage(myImage, 0, 0, (int)(0.5 * xWidth), (int)(1.5 * yHeight), null);
-			}//end paintComponent
-		}//end CardPanel
+			}// end constructor
+
+			public void paintComponent(Graphics g) {
+				g.drawImage(myImage, 0, 0, (int) (0.5 * xWidth), (int) (1.5 * yHeight), null);
+			}// end paintComponent
+		}// end CardPanel
 
 		/*
 		 * Handles the logic for trading in cards!
@@ -1083,15 +1105,15 @@ public class riskGUI extends JFrame {
 				System.out.println("You wish to trade.");
 				ArrayList<Card> cards = new ArrayList<Card>();
 
-				//TODO JOptionPane to select the cards the the player wants to redeem.
-				((HumanPlayer)theGame.getCurrentPlayer()).setCardsToRedeem(cards, theGame.getNumRedemptions());
-				int additionalTroups = ((HumanPlayer)theGame.getCurrentPlayer()).redeemCards();
-				if(additionalTroups > 0){
+				// TODO JOptionPane to select the cards the the player wants to
+				// redeem.
+				((HumanPlayer) theGame.getCurrentPlayer()).setCardsToRedeem(cards, theGame.getNumRedemptions());
+				int additionalTroups = ((HumanPlayer) theGame.getCurrentPlayer()).redeemCards();
+				if (additionalTroups > 0) {
 					theGame.incrementNumRedemptions();
 					theGame.getCurrentPlayer().discardCards(cards);
 					theGame.getDeck().addToDiscardPile(cards);
-				}
-				else
+				} else
 					JOptionPane.showMessageDialog(riskGUI.this, "Illegal amount of cards set to redeem.",
 							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
 				repaint();
@@ -1109,8 +1131,9 @@ public class riskGUI extends JFrame {
 				int countB = theGame.getCurrentPlayer().getCards().size();
 				theGame.skipAttackPhase();
 				int countA = theGame.getCurrentPlayer().getCards().size();
-				if(countB<countA)
-					JOptionPane.showMessageDialog(riskGUI.this, "you earned a new card!","Card Warning", JOptionPane.INFORMATION_MESSAGE);
+				if (countB < countA)
+					JOptionPane.showMessageDialog(riskGUI.this, "you earned a new card!", "Card Warning",
+							JOptionPane.INFORMATION_MESSAGE);
 				System.out.println("Passed attack phase");
 			} else if (theGame.isReinforcePhase()) {
 				theGame.finishTurn();
@@ -1297,7 +1320,7 @@ public class riskGUI extends JFrame {
 							System.out.println(attack + " " + attack.getForcesVal());
 							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
 							attackFlag = false;
-							
+
 						}
 					}
 				}
@@ -1400,7 +1423,8 @@ public class riskGUI extends JFrame {
 	private class NewGameListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.newGame();
+			theGame.clear();
+			splashNumPlayers();
 		}// end action performed
 	}// end game listener
 
@@ -1415,7 +1439,10 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			gameType = arg0.getActionCommand();
 			System.out.println(gameType);
-			splashNumPlayers();
+			if(gameType.compareTo("New Game!")==0)
+				splashNumPlayers();
+			else
+				loadGame();
 		}// end actionperformed
 	}// end GameTypeListener
 
@@ -1469,7 +1496,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+
 			musicOn = !musicOn;
 			if (musicOn) {
 				player.notifyPause();

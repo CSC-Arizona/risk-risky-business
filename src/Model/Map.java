@@ -45,6 +45,10 @@ public class Map {
 		return gameMap;
 	}// end getInstance
 
+	public Map newMap(){
+		gameMap=null;
+		return getInstance();
+	}
 	
 	
 	public int getContinentBonuses(Player player){
