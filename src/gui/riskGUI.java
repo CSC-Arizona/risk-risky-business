@@ -1418,7 +1418,8 @@ public class riskGUI extends JFrame {
 	private class NewGameListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.newGame();
+			theGame.clear();
+			splashNumPlayers();
 		}// end action performed
 	}// end game listener
 

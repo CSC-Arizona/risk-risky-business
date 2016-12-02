@@ -44,13 +44,19 @@ public class Game {
 		return theGame;
 	}// end getInstance
 
+	public void clear(){
+		theGame = null;
+	}
+	
 	public void newGame() {
 		if (players != null)
 			players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
 		gameMap = Map.getInstance();
+		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
+		deck=deck.newDeck();
 		// deck.shuffle();
 		players = new ArrayList<>();
 		addHumanPlayers(humans);

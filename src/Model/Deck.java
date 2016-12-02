@@ -28,6 +28,11 @@ public class Deck {
 	public ArrayList<Card> getDeck() {
 		return riskDeck;
 	}
+	
+	public Deck newDeck(){
+		uniqueDeck=null;
+		return getInstance();
+	}
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
