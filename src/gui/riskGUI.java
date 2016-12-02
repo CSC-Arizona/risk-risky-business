@@ -166,6 +166,10 @@ public class riskGUI extends JFrame {
 		//TODO
 		splashNumPlayers(); //here for now so that we don't break things. 
 	}
+	
+	public void saveGame(){
+		//TODO
+	}
 
 	private void defaultMode() {
 		humans = 1;
@@ -449,7 +453,7 @@ public class riskGUI extends JFrame {
 	}// end splashLoading1
 
 	private void setUpGui() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLayout(new BorderLayout());
 		setTitle("GoT Risk");
@@ -462,8 +466,12 @@ public class riskGUI extends JFrame {
 				int confirm = JOptionPane.showConfirmDialog(null, "Save Data?", "End",
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				// If the user wants to save before quit, then save!
-				if (confirm == JOptionPane.OK_OPTION) {
-					System.out.println("SAVE GAME?");
+				if(confirm==JOptionPane.CANCEL_OPTION){
+					System.out.println("CANCEL CLOSE");
+				}
+				else if (confirm == JOptionPane.OK_OPTION) {
+					saveGame();
+					System.out.println("SAVE GAME");
 					System.exit(0);
 				} else if (confirm == JOptionPane.NO_OPTION) {
 					System.exit(0);
