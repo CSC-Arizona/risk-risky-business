@@ -166,6 +166,10 @@ public class riskGUI extends JFrame {
 		//TODO
 		splashNumPlayers(); //here for now so that we don't break things. 
 	}
+	
+	public void saveGame(){
+		//TODO
+	}
 
 	private void defaultMode() {
 		humans = 1;
@@ -449,7 +453,7 @@ public class riskGUI extends JFrame {
 	}// end splashLoading1
 
 	private void setUpGui() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLayout(new BorderLayout());
 		setTitle("GoT Risk");
@@ -462,8 +466,12 @@ public class riskGUI extends JFrame {
 				int confirm = JOptionPane.showConfirmDialog(null, "Save Data?", "End",
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				// If the user wants to save before quit, then save!
-				if (confirm == JOptionPane.OK_OPTION) {
-					System.out.println("SAVE GAME?");
+				if(confirm==JOptionPane.CANCEL_OPTION){
+					System.out.println("CANCEL CLOSE");
+				}
+				else if (confirm == JOptionPane.OK_OPTION) {
+					saveGame();
+					System.out.println("SAVE GAME");
 					System.exit(0);
 				} else if (confirm == JOptionPane.NO_OPTION) {
 					System.exit(0);
@@ -603,17 +611,19 @@ public class riskGUI extends JFrame {
 			xWidth = (int) (drawD.getWidth() / 40);
 			yHeight = (int) (drawD.getHeight() / 40);
 
+			drawFactions(g2);
 			if (!gameOver) {
 				if (!splash) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
 
-				drawFactions(g2);
+				
 
 				if (theGame != null) {
 					drawCurrentPlayer(g2);
 					drawUnits(g2);
+					gameOver = theGame.isFinished();
 				}
 				// drawGridAndNumbers(g2);
 			} else {
@@ -911,6 +921,7 @@ public class riskGUI extends JFrame {
 			butt.addActionListener(new AttackListener());
 			this.add(butt, BorderLayout.SOUTH);
 			this.revalidate();
+
 			// if (theGame.isDeployPhase())
 			// butt.setText("Deploy Troops Here");
 			// bott.revalidate();
@@ -1190,6 +1201,7 @@ public class riskGUI extends JFrame {
 			// player move then ai move if ai turn
 			// if(theGame.getCurrentPlayer() instanceof AI)
 			// ((AI) theGame.getCurrentPlayer()).myTurn();
+			//System.out.println("Place clicked");
 			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
 				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
 
@@ -1367,7 +1379,7 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
+			System.out.println("Place clicked");
 			if (theGame.isPlacePhase()) {
 				// next player place army
 				numOfOwnedCountries = theGame.getCurrentPlayer().getCountries().size();
