@@ -286,12 +286,13 @@ public class Game {
 			} else if (isPlayPhase() && isDeployPhase()) {
 				players.get(playerLocation).getTroops();
 				((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
-				int redeem = 0;//players.get(playerLocation).redeemCards(); // redeem
+				int redeem = 0;//TODO replace the 0 with: players.get(playerLocation).redeemCards(); // redeem
 																		// cards
 																		// to
 																		// get
 																		// more
 																		// troops
+//TODO uncomment when card redemptoin finished
 				//players.get(playerLocation).addTroops(redeem); // add redeemed
 																// troops
 				if (redeem > 0)
@@ -307,7 +308,8 @@ public class Game {
 				while (!finishedAttacking) {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
-//				if (aiCountries < players.get(playerLocation).getCountries().size())
+//	TODO uncomment these lines when cardRedemption is finished
+				//if (aiCountries < players.get(playerLocation).getCountries().size())
 //					players.get(playerLocation).addCard(deck.deal());
 
 				removeLosers();
