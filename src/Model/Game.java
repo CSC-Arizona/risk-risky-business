@@ -16,11 +16,11 @@ public class Game {
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
 	private int numRedemptions;
-	private boolean canPlace;
+	private boolean canPlace, tournamentMode;
 	private int countriesBefore;
 	private int countriesAfter;
 
-	private Game(int numOfHumanPlayers, int numOfAIPlayers) {
+	private Game(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		humans = numOfHumanPlayers;
 		totalPlayers = numOfHumanPlayers + numOfAIPlayers;
 		armiesPlaced = 0;
@@ -33,13 +33,17 @@ public class Game {
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
-		newGame();
+		tournamentMode = tourny;
+		if(!tournamentMode)
+			newGame();
+		else
+			newGame(numOfAIPlayers);
 
 	}// end constructor
 
-	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers) {
+	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers, boolean tourny) {
 		if (theGame == null)
-			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers);
+			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers, tourny);
 
 		return theGame;
 	}// end getInstance
@@ -53,7 +57,7 @@ public class Game {
 			players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
-		gameMap = Map.getInstance();
+		gameMap = Map.getInstance(0);
 		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
 		deck=deck.newDeck();
@@ -64,6 +68,24 @@ public class Game {
 		numRedemptions = 0;
 
 	}// end newGame
+	
+	//used for tournament mode
+	public void newGame(int i)
+	{
+		if(players != null)
+			players.removeAll(players);
+		
+		selectedCountry = null;
+		aiSelectedCountry = null;
+		gameMap = Map.getInstance(1);
+		gameMap = gameMap.newTourneyMap();
+		deck = Deck.getInstance();
+		deck=deck.newDeck();
+		// deck.shuffle();
+		players = new ArrayList<>();
+		addAI(i);
+		numRedemptions = 0;
+	}
 
 	// makes sure all country buttons are enabled
 	private void turnOnCountryButtons() {
@@ -264,13 +286,13 @@ public class Game {
 			} else if (isPlayPhase() && isDeployPhase()) {
 				players.get(playerLocation).getTroops();
 				((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
-				int redeem = players.get(playerLocation).redeemCards(); // redeem
+				int redeem = 0;//players.get(playerLocation).redeemCards(); // redeem
 																		// cards
 																		// to
 																		// get
 																		// more
 																		// troops
-				players.get(playerLocation).addTroops(redeem); // add redeemed
+				//players.get(playerLocation).addTroops(redeem); // add redeemed
 																// troops
 				if (redeem > 0)
 					numRedemptions++;
@@ -285,8 +307,8 @@ public class Game {
 				while (!finishedAttacking) {
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
-				if (aiCountries < players.get(playerLocation).getCountries().size())
-					players.get(playerLocation).addCard(deck.deal());
+//				if (aiCountries < players.get(playerLocation).getCountries().size())
+//					players.get(playerLocation).addCard(deck.deal());
 
 				removeLosers();
 				isFinished();

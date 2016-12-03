@@ -176,7 +176,7 @@ public class riskGUI extends JFrame {
 		ai = 5;
 		drawingPanel = new BoardPanel();
 		// splashLoading2();
-		theGame = Game.getInstance(1, 5);
+		theGame = Game.getInstance(1, 5, false);
 		setUpDrawingPanel();
 		setUpMenu();
 		// setUpClearButton();
@@ -238,7 +238,7 @@ public class riskGUI extends JFrame {
 		this.remove(drawingPanel);
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
-		theGame = Game.getInstance(humans, ai);
+		theGame = Game.getInstance(humans, ai, false);
 		setUpDrawingPanel();
 		setUpMenu();
 		// setUpClearButton();
@@ -697,7 +697,7 @@ public class riskGUI extends JFrame {
 
 		// draws factions if a country is occupied
 		private void drawFactions(Graphics2D g2) {
-			Map temp = Map.getInstance();
+			Map temp = Map.getInstance(0);
 			Country[] allCountries = temp.getCountries();
 			for (Country country : allCountries) {
 				if (country.getOccupier() != null) {
