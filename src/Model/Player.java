@@ -78,7 +78,7 @@ public abstract class Player {
 		if (player == null)
 			return false;
 		
-		if (this.faction.compareTo(player.faction) == 0)
+		if (this == player)
 			return true;
 
 		return false;
@@ -143,5 +143,31 @@ public abstract class Player {
 		return cardsToDiscard;
 	}
 
+	//used for tourney mode
+	public void setFaction(int i)
+	{
+		switch(i)
+		{
+		case 0:
+			faction = Faction.STARK;
+			break;
+		case 1:
+			faction = Faction.TARGARYEN;
+			break;
+		case 2:
+			faction = Faction.DOTHRAKI;
+			break;
+		case 3: 
+			faction = Faction.LANNISTER;
+			break;
+		case 4:
+			faction = Faction.WHITEWALKERS;
+			break;
+		case 5:
+			faction = Faction.WILDLINGS;
+			break;
+		}
+	}
+	
 	public abstract int redeemCards();
 }

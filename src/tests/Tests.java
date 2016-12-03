@@ -97,7 +97,7 @@ public class Tests {
 	@Test
 	public void testMap() {
 		// 100% Coverage
-		Map map = Map.getInstance();
+		Map map = Map.getInstance(0);
 
 		assertEquals(map.getCountries()[0].getName(), "The Wall");
 	}
@@ -126,7 +126,7 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6);
+		Game theGame = Game.getInstance(1, 6, false);
 		/*
 		int result = theGame.redeemCards(one, redeem);
 		System.out.println(result);
@@ -157,7 +157,7 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6);
+		Game theGame = Game.getInstance(1, 6, false);
 		theGame.newGame();
 		//int result = theGame.redeemCards(one, redeem);
 		//System.out.println(result);
@@ -181,7 +181,7 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6);
+		Game theGame = Game.getInstance(1, 6, false);
 		theGame.newGame();
 		//int result = theGame.redeemCards(one, redeem);
 		//System.out.println(result);
@@ -205,7 +205,7 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6);
+		Game theGame = Game.getInstance(1, 6, false);
 		theGame.newGame();
 		//int result = theGame.redeemCards(one, redeem);
 		//System.out.println(result);
