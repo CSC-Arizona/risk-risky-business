@@ -134,6 +134,7 @@ public class AI extends Player {
 
 		// change this for dice roll later, but for now, just take over
 		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName();
 			int oldForces = attacking.getForcesVal();
 			attacking.getOccupier().loseCountry(attacking);
 			attacking.removeUnits(oldForces);
@@ -142,7 +143,7 @@ public class AI extends Player {
 			this.occupyCountry(attacking);
 			System.out.println(this.getName() + " took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
-			return this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName();
+			return str;
 		}
 
 		/*

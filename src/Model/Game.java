@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
-public class Game {
+public class Game implements Serializable{
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
@@ -21,6 +22,7 @@ public class Game {
 	private int countriesBefore;
 	private int countriesAfter;
 	private String gameLog;
+	public static final String FILE_NAME = "game.ser";
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		humans = numOfHumanPlayers;
@@ -62,7 +64,7 @@ public class Game {
 		gameMap = Map.getInstance(0);
 		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
-		deck=deck.newDeck();
+		deck = deck.newDeck();
 		// deck.shuffle();
 		players = new ArrayList<>();
 		addHumanPlayers(humans);
@@ -604,11 +606,12 @@ public class Game {
 			}
 
 		}
-		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
+		ArrayList<Card> cardsToAddToDiscard = new ArrayList<Card>();
 		for (Player player : playersToRemove) {
 			cardsToAddToDiscard.addAll(player.discardCards());
 		}
-		deck.addToDiscardPile(cardsToAddToDiscard);
+		if(cardsToAddToDiscard.size()>0)
+			deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
 		for(Integer removedPlayersLoc : playersToRemoveLocations)

@@ -1,10 +1,11 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JMenuItem;
 
-public abstract class Player {
+public abstract class Player implements Serializable{
 	private String name;
 	private Faction faction;
 	private int availTroops;

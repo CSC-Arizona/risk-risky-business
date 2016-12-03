@@ -2,9 +2,10 @@ package Model;
 
 import gui.riskGUI;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Map {
+public class Map implements Serializable{
 
 	private Country countries[] = new Country[50];
 	private Continent blue;

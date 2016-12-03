@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  BLUE, GREEN, ORANGE, PINK, RED, YELLOW, BLACK;
  }*/
 
-public class Continent {
+public class Continent implements Serializable{
 
 	private Player owner;
 	private ArrayList<Country> myCountries;
