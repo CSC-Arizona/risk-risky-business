@@ -1,13 +1,12 @@
 package Model;
 
 import java.awt.event.ActionListener;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JMenuItem;
 
-public class AI extends Player implements Serializable {
+public class AI extends Player {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
@@ -127,23 +126,24 @@ public class AI extends Player implements Serializable {
 	// grabs a country to attack, and the country that it is attacking from
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
-	public boolean aiAttack() {
+	public String aiAttack() {
 		Country attacking = getCountryToAttack();
 		if (attacking == null)
-			return true;
+			return null;
 		Country attackingFrom = findAttackingCountry(attacking);
 
 		// change this for dice roll later, but for now, just take over
 		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName();
 			int oldForces = attacking.getForcesVal();
 			attacking.getOccupier().loseCountry(attacking);
 			attacking.removeUnits(oldForces);
 			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
 			attacking.setOccupier(this);
 			this.occupyCountry(attacking);
-			System.out.println(this.getName() + " Took " + attacking.getName());
+			System.out.println(this.getName() + " took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
-			return false;
+			return str;
 		}
 
 		/*
@@ -164,7 +164,7 @@ public class AI extends Player implements Serializable {
 		 * 		return true;
 		 * }
 		 */
-		return true;
+		return null;
 
 	}// end aiAttack
 
