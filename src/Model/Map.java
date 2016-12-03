@@ -65,6 +65,20 @@ public class Map {
 	}//end getContinentBonuses
 	
 	
+	public String[] getContinentOwnersAsStrings(){
+		String[] allStrings = new String[6];
+		
+		allStrings[0] = blue.toString();
+		allStrings[1] = green.toString();
+		allStrings[2] = pink.toString();
+		allStrings[3] = red.toString();
+		allStrings[4] = black.toString();
+		allStrings[5] = yellow.toString();
+		
+		return allStrings;
+	}
+	
+	
 	
 	private void fillCountries() {
 		// this method is going to suck

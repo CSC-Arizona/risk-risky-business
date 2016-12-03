@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.JOptionPane;
 
 public class Game {
@@ -584,5 +585,13 @@ public class Game {
 
 	public Deck getDeck() {
 		return deck;
+	}
+
+	public Map getMap() {
+		return gameMap;
+	}
+
+	public String getGameLog() {
+		return "I will eventually have all of the text\nthat your little heart desires";
 	}
 }// end GameClasss

@@ -21,6 +21,10 @@ public class Card {
 	public Image getMyImage() {
 		return myImage.getImage();
 	}
+	
+	public ImageIcon getMyImageIcon(){
+		return myImage;
+	}
 
 	private String findMyFileName() {
 		return "RiskCards//" + removeWhiteSpace(country) + "Card.png";
