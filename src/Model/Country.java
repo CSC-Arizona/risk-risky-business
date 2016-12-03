@@ -138,9 +138,7 @@ public class Country extends Observable implements Serializable{
 
 	public void setOccupier(Player player) {
 		occupier = player;
-		setChanged();
-		notifyObservers();
-
+		player.occupyCountry(this);
 	}// end setOccupier
 
 	public void setForcesVal(int i) {

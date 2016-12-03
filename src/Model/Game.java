@@ -13,7 +13,7 @@ public class Game implements Serializable{
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver;
+	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
@@ -37,6 +37,7 @@ public class Game implements Serializable{
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
+		redeemCardPhase = false;
 		tournamentMode = tourny;
 		if(!tournamentMode)
 			newGame();
@@ -160,15 +161,17 @@ public class Game implements Serializable{
 	// country, and sets the occupier to whichever player is up
 	public void placeArmies(Country countryToPlace, int numToPlace) {
 		// place initial 50 armies
-		if (armiesPlaced < 50) {
+		if (isPlacePhase()){//armiesPlaced < 50) {
+			System.out.println("I WAS AT A AT CRASH");
 			if (countryToPlace.getOccupier() == null) {
 				players.get(playerLocation).occupyCountry(countryToPlace);
 				countryToPlace.setOccupier(players.get(playerLocation));
 				countryToPlace.setForcesVal(numToPlace);
 				armiesPlaced++;
 				if (armiesPlaced == 50) {
-					placePhase = false;
-					reinforcePhase = true;
+					//placePhase = false;
+					//reinforcePhase = true;
+					nextPhase();
 				} // end if
 				gameLog+=players.get(playerLocation).getName() + " claimed" + countryToPlace.toString() +"\n";
 				System.out.println(armiesPlaced);
@@ -182,19 +185,22 @@ public class Game implements Serializable{
 
 			} // end else
 		} else if (isDeployPhase()) {
+			System.out.println("I WAS AT B AT CRASH");
 			if (players.get(playerLocation).getAvailableTroops() > 0
 					&& countryToPlace.getOccupier().equals(players.get(playerLocation))) {
 				countryToPlace.setForcesVal(numToPlace);
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
 				if (players.get(playerLocation).getAvailableTroops() == 0) {
-					deployPhase = false;
-					attackPhase = true;
+					//deployPhase = false;
+					//attackPhase = true;
+					//nextPhase();
 				}//end if
-				gameLog+=players.get(playerLocation) + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
+				gameLog+=players.get(playerLocation).getName() + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
 			}//end if
 		} else if (players.get(playerLocation).getAvailableTroops() > 0)
 		// place remaining armies
 		{
+			System.out.println("I WAS AT C AT CRASH");
 			// placePhase = false;
 			// reinforcePhase = true;
 
@@ -204,37 +210,32 @@ public class Game implements Serializable{
 				gameLog+="Reinforced " + countryToPlace + " " + armiesPlaced+"\n";
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
-				gameLog+=players.get(playerLocation) + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
+				gameLog+=players.get(playerLocation).getName() + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
 			} else
 				System.out.println("You don't occupy this country");
 
 		} else {
-
-			placePhase = false;
-			reinforcePhase = false;
-			playPhase = true;
-			deployPhase = true;
+			System.out.println("I WAS AT D AT CRASH");
+			//placePhase = false;
+			//reinforcePhase = false;
+			//playPhase = true;
+			//deployPhase = true;
+			nextPhase();
 			// we should now be back at the beginning of the players list
 			// already,
 			// so we need to give
 			// that player units for the first turn
-		}
-
+		}//end else
 	}// end placeArmies
 
 	private void addAI(int numOfAI) {
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI(AIStrat.EASY, totalPlayers));// this will change
-															// later,
-		// depending on what difficulty
-		// is chosen;
-
+			players.add(new AI(AIStrat.EASY, totalPlayers));
 	}// end addAi
 
 	public Country getSelectedCountry() {
 		return selectedCountry;
 	}// end
-		// getSelectedCountry
 
 	public void setSelectedCountry(Country selectedCountry) {
 		this.selectedCountry = selectedCountry;
@@ -244,7 +245,6 @@ public class Game implements Serializable{
 		for (int i = 0; i < numOfHumanPlayers; i++) {
 			players.add(new HumanPlayer(totalPlayers));
 		}
-
 	}// end addHumanPlayers
 
 	public Map getGameMap() {
@@ -292,23 +292,16 @@ public class Game implements Serializable{
 				done = true;
 			} else if (isPlayPhase() && isDeployPhase()) {
 				players.get(playerLocation).getTroops();
-				((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
-				int redeem = 0;//TODO replace the 0 with: players.get(playerLocation).redeemCards(); // redeem
-																		// cards
-																		// to
-																		// get
-																		// more
-																		// troops
-//TODO uncomment when card redemptoin finished
-				//players.get(playerLocation).addTroops(redeem); // add redeemed
-																// troops
+		//		((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
+				int redeem = 0;//TODO replace the 0 with: players.get(playerLocation).redeemCards();
 				if (redeem > 0)
 					numRedemptions++;
 				while (players.get(playerLocation).getAvailableTroops() > 0) {
 					aiReinforcePlacement();
-				}
-				deployPhase = false;
-				attackPhase = true;
+				}//end while
+				//deployPhase = false;
+				//attackPhase = true;
+				nextPhase();
 			} else if (isPlayPhase() && isAttackPhase()) {
 				String finishedAttacking = "";
 				int aiCountries = players.get(playerLocation).getCountries().size();
@@ -322,16 +315,19 @@ public class Game implements Serializable{
 
 				removeLosers();
 				isFinished();
-				attackPhase = false;
-				reinforcePhase = true;
+				//attackPhase = false;
+				//reinforcePhase = true;
+				nextPhase();
 			} else if (isPlayPhase() && isReinforcePhase()) {
 				aiPlayReinforce();
-				reinforcePhase = false;
-				deployPhase = true;
+				//reinforcePhase = false;
+				//deployPhase = true;
+				nextPhase();
 				done = true;
 			}
 		}
 		nextPlayer();
+		//nextPlayer();
 	}
 
 	// calls the ai's reinforce method
@@ -355,6 +351,10 @@ public class Game implements Serializable{
 	public boolean isDeployPhase() {
 		return deployPhase;
 	}// end isDeplyPhase;
+	
+	public boolean isRedeemCardPhase(){
+		return redeemCardPhase;
+	}
 
 	public boolean aiChoicePlacement() {
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
@@ -560,16 +560,18 @@ public class Game implements Serializable{
 			gameLog+= getCurrentPlayer().getName() + " earned a new card.\n";
 		}
 			
-		attackPhase = false;
-		reinforcePhase = true;
+	//	attackPhase = false;
+	//	reinforcePhase = true;
+		nextPhase();
 		countriesBefore = 0;
 		countriesAfter = 0;
 	}// end skipAttackPhase
 
 	public void finishTurn() {
-		deployPhase = true;
-		attackPhase = false;
-		reinforcePhase = false;
+		//deployPhase = true;
+		//attackPhase = false;
+		//reinforcePhase = false;
+		nextPhase();
 		nextPlayer();
 	}// end finishTurn
 
@@ -580,9 +582,11 @@ public class Game implements Serializable{
 		if (players.size() == 1) {
 			gameOver = true;
 			playPhase = false;
-			attackPhase = false;
+			placePhase = false;
 			reinforcePhase = false;
+			redeemCardPhase = false;
 			deployPhase = false;
+			attackPhase = false;
 		} else
 			gameOver = false;
 
@@ -623,7 +627,85 @@ public class Game implements Serializable{
 		}
 
 	}// end removeLosers
+	
+	public boolean skipCardRedemption(){
+		if (!getCurrentPlayer().mustRedeemCards()){
+			nextPhase();
+			return true;
+		}//end if
+		else
+			return false;
+	}//end skipCardRedemption
+	
+	
+	/*
+	 * These methods handle moving our code from one phase to the next
+	 */
+	public void nextPhase() throws IllegalStateException{
+		if (isPlacePhase()){
+			changeToReinforcePhase();
+		}//ed if
+		else if (isReinforcePhase()){
+			changeToRedeemCardsPhase();
+		}//end else if
+		else if (isRedeemCardPhase()){
+			changeToDeployTroopsPhase();
+		}//end else if
+		else if (isDeployPhase()){
+			changeToAttackPhase();
+		}//end else if
+		else if (isAttackPhase()){
+			changeToReinforcePhase();
+		}//end else if
+		else if (isFinished()){
+			System.out.println("The game is over");
+		}
+		else {
+			throw new IllegalStateException("The phase was invalid");
+		}
+	}//end nextPhase
+	
+//	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase;
+	
+	private void changeToReinforcePhase(){
+		placePhase = false;
+		reinforcePhase = true;
+		redeemCardPhase = false;
+		deployPhase = false;
+		attackPhase = false;
+		gameOver = false;
+	}//end changetoReinforcePhase
+	
+	private void changeToRedeemCardsPhase(){
+		playPhase = true;
+		placePhase = false;
+		reinforcePhase = false;
+		redeemCardPhase = true;
+		deployPhase = false;
+		attackPhase = false;
+		gameOver = false;
+	}//end changeToRedeemCardsPhase
+	
+	private void changeToDeployTroopsPhase(){
+		placePhase = false;
+		reinforcePhase = false;
+		redeemCardPhase = false;
+		deployPhase = true;
+		attackPhase = false;
+		gameOver = false;
+	}//end changeToDeployTroopsPhase
+	
+	private void changeToAttackPhase(){
+		placePhase = false;
+		reinforcePhase = false;
+		redeemCardPhase = false;
+		deployPhase = false;
+		attackPhase = true;
+		gameOver = false;
+	}//end changetoattackphase
 
+	
+	
 	public Deck getDeck() {
 		return deck;
 	}

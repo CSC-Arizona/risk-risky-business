@@ -10,15 +10,11 @@ public class AI extends Player {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
-	private Deck deck;
-	private int redemptions;
 	// private Game theGame;
 
 	public AI(AIStrat strat, int numOfPlayers) {
 		super(numOfPlayers);
 		myStrat = strat;
-		deck = Deck.getInstance();
-		redemptions=0;
 	}// end AI constructor
 
 	// get a random number between from 0 and 49
@@ -324,86 +320,84 @@ public class AI extends Player {
 		}
 	}// end reinforce2
 	
-	public void setRedemptions(int num){
-		redemptions = num;
-	}
 
 	@Override
-	public int redeemCards() {
+	public ArrayList<Card> redeemCards() {
 		if (getCards().size() == 5) {
-			ArrayList<Card> myCardsToRedeem = findmyCardsToRedeem();
-			// TODO turn in cards
-			// TODO discardCards to deck
-			int numArmies = -1;
-
-			Card one = myCardsToRedeem.get(0);
-			Card two = myCardsToRedeem.get(1);
-			Card three = myCardsToRedeem.get(2);
-
-			// redeemable: three of the same unit type, one of each type, two + wild
-			// if can redeem:
-			if ((one.getUnit().compareTo(two.getUnit()) == 0 && one.getUnit().compareTo(three.getUnit()) == 0
-					&& three.getUnit().compareTo(two.getUnit()) == 0)
-					|| (one.getUnit().compareTo(two.getUnit()) != 0 && one.getUnit().compareTo(three.getUnit()) != 0
-							&& three.getUnit().compareTo(two.getUnit()) != 0)
-					|| (one.getUnit().compareTo("WILD") == 0 )
-					|| (two.getUnit().compareTo("WILD") == 0 )
-					|| (three.getUnit().compareTo("WILD") == 0)) {
-
-				numArmies = 0;
-				redemptions++;
-				switch (redemptions) {
-				case 1:
-					numArmies = 4;
-					break;
-				case 2:
-					numArmies = 6;
-					break;
-				case 3:
-					numArmies = 8;
-					break;
-				case 4:
-					numArmies = 10;
-					break;
-				case 5:
-					numArmies = 12;
-					break;
-				case 6:
-					numArmies = 15;
-					break;
-				default:
-					numArmies = 15 + 5 * (redemptions - 6);
-					break;
-				}
-
-				// if any one of the redeemable cards contains a country that the
-				// player has, add 2 armies to that country.
-				boolean added = false;
-				for (Card c : myCardsToRedeem) {
-					for (Country t : this.getCountries()) {
-						if (c.getCountry().compareTo(t.getName()) == 0) {
-							// add 2 armies to that country
-							added = true;
-							int currentForces = t.getForcesVal();
-							System.out.println("current Forces" + currentForces + t.getName());
-							t.setForcesVal(2);
-							System.out.println("updated Forces" + t.getForcesVal() + t.getName());
-							break; //can only redeem a country card for extra armies once per turn
-						}
-					}
-					if(added)
-						break;
-				}
-				if (!added)
-					System.out.println("no country cards to redeem");
-			} else
-				System.out.println("unable to redeem cards");
-			
-			this.discardCards(myCardsToRedeem);
-			deck.addToDiscardPile(myCardsToRedeem);
-			return numArmies;
-		}
-		return 0;
+			return findmyCardsToRedeem();
+		}//end if
+		else
+			return null;
+//			int numArmies = -1;
+//
+//			Card one = myCardsToRedeem.get(0);
+//			Card two = myCardsToRedeem.get(1);
+//			Card three = myCardsToRedeem.get(2);
+//
+//			// redeemable: three of the same unit type, one of each type, two + wild
+//			// if can redeem:
+//			if ((one.getUnit().compareTo(two.getUnit()) == 0 && one.getUnit().compareTo(three.getUnit()) == 0
+//					&& three.getUnit().compareTo(two.getUnit()) == 0)
+//					|| (one.getUnit().compareTo(two.getUnit()) != 0 && one.getUnit().compareTo(three.getUnit()) != 0
+//							&& three.getUnit().compareTo(two.getUnit()) != 0)
+//					|| (one.getUnit().compareTo("WILD") == 0 )
+//					|| (two.getUnit().compareTo("WILD") == 0 )
+//					|| (three.getUnit().compareTo("WILD") == 0)) {
+//
+//				numArmies = 0;
+//				redemptions++;
+//				switch (redemptions) {
+//				case 1:
+//					numArmies = 4;
+//					break;
+//				case 2:
+//					numArmies = 6;
+//					break;
+//				case 3:
+//					numArmies = 8;
+//					break;
+//				case 4:
+//					numArmies = 10;
+//					break;
+//				case 5:
+//					numArmies = 12;
+//					break;
+//				case 6:
+//					numArmies = 15;
+//					break;
+//				default:
+//					numArmies = 15 + 5 * (redemptions - 6);
+//					break;
+//				}
+//
+//				// if any one of the redeemable cards contains a country that the
+//				// player has, add 2 armies to that country.
+//				boolean added = false;
+//				for (Card c : myCardsToRedeem) {
+//					for (Country t : this.getCountries()) {
+//						if (c.getCountry().compareTo(t.getName()) == 0) {
+//							// add 2 armies to that country
+//							added = true;
+//							int currentForces = t.getForcesVal();
+//							System.out.println("current Forces" + currentForces + t.getName());
+//							t.setForcesVal(2);
+//							System.out.println("updated Forces" + t.getForcesVal() + t.getName());
+//							break; //can only redeem a country card for extra armies once per turn
+//						}
+//					}
+//					if(added)
+//						break;
+//				}
+//				if (!added)
+//					System.out.println("no country cards to redeem");
+//			} else
+//				System.out.println("unable to redeem cards");
+//			
+//			this.discardCards(myCardsToRedeem);
+//			deck.addToDiscardPile(myCardsToRedeem);
+//			return numArmies;
+//		}
+//		return 0;
 	}
 
 	private ArrayList<Card> findmyCardsToRedeem() {
