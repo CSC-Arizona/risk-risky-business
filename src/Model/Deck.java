@@ -19,7 +19,7 @@ public class Deck implements Serializable{
 
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
-		discardPile = new ArrayList<>();
+		discardPile = new ArrayList<Card>();
 		fillDeck(riskDeck);
 		shuffle();
 		size = 52;
@@ -31,8 +31,8 @@ public class Deck implements Serializable{
 	}
 	
 	public Deck newDeck(){
-		uniqueDeck=null;
-		return getInstance();
+		uniqueDeck=new Deck();
+		return uniqueDeck;
 	}
 
 	public static synchronized Deck getInstance() {

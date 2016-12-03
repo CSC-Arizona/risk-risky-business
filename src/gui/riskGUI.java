@@ -39,7 +39,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -99,7 +104,7 @@ public class riskGUI extends JFrame {
 	private JButton moveButton;
 	private boolean splash, gameOver = false;
 	private ImageIcon splashScreen;
-	private JPanel splashInfo;
+	private JPanel splashInfo= new JPanel();
 	private Font gotFontHeader;
 	private Font gotFontBody;
 
@@ -122,6 +127,12 @@ public class riskGUI extends JFrame {
 	private Border blueline, raisedetched, loweredetched, raisedbevel,
 			loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
+	public static final String MU_FLAG_FILE = "moveUnitsFlag.ser";
+	public static final String MU_COUNTRY_FILE = "moveUnitsCountry.ser";
+	public static final String AF_FLAG_FILE = "attackFromFlag.ser";
+	public static final String A_FLAG_FILE = "attackFlag.ser";
+	public static final String AF_FILE = "attackFrom.ser";
+	public static final String A_FILE = "attack.ser";
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment
@@ -157,14 +168,14 @@ public class riskGUI extends JFrame {
 
 		System.out.println("Width = " + width + " Height = " + height);
 
-		// splash = true; // comment me out for default mode
-		splash = false; // comment me out for splash screens
+		splash = true; // comment me out for default mode
+		//splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		// setUpSplash(); // comment me out for default mode
-		defaultMode(); // comment me out for splash screens
+		setUpSplash(); // comment me out for default mode
+		//defaultMode(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -184,26 +195,126 @@ public class riskGUI extends JFrame {
 	
 	public void loadGame(){
 		//TODO
-		splashNumPlayers(); //here for now so that we don't break things.
-		/* 
-		System.out.println("Brace Yourselves, RISK is Coming...");
-		splash = false;
-		drawingPanel.removeAll();
-		this.remove(drawingPanel);
-		// creates or grabs an instance of the game, first variable is number of
-		// human players, second is total number of players
-		theGame = Game.getInstance(humans, ai);
-		setUpDrawingPanel();
-		setUpMenu();
-		// setUpClearButton();
-		// setUpPassButton();
-		setUpAIMenu();
-		//theGame.startGame();
-		drawingPanel.repaint();
-		*/
+		//splashNumPlayers(); //here for now so that we don't break things.
+		boolean error = setUpLoad();
+		if(error){
+			JOptionPane.showMessageDialog(null, "No game data has been saved. Start a new game.",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			splashNumPlayers();
+		}
+		else{
+			System.out.println("Brace Yourselves, RISK is Coming...");
+			splash = false;
+			drawingPanel.removeAll();
+			this.remove(drawingPanel);
+			setUpDrawingPanel();
+			setUpMenu();
+			setUpAIMenu();
+			drawingPanel.revalidate();
+			drawingPanel.repaint();
+		}
+		
+	}
+	
+	private boolean setUpLoad(){
+		boolean error = false;
+		try {
+			ObjectInputStream inFile = new ObjectInputStream(new FileInputStream("game.ser"));
+			theGame = (Game)inFile.readObject();
+			inFile.close();
+			
+			ObjectInputStream inFile2 = new ObjectInputStream(new FileInputStream("moveUnitsFlag.ser"));
+			moveUnitsFlag = (boolean)inFile2.readObject();
+			inFile2.close();
+			
+			ObjectInputStream inFile3 = new ObjectInputStream(new FileInputStream("moveUnitsCountry.ser"));
+			moveUnitsFromCountry = (Country)inFile3.readObject();
+			inFile3.close();
+			
+			ObjectInputStream inFile4 = new ObjectInputStream(new FileInputStream("attackFromFlag.ser"));
+			attackFromFlag = (boolean)inFile4.readObject();
+			inFile4.close();
+			
+			ObjectInputStream inFile5 = new ObjectInputStream(new FileInputStream("attackFlag.ser"));
+			attackFlag = (boolean)inFile5.readObject();
+			inFile5.close();
+			
+			ObjectInputStream inFile6 = new ObjectInputStream(new FileInputStream("attackFrom.ser"));
+			attackFrom = (Country)inFile6.readObject();
+			inFile6.close();
+			
+			ObjectInputStream inFile7 = new ObjectInputStream(new FileInputStream("attack.ser"));
+			attack = (Country)inFile7.readObject();
+			inFile7.close();
+		
+		} catch (IOException e) {
+			error=true;
+			e.printStackTrace();
+		} catch(ClassNotFoundException e){
+			error=true;
+			e.printStackTrace();
+		}
+		return error;
 	}
 
 	public void saveGame() {
+		FileOutputStream gameToDisk = null;
+		FileOutputStream muFlagToDisk = null;
+		FileOutputStream muCountryToDisk = null;
+		FileOutputStream afFlagToDisk = null;
+		FileOutputStream aFlagToDisk = null;
+		FileOutputStream afToDisk = null;
+		FileOutputStream aToDisk = null;
+		
+		try{
+			//save Game
+			gameToDisk = new FileOutputStream(Game.FILE_NAME);
+			ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
+			outFile.writeObject(theGame);
+			outFile.close();
+			
+			//save Move Units Flag
+			muFlagToDisk = new FileOutputStream(MU_FLAG_FILE);
+			ObjectOutputStream outFile2 = new ObjectOutputStream(muFlagToDisk);
+			outFile2.writeObject(moveUnitsFlag);
+			outFile2.close();
+			
+			//save Move Units Country
+			muCountryToDisk = new FileOutputStream(MU_COUNTRY_FILE);
+			ObjectOutputStream outFile3 = new ObjectOutputStream(muCountryToDisk);
+			outFile3.writeObject(moveUnitsFromCountry);
+			outFile3.close();
+			
+			//save attack from flag
+			afFlagToDisk = new FileOutputStream(AF_FLAG_FILE);
+			ObjectOutputStream outFile4 = new ObjectOutputStream(afFlagToDisk);
+			outFile4.writeObject(attackFromFlag);
+			outFile4.close();
+			
+			//save attack  flag
+			aFlagToDisk = new FileOutputStream(A_FLAG_FILE);
+			ObjectOutputStream outFile5 = new ObjectOutputStream(aFlagToDisk);
+			outFile5.writeObject(attackFlag);
+			outFile5.close();
+			
+			//save attack from 
+			afToDisk = new FileOutputStream(AF_FILE);
+			ObjectOutputStream outFile6 = new ObjectOutputStream(afToDisk);
+			outFile6.writeObject(attackFrom);
+			outFile6.close();
+			
+			//save attack 
+			aToDisk = new FileOutputStream(A_FILE);
+			ObjectOutputStream outFile7 = new ObjectOutputStream(aToDisk);
+			outFile7.writeObject(attack);
+			outFile7.close();
+		}
+		catch(FileNotFoundException e){
+			e.printStackTrace();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 		// TODO
 	}
 

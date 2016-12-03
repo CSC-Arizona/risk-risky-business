@@ -21,6 +21,7 @@ public class Game implements Serializable{
 	private boolean canPlace, tournamentMode;
 	private int countriesBefore;
 	private int countriesAfter;
+	public static final String FILE_NAME = "game.ser";
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		humans = numOfHumanPlayers;
@@ -62,7 +63,7 @@ public class Game implements Serializable{
 		gameMap = Map.getInstance(0);
 		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
-		deck=deck.newDeck();
+		deck = deck.newDeck();
 		// deck.shuffle();
 		players = new ArrayList<>();
 		addHumanPlayers(humans);
@@ -591,11 +592,12 @@ public class Game implements Serializable{
 			}
 
 		}
-		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
+		ArrayList<Card> cardsToAddToDiscard = new ArrayList<Card>();
 		for (Player player : playersToRemove) {
 			cardsToAddToDiscard.addAll(player.discardCards());
 		}
-		deck.addToDiscardPile(cardsToAddToDiscard);
+		if(cardsToAddToDiscard.size()>0)
+			deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
 		for(Integer removedPlayersLoc : playersToRemoveLocations)
