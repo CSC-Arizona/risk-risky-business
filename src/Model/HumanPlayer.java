@@ -1,8 +1,9 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HumanPlayer extends Player {
+public class HumanPlayer extends Player implements Serializable{
 	
 	private ArrayList<Card> redeemable = new ArrayList<Card>();
 	private int redemptions=0;

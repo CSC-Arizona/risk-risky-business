@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +10,7 @@ import Model.Card;
  * Deck has 52 cards: 50 (one for each territory) + 2 (wild cards)
  * NOTE: Deck class is a singleton, should never have more than one! :) 
  */
-public class Deck {
+public class Deck implements Serializable{
 
 	private ArrayList<Card> riskDeck;
 	private int size;

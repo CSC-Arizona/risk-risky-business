@@ -94,8 +94,6 @@ public class riskGUI extends JFrame {
 	private boolean splash, gameOver = false;
 	private ImageIcon splashScreen;
 	private JPanel splashInfo;
-	// my new favorite font...
-	private Font goudyFontBig = new Font("Goudy Old Style", Font.BOLD, 40);
 	private Font gotFontHeader;
 	private Font gotFontBody;
 
@@ -164,7 +162,25 @@ public class riskGUI extends JFrame {
 	
 	public void loadGame(){
 		//TODO
-		splashNumPlayers(); //here for now so that we don't break things. 
+		splashNumPlayers(); //here for now so that we don't break things.
+		/* 
+		System.out.println("Brace Yourselves, RISK is Coming...");
+		splash = false;
+		drawingPanel.removeAll();
+		this.remove(drawingPanel);
+		// creates or grabs an instance of the game, first variable is number of
+		// human players, second is total number of players
+		theGame = Game.getInstance(humans, ai);
+		setUpDrawingPanel();
+		setUpMenu();
+		// setUpClearButton();
+		// setUpPassButton();
+		setUpAIMenu();
+		//theGame.startGame();
+		drawingPanel.repaint();
+		*/
+	
+	
 	}
 	
 	public void saveGame(){
@@ -259,12 +275,9 @@ public class riskGUI extends JFrame {
 			i++;
 		}
 
-		theGame.setPlayers(players); // player.startTheme();
+		theGame.setPlayers(players); 
 		theGame.startGame();
 
-		// player.stopTheme();
-		// player.startTheme();
-		// musicOn=true;
 	}// end splashLoading2
 
 	private void splashNames() {

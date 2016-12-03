@@ -1,12 +1,13 @@
 package Model;
 
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JMenuItem;
 
-public class AI extends Player {
+public class AI extends Player implements Serializable {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;

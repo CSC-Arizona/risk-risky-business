@@ -1,12 +1,13 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
 
-public class Game {
+public class Game implements Serializable{
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
