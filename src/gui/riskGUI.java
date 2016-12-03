@@ -159,14 +159,14 @@ public class riskGUI extends JFrame {
 
 		System.out.println("Width = " + width + " Height = " + height);
 
-		// splash = true; // comment me out for default mode
-		splash = false; // comment me out for splash screens
+		splash = true; // comment me out for default mode
+		// splash = false; // comment me out for splash screens
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		// setUpSplash(); // comment me out for default mode
-		defaultMode(); // comment me out for splash screens
+		 setUpSplash(); // comment me out for default mode
+		//(); // comment me out for splash screens
 
 	}// end riskGui constructor
 
@@ -1009,7 +1009,6 @@ public class riskGUI extends JFrame {
 					player += ": " + allPlayers.get(i).getCountries().size()
 							+ " countries.";
 					aPlayer.setText(player);
-					System.out.println(aPlayer.getText());
 
 					// add it
 					playList.add(aPlayer);
@@ -1035,8 +1034,6 @@ public class riskGUI extends JFrame {
 					JLabel lab = new JLabel(allContinents[i]);
 					lab.setFont(gotFontBody);
 					contPanel.add(lab);
-
-					System.out.println(lab.getText());
 				}
 				lastPanel.add(contPanel);
 
