@@ -116,7 +116,7 @@ public class AI extends Player implements Serializable {
 
 		Random rand = new Random();
 		int randNum = 0;
-		System.out.println(fringeCountries.size() + " size of list to choose from");
+	//	System.out.println(fringeCountries.size() + " size of list to choose from");
 		if (fringeCountries.size() == 0)
 			return null;
 		randNum = rand.nextInt(fringeCountries.size());
@@ -146,6 +146,24 @@ public class AI extends Player implements Serializable {
 			return false;
 		}
 
+		/*
+		 * for when dice roll exists
+		 * if(myStrat == AIStrat.EASY){
+		 * 	if(attackingFrom.getForcesVal() > 1){
+		 * 		do dice roll stuff against attacking and take all units but 1 from attackinFrom
+		 * 		return false;		
+		 * 	}
+		 * else
+		 * 		return true;
+		 * }
+		 * else{
+		 * 	if(attackingFrom.getForces() == attacking.getForces() or up to 2 less)
+		 * 			do dice roll stuff against attacking and take all units but 1 from attacking from
+		 * 			return false
+		 * else
+		 * 		return true;
+		 * }
+		 */
 		return true;
 
 	}// end aiAttack
@@ -203,7 +221,6 @@ public class AI extends Player implements Serializable {
 	// returns the ai's current strategy as a string, used for checking if the
 	// ai difficulty menu in the gui was working
 	public String getStrat() {
-
 		return myStrat.toString();
 	}// end getStrat
 
@@ -487,4 +504,5 @@ public class AI extends Player implements Serializable {
 		}
 		return threeInfantry;
 	}// end findThreeInfantry
+	
 }
