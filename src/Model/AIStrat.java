@@ -1,5 +1,7 @@
 package Model;
 
-public enum AIStrat {
+import java.io.Serializable;
+
+public enum AIStrat implements Serializable{
 	EASY, HARD;
 }
