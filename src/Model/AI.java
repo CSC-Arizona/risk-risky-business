@@ -145,6 +145,24 @@ public class AI extends Player {
 			return false;
 		}
 
+		/*
+		 * for when dice roll exists
+		 * if(myStrat == AIStrat.EASY){
+		 * 	if(attackingFrom.getForcesVal() > 1){
+		 * 		do dice roll stuff against attacking and take all units but 1 from attackinFrom
+		 * 		return false;		
+		 * 	}
+		 * else
+		 * 		return true;
+		 * }
+		 * else{
+		 * 	if(attackingFrom.getForces() == attacking.getForces() or up to 2 less)
+		 * 			do dice roll stuff against attacking and take all units but 1 from attacking from
+		 * 			return false
+		 * else
+		 * 		return true;
+		 * }
+		 */
 		return true;
 
 	}// end aiAttack
