@@ -2,6 +2,8 @@ package Model;
 
 import gui.riskGUI;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -15,7 +17,7 @@ public class Map implements Serializable{
 	private Continent red;
 	private Continent black;
 	private Continent yellow;
-	private static Map gameMap;
+	private static Map gameMap = null;
 
 	private Map(int i) {
 		blue = new Continent(4, "Blue");
@@ -26,8 +28,8 @@ public class Map implements Serializable{
 		black = new Continent(5, "Black");
 		yellow = new Continent(7, "Yellow");
 
-		if(i ==0)
-		fillCountries();
+		if(i == 0)
+			fillCountries();
 		else
 			fillCountries2();
 		/*
@@ -50,7 +52,14 @@ public class Map implements Serializable{
 	}// end getInstance
 	
 
-	
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	    ois.defaultReadObject();
+	    gameMap = this;
+	}
+
+	private Object readResolve()  {
+	    return gameMap;
+	}
 
 	public Map newMap(){
 		gameMap=null;
@@ -445,4 +454,4 @@ public class Map implements Serializable{
 	}
 
 
-}// end Map clss
+}// end Map class

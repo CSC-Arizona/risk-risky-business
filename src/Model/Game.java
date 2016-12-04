@@ -434,13 +434,13 @@ public class Game implements Serializable{
 
 	}// end unitsToReturn
 
-	public int getArmiesToAttack(Country countryToRemoveUnits) {
+	public int getUnits(Country countryToRemoveUnits) {
 		boolean moveFlag = false, continueFlag = false;
 		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
 		String unitsToMove = "";
 
 		while (!moveFlag) {
-			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
+			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to move over? You must leave 1.");
 			try {
 				unitsToReturn = Integer.parseInt(unitsToMove);
 				continueFlag = true;
@@ -525,30 +525,58 @@ public class Game implements Serializable{
 		return null;
 	}// end getPhase
 
-	public String attack(Country yours, Country theirs, int numArmies) {
+	public boolean attack(Country yours, Country theirs, int numDice) {
+		Dice die = new Dice(0);
+		boolean winFlag = false;
 		//Update the gameLog
-		gameLog+=yours.getOccupier().getName() + " attacked " + theirs.getName() + " with " + numArmies + " units.\n";
-		
-		String result = "";
-		if (numArmies <= theirs.getForcesVal()) {
-			// theirs.setForcesVal(numArmies);
-			yours.removeUnits(numArmies); // you lose the armies fought with
-			gameLog+=yours.getOccupier().getName() + " lost the battle.\n";
-		} else if (theirs.getForcesVal() < numArmies) {
-			gameLog += yours.getOccupier().getName() + " defeated " + theirs.getOccupier().getName() + " and took " + theirs.getName() + ".\n";
-			countriesBefore = getCurrentPlayer().getCountries().size();
-			theirs.getOccupier().loseCountry(theirs);
-			theirs.removeUnits(theirs.getForcesVal());
-			theirs.setForcesVal(numArmies);
-			theirs.setOccupier(yours.getOccupier());
-			yours.getOccupier().occupyCountry(theirs);
-			yours.removeUnits(numArmies); 
-			result = yours.toString();
-			countriesAfter = getCurrentPlayer().getCountries().size();
-			// players.get(playerLocation).addCard(deck.deal());
+//		gameLog+=yours.getOccupier().getName() + " attacked " + theirs.getName() + " with " + numArmies + " units.\n";
+		int enemyDice = 0;
+		if(theirs.getForcesVal() >= 2)
+		{
+			enemyDice = 2;
 		}
-		return result;
+		else
+			enemyDice = 1;
+		
+		ArrayList<Dice> attackingDice = die.roll(numDice);
+		ArrayList<Dice> defendingDice = die.roll(enemyDice);
+		
+		for(int i = 0; i < defendingDice.size(); i++)
+		{
+			if(yours.getForcesVal() == 1)
+			{
+				break;
+			}
+			else if(theirs.getForcesVal() <=0)
+			{
+				winFlag = true;
+				break;
+			}
+			
+			if(attackingDice.get(i).getValue() > defendingDice.get(i).getValue())
+			{
+				theirs.removeUnits(1);
+			}
+			else
+				yours.removeUnits(1);
+		}
+		
+				
+		if(winFlag)
+		{
+			Player loser = theirs.getOccupier();
+			loser.loseCountry(theirs);
+			theirs.setOccupier(getCurrentPlayer());
+			getCurrentPlayer().occupyCountry(theirs);
+			return true;
+		}
+		else
+			return false;
+
+
 	}// end attack
+
+	
 
 	public boolean isAttackPhase() {
 		return attackPhase;

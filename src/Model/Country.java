@@ -56,9 +56,6 @@ public class Country extends Observable implements Serializable{
 		neighbors.add(neighbor);
 	}// end addNeighbor
 
-	public void drawMyButton() {
-		// TODO
-	}// end drawMyButton
 
 	public void makeButton(int xWidth, int yHeight, ActionListener act) {
 		myButton = new JButton();
@@ -118,7 +115,7 @@ public class Country extends Observable implements Serializable{
 	}// end getOccupier
 
 	public JButton getMyButton() {
-		return myButton;
+		return getButton();
 	}// end getMyButton
 
 	public ArrayList<Country> getNeighbors() {

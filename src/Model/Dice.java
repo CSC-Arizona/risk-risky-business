@@ -1,32 +1,37 @@
 package Model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
-public class Dice {
+public class Dice implements Serializable, Comparable<Dice> {
 
 	private int value;
 	Random rnd = new Random();
 
 	// initialize to 0 (has not been rolled)
-	public Dice() {
-		this.value = 0;
+	public Dice(int i) {
+		this.value = i;
 	}// end constructor
 
 	// Rolls a given number of 6 sided die
-	// TODO: This just returns the total sum. I think this may need
-	// to be changed in order to follow the rules of Risk, depending on
-	// how we are handling combat
-	public int roll(int numDice) {
-		int total = 0;
-		int num;
+	// Returns a sorted arraylist of dice.
+	// The amount of dice is passed into the function by the numDice method
+	public ArrayList<Dice> roll(int numDice) {
+		ArrayList<Dice> myRolledDice = new ArrayList<>();
+		int num = 0;
 		for (int i = 0; i < numDice; i++) {
 			num = rnd.nextInt(6) + 1;
 			// System.out.println("Die " + (i+1) + ": " + num);
-			total += num;
+			Dice die = new Dice(num);
+			myRolledDice.add(die);
 		}
-		// System.out.println("Total: " + total);
-		this.value = total;
-		return total;
+
+		Collections.sort(myRolledDice);
+
+		return myRolledDice;
 	}// end roll
 
 	// Returns the value of the die,
@@ -34,4 +39,14 @@ public class Dice {
 	public int getValue() {
 		return this.value;
 	}// end getValue
+
+	@Override
+	public int compareTo(Dice other) {
+
+		if (this.value < other.value)
+			return 1;
+		else
+			return -1;
+	}
+
 }

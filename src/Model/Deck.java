@@ -1,5 +1,7 @@
 package Model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +42,15 @@ public class Deck implements Serializable{
 			uniqueDeck = new Deck();
 		return uniqueDeck;
 	}// end getInstance
+	
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	    ois.defaultReadObject();
+	    uniqueDeck = this;
+	}
+
+	private Object readResolve()  {
+	    return uniqueDeck;
+	}
 
 	public void shuffle() {
 		if (size == 0 && discardPile.size() > 0) {
