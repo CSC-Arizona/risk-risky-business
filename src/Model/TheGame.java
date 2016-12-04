@@ -5,12 +5,13 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-public class TheGame implements Serializable{
+public class TheGame implements Serializable {
 	private ArrayList<Player> players;
 	private Player currentPlayer;
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry;
+	private Country moveFrom, moveTo;
 	private boolean placePhase, reinforcePhase, deployPhase, attackPhase,
 			gameOver, redeemCardPhase, mainGamePhase;
 	private static TheGame theGame;
@@ -18,22 +19,22 @@ public class TheGame implements Serializable{
 	private String gameLog;
 	private int humans, ais, totalPlayers;
 	private int numRedemptions, countriesClaimed;
+	private int countriesBefore, countriesAfter;
 	public static final String FILE_NAME = "game.ser";
 
-	
-	
-	
 	/**********************************************************************************
-	**********************************Game Creation************************************
-	**********************************************************************************/
+	 ********************************** Game Creation************************************
+	 **********************************************************************************/
 	private TheGame(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		// Getting the sizes
 		humans = numOfHumanPlayers;
 		ais = numOfAIPlayers;
 		totalPlayers = humans + ais;
 		countriesClaimed = 0;
-		
-		if(!tournamentMode)
+		countriesBefore = 0;
+		countriesAfter = 0;
+
+		if (!tournamentMode)
 			newGame();
 		else
 			newGame(numOfAIPlayers);
@@ -124,11 +125,10 @@ public class TheGame implements Serializable{
 			players.add(new HumanPlayer(totalPlayers));
 	}// end addHumanPlayers
 
-	
 	/**********************************************************************************
-	******************************Changing the game phase******************************
-	**********************************************************************************/
-	
+	 ****************************** Changing the game phase******************************
+	 **********************************************************************************/
+
 	/*
 	 * These methods handle moving our code from one phase to the next
 	 */
@@ -179,7 +179,7 @@ public class TheGame implements Serializable{
 	public boolean isPlacePhase() {
 		return placePhase;
 	}
-	
+
 	public boolean isPlayPhase() {
 		return mainGamePhase;
 	}
@@ -204,8 +204,8 @@ public class TheGame implements Serializable{
 	}// end changetoReinforcePhase
 
 	private void changeToRedeemCardsPhase() {
-		//If this is our first card redemption
-		if (mainGamePhase = false)
+		// If this is our first card redemption
+		if (mainGamePhase == false)
 			mainGamePhase = true;
 		placePhase = false;
 		reinforcePhase = false;
@@ -222,6 +222,12 @@ public class TheGame implements Serializable{
 		deployPhase = true;
 		attackPhase = false;
 		gameOver = false;
+
+		currentPlayer.addAvailableTroops(gameMap
+				.getContinentBonuses(currentPlayer));
+		currentPlayer.getTroops();
+		gameLog += "Continent bonus applied: "
+				+ gameMap.getContinentBonuses(getCurrentPlayer()) + "\n";
 	}// end changeToDeployTroopsPhase
 
 	private void changeToAttackPhase() {
@@ -248,11 +254,13 @@ public class TheGame implements Serializable{
 
 		currentPlayer = players.get(i);
 		selectedCountry = null;
+		gameLog += "\nNext player's turn: " + getCurrentPlayer().getName()
+				+ "\n";
 	}// end nextPlayer
 
 	/**********************************************************************************
-	***************************Coordinating Gameplay***********************************
-	**********************************************************************************/
+	 *************************** Coordinating Gameplay***********************************
+	 **********************************************************************************/
 	public void startGame() {
 		// Randomly picks a player from the total number of players
 		int firstPlayer = (int) (Math.random() * totalPlayers);
@@ -273,123 +281,191 @@ public class TheGame implements Serializable{
 
 		// calls roundOfPlacement to let any AIs who may have been set to
 		// go first play their parts
+		currentPlayer = players.get(0);
 		play();
 	}// end startGame
-	
-	public void play(){
-		//Always take the human turn that triggered this call to play
+
+	public void play() {
+		// Always take the human turn that triggered this call to play
 		// if there is a human player
 		if (currentPlayer instanceof HumanPlayer)
 			humanTurn();
-		
-		//Then, continue as long as an AI is playing
-		while (currentPlayer instanceof AI){
+
+		// Then, continue as long as an AI is playing
+		while (currentPlayer instanceof AI) {
 			aiTurn();
-		}//end while
-	}//end play
+		}// end while
+	}// end play
+
 	/*
 	 * aiTurn
 	 * 
 	 * Tells the AI to play one move
 	 */
-	private void aiTurn() throws IllegalStateException{
-		if (isPlacePhase()){
+	private void aiTurn() throws IllegalStateException {
+		if (isPlacePhase()) {
 			boolean placed = false;
-			//Ask the AI to pick a country until they pick a country without an owner
+			// Ask the AI to pick a country until they pick a country without an
+			// owner
 			while (!placed) {
-				selectedCountry = ((AI) currentPlayer).pickRandomCountry(gameMap.getCountries());
+				selectedCountry = ((AI) currentPlayer)
+						.pickRandomCountry(gameMap.getCountries());
 				if (selectedCountry.getOccupier() == null)
 					placed = true;
-			}//end while
+			}// end while
 			placeArmies(1);
 			nextPlayer();
-			if (countriesClaimed==50)
+			if (countriesClaimed == 50)
 				nextPhase();
-		}//end if
-		else if (isReinforcePhase() && !isPlayPhase()){
-			while (selectedCountry == null){
-				selectedCountry = ((AI)currentPlayer).placeNewTroops();
+		}// end if
+		
+		// During initial reinforce phase
+		else if (isReinforcePhase() && !isPlayPhase()) {
+			while (selectedCountry == null) {
+				selectedCountry = ((AI) currentPlayer).placeNewTroops();
 			}
 			placeArmies(1);
 			nextPlayer();
-			//If the next player has no more troops, then go to redeem cards!
+			// If the next player has no more troops, then go to redeem cards!
 			if (currentPlayer.getAvailableTroops() == 0)
 				nextPhase();
-		}//end else if
-		else if (isRedeemCardPhase()){
+		}// end else if
+
+		// During redeem cards
+		else if (isRedeemCardPhase()) {
 			currentPlayer.addAvailableTroops(redeemCards());
 			nextPhase();
-		}//end else if
-		else if (isDeployPhase()){
+		}// end else if
+
+		// During deployment
+		else if (isDeployPhase()) {
+			deployTroops();
+
+			if (currentPlayer.getAvailableTroops() == 0)
+				nextPhase();
+		}// end else if
+
+		// During attack phase
+		else if (isAttackPhase()) {
+			String tmp = ((AI)currentPlayer).aiAttack();
 			
-			nextPhase();
-		}//end else if
-		else if (isAttackPhase()){
-			
-			nextPhase();
-		}//end else if
-		else if (isReinforcePhase()){
-			
+			if (tmp == null){
+				nextPhase();
+			}//end if
+			else{
+				gameLog += tmp;
+			}//end else
+		}// end else if
+
+		// during official reinforcement
+		else if (isReinforcePhase()) {
+			gameLog += ((AI) currentPlayer).reinforce();
 			nextPhase();
 			nextPlayer();
-		}//end else if
+		}// end else if
+		
+		//Otherwise, problem!
 		else {
 			throw new IllegalStateException("Illegal phase!");
-		}//end else
-	}//end aiturn
-	
+		}// end else
+	}// end aiturn
+
+	private void deployTroops() {
+		if (currentPlayer instanceof AI) {
+			ArrayList<Country> selectedCountries = new ArrayList<Country>();
+			selectedCountries = ((AI) currentPlayer).countriesToReinforce();
+			int i = 0;
+			while (i < selectedCountries.size()
+					&& currentPlayer.getAvailableTroops() > 0) {
+				selectedCountry = selectedCountries.get(i);
+				placeArmies(1);
+				i++;
+			}// end while
+		}// end if
+		else {
+			// if (selectedCountry != null){
+			boolean continueFlag = false;
+			int armiesToPlaceInt = 0;
+			String armiesToPlaceStr = JOptionPane
+					.showInputDialog("How many armies do you want to place? (You can place "
+							+ theGame.getCurrentPlayer().getAvailableTroops()
+							+ ")");
+
+			try {
+				armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}// end catch
+			if (continueFlag) {
+				if (armiesToPlaceInt < 0
+						|| armiesToPlaceInt > currentPlayer
+								.getAvailableTroops()) {
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					placeArmies(armiesToPlaceInt);
+				}// end else
+			}// end if
+			// }//end if
+		}// end else
+	}// end deploytroops
+
 	/*
 	 * humanTurn
 	 * 
 	 * plays one human turn
 	 */
-	private void humanTurn() throws IllegalStateException{
-		if (isPlacePhase()){
+	private void humanTurn() throws IllegalStateException {
+		if (isPlacePhase()) {
 			placeArmies(1);
 			nextPlayer();
-			if (countriesClaimed==50)
+			if (countriesClaimed == 50)
 				nextPhase();
-		}//end if
-		else if (isReinforcePhase() && !isPlayPhase()){
+		}// end if
+		else if (isReinforcePhase() && !isPlayPhase()) {
 			placeArmies(1);
 			nextPlayer();
-			//If the next player has no more troops, then go to redeem cards!
+			// If the next player has no more troops, then go to redeem cards!
 			if (currentPlayer.getAvailableTroops() == 0)
 				nextPhase();
-		}//end else if
-		else if (isRedeemCardPhase()){
+		}// end else if
+		else if (isRedeemCardPhase()) {
 			currentPlayer.addAvailableTroops(redeemCards());
 			nextPhase();
-		}//end else if
-		else if (isDeployPhase()){
-			
+		}// end else if
+		else if (isDeployPhase()) {
+			deployTroops();
+
+			if (currentPlayer.getAvailableTroops() == 0)
+				nextPhase();
+		}// end else if
+		else if (isAttackPhase()) {
+			//If we're here, the human is already done with attack
 			nextPhase();
-		}//end else if
-		else if (isAttackPhase()){
-			
-			nextPhase();
-		}//end else if
-		else if (isReinforcePhase()){
-			
+		}// end else if
+		else if (isReinforcePhase()) {
+			// If we're here, the human is already done with reinforcement
 			nextPhase();
 			nextPlayer();
-		}//end else if
+		}// end else if
 		else {
 			throw new IllegalStateException("Illegal phase!");
-		}//end else
-	}//end aiturn
-	
-	
+		}// end else
+	}// end aiturn
+
 	public boolean aiChoicePlacement() {
-		selectedCountry = ((AI) currentPlayer).pickRandomCountry(gameMap.getCountries());
+		selectedCountry = ((AI) currentPlayer).pickRandomCountry(gameMap
+				.getCountries());
 		if (checkIfCountryAvailable(selectedCountry)) {
 			placeArmies(1);
 			selectedCountry = null;
 			return true;
-		}//end if
+		}// end if
 		return false;
 	}// end aiChoicePlacement
-	
+
 	/*
 	 * checkIfCountryAvailable
 	 * 
@@ -398,38 +474,38 @@ public class TheGame implements Serializable{
 	private boolean checkIfCountryAvailable(Country countryToCheck) {
 		return countryToCheck.getOccupier() == null;
 	}// end checkIfCountryAvailable
-	
-	
-	public void placeArmies(int num) throws IllegalStateException{
-		if (isPlacePhase()){
-			//Sets player to this country's occupier and adds country
-			//to player's list
+
+	public void placeArmies(int num) throws IllegalStateException {
+		if (isPlacePhase()) {
+			// Sets player to this country's occupier and adds country
+			// to player's list
 			selectedCountry.setOccupier(currentPlayer);
-			gameLog+=currentPlayer.getName() + " claimed " + selectedCountry.toString() +"\n";
+			gameLog += currentPlayer.getName() + " claimed "
+					+ selectedCountry.toString() + "\n";
 			countriesClaimed++;
-		}//end if
+		}// end if
 		else {
-			gameLog += currentPlayer.getName() + " place " + num + " units on " + selectedCountry.toString() + "\n";
+			gameLog += currentPlayer.getName() + " place " + num + " units on "
+					+ selectedCountry.toString() + "\n";
 		}
 		selectedCountry.setForcesVal(num);
 		currentPlayer.subtractFromAvailableTroops(num);
-	}//end placeArmies
-	
-	
+	}// end placeArmies
+
 	/*
 	 * Given the player's current decision, redeem or don't redeem cards
 	 */
-	public int redeemCards(){
+	public int redeemCards() {
 		ArrayList<Card> cards = currentPlayer.redeemCards();
-		
-		//If cards is null, the player didn't want to redeem anythign
+
+		// If cards is null, the player didn't want to redeem anythign
 		if (cards == null)
 			return 0;
-		
-		//If we're here, we're redeeming
+
+		// If we're here, we're redeeming
 		numRedemptions++;
 		int numArmies = 0;
-		
+
 		switch (numRedemptions) {
 		case 1:
 			numArmies = 4;
@@ -452,143 +528,168 @@ public class TheGame implements Serializable{
 		default:
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
-		}//end switch case
-		
-		
+		}// end switch case
+
 		return numArmies;
-	}//end redeemCards
-	
-	
-	public String attack(Country attackFrom, Country selectedCountry2,
-			int numArmies) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
-	
+	}// end redeemCards
+
+	public String attack(int numArmies) {
+		gameLog+=moveFrom.getOccupier().getName() + " attacked " + moveTo.getName() + " with " + numArmies + " units.\n";
+		
+		String result = "";
+		if (numArmies <= moveTo.getForcesVal()) {
+			// theirs.setForcesVal(numArmies);
+			moveFrom.removeUnits(numArmies); // you lose the armies fought with
+			result+=moveFrom.getOccupier().getName() + " lost the battle.\n";
+		} else if (moveTo.getForcesVal() < numArmies) {
+			result += moveFrom.getOccupier().getName() + " defeated " + moveTo.getOccupier().getName() + " and took " + moveTo.getName() + ".\n";
+			countriesBefore = getCurrentPlayer().getCountries().size();
+			moveTo.getOccupier().loseCountry(moveTo);
+			moveTo.removeUnits(moveTo.getForcesVal());
+			moveTo.setForcesVal(numArmies);
+			moveTo.setOccupier(moveFrom.getOccupier());
+			moveFrom.getOccupier().occupyCountry(moveTo);
+			moveFrom.removeUnits(numArmies); 
+			countriesAfter = getCurrentPlayer().getCountries().size();
+			// players.get(playerLocation).addCard(deck.deal());
+		}//end else if
+		clearSelections();
+		gameLog+=result;
+		return result;
+	}//end attack
+
 	/**********************************************************************************
-	***************************Shuffling Armies in Countries***************************
-	**********************************************************************************/
+	 *************************** Shuffling Armies in Countries***************************
+	 **********************************************************************************/
 	// Main idea: player chooses which cards to redeem (max of 3)
-		// if player has 5 cards, he MUST have a match, so call this function until
-		// the player chooses the matching 3 cards
+	// if player has 5 cards, he MUST have a match, so call this function until
+	// the player chooses the matching 3 cards
 
-		// pops up a pane to ask how many units to move, which returns a string
-		// it then tries to parse that string into an int, and if it does compares
-		// it to the total
-		// number of units on a country. If it is larger, or equal to the total
-		// number, throws an error, otherwise returns that number
-		// to the gui
-		public int getUnitsToMove(Country countryToRemoveUnits) {
-			boolean moveFlag = false, continueFlag = false;
-			int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
-			;
-			String unitsToMove = "";
+	// pops up a pane to ask how many units to move, which returns a string
+	// it then tries to parse that string into an int, and if it does compares
+	// it to the total
+	// number of units on a country. If it is larger, or equal to the total
+	// number, throws an error, otherwise returns that number
+	// to the gui
+	public int getUnitsToMove(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		;
+		String unitsToMove = "";
 
-			while (!moveFlag) {
-				unitsToMove = JOptionPane.showInputDialog("How Many armies? You must leave 1.");
-				try {
-					unitsToReturn = Integer.parseInt(unitsToMove);
-					continueFlag = true;
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (continueFlag) {
-					if (unitsToReturn >= totalUnits) {
-						JOptionPane.showMessageDialog(null, "You must leave 1 army.", "Error", JOptionPane.ERROR_MESSAGE);
-					} else {
-						// theGame.getSelectedCountry().removeUnits(unitsToReturn);
-						moveFlag = true;
-					}
+		while (!moveFlag) {
+			unitsToMove = JOptionPane
+					.showInputDialog("How Many armies? You must leave 1.");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn >= totalUnits) {
+					JOptionPane.showMessageDialog(null,
+							"You must leave 1 army.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
 				}
 			}
-			return unitsToReturn;
+		}
+		return unitsToReturn;
 
-		}// end unitsToReturn
+	}// end unitsToReturn
 
-		public int getArmiesToAttack(Country countryToRemoveUnits) {
-			boolean moveFlag = false, continueFlag = false;
-			int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
-			String unitsToMove = "";
+	public int getArmiesToAttack(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		String unitsToMove = "";
 
-			while (!moveFlag) {
-				unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
-				try {
-					unitsToReturn = Integer.parseInt(unitsToMove);
-					continueFlag = true;
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (continueFlag) {
-					if (unitsToReturn >= totalUnits || unitsToReturn < 0) {
-						JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
-					} else {
-						// theGame.getSelectedCountry().removeUnits(unitsToReturn);
-						moveFlag = true;
-					}
+		while (!moveFlag) {
+			unitsToMove = JOptionPane
+					.showInputDialog("How many armies do you want to attack with?");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn >= totalUnits || unitsToReturn < 0) {
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
 				}
 			}
-			return unitsToReturn;
+		}
+		return unitsToReturn;
 
-		}// end getArmiesToAttack
+	}// end getArmiesToAttack
 
-		public boolean moveUnitsToCountry(int numUnits, Country fromCountry, Country toCountry, Player current) {
+	public boolean moveUnitsToCountry(int numUnits, Country fromCountry,
+			Country toCountry, Player current) {
 
-			boolean result = false;
-			ArrayList<Country> visited = new ArrayList<Country>();
-			visited.add(fromCountry);
-			findPath(fromCountry, visited, toCountry, current);
-			if (canPlace) {
-				toCountry.setForcesVal(numUnits);
-				fromCountry.removeUnits(numUnits);
-				result = true;
-			}
-			canPlace = false;
-			return result;
-		}// end moveUnitsToCountry
+		boolean result = false;
+		ArrayList<Country> visited = new ArrayList<Country>();
+		visited.add(fromCountry);
+		findPath(fromCountry, visited, toCountry, current);
+		if (canPlace) {
+			toCountry.setForcesVal(numUnits);
+			fromCountry.removeUnits(numUnits);
+			result = true;
+		}
+		canPlace = false;
+		return result;
+	}// end moveUnitsToCountry
 
-		private void findPath(Country fromCountry, ArrayList<Country> visited, Country toCountry, Player currentP) {
-			if (canPlace)
-				return;
-			ArrayList<Country> countries = visited.get(visited.size() - 1).getNeighbors();
-			for (Country c : countries) {
-				if (!(c.getOccupier().equals(currentP)))
-					continue;
-				if (visited.contains(c))
-					continue;
-				if (c.equals(toCountry)) {
-					visited.add(c);
-					canPlace = true;
-					printPath(visited);
-					visited.remove(visited.size() - 1);
-					break;
-				}
-			}
-			for (Country c : countries) {
-				if (!(c.getOccupier().equals(currentP)))
-					continue;
-				if (visited.contains(c) || c.equals(toCountry)) {
-					continue;
-				}
+	private void findPath(Country fromCountry, ArrayList<Country> visited,
+			Country toCountry, Player currentP) {
+		if (canPlace)
+			return;
+		ArrayList<Country> countries = visited.get(visited.size() - 1)
+				.getNeighbors();
+		for (Country c : countries) {
+			if (!(c.getOccupier().equals(currentP)))
+				continue;
+			if (visited.contains(c))
+				continue;
+			if (c.equals(toCountry)) {
 				visited.add(c);
-				findPath(fromCountry, visited, toCountry, currentP);
+				canPlace = true;
+				printPath(visited);
 				visited.remove(visited.size() - 1);
-
+				break;
 			}
-		}// end findPath
-
-		private void printPath(ArrayList<Country> visited) {
-			for (Country node : visited) {
-				System.out.print(node);
-				System.out.print(" ");
+		}
+		for (Country c : countries) {
+			if (!(c.getOccupier().equals(currentP)))
+				continue;
+			if (visited.contains(c) || c.equals(toCountry)) {
+				continue;
 			}
-			System.out.println();
-		}// end printPath
+			visited.add(c);
+			findPath(fromCountry, visited, toCountry, currentP);
+			visited.remove(visited.size() - 1);
+
+		}
+	}// end findPath
+
+	private void printPath(ArrayList<Country> visited) {
+		for (Country node : visited) {
+			System.out.print(node);
+			System.out.print(" ");
+		}
+		System.out.println();
+	}// end printPath
 
 	/**********************************************************************************
-	***************************The Getters and the Setters*****************************
-	**********************************************************************************/
+	 *************************** The Getters and the Setters*****************************
+	 **********************************************************************************/
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
@@ -633,32 +734,87 @@ public class TheGame implements Serializable{
 		return gameLog;
 	}
 
-	public void setGameLog(String gameLog) {
-		this.gameLog = gameLog;
+	public Country getMoveFrom() {
+		return moveFrom;
+	}
+
+	public void setMoveFrom() {
+		this.moveFrom = selectedCountry;
+	}
+
+	public Country getMoveTo() {
+		return moveTo;
+	}
+
+	public void setMoveTo() {
+		this.moveTo = selectedCountry;
 	}
 
 	public String getPhase() {
-		// TODO Auto-generated method stub
-		return "TBD";
+		if (isPlacePhase())
+			return "Place Phase";
+		else if (isDeployPhase())
+			return "Deploy Phase";
+		else if (isReinforcePhase())
+			return "Reinforce Phase";
+		else if (isAttackPhase())
+			return "Attack Phase";
+		else if (isRedeemCardPhase())
+			return "Card Redemption Phase";
+		return null;
 	}
 
 	public Map getMap() {
 		return getGameMap();
 	}
+	
+	public boolean playerIsOwner(){
+		return currentPlayer.equals(selectedCountry.getOccupier());
+	}//end playerIsOwner
 
 	public void skipAttackPhase() {
-		// TODO Auto-generated method stub
-		
-	}
+		clearSelections();
+		if (countriesBefore < countriesAfter) {
+			currentPlayer.addCard(deck.deal());
+			gameLog += currentPlayer.getName() + " earned a new card.\n";
+		}// end if
+		countriesBefore = 0;
+		countriesAfter = 0;
+	//	nextPhase();
+		play();
+	}// end skipAttackPhase
 
 	public boolean skipCardRedemption() {
-		return !currentPlayer.mustRedeemCards();
-	}
+		if (!currentPlayer.mustRedeemCards()) {
+			nextPhase();
+			return true;
+		}// end if
+		else {
+			return false;
+		}// end else
+	}// end skipCardRedemption
 
 	public int getNumRedemptions() {
 		return numRedemptions;
 	}
 
+	public void passReinforcementPhase() {
+		clearSelections();
+	//	nextPhase();
+	//	nextPlayer();
+		play();
+	}// end passReinforce
+	
+	
+	public void clearSelections(){
+		moveFrom = null;
+		moveTo = null;
+		selectedCountry = null;
+	}//end clearSelections
 
+	public boolean transferTroops(int numArmies) {
+		canPlace = false;
+		return moveUnitsToCountry(numArmies, moveFrom, moveTo, currentPlayer);
+	}//end transferTroops
 
 }// end theGame

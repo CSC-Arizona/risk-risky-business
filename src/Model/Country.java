@@ -158,5 +158,9 @@ public class Country extends Observable implements Serializable{
 		forcesVal -= numOfUnitsToMove;
 
 	}// end removeUnits
+	
+	public boolean isMyNeighbor (Country other){
+		return neighbors.contains(other);
+	}//end isMyNeighbor
 
 }// end countryClasss

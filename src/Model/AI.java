@@ -73,7 +73,21 @@ public class AI extends Player {
 		while (i < getCountries().size()) {
 			j = 0;
 			while (j < neighbors.size()) {
-				if (neighbors.get(j).getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
+				if (neighbors.get(j) == null){
+					System.out.println("null neighbor at " + j);
+				}
+				else if (neighbors.get(j).getOccupier() == null){
+					System.out.println(neighbors.get(j).getName() +" had a null occupier");
+				}
+				else if (neighbors.get(j).getOccupier().getFaction() == null){
+					System.out.println(neighbors.get(j).getOccupier().getName() +" had a null faction");
+				}
+				else if (this.getFaction()==null){
+					System.out.println(this.getName() + " had a null faction.");
+				}
+				//Something in the earlier version of this if statement threw a
+				//null pointer exception - hence the if statemens above
+				if (!this.equals(neighbors.get(j).getOccupier())) {
 					fringeCountries.add(getCountries().get(i));
 					j = neighbors.size();
 				}
@@ -130,7 +144,7 @@ public class AI extends Player {
 
 		// change this for dice roll later, but for now, just take over
 		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
-			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName();
+			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName() + ".\n";
 			int oldForces = attacking.getForcesVal();
 			attacking.getOccupier().loseCountry(attacking);
 			attacking.removeUnits(oldForces);
@@ -140,7 +154,7 @@ public class AI extends Player {
 			System.out.println(this.getName() + " took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			return str;
-		}
+		}//
 
 		/*
 		 * for when dice roll exists
@@ -236,7 +250,9 @@ public class AI extends Player {
 		ArrayList<Country> countries = new ArrayList<>();
 		Random rand = new Random();
 		int randNum = 0;
-		while (getAvailableTroops() > 0) {
+		int i=0;
+		while (getAvailableTroops() > i) {
+			i++;
 			randNum = rand.nextInt(getCountries().size());
 			countries.add(getCountries().get(randNum));
 		}
@@ -270,7 +286,8 @@ public class AI extends Player {
 	// starts at first country, checks if it is surrounded by friendlies, if it
 	// is
 	// moves all of its units except for one to its neighbors
-	public void reinforce() {
+	public String reinforce() {
+		String str = "";
 
 		int surroundCounter = 0;
 		if (myStrat == AIStrat.HARD) {
@@ -288,6 +305,7 @@ public class AI extends Player {
 						for (Country neighbor : neighbors) {
 							country.removeUnits(1);
 							neighbor.setForcesVal(1);
+							str += this.getName() + " removed 1 unit from " + country.getName() + " and moved it to " + neighbor.getName() + ".\n";
 							if (country.getForcesVal() == 1)
 								break;
 						}
@@ -296,7 +314,7 @@ public class AI extends Player {
 				}
 			}
 		}
-
+		return str;
 	}// end reinforce
 		// moves units to other countries if it has more than 2 units occupying
 
