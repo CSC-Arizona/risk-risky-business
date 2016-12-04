@@ -531,34 +531,42 @@ public class Game implements Serializable{
 		//Update the gameLog
 //		gameLog+=yours.getOccupier().getName() + " attacked " + theirs.getName() + " with " + numArmies + " units.\n";
 		int enemyDice = 0;
-		if(theirs.getForcesVal() >= 2)
+		if(theirs.getOccupier() instanceof HumanPlayer)
 		{
-			enemyDice = 2;
+			//prompt player for how many dice to throw
 		}
-		else
-			enemyDice = 1;
+		else	
+			if(theirs.getForcesVal() >= 2)
+			{
+				enemyDice = 2;
+			}
+			else
+				enemyDice = 1;
 		
 		ArrayList<Dice> attackingDice = die.roll(numDice);
 		ArrayList<Dice> defendingDice = die.roll(enemyDice);
 		
 		for(int i = 0; i < defendingDice.size(); i++)
 		{
-			if(yours.getForcesVal() == 1)
-			{
-				break;
-			}
-			else if(theirs.getForcesVal() <=0)
-			{
-				winFlag = true;
-				break;
-			}
+			
 			
 			if(attackingDice.get(i).getValue() > defendingDice.get(i).getValue())
 			{
 				theirs.removeUnits(1);
+				if(theirs.getForcesVal() == 0)
+				{	winFlag = true;
+					break;
+				
+				}
+				
 			}
-			else
+			else{
 				yours.removeUnits(1);
+				if(yours.getForcesVal() == 1){
+					winFlag = false;
+					break;
+				}
+			}
 		}
 		
 				

@@ -111,7 +111,7 @@ public class riskGUI extends JFrame {
 	private JPanel splashInfo = new JPanel();
 	private Font gotFontHeader;
 	private Font gotFontBody;
-
+	private Boolean maxDice = true;
 	private String gameType;
 	private Player nextPlayer, currPlayer;
 	private int humans;
@@ -676,6 +676,15 @@ public class riskGUI extends JFrame {
 		JMenuItem musicStatus = new JMenuItem(music);
 		musicStatus.addActionListener(new musicListener());
 		settings.add(musicStatus);
+		JMenu maxDice = new JMenu("Defualt Dice");
+		JMenuItem setMax = new JMenuItem("Always Max");
+		setMax.addActionListener(new HelpListener());
+		setMax.setActionCommand("max");
+		maxDice.add(setMax);
+		JMenuItem prompt = new JMenuItem("Prompt user");
+		prompt.setActionCommand("prompt");
+		maxDice.add(prompt);
+		settings.add(maxDice);
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
 		menu.add(file);
@@ -1569,11 +1578,18 @@ public class riskGUI extends JFrame {
 				ep.addHyperlinkListener(new LinkClickListener(rules));
 				JOptionPane.showMessageDialog(null, ep);
 
-			} else
+			} else if(e.getActionCommand().compareTo("about") == 0){
 				JOptionPane.showMessageDialog(riskGUI.this,
 						"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
 								+ "\nCreated for our CS335 class as our final project.",
 						"About", JOptionPane.INFORMATION_MESSAGE);
+			}
+			else if(e.getActionCommand().compareTo("max") == 0)
+			{
+				maxDice = true;
+			}
+			else if(e.getActionCommand().compareTo("prompt") == 0)
+				maxDice = false;
 		}// actionPerformed
 	}// end helpListener
 
