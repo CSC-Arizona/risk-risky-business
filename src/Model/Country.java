@@ -2,6 +2,7 @@ package Model;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -13,7 +14,7 @@ import javax.swing.JButton;
  * 	Purpose:	Represent a single country
  */
 
-public class Country extends Observable {
+public class Country extends Observable implements Serializable{
 
 	private String name;
 	private double x;

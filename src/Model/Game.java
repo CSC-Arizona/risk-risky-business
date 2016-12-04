@@ -1,12 +1,14 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.JOptionPane;
 
-public class Game {
+public class Game implements Serializable{
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
@@ -19,6 +21,8 @@ public class Game {
 	private boolean canPlace, tournamentMode;
 	private int countriesBefore;
 	private int countriesAfter;
+	private String gameLog;
+	public static final String FILE_NAME = "game.ser";
 
 	private Game(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		humans = numOfHumanPlayers;
@@ -60,7 +64,7 @@ public class Game {
 		gameMap = Map.getInstance(0);
 		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
-		deck=deck.newDeck();
+		deck = deck.newDeck();
 		// deck.shuffle();
 		players = new ArrayList<>();
 		addHumanPlayers(humans);
@@ -92,8 +96,7 @@ public class Game {
 		for (Country country : gameMap.getCountries()) {
 			if (country.getMyButton() != null)
 				country.getMyButton().setEnabled(true);
-		}
-
+		}//end for
 	}// end turnOnCountryButtons
 
 	public void setPlayers(ArrayList<Player> thePlayers) {
@@ -107,6 +110,7 @@ public class Game {
 	public void incrementNumRedemptions() {
 		numRedemptions++;
 	}// end incrementNumRedemptions
+	
 
 	/*
 	 * Shuffles the players so they're not always in the same old boring order.
@@ -166,7 +170,7 @@ public class Game {
 					placePhase = false;
 					reinforcePhase = true;
 				} // end if
-
+				gameLog+=players.get(playerLocation).getName() + " claimed" + countryToPlace.toString() +"\n";
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
 				System.out.println("Army placed at : " + countryToPlace.toString());
@@ -185,9 +189,9 @@ public class Game {
 				if (players.get(playerLocation).getAvailableTroops() == 0) {
 					deployPhase = false;
 					attackPhase = true;
-				}
-
-			}
+				}//end if
+				gameLog+=players.get(playerLocation) + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
+			}//end if
 		} else if (players.get(playerLocation).getAvailableTroops() > 0)
 		// place remaining armies
 		{
@@ -197,9 +201,10 @@ public class Game {
 			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
 				countryToPlace.setForcesVal(numToPlace);
 				armiesPlaced++;
+				gameLog+="Reinforced " + countryToPlace + " " + armiesPlaced+"\n";
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
-
+				gameLog+=players.get(playerLocation) + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
 			} else
 				System.out.println("You don't occupy this country");
 
@@ -254,11 +259,13 @@ public class Game {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
-
+		
+		gameLog+= "\nNext player's turn: " + getCurrentPlayer().getName() + "\n";
 		// If it's the play phase, apply any continent bonuses
 		if (isPlayPhase()) {
 			players.get(playerLocation).addAvailableTroops(gameMap.getContinentBonuses(getCurrentPlayer()));
 			System.out.println("Continent bonus applied:" + gameMap.getContinentBonuses(getCurrentPlayer()));
+			gameLog+="Continent bonus applied: " + gameMap.getContinentBonuses(getCurrentPlayer()) + "\n";
 		}
 
 		if (players.get(playerLocation) instanceof AI) {
@@ -303,9 +310,10 @@ public class Game {
 				deployPhase = false;
 				attackPhase = true;
 			} else if (isPlayPhase() && isAttackPhase()) {
-				boolean finishedAttacking = false;
+				String finishedAttacking = "";
 				int aiCountries = players.get(playerLocation).getCountries().size();
-				while (!finishedAttacking) {
+				while (finishedAttacking != null) {
+					gameLog += finishedAttacking+"\n";
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
 //	TODO uncomment these lines when cardRedemption is finished
@@ -518,18 +526,23 @@ public class Game {
 	}// end getPhase
 
 	public String attack(Country yours, Country theirs, int numArmies) {
+		//Update the gameLog
+		gameLog+=yours.getOccupier().getName() + " attacked " + theirs.getName() + " with " + numArmies + " units.\n";
+		
 		String result = "";
 		if (numArmies <= theirs.getForcesVal()) {
 			// theirs.setForcesVal(numArmies);
 			yours.removeUnits(numArmies); // you lose the armies fought with
+			gameLog+=yours.getOccupier().getName() + " lost the battle.\n";
 		} else if (theirs.getForcesVal() < numArmies) {
+			gameLog += yours.getOccupier().getName() + " defeated " + theirs.getOccupier().getName() + " and took " + theirs.getName() + ".\n";
 			countriesBefore = getCurrentPlayer().getCountries().size();
 			theirs.getOccupier().loseCountry(theirs);
 			theirs.removeUnits(theirs.getForcesVal());
 			theirs.setForcesVal(numArmies);
 			theirs.setOccupier(yours.getOccupier());
 			yours.getOccupier().occupyCountry(theirs);
-			yours.removeUnits(numArmies);
+			yours.removeUnits(numArmies); 
 			result = yours.toString();
 			countriesAfter = getCurrentPlayer().getCountries().size();
 			// players.get(playerLocation).addCard(deck.deal());
@@ -542,8 +555,11 @@ public class Game {
 	}// end isAttackPhase
 
 	public void skipAttackPhase() {
-		if (countriesBefore < countriesAfter)
+		if (countriesBefore < countriesAfter){
 			getCurrentPlayer().addCard(deck.deal());
+			gameLog+= getCurrentPlayer().getName() + " earned a new card.\n";
+		}
+			
 		attackPhase = false;
 		reinforcePhase = true;
 		countriesBefore = 0;
@@ -583,17 +599,19 @@ public class Game {
 		ArrayList<Integer> playersToRemoveLocations = new ArrayList<>();
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-				System.out.println(player.getName() + " has been defeated.");
+				System.out.println(player.getName() + " has been wiped off the map.");
+				gameLog+=player.getName() + " has been wiped off the map.\n";
 				playersToRemove.add(player);
 				playersToRemoveLocations.add(players.indexOf(player));
 			}
 
 		}
-		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
+		ArrayList<Card> cardsToAddToDiscard = new ArrayList<Card>();
 		for (Player player : playersToRemove) {
 			cardsToAddToDiscard.addAll(player.discardCards());
 		}
-		deck.addToDiscardPile(cardsToAddToDiscard);
+		if(cardsToAddToDiscard.size()>0)
+			deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
 		for(Integer removedPlayersLoc : playersToRemoveLocations)
@@ -608,5 +626,13 @@ public class Game {
 
 	public Deck getDeck() {
 		return deck;
+	}
+
+	public Map getMap() {
+		return gameMap;
+	}
+
+	public String getGameLog() {
+		return gameLog;
 	}
 }// end GameClasss

@@ -2,9 +2,10 @@ package Model;
 
 import gui.riskGUI;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Map {
+public class Map implements Serializable{
 
 	private Country countries[] = new Country[50];
 	private Continent blue;
@@ -69,6 +70,20 @@ public class Map {
 		
 		return totalBonus;
 	}//end getContinentBonuses
+	
+	
+	public String[] getContinentOwnersAsStrings(){
+		String[] allStrings = new String[6];
+		
+		allStrings[0] = blue.toString();
+		allStrings[1] = green.toString();
+		allStrings[2] = pink.toString();
+		allStrings[3] = red.toString();
+		allStrings[4] = black.toString();
+		allStrings[5] = yellow.toString();
+		
+		return allStrings;
+	}
 	
 	
 	

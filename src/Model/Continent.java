@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  BLUE, GREEN, ORANGE, PINK, RED, YELLOW, BLACK;
  }*/
 
-public class Continent {
+public class Continent implements Serializable{
 
 	private Player owner;
 	private ArrayList<Country> myCountries;
@@ -19,6 +20,7 @@ public class Continent {
 	private String name;
 
 	public Continent() {
+		this.name = "";
 		owner = null;
 		myCountries = new ArrayList<Country>();
 		ownerBonus = 0;
@@ -47,23 +49,29 @@ public class Continent {
 	public Player findOwner() {
 		Player owner = myCountries.get(0).getOccupier();
 		int i = 1;
+		
+		if (owner == null)
+			return null;
 
 		while (i < myCountries.size()) {
 			if (!owner.equals(myCountries.get(i).getOccupier()))
 				return null;
 			i++;
 		}
+		this.owner = owner;
 		return owner;
 	}// end findOwner
 
 	public String toString() {
+		findOwner();
 		String str = "";
 
-		str += name;
-
-		for (Country c : myCountries) {
-			str += "\n\t" + c.getName();
-		}
+		str += name + " is held by ";
+		
+		if (owner != null)
+			str += owner.getName();
+		else
+			str += "no one.";
 
 		return str;
 	}// end toString

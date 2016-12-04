@@ -1,11 +1,12 @@
 package Model;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-public class Card {
+public class Card implements Serializable{
 	private String country;
 	private String unit;
 	private String filename;
@@ -20,6 +21,10 @@ public class Card {
 
 	public Image getMyImage() {
 		return myImage.getImage();
+	}
+	
+	public ImageIcon getMyImageIcon(){
+		return myImage;
 	}
 
 	private String findMyFileName() {
