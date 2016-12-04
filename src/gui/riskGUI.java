@@ -127,6 +127,7 @@ public class riskGUI extends JFrame {
 	private Country attackFrom, attack;
 	private int numOfArmies = 0;
 	private boolean musicOn = true;
+	private boolean useMaxDice = true;
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
@@ -1761,9 +1762,16 @@ public class riskGUI extends JFrame {
 					if (theGame.getSelectedCountry().getForcesVal() > 1) {
 						theGame.setMoveFrom();
 						if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
-							System.out.println(theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom()));
+							
+							
+							
+							
 							int numArmies = getArmiesToUse(theGame.getMoveFrom());
 							theGame.attack(numArmies);
+						
+						
+						
+						
 						} // end if
 						else {
 							JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
@@ -1791,9 +1799,22 @@ public class riskGUI extends JFrame {
 					theGame.setMoveTo();
 
 					if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
+						
+						int numAttackDice = getNumAttackDice();
+						int numDefenseDice = getNumDefenseDice();
+						
+						
 						int numArmies = getArmiesToUse(theGame.getMoveFrom());
 						theGame.attack(numArmies);
+					
+					
+					
+					
 					} // end if
+					
+					
+					
+					
 					else {
 						JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
 								JOptionPane.ERROR_MESSAGE);
@@ -1808,7 +1829,108 @@ public class riskGUI extends JFrame {
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
 		}// end actionPerformed
+		
+		
 	}// end AttackListener
+	
+	public int getNumAttackDice(){
+		int forces = theGame.getMoveFrom().getForcesVal();
+		if (useMaxDice){
+			if (forces >3){
+				return 3;
+			}//end if
+			else if (forces > 2){
+				return 2;
+			}//end else if
+			else {
+				return 1;
+			}//end else
+		}
+		else {
+			int diceAllowed = 0;
+			if (forces >3){
+				diceAllowed = 3;
+			}//end if
+			else if (forces > 2){
+				diceAllowed =  2;
+			}//end else if
+			else {
+				return 1;
+			}//end else
+			int diceToUse = -1;
+			
+			while (diceToUse == -1){
+				String sNumDice = JOptionPane.showInputDialog(
+						"How many dice would you like to throw? You can throw up to " +
+						diceAllowed);
+				
+				
+				
+				try {
+					diceToUse = Integer.parseInt(sNumDice);
+				} catch (NumberFormatException e){
+					JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+					continue;
+				}//end catch
+				
+				if (diceToUse > diceAllowed || diceToUse < 0){
+					diceToUse = -1;
+					JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+				}//end if
+			}//end while
+
+			return diceToUse;
+			
+		}
+	}//end getNumAttackDice
+	
+	public int getNumDefenseDice(){
+		int forces = theGame.getMoveTo().getForcesVal();
+		if (useMaxDice){
+			if (forces > 1)
+				return 2;
+			else
+				return 1;
+		}//end if
+		else {
+			int diceAllowed = 0;
+			if (forces > 1){
+				diceAllowed =  2;
+			}//end else if
+			else {
+				return 1;
+			}//end else
+			
+			if (theGame.getMoveTo().getOccupier() instanceof HumanPlayer){
+				int diceToUse = -1;
+				
+				while (diceToUse == -1){
+					String sNumDice = JOptionPane.showInputDialog(
+							"How many dice would you like to throw? You can throw up to " +
+							diceAllowed);
+					
+					
+					
+					try {
+						diceToUse = Integer.parseInt(sNumDice);
+					} catch (NumberFormatException e){
+						JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+						continue;
+					}//end catch
+					
+					if (diceToUse > diceAllowed || diceToUse < 0){
+						diceToUse = -1;
+						JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+					}//end if
+				}//end while
+
+				return diceToUse;
+			}//end if
+			return ((AI)theGame.getMoveTo().getOccupier()).chooseMyDiceToRoll(diceAllowed);
+		}//end else
+	}//end getNumDefenseDice
+	
+	
 	// private boolean firstAttackPast = false, continueFlag = false;
 	// int diceAllowed = 0, actualNumDice = 0;
 	//

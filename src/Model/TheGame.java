@@ -296,6 +296,7 @@ public class TheGame implements Serializable {
 		// Then, continue as long as an AI is playing
 		while (currentPlayer instanceof AI) {
 			aiTurn();
+			System.out.println(getPhase());
 		}// end while
 	}// end play
 
@@ -355,7 +356,7 @@ public class TheGame implements Serializable {
 			
 			//If the AI decided to finish attacking
 			if (((AI)currentPlayer).finishedAttacking())
-				this.skipAttackPhase();
+				this.skipAttackPhaseAI();
 		}// end else if
 
 		// during official reinforcement
@@ -815,10 +816,13 @@ public class TheGame implements Serializable {
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
 			cardEarned = false;
 		}// end if
-		play();
-		
 		return tmp;
 	}// end skipAttackPhase
+	
+	public void skipAttackPhaseAI(){
+		skipAttackPhase();
+		nextPhase();
+	}//end skipA
 
 	public boolean skipCardRedemption() {
 		if (!currentPlayer.mustRedeemCards()) {
