@@ -700,7 +700,7 @@ public class riskGUI extends JFrame {
 	}
 
 	private void setUpPassButton() {
-		JButton passButton = new JButton("Skip this Step");
+		JButton passButton = new JButton("Skip to the Next Phase");
 		passButton.addActionListener(new PassButtonListener());
 		passButton.setSize(4 * xWidth, 2 * yHeight);
 		passButton.setLocation(width - (int) (4.25 * xWidth), (int) (2.75 * yHeight));
