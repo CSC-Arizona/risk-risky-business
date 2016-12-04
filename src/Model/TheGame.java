@@ -816,6 +816,10 @@ public class TheGame implements Serializable {
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
 			cardEarned = false;
 		}// end if
+		
+		if (currentPlayer instanceof HumanPlayer)
+			play();
+		
 		return tmp;
 	}// end skipAttackPhase
 	
