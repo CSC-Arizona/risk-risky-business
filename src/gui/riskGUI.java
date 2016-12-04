@@ -1379,9 +1379,7 @@ public class riskGUI extends JFrame {
 
 				if (theGame.isRedeemCardPhase()) {
 					if (!theGame.isPlayPhase())
-					directions.setFont(gotFontHeader.d{
-						
-					}eriveFont(Font.BOLD, 18));
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 18));
 					directions.setText("Redeem your cards");
 					this.add(directions, BorderLayout.NORTH);
 					makePlayingCardPanel(g);

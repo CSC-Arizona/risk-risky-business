@@ -154,7 +154,7 @@ public class AI extends Player {
 			System.out.println(this.getName() + " took " + attacking.getName());
 			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
 			return str;
-		}//
+		}//end aiAttack
 
 		/*
 		 * for when dice roll exists

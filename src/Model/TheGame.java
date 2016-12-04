@@ -728,6 +728,7 @@ public class TheGame implements Serializable {
 
 	public void setSelectedCountry(Country selectedCountry) {
 		this.selectedCountry = selectedCountry;
+		selectedCountry = null;
 	}
 
 	public String getGameLog() {
@@ -740,6 +741,7 @@ public class TheGame implements Serializable {
 
 	public void setMoveFrom() {
 		this.moveFrom = selectedCountry;
+		selectedCountry = null;
 	}
 
 	public Country getMoveTo() {
