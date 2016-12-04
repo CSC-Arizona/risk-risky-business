@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import java.net.MalformedURLException;
@@ -61,6 +62,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -217,7 +219,21 @@ public class riskGUI extends JFrame {
 
 	private boolean setUpLoad() {
 		boolean error = false;
-		try {
+		JFileChooser choose = new JFileChooser();
+		choose.setCurrentDirectory(new File("./SavedGames"));
+		int get = choose.showOpenDialog(null);
+		if(get==JFileChooser.APPROVE_OPTION){
+			try{
+				ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(choose.getSelectedFile()));
+				theGame = (Game) inFile.readObject();
+				inFile.close();
+			}catch(Exception ex){
+				ex.printStackTrace();
+				error=true;
+			}
+		}
+		
+		/*try {
 			ObjectInputStream inFile = new ObjectInputStream(new FileInputStream("game.ser"));
 			theGame = (Game) inFile.readObject();
 			inFile.close();
@@ -252,7 +268,7 @@ public class riskGUI extends JFrame {
 		} catch (ClassNotFoundException e) {
 			error = true;
 			e.printStackTrace();
-		}
+		}*/
 		return error;
 
 	}
@@ -626,7 +642,20 @@ public class riskGUI extends JFrame {
 				if (confirm == JOptionPane.CANCEL_OPTION) {
 					System.out.println("CANCEL CLOSE");
 				} else if (confirm == JOptionPane.OK_OPTION) {
-					saveGame();
+					JFileChooser choose = new JFileChooser();
+					choose.setCurrentDirectory(new File("./SavedGames"));
+					int get = choose.showSaveDialog(null);
+					if(get==JFileChooser.APPROVE_OPTION){
+						try{
+							FileOutputStream gameToDisk = new FileOutputStream(choose.getSelectedFile() + ".ser");
+							ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
+							outFile.writeObject(theGame);
+							outFile.close();
+						}catch(Exception ex){
+							ex.printStackTrace();
+						}
+					}
+					//saveGame();
 					System.out.println("SAVE GAME");
 					System.exit(0);
 				} else if (confirm == JOptionPane.NO_OPTION) {
@@ -642,6 +671,9 @@ public class riskGUI extends JFrame {
 		JMenuItem newGame = new JMenuItem("New Game");
 		newGame.addActionListener(new NewGameListener());
 		file.add(newGame);
+		JMenuItem saveGame = new JMenuItem("Save Game");
+		saveGame.addActionListener(new saveGameListener());
+		file.add(saveGame);
 		JMenu settings = new JMenu("Settings");
 		String music = "";
 		if (musicOn)
@@ -1491,6 +1523,7 @@ public class riskGUI extends JFrame {
 	private class HelpListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().compareTo("rules") == 0) {
+
 				URL rules = null;
 				try {
 					rules = new URL("http://www.cs.arizona.edu/~mercer/Projects/335/Final/RiskRules.pdf");
@@ -1937,5 +1970,25 @@ public class riskGUI extends JFrame {
 			turnOffStatPanel();
 		}// end actionPerformed
 	}// end turned off listener
+	
+	private class saveGameListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			JFileChooser choose = new JFileChooser();
+			choose.setCurrentDirectory(new File("./SavedGames"));
+			int get = choose.showSaveDialog(null);
+			if(get==JFileChooser.APPROVE_OPTION){
+				try{
+					FileOutputStream gameToDisk = new FileOutputStream(choose.getSelectedFile() + ".ser");
+					ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
+					outFile.writeObject(theGame);
+					outFile.close();
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		}// end actionPerformed
+	}// end saveGame listener
 
 }// end GUI
