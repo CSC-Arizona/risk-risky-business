@@ -111,7 +111,7 @@ public class riskGUI extends JFrame {
 	private JPanel splashInfo = new JPanel();
 	private Font gotFontHeader;
 	private Font gotFontBody;
-	private Boolean maxDice = true;
+	private Boolean useMaxDice = true;
 	private String gameType;
 	private Player nextPlayer, currPlayer;
 	private int humans;
@@ -1586,10 +1586,10 @@ public class riskGUI extends JFrame {
 			}
 			else if(e.getActionCommand().compareTo("max") == 0)
 			{
-				maxDice = true;
+				useMaxDice = true;
 			}
 			else if(e.getActionCommand().compareTo("prompt") == 0)
-				maxDice = false;
+				useMaxDice = false;
 		}// actionPerformed
 	}// end helpListener
 
