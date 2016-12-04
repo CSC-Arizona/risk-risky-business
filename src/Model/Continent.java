@@ -18,7 +18,7 @@ public class Continent implements Serializable{
 	private ArrayList<Country> myCountries;
 	private int ownerBonus;
 	private String name;
-
+	private int numOfCountries = 0;
 	public Continent() {
 		this.name = "";
 		owner = null;
@@ -44,6 +44,7 @@ public class Continent implements Serializable{
 
 	public void addCountry(Country country) {
 		myCountries.add(country);
+		numOfCountries++;
 	}// end addCountry
 
 	public Player findOwner() {
@@ -75,5 +76,15 @@ public class Continent implements Serializable{
 
 		return str;
 	}// end toString
+	
+	public int getNumOfCountries()
+	{
+		return numOfCountries;
+	}
+	
+ 	public ArrayList<Country> getMyCountries()
+ 	{
+ 		return myCountries;
+ 	}
 
 }

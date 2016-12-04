@@ -11,6 +11,7 @@ public class AI extends Player implements Serializable{
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
+	private AIStrategy strategy;
 	private int timesIAttacked;
 	// private Game theGame;
 
@@ -18,6 +19,7 @@ public class AI extends Player implements Serializable{
 		super(numOfPlayers);
 		myStrat = strat;
 		timesIAttacked = 0;
+		strategy = new EasyAI(this);
 	}// end AI constructor
 
 	// get a random number between from 0 and 49
@@ -287,7 +289,6 @@ public class AI extends Player implements Serializable{
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
 				if (neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
-					if (country.getForcesVal() - 1 > neighboringCountry.getForcesVal())
 						countriesWorthAttacking.add(neighboringCountry);
 				} // end if
 			} // end for
@@ -532,5 +533,10 @@ public class AI extends Player implements Serializable{
 		}
 		return threeInfantry;
 	}// end findThreeInfantry
+	
+	public AIStrategy getStrategy()
+	{
+		return strategy;
+	}
 	
 }

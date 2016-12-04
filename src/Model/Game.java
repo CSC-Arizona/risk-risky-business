@@ -285,6 +285,7 @@ public class Game implements Serializable{
 				boolean placed = false;
 				while (!placed) {
 					placed = aiChoicePlacement();
+					
 				}
 				done = true;
 			} else if (isReinforcePhase() && !isPlayPhase()) {
@@ -332,7 +333,7 @@ public class Game implements Serializable{
 
 	// calls the ai's reinforce method
 	private void aiPlayReinforce() {
-		((AI) players.get(playerLocation)).reinforce();
+		((AI) this.getCurrentPlayer()).getStrategy().reinforce(this.getCurrentPlayer().getCountries());
 
 	}// end aiPlayReinforce
 
@@ -357,7 +358,7 @@ public class Game implements Serializable{
 	}
 
 	public boolean aiChoicePlacement() {
-		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		aiSelectedCountry = ((AI) players.get(playerLocation)).getStrategy().pickRandomCountry(this.getCurrentPlayer().getCountries());
 		if (checkIfCountryAvailable(aiSelectedCountry)) {
 
 			placeArmies(aiSelectedCountry, 1);

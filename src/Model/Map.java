@@ -17,6 +17,7 @@ public class Map implements Serializable{
 	private Continent red;
 	private Continent black;
 	private Continent yellow;
+	private static ArrayList<Continent> allContinents;
 	private static Map gameMap = null;
 
 	private Map(int i) {
@@ -28,6 +29,14 @@ public class Map implements Serializable{
 		black = new Continent(5, "Black");
 		yellow = new Continent(7, "Yellow");
 
+		allContinents = new ArrayList<>();
+		allContinents.add(blue);
+		allContinents.add(green);
+		allContinents.add(orange);
+		allContinents.add(pink);
+		allContinents.add(red);
+		allContinents.add(black);
+		allContinents.add(yellow);
 		if(i == 0)
 			fillCountries();
 		else
@@ -454,4 +463,7 @@ public class Map implements Serializable{
 	}
 
 
+	public static ArrayList<Continent> getAllContinents(){
+		return allContinents;
+	}
 }// end Map class
