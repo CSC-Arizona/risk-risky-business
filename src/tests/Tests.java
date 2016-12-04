@@ -78,7 +78,7 @@ public class Tests {
 	@Test
 	public void testDice() {
 		// 100% Coverage
-		Dice die = new Dice();
+		Dice die = new Dice(1);
 		assertEquals(die.getValue(), 0);
 		die.roll(1);
 		die.roll(3);
@@ -154,7 +154,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -174,7 +174,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -198,7 +198,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -222,7 +222,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);

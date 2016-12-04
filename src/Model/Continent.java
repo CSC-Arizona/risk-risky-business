@@ -1,10 +1,13 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Continent.java
+ * 	Purpose:	Continent class holds all information for each continent in risk game and tracks/pays bonuses.
+ */
+
 package Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-/*
-*/
 
 public class Continent implements Serializable{
 
@@ -12,13 +15,19 @@ public class Continent implements Serializable{
 	private ArrayList<Country> myCountries;
 	private int ownerBonus;
 	private String name;
-
-//	public Continent() {
-//		this.name = "";
-//		owner = null;
-//		myCountries = new ArrayList<Country>();
-//		ownerBonus = 0;
-//	}// end continent constructor #1
+	/*
+	 * Continent Constructors:
+	 * Continent()
+	 * purpose: sets name as empty string, owner as null, countries it contains to arrayList, and ownerbonus to 0.
+	 * Continent(ownerBonus, name)
+	 * purpose: sets name to given name and ownerBonus to given bonus value.
+	 */
+	public Continent() {
+		this.name = "";
+		owner = null;
+		myCountries = new ArrayList<Country>();
+		ownerBonus = 0;
+	}// end continent constructor #1
 
 	public Continent(int ownerBonus, String name) {
 		this.name = name;
@@ -29,6 +38,14 @@ public class Continent implements Serializable{
 
 	// returns 0 if the player is not the owner of this country,
 	// and returns the owner bonus otherwise
+	/*
+	 * payOwnerBonus()
+	 * parameters: Player play 
+	 * returns: int (0 or bonus value)
+	 * purpose: determines if current player gets a bonus for 
+	 * owning an entire continent and returns the bonus associated
+	 * with that continent. dependent on findOwner();
+	 */
 	public int payOwnerBonus(Player play) {
 		if (play.equals(findOwner()))
 			return ownerBonus;
@@ -36,10 +53,23 @@ public class Continent implements Serializable{
 			return 0;
 	}// end payOwnerbonus
 
+	/*
+	 * addCountry()
+	 * parameters: Country country
+	 * returns: none
+	 * purpose: adds the given country to the current continent's country array
+	 */
 	public void addCountry(Country country) {
 		myCountries.add(country);
 	}// end addCountry
 
+	/*
+	 * findOwner()
+	 * parameters: none
+	 * returns: Player or null
+	 * purpose: determines if all countries in myCountries are owned 
+	 * by the same player, if so, that player is returned.
+	 */
 	public Player findOwner() {
 		Player owner = myCountries.get(0).getOccupier();
 		int i = 1;
@@ -56,6 +86,9 @@ public class Continent implements Serializable{
 		return owner;
 	}// end findOwner
 
+	/*
+	 * Override Object's toString() method for continent
+	 */
 	public String toString() {
 		findOwner();
 		String str = "";

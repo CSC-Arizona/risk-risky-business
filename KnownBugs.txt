@@ -13,7 +13,7 @@ MAYBE FIXED//-After removing losing players, it seems that the ArrayList might r
 
 --TODO--
 1. fix attacking so that it works correctly -DONE
-2. implement saving/loading a game
+2. implement saving/loading a game - DONE
 3. fix GUI so that card trade button can only be pressed before deploy phase
 4. find a way for users to select cards to redeem
 5. force players to redeem cards if they have 5 cards

@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Card.java
+ * 	Purpose:	Card class holds all card information for risk game.
+ */
+
 package Model;
 
 import java.awt.Image;
@@ -12,6 +18,13 @@ public class Card implements Serializable{
 	private String filename;
 	private ImageIcon myImage;
 
+	/*
+	 * Card(): Constructor
+	 * parameters: String country
+	 * 			   String unit
+	 * returns: none
+	 * Sets up Card object with its country, unit, and ImageIcon based on its country.
+	 */
 	public Card(String country, String unit) {
 		this.country = country;
 		this.unit = unit;
@@ -19,18 +32,43 @@ public class Card implements Serializable{
 		myImage = new ImageIcon(filename);
 	}// end card constructor
 
+	/*
+	 * getMyImage()
+	 * parameters: none
+	 * returns: Image
+	 * calls getImage on the Card's myImage variable set in the constructor.
+	 */
 	public Image getMyImage() {
 		return myImage.getImage();
-	}
+	}//end getMyImage
 	
+	/*
+	 * getMyImageIcon
+	 * parameters: none
+	 * returns: ImageIcon
+	 * getter to return the imageIcon for the current card object
+	 */
 	public ImageIcon getMyImageIcon(){
 		return myImage;
-	}
+	}//end getMyImageIcon
 
+	/*
+	 * findMyFileName()
+	 * parameters: none
+	 * returns: String
+	 * returns the string filename for the current card object
+	 */
 	private String findMyFileName() {
 		return "RiskCards//" + removeWhiteSpace(country) + "Card.png";
 	}// end findMyFileName
 
+	/*
+	 * removeWhiteSpace()
+	 * parameters: none
+	 * returns: String
+	 * modifies the current country name to match the card filename equivalent.
+	 * Assists in matching the card objects with the card images on file.
+	 */
 	private String removeWhiteSpace(String orig) {
 		String str = "";
 		int i = 0;
@@ -51,9 +89,13 @@ public class Card implements Serializable{
 		return str;
 	}// removeWhiteSpace
 
+	/*
+	 * getFilename(); getCountry(); getUnits()
+	 * getters for the Card objects
+	 */
 	public String getFilename() {
 		return filename;
-	}
+	}//end getFilename
 
 	public String getCountry() {
 		return country;
@@ -63,6 +105,9 @@ public class Card implements Serializable{
 		return unit;
 	}// end getUnit
 	
+	/*
+	 * Override toString method for Card Objects
+	 */
 	public String toString(){
 		return country + ", " + unit;
 	}//end toString
