@@ -356,7 +356,7 @@ public class TheGame implements Serializable {
 			
 			//If the AI decided to finish attacking
 			if (((AI)currentPlayer).finishedAttacking())
-				this.skipAttackPhaseAI();
+				this.skipAttackPhase();
 		}// end else if
 
 		// during official reinforcement
@@ -543,7 +543,7 @@ public class TheGame implements Serializable {
 		
 		//attack won
 		if (wasAttackSuccessful(numArmies)){
-			result += currentPlayer.getName() + " defeated " + moveTo.getOccupier() + " and took " + moveTo.getName() + ".\n";
+			result += currentPlayer.getName() + " defeated " + moveTo.getOccupier().getName() + " and took " + moveTo.getName() + ".\n";
 			
 			//Resetting units
 			moveTo.setForcesToZero();
@@ -817,16 +817,14 @@ public class TheGame implements Serializable {
 			cardEarned = false;
 		}// end if
 		
-		if (currentPlayer instanceof HumanPlayer)
-			play();
-		
+		nextPhase();
 		return tmp;
 	}// end skipAttackPhase
 	
-	public void skipAttackPhaseAI(){
+	/*public void skipAttackPhaseAI(){
 		skipAttackPhase();
 		nextPhase();
-	}//end skipAI
+	}//end skipAI*/
 
 	public boolean skipCardRedemption() {
 		if (!currentPlayer.mustRedeemCards()) {
@@ -840,7 +838,7 @@ public class TheGame implements Serializable {
 
 	public int getNumRedemptions() {
 		return numRedemptions;
-	}
+	}//end getNumRedemptions
 
 	public void passReinforcementPhase() {
 		clearSelections();

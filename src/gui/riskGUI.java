@@ -1804,8 +1804,8 @@ public class riskGUI extends JFrame {
 						int numDefenseDice = getNumDefenseDice();
 						
 						
-				//		int numArmies = getArmiesToUse(theGame.getMoveFrom());
-				//		theGame.attack(numArmies);
+						int numArmies = getArmiesToUse(theGame.getMoveFrom());
+						theGame.attack(numArmies);
 					} // end if
 
 					else {
