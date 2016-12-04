@@ -2,6 +2,8 @@ package Model;
 
 import gui.riskGUI;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -50,7 +52,14 @@ public class Map implements Serializable{
 	}// end getInstance
 	
 
-	
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	    ois.defaultReadObject();
+	    gameMap = this;
+	}
+
+	private Object readResolve()  {
+	    return gameMap;
+	}
 
 	public Map newMap(){
 		gameMap=null;
