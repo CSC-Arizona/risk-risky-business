@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Dice.java
+ * 	Purpose:	Dice class "rolls" a number of dice given and returns an array of dice objects.
+ */
+
 package Model;
 
 import java.io.Serializable;

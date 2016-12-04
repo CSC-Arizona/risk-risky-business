@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		HumanPlayer.java
+ * 	Purpose:	HumanPlayer class extends player and contains control of human type players.
+ */
+
 package Model;
 
 import java.io.Serializable;

@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Player.java
+ * 	Purpose:	Abstract player class to control all player moves- both AI and Human- throughout the Risk game. 
+ */
+
 package Model;
 
 import java.io.Serializable;

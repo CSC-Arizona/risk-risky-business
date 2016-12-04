@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		AI.java
+ * 	Purpose:	AI class extends player and contains control of AI type players, both easy and hard.
+ */
+
 package Model;
 
 import java.awt.event.ActionListener;

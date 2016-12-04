@@ -4,21 +4,6 @@
  * 	Purpose:	GUI for visual implementation of RISK
  */
 
-/*
- * To-Dos for Iteration 3
- * 
- * Work on our wow factor - Jewell
- * Make card images - Jewell
- * Polish the GUI/Make sure everything is displayed - Abigail
- * Set up flags for state changes during game - Abigail
- * Adjust reinforcement phase adjustment - Abigail
- * Decide order of players based on dice roll - Abigail
- * Implement rules for army placement - Sydney
- * Write some sort of attack (can be hard coded for now) - Sydney
- * Change AIs during gameplay - Dylan
- * Write AI strategies - Dylan
- *
- */
 
 package gui;
 

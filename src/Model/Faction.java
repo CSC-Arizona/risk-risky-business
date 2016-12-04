@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Faction.java
+ * 	Purpose:	Faction Enum holds the name of the faction and its default name and sets/gets names. 
+ */
+
 package Model;
 
 import java.io.Serializable;
