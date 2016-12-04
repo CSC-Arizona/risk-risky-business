@@ -4,13 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
- * We had a better idea, but we'll change it later! Continents will eventually be objects
- */
-
-/*
- public enum Continent {
- BLUE, GREEN, ORANGE, PINK, RED, YELLOW, BLACK;
- }*/
+*/
 
 public class Continent implements Serializable{
 
@@ -19,12 +13,12 @@ public class Continent implements Serializable{
 	private int ownerBonus;
 	private String name;
 
-	public Continent() {
-		this.name = "";
-		owner = null;
-		myCountries = new ArrayList<Country>();
-		ownerBonus = 0;
-	}// end continent constructor #1
+//	public Continent() {
+//		this.name = "";
+//		owner = null;
+//		myCountries = new ArrayList<Country>();
+//		ownerBonus = 0;
+//	}// end continent constructor #1
 
 	public Continent(int ownerBonus, String name) {
 		this.name = name;

@@ -151,9 +151,9 @@ public class Game implements Serializable{
 			roundOfReinforcement();
 	}// end roundOfPlacement
 
-	public void roundOfReinforcement() {
+	public void roundOfReinforcement() { 
 		while (isReinforcePhase() && getCurrentPlayer() instanceof AI)
-			aiTurn();
+			aiTurn(); 
 	}
 
 	// this is called by the countryClickListener, and "places" an army in a
@@ -634,5 +634,13 @@ public class Game implements Serializable{
 
 	public String getGameLog() {
 		return gameLog;
+	}
+
+	public int getHit() {
+		//TODO: May be changed after dice rolls are implemented 
+		//return 0 = no hit
+		//return 1 = 1 hit, 1 miss
+		//return 2 = all hit
+		return 0;
 	}
 }// end GameClasss
