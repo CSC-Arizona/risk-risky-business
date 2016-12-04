@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		CardPanel.java
+ * 	Purpose:	CardPanel class sets up the card panel inside the stats panel for the risk gui.
+ */
+
 package gui;
 
 import java.awt.Graphics;

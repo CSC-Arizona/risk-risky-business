@@ -490,7 +490,7 @@ public class TheGame implements Serializable {
 			gameLog += currentPlayer.getName() + " place " + num + " units on "
 					+ selectedCountry.toString() + "\n";
 		}
-		selectedCountry.setForcesVal(num);
+		selectedCountry.addForcesVal(num);
 		currentPlayer.subtractFromAvailableTroops(num);
 	}// end placeArmies
 
@@ -547,7 +547,7 @@ public class TheGame implements Serializable {
 			
 			//Resetting units
 			moveTo.setForcesToZero();
-			moveTo.setForcesVal(numArmies);
+			moveTo.addForcesVal(numArmies);
 			moveFrom.removeUnits(numArmies);
 			
 			//Now, set the occupier of the new country to the attacker
@@ -673,7 +673,7 @@ public class TheGame implements Serializable {
 		visited.add(fromCountry);
 		findPath(fromCountry, visited, toCountry, current);
 		if (canPlace) {
-			toCountry.setForcesVal(numUnits);
+			toCountry.addForcesVal(numUnits);
 			fromCountry.removeUnits(numUnits);
 			result = true;
 		}

@@ -166,7 +166,7 @@ public class Game implements Serializable{
 			if (countryToPlace.getOccupier() == null) {
 				players.get(playerLocation).occupyCountry(countryToPlace);
 				countryToPlace.setOccupier(players.get(playerLocation));
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				armiesPlaced++;
 				if (armiesPlaced == 50) {
 					//placePhase = false;
@@ -188,7 +188,7 @@ public class Game implements Serializable{
 			System.out.println("I WAS AT B AT CRASH");
 			if (players.get(playerLocation).getAvailableTroops() > 0
 					&& countryToPlace.getOccupier().equals(players.get(playerLocation))) {
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
 				if (players.get(playerLocation).getAvailableTroops() == 0) {
 					//deployPhase = false;
@@ -205,7 +205,7 @@ public class Game implements Serializable{
 			// reinforcePhase = true;
 
 			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				armiesPlaced++;
 				gameLog+="Reinforced " + countryToPlace + " " + armiesPlaced+"\n";
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
@@ -467,7 +467,7 @@ public class Game implements Serializable{
 		visited.add(fromCountry);
 		findPath(fromCountry, visited, toCountry, current);
 		if (canPlace) {
-			toCountry.setForcesVal(numUnits);
+			toCountry.addForcesVal(numUnits);
 			fromCountry.removeUnits(numUnits);
 			result = true;
 		}
@@ -531,34 +531,42 @@ public class Game implements Serializable{
 		//Update the gameLog
 //		gameLog+=yours.getOccupier().getName() + " attacked " + theirs.getName() + " with " + numArmies + " units.\n";
 		int enemyDice = 0;
-		if(theirs.getForcesVal() >= 2)
+		if(theirs.getOccupier() instanceof HumanPlayer)
 		{
-			enemyDice = 2;
+			//prompt player for how many dice to throw
 		}
-		else
-			enemyDice = 1;
+		else	
+			if(theirs.getForcesVal() >= 2)
+			{
+				enemyDice = 2;
+			}
+			else
+				enemyDice = 1;
 		
 		ArrayList<Dice> attackingDice = die.roll(numDice);
 		ArrayList<Dice> defendingDice = die.roll(enemyDice);
 		
 		for(int i = 0; i < defendingDice.size(); i++)
 		{
-			if(yours.getForcesVal() == 1)
-			{
-				break;
-			}
-			else if(theirs.getForcesVal() <=0)
-			{
-				winFlag = true;
-				break;
-			}
+			
 			
 			if(attackingDice.get(i).getValue() > defendingDice.get(i).getValue())
 			{
 				theirs.removeUnits(1);
+				if(theirs.getForcesVal() == 0)
+				{	winFlag = true;
+					break;
+				
+				}
+				
 			}
-			else
+			else{
 				yours.removeUnits(1);
+				if(yours.getForcesVal() == 1){
+					winFlag = false;
+					break;
+				}
+			}
 		}
 		
 				

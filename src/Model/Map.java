@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Map.java
+ * 	Purpose:	Singleton Map class holds all country, neighbor, and continent information for the risk game.
+ */
+
 package Model;
 
 import gui.riskGUI;

@@ -1,3 +1,8 @@
+/*
+ * 	File:		AI.java
+ * 	Purpose:	AI class extends player and contains control of AI type players, both easy and hard.
+ */
+
 package Model;
 
 import java.awt.event.ActionListener;
@@ -156,7 +161,7 @@ public class AI extends Player implements Serializable{
 //			int oldForces = attacking.getForcesVal();
 //			attacking.getOccupier().loseCountry(attacking);
 //			attacking.removeUnits(oldForces);
-//			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
+//			attacking.addForcesVal(attackingFrom.getForcesVal() - 1);
 //			attacking.setOccupier(this);
 //			this.occupyCountry(attacking);
 //			System.out.println(this.getName() + " took " + attacking.getName());
@@ -325,7 +330,7 @@ public class AI extends Player implements Serializable{
 					while (country.getForcesVal() > 1) {
 						for (Country neighbor : neighbors) {
 							country.removeUnits(1);
-							neighbor.setForcesVal(1);
+							neighbor.addForcesVal(1);
 							str += this.getName() + " removed 1 unit from " + country.getName() + " and moved it to " + neighbor.getName() + ".\n";
 							if (country.getForcesVal() == 1)
 								break;
@@ -347,7 +352,7 @@ public class AI extends Player implements Serializable{
 					while (country.getForcesVal() > 2) {
 						for (Country neighbor : country.getNeighbors()) {
 							if (neighbor.getOccupier().equals(this)) {
-								neighbor.setForcesVal(1);
+								neighbor.addForcesVal(1);
 								country.removeUnits(1);
 							}
 							if (country.getForcesVal() == 2)
@@ -419,7 +424,7 @@ public class AI extends Player implements Serializable{
 //							added = true;
 //							int currentForces = t.getForcesVal();
 //							System.out.println("current Forces" + currentForces + t.getName());
-//							t.setForcesVal(2);
+//							t.addForcesVal(2);
 //							System.out.println("updated Forces" + t.getForcesVal() + t.getName());
 //							break; //can only redeem a country card for extra armies once per turn
 //						}

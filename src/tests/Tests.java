@@ -145,7 +145,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -176,7 +176,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -200,7 +200,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -224,7 +224,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
