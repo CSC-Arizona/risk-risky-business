@@ -34,6 +34,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -1276,6 +1278,8 @@ public class riskGUI extends JFrame {
 						Image.SCALE_DEFAULT));
 
 				checkBox = new JCheckBox(ic);
+				checkBox.setActionCommand("" + i);
+				checkBox.setSelected(false);
 				/*
 				 * Image im = currCards.get(i).getMyImage(); JPanel oneCard =
 				 * new CardPanel(im, xWidth, yHeight); // g.drawImage(im,
@@ -1484,6 +1488,27 @@ public class riskGUI extends JFrame {
 		}// end updatePanel
 
 		/****************************** Listeners are Below this line!!! *****************************/
+		
+		private class CardBoxListener implements ItemListener {
+
+			@Override
+			public void itemStateChanged(ItemEvent itE) {
+			
+				//if it's selected
+				if (itE.getStateChange() == ItemEvent.SELECTED){
+					
+				}//end if
+				//if it's deseletced
+				else {
+					
+				}//end else
+				
+			}//end itemstatechanged
+			
+		}//end cardboxlistener
+		
+		
+		
 		/*
 		 * Handles the logic for trading in cards!
 		 */
