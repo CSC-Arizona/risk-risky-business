@@ -826,7 +826,7 @@ public class TheGame implements Serializable {
 	public void skipAttackPhaseAI(){
 		skipAttackPhase();
 		nextPhase();
-	}//end skipA
+	}//end skipAI
 
 	public boolean skipCardRedemption() {
 		if (!currentPlayer.mustRedeemCards()) {
