@@ -13,7 +13,7 @@ public class TheGame implements Serializable {
 	private Country selectedCountry;
 	private Country moveFrom, moveTo;
 	private boolean placePhase, reinforcePhase, deployPhase, attackPhase,
-			gameOver, redeemCardPhase, mainGamePhase;
+			gameOver, redeemCardPhase, mainGamePhase, cardEarned;
 	private static TheGame theGame;
 	private boolean tournamentMode, canPlace;
 	private String gameLog;
@@ -33,6 +33,7 @@ public class TheGame implements Serializable {
 		countriesClaimed = 0;
 		countriesBefore = 0;
 		countriesAfter = 0;
+		cardEarned = false;
 
 		if (!tournamentMode)
 			newGame();
@@ -237,6 +238,7 @@ public class TheGame implements Serializable {
 		deployPhase = false;
 		attackPhase = true;
 		gameOver = false;
+		cardEarned = false;
 	}// end changetoattackphase
 
 	/*
@@ -353,7 +355,7 @@ public class TheGame implements Serializable {
 			
 			//If the AI decided to finish attacking
 			if (((AI)currentPlayer).finishedAttacking())
-				nextPhase();
+				this.skipAttackPhase();
 		}// end else if
 
 		// during official reinforcement
@@ -549,6 +551,9 @@ public class TheGame implements Serializable {
 			
 			//Now, set the occupier of the new country to the attacker
 			moveTo.setOccupier(currentPlayer);
+			
+			//The player is now eligible for one card - just always set it
+			cardEarned = true;
 		}//end if
 		
 		//attack lost
@@ -802,16 +807,17 @@ public class TheGame implements Serializable {
 		return currentPlayer.equals(selectedCountry.getOccupier());
 	}//end playerIsOwner
 
-	public void skipAttackPhase() {
+	public boolean skipAttackPhase() {
+		boolean tmp = cardEarned;
 		clearSelections();
-		if (countriesBefore < countriesAfter) {
+		if (cardEarned) {
 			currentPlayer.addCard(deck.deal());
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
+			cardEarned = false;
 		}// end if
-		countriesBefore = 0;
-		countriesAfter = 0;
-	//	nextPhase();
 		play();
+		
+		return tmp;
 	}// end skipAttackPhase
 
 	public boolean skipCardRedemption() {

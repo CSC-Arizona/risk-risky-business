@@ -1519,13 +1519,12 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (theGame.isAttackPhase()) {
-				int countB = theGame.getCurrentPlayer().getCards().size();
-				theGame.skipAttackPhase();
-				int countA = theGame.getCurrentPlayer().getCards().size();
-				if (countB < countA)
+				if (theGame.skipAttackPhase()){
 					JOptionPane.showMessageDialog(riskGUI.this,
-							"You earned a new card!", "Card Warning",
+							"You earned a new card!",
+							"Card Earned",
 							JOptionPane.INFORMATION_MESSAGE);
+				}//end if
 				System.out.println("Passed attack phase");
 			} else if (theGame.isReinforcePhase() && theGame.isPlayPhase()) {
 			//	theGame.finishTurn();
