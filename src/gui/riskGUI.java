@@ -35,6 +35,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -62,6 +64,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -79,16 +82,8 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import Model.AI;
-import Model.AIStrat;
-import Model.Card;
-import Model.Country;
-import Model.Faction;
-import Model.Game;
-import Model.HumanPlayer;
-import Model.Map;
+import Model.*;
 import songplayer.SoundClipPlayer;
-import Model.Player;
 
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
@@ -105,7 +100,8 @@ public class riskGUI extends JFrame {
 	private int yHeight = 0;
 	// private Map map; dont think this is needed anymore cause it is stored
 	// within theGame
-	private Game theGame;
+	// private Game theGame;
+	private TheGame theGame;
 	private ImageIcon gameBoard, stark, targaryen, lannister, whiteWalkers, dothraki, wildlings;
 	private JButton checkButton;
 	private CountryPanel currCountryPanel;
@@ -225,7 +221,7 @@ public class riskGUI extends JFrame {
 		if (get == JFileChooser.APPROVE_OPTION) {
 			try {
 				ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(choose.getSelectedFile()));
-				theGame = (Game) inFile.readObject();
+				theGame = (TheGame) inFile.readObject();
 				inFile.close();
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -346,14 +342,6 @@ public class riskGUI extends JFrame {
 	private void defaultMode() {
 		humans = 1;
 		ai = 5;
-		drawingPanel = new BoardPanel();
-		// splashLoading2();
-		theGame = Game.getInstance(1, 5, false);
-		setUpDrawingPanel();
-		setUpMenu();
-		// setUpClearButton();
-		// setUpPassButton();
-		setUpAIMenu();
 		ArrayList<Player> players = theGame.getPlayers();
 		players.get(0).setFaction("Stark");
 		players.get(1).setFaction("Dothraki");
@@ -372,6 +360,15 @@ public class riskGUI extends JFrame {
 		theGame.setPlayers(players);
 		// Starting the game...
 		theGame.startGame();
+
+		drawingPanel = new BoardPanel();
+		// splashLoading2();
+		theGame = TheGame.getInstance(1, 5, false);
+		setUpDrawingPanel();
+		setUpMenu();
+		setUpClearButton();
+		setUpPassButton();
+		setUpAIMenu();
 		// player.startPlay();
 		drawingPanel.repaint();
 	}// end defualtMode
@@ -410,11 +407,11 @@ public class riskGUI extends JFrame {
 		this.remove(drawingPanel);
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
-		theGame = Game.getInstance(humans, ai, false);
+		theGame = TheGame.getInstance(humans, ai, false);
 		setUpDrawingPanel();
 		setUpMenu();
-		// setUpClearButton();
-		// setUpPassButton();
+		setUpClearButton();
+		setUpPassButton();
 		setUpAIMenu();
 		ArrayList<Player> players = theGame.getPlayers();
 		for (int i = 0; i < humans; i++) {
@@ -709,7 +706,7 @@ public class riskGUI extends JFrame {
 	}
 
 	private void setUpPassButton() {
-		JButton passButton = new JButton("Finished Attacking");
+		JButton passButton = new JButton("Skip this Step");
 		passButton.addActionListener(new PassButtonListener());
 		passButton.setSize(4 * xWidth, 2 * yHeight);
 		passButton.setLocation(width - (int) (4.25 * xWidth), (int) (2.75 * yHeight));
@@ -816,7 +813,8 @@ public class riskGUI extends JFrame {
 				if (theGame != null) {
 					drawCurrentPlayer(g2);
 					drawUnits(g2);
-					gameOver = theGame.isFinished();
+					// gameOver = theGame.isFinished();
+					gameOver = theGame.isGameOver();
 				}
 				// drawGridAndNumbers(g2);
 			} else {
@@ -1249,20 +1247,30 @@ public class riskGUI extends JFrame {
 			JPanel cards = new JPanel();
 			cards.setLayout(new GridLayout(2, 0));
 			JPanel showCards = new JPanel();
-			showCards.setLayout(new GridLayout(3, 2));
-			ArrayList<Card> currCards = theGame.getCurrentPlayer().getCards();
-
+			int cols = myCards.size();
+			if (cols < 1)
+				cols = 1;
+			showCards.setLayout(new GridLayout(0, cols));
+			// ArrayList<Card> currCards =
+			// theGame.getCurrentPlayer().getCards();
+			JCheckBox checkBox = new JCheckBox();
 			// Get the image for this card
-			for (int i = 0; i < currCards.size(); i++) {
-				Image im = currCards.get(i).getMyImage();
-				JPanel oneCard = new CardPanel(im, xWidth, yHeight);
-				// g.drawImage(im, 0,0,null);
+			for (int i = 0; i < myCards.size(); i++) {
+				Image im = myCards.get(i).getMyImage();
+				ImageIcon ic = new ImageIcon(
+						im.getScaledInstance((int) (xWidth * 1), (int) (yHeight * 1.5), Image.SCALE_DEFAULT));
+
+				checkBox = new JCheckBox(ic);
+				checkBox.setActionCommand("" + i);
+				checkBox.setSelected(false);
 				/*
-				 * Dimension myD = new Dimension((int) (0.75 * xWidth), (int)
-				 * (1.5 * yHeight)); oneCard.setPreferredSize(myD);
+				 * Image im = currCards.get(i).getMyImage(); JPanel oneCard =
+				 * new CardPanel(im, xWidth, yHeight); // g.drawImage(im,
+				 * 0,0,null); Dimension myD = new Dimension((int) (0.75 *
+				 * xWidth), (int) (1.5 * yHeight));
+				 * oneCard.setPreferredSize(myD); oneCard.repaint();
 				 */
-				oneCard.repaint();
-				showCards.add(oneCard);
+				showCards.add(checkBox);
 			} // end for
 
 			cards.add(showCards);
@@ -1270,7 +1278,7 @@ public class riskGUI extends JFrame {
 			trade.addActionListener(new TradeClickListener());
 			cards.add(trade);
 			cards.setBorder(raisedWithColor);
-			this.add(cards, BorderLayout.EAST);
+			this.add(cards, BorderLayout.CENTER);
 			showCards.repaint();
 			showCards.revalidate();
 			cards.revalidate();
@@ -1359,11 +1367,17 @@ public class riskGUI extends JFrame {
 				// Font labFont = gotFontBody.deriveFont(Font.BOLD, 32);
 				// directions.setFont(labFont);
 
-				if (theGame.isPlacePhase()) {
+				if (theGame.isRedeemCardPhase()) {
+					if (!theGame.isPlayPhase())
+						directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 18));
+					directions.setText("Redeem your cards");
+					this.add(directions, BorderLayout.NORTH);
+					makePlayingCardPanel(g);
+				} // end if
+				else if (theGame.isPlacePhase()) {
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
 					directions.setText("Choose a Country to Claim");
 					this.add(directions, BorderLayout.CENTER);
-
 				} // end if
 				else if (theGame.isDeployPhase()) {
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 20));
@@ -1374,42 +1388,39 @@ public class riskGUI extends JFrame {
 					directions.setText("Choose a Country to Reinforce");
 					this.add(directions, BorderLayout.CENTER);
 				} // end else if
-				else if (attackFromFlag) {
-					if (isFirstAttackPhase) {
-						setUpPassButton();
-						setUpClearButton();
-						isFirstAttackPhase = false;
-					}
+				else if (theGame.isAttackPhase()) {
+					if (theGame.getMoveFrom() != null) {
+						directions.setText("Choose a Country to Attack");
+					} // end if
+					else if (theGame.getMoveTo() != null) {
+						directions.setText("Choose a Country to Attack From");
+					} // end else if
+					else {
+						directions.setText("Choose a Country to Go to War!");
+					} // end else
 
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
-					directions.setText("Choose a Country to Attack");
+
 					this.add(directions, BorderLayout.CENTER);
 				} // end else if
-				else if (attackFlag) {
-					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
-					directions.setText("Choose a Country to Attack From");
-					this.add(directions, BorderLayout.CENTER);
-				} else if (moveUnitsFlag) {
-					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
-					directions.setText("Choose a Country to Reinforce");
-					this.add(directions, BorderLayout.CENTER);
-				} // end else if
+				// else if (attackFlag) {
+				// directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
+				// directions.setText("Choose a Country to Attack From");
+				// this.add(directions, BorderLayout.CENTER);
+				// } else if (moveUnitsFlag) {
+				// directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 30));
+				// directions.setText("Choose a Country to Reinforce");
+				// this.add(directions, BorderLayout.CENTER);
+				// } // end else if
 				else {
-					if (isFirstAttackPhase) {
-						setUpPassButton();
-						setUpClearButton();
-						isFirstAttackPhase = false;
-					}
+
 					JLabel dir2 = new JLabel();
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
 					dir2.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
 					directions.setText("Choose a Country to Attack"); // or
-																		// Reinforce");
-					dir2.setText("Or to Reinforce");
-					dir2.setHorizontalAlignment(JLabel.CENTER);
+
 					this.add(directions, BorderLayout.CENTER);
-					this.add(dir2, BorderLayout.SOUTH);
-					makePlayingCardPanel(g);
+					// makePlayingCardPanel(g);
 				} // end else
 
 				this.revalidate();
@@ -1424,12 +1435,12 @@ public class riskGUI extends JFrame {
 					makePlacementCenterPanel();
 					makePlacementBottomLabel();
 				} // end if
-				else if (theGame.isReinforcePhase()) {
+				else if (!theGame.isPlayPhase() && theGame.isReinforcePhase()) {
 					makePlayingCenterPanel();
 					makePlacementBottomLabel();
 
 				} else if (theGame.isDeployPhase()) {
-					makePlayingCardPanel(g);
+					// makePlayingCardPanel(g);
 					makePlayingCenterPanel();
 					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
@@ -1437,12 +1448,9 @@ public class riskGUI extends JFrame {
 				} // end elseif
 					// we should make a specific panel for if a transfer is in
 					// progress.
-					// we should make a specific panel for if a transfer is in
-					// progress.
 				else if (theGame.isAttackPhase()) {
-					makePlayingCardPanel(g);
+					// makePlayingCardPanel(g);
 					makePlayingCenterPanel();
-					makePlayingCardPanel(g);
 
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier())) {
 						makePlayingMyCountryBottomLabel();
@@ -1451,7 +1459,7 @@ public class riskGUI extends JFrame {
 						makePlayingYourCountryBottomLabel();
 					}
 				} else {
-					makePlayingCardPanel(g);
+					// makePlayingCardPanel(g);
 					makePlayingCenterPanel();
 					// Only give this option if the country is yours
 					if (theGame.getCurrentPlayer().equals(curr.getOccupier()))
@@ -1465,6 +1473,25 @@ public class riskGUI extends JFrame {
 		/******************************
 		 * Listeners are Below this line!!!
 		 *****************************/
+
+		private class CardBoxListener implements ItemListener {
+
+			@Override
+			public void itemStateChanged(ItemEvent itE) {
+
+				// if it's selected
+				if (itE.getStateChange() == ItemEvent.SELECTED) {
+
+				} // end if
+					// if it's deseletced
+				else {
+
+				} // end else
+
+			}// end itemstatechanged
+
+		}// end cardboxlistener
+
 		/*
 		 * Handles the logic for trading in cards!
 		 */
@@ -1476,15 +1503,18 @@ public class riskGUI extends JFrame {
 
 				// TODO JOptionPane to select the cards the the player wants to
 				// redeem.
-				((HumanPlayer) theGame.getCurrentPlayer()).setCardsToRedeem(cards, theGame.getNumRedemptions());
-				int additionalTroups = ((HumanPlayer) theGame.getCurrentPlayer()).redeemCards();
-				if (additionalTroups > 0) {
-					theGame.incrementNumRedemptions();
-					theGame.getCurrentPlayer().discardCards(cards);
-					theGame.getDeck().addToDiscardPile(cards);
-				} else
-					JOptionPane.showMessageDialog(riskGUI.this, "Illegal amount of cards set to redeem.",
-							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
+				// ((HumanPlayer) theGame.getCurrentPlayer()).setCardsToRedeem(
+				// cards, theGame.getNumRedemptions());
+				((HumanPlayer) theGame.getCurrentPlayer()).setCardsToRedeem(cards);
+				// int additionalTroups = ((HumanPlayer) theGame
+				// .getCurrentPlayer()).redeemCards();
+				// if (additionalTroups > 0) {
+				// theGame.incrementNumRedemptions();
+				// theGame.getCurrentPlayer().discardCards(cards);
+				// theGame.getDeck().addToDiscardPile(cards);
+				// } else
+				JOptionPane.showMessageDialog(riskGUI.this, "Illegal amount of cards set to redeem.",
+						"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
 				repaint();
 			}// end actionPerformed
 		}// end tradeClickListener
@@ -1494,22 +1524,27 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// do stuff, but I be tired :)
-
 			if (theGame.isAttackPhase()) {
-				int countB = theGame.getCurrentPlayer().getCards().size();
-				theGame.skipAttackPhase();
-				int countA = theGame.getCurrentPlayer().getCards().size();
-				if (countB < countA)
-					JOptionPane.showMessageDialog(riskGUI.this, "you earned a new card!", "Card Warning",
+				if (theGame.skipAttackPhase()) {
+					JOptionPane.showMessageDialog(riskGUI.this, "You earned a new card!", "Card Earned",
 							JOptionPane.INFORMATION_MESSAGE);
+				} // end if
 				System.out.println("Passed attack phase");
-			} else if (theGame.isReinforcePhase()) {
-				theGame.finishTurn();
+			} else if (theGame.isReinforcePhase() && theGame.isPlayPhase()) {
+				// theGame.finishTurn();
+				theGame.passReinforcementPhase();
 				System.out.println("Ended turn");
+			} else if (theGame.isRedeemCardPhase()) {
+				if (!theGame.skipCardRedemption())
+					JOptionPane.showMessageDialog(riskGUI.this, "Because you have 5 cards, you must redeem 3.",
+							"Card Redemption Warning", JOptionPane.INFORMATION_MESSAGE);
+			} // end else if
+			else {
+				JOptionPane.showMessageDialog(riskGUI.this, "Sorry, you're not allowed to skip this phase.",
+						"Pass Warning", JOptionPane.INFORMATION_MESSAGE);
 			}
-			drawingPanel.repaint();
 
+			drawingPanel.repaint();
 		}// end actionperformed
 	}// end passbuttonlistener
 
@@ -1551,11 +1586,15 @@ public class riskGUI extends JFrame {
 			System.out.println(e.getActionCommand() + " pressed.");
 			// step through all countries until the same name as the
 			// actionCommand, then return that country
+			// No country is selected if it's the card phase
+			// because that's not allowed :)
+			if (!theGame.isRedeemCardPhase()) {
+				for (Country country : theGame.getGameMap().getCountries()) {
+					if (country.getName().compareTo(e.getActionCommand()) == 0)
+						theGame.setSelectedCountry(country);
+				} // end for
+			} // end if
 
-			for (Country country : theGame.getGameMap().getCountries()) {
-				if (country.getName().compareTo(e.getActionCommand()) == 0)
-					theGame.setSelectedCountry(country);
-			}
 			drawingPanel.repaint();
 		}// end actionperformed
 	}// end countryclicklistener
@@ -1568,38 +1607,91 @@ public class riskGUI extends JFrame {
 	private class TransferTroopListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// for now just allow players to move armies
-			// player move then ai move if ai turn
-			// if(theGame.getCurrentPlayer() instanceof AI)
-			// ((AI) theGame.getCurrentPlayer()).myTurn();
-			// System.out.println("Place clicked");
-			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
-				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
 
-					if (!moveUnitsFlag) {
-						if (theGame.getSelectedCountry().getForcesVal() <= 1) {
-							JOptionPane.showMessageDialog(null, "You must choose a country with more than one army.",
-									"Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							numOfUnitsToMove = getUnitsToMove(theGame.getSelectedCountry());
-							moveUnitsFlag = true;
-							moveUnitsFromCountry = theGame.getSelectedCountry();
-						}
-					} else {
-						boolean result = theGame.moveUnitsToCountry(numOfUnitsToMove, moveUnitsFromCountry,
-								theGame.getSelectedCountry(), theGame.getCurrentPlayer());
-						// theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
-						if (result)
-							moveUnitsFlag = false;
-						else
-							JOptionPane.showMessageDialog(null, "Invalid Country Choice. Please choose another",
-									"Error", JOptionPane.ERROR_MESSAGE);
-					} // end else
+			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
+				// Set the move from first
+				if (theGame.getMoveFrom() == null) {
+					if (theGame.playerIsOwner()) {
+						theGame.setMoveFrom();
+					} // end if
+					else {
+						JOptionPane.showMessageDialog(null, "You can only transfer troops from your own countries.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
 				} // end if
-				theGame.setSelectedCountry(null);
-				drawingPanel.repaint();
-			}
+					// Then set the move To
+				else if (theGame.getMoveTo() == null) {
+					if (theGame.playerIsOwner()) {
+						theGame.setMoveTo();
+						int numArmies = getArmiesToUse(theGame.getMoveFrom());// Get
+																				// Armies
+																				// to
+																				// Move
+
+						boolean success = theGame.transferTroops(numArmies);
+
+						if (!success) {
+							JOptionPane.showMessageDialog(null,
+									"There must be a path of your own countries between your two choices.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						} // end if
+
+						// Always clear the game, even if failure
+						theGame.clearSelections();
+					} // end if
+					else {
+						JOptionPane.showMessageDialog(null, "You can only transfer troops from your own countries.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					} // end else
+				} // end else if
+			} // end if
+
+			drawingPanel.repaint();
 		}// end actionPerformed
+			// Old Version below
+
+		// for now just allow players to move armies
+		// player move then ai move if ai turn
+		// if(theGame.getCurrentPlayer() instanceof AI)
+		// ((AI) theGame.getCurrentPlayer()).myTurn();
+		// System.out.println("Place clicked");
+		// if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
+		// if (theGame.getSelectedCountry().getOccupier()
+		// .equals(theGame.getCurrentPlayer())) {
+		//
+		// if (!moveUnitsFlag) {
+		// if (theGame.getSelectedCountry().getForcesVal() <= 1) {
+		// JOptionPane
+		// .showMessageDialog(
+		// null,
+		// "You must choose a country with more than one army.",
+		// "Error", JOptionPane.ERROR_MESSAGE);
+		// } else {
+		// numOfUnitsToMove = getUnitsToMove(theGame
+		// .getSelectedCountry());
+		// moveUnitsFlag = true;
+		// moveUnitsFromCountry = theGame.getSelectedCountry();
+		// }
+		// } else {
+		// boolean result = theGame.moveUnitsToCountry(
+		// numOfUnitsToMove, moveUnitsFromCountry,
+		// theGame.getSelectedCountry(),
+		// theGame.getCurrentPlayer());
+		// // theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
+		// if (result)
+		// moveUnitsFlag = false;
+		// else
+		// JOptionPane
+		// .showMessageDialog(
+		// null,
+		// "Invalid Country Choice. Please choose another",
+		// "Error", JOptionPane.ERROR_MESSAGE);
+		// } // end else
+		// } // end if
+		// theGame.setSelectedCountry(null);
+		// drawingPanel.repaint();
+		// }
+		// }// end actionPerformed
 
 		// pops up a pane to ask how many units to move, which returns a string
 		// it then tries to parse that string into an int, and if it does
@@ -1642,215 +1734,314 @@ public class riskGUI extends JFrame {
 	 * Handles two teams going to war against each other!
 	 */
 	private class AttackListener implements ActionListener {
-		private boolean firstAttackPast = false, continueFlag = false;
-		int diceAllowed = 0, actualNumDice = 0;
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-
-			if (attackFromFlag == false && attackFlag == false) {
-				if (theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier())) {
-					attackFromFlag = true;
-					attackFrom = theGame.getSelectedCountry();
-				} else {
-					attackFlag = true;
-					attack = theGame.getSelectedCountry();
-				}
-			} else {
-				if (attackFromFlag) {
-
-					if (theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier())) {
-						JOptionPane.showMessageDialog(null, "Cannot attack your own country. Please choose another",
-								"Error", JOptionPane.ERROR_MESSAGE);
-					} else if (!attackFrom.getNeighbors().contains(theGame.getSelectedCountry())) {
+			// One of the countries needs to be set
+			if (theGame.getMoveFrom() == null && theGame.getMoveTo() == null) {
+				if (theGame.playerIsOwner()) {
+					if (theGame.getSelectedCountry().getForcesVal() > 1)
+						theGame.setMoveFrom();
+					else {
 						JOptionPane.showMessageDialog(null,
-								"Attacking Countries must be neighbors. Please choose another", "Error",
+								"Cannot attack from a country with only one army. Please choose another", "Error",
 								JOptionPane.ERROR_MESSAGE);
-					} else {
-						if (attackFrom.getForcesVal() > 1) {
-
-							int forces = attackFrom.getForcesVal();
-							if (forces >= 4) {
-								diceAllowed = 3;
-							} else if (forces == 3) {
-								diceAllowed = 2;
-							} else
-								diceAllowed = 1;
-
-							while (!continueFlag) {
-								String sNumDice = JOptionPane.showInputDialog(
-										"How many dice would you like to throw? You can throw up to " + diceAllowed);
-								try {
-									actualNumDice = Integer.parseInt(sNumDice);
-									if (actualNumDice <= diceAllowed || actualNumDice > 0) {
-										continueFlag = true;
-									} else {
-									} // error
-
-								} catch (NumberFormatException e) {
-									// invalid number
-								}
-
-							}
-						}
-						// TODO start animation here, I think
-						Boolean attackResult = false;
-						System.out.println(
-								theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
-						System.out.println(attackFrom + " " + attackFrom.getForcesVal());
-						attackResult = theGame.attack(attackFrom, theGame.getSelectedCountry(), actualNumDice);
-						if (attackResult) {
-							System.out.println(
-									theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
-							System.out.println(attackFrom + " " + attackFrom.getForcesVal());
-							JOptionPane.showMessageDialog(null, attackFrom.toString() + " won the attack!");
-							int units = theGame.getUnits(attackFrom);
-							theGame.moveUnitsToCountry(units, attackFrom, attack, theGame.getCurrentPlayer());
-
-							attackFromFlag = false;
-							theGame.removeLosers();
-							gameOver = theGame.isFinished();
-						}
-
 					}
-				} else if (attackFlag) {
-					if (!theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier())) {
-						JOptionPane.showMessageDialog(null, "Must attack with a Country you own. Please choose another",
-								"Error", JOptionPane.ERROR_MESSAGE);
-					} else if (!attack.getNeighbors().contains(theGame.getSelectedCountry())) {
+				} // end if
+
+				else {
+					theGame.setMoveTo();
+				} // end else
+			} // end if
+
+			// the other one needs to be set
+			else if (theGame.getMoveFrom() == null) {
+				if (theGame.playerIsOwner()) {
+					// Only allow attack from a country with more than one army
+					if (theGame.getSelectedCountry().getForcesVal() > 1) {
+						theGame.setMoveFrom();
+						if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
+							System.out.println(theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom()));
+							int numArmies = getArmiesToUse(theGame.getMoveFrom());
+							theGame.attack(numArmies);
+						} // end if
+						else {
+							JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							theGame.clearSelections();
+						}
+					} // end if
+					else {
 						JOptionPane.showMessageDialog(null,
-								"Attacking Countries must be neighbors. Please choose another", "Error",
+								"Cannot attack from a country with only one army. Please choose another", "Error",
 								JOptionPane.ERROR_MESSAGE);
-					} else {
-						if (attackFrom.getForcesVal() > 1) {
+					} // end else
+				} // end if
 
-							int forces = attackFrom.getForcesVal();
-							if (forces >= 4) {
-								diceAllowed = 3;
-							} else if (forces == 3) {
-								diceAllowed = 2;
-							} else
-								diceAllowed = 1;
+				else {
+					JOptionPane.showMessageDialog(null,
+							"Cannot attack from someone else's country. Please choose another", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} // end else
+			} // end else if
 
-							while (!continueFlag) {
-								String sNumDice = JOptionPane.showInputDialog(
-										"How many dice would you like to throw? You can throw up to " + diceAllowed);
-								try {
-									actualNumDice = Integer.parseInt(sNumDice);
-									if (actualNumDice <= diceAllowed || actualNumDice > 0) {
-										continueFlag = true;
-									} else {
-									} // error
+			// the other one needs to be set
+			else if (theGame.getMoveTo() == null) {
+				if (!theGame.playerIsOwner()) {
+					theGame.setMoveTo();
 
-								} catch (NumberFormatException e) {
-									// invalid number
-								}
-
-							}
-						}
-						boolean attackResult = false;
-						System.out.println(
-								theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
-						System.out.println(attack + " " + attack.getForcesVal());
-						attackResult = theGame.attack(theGame.getSelectedCountry(), attack, actualNumDice);
-						if (attackResult) {
-							System.out.println(
-									theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
-							System.out.println(attack + " " + attack.getForcesVal());
-							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
-							attackFlag = false;
-
-						}
-					}
-				}
-			}
+					if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
+						int numArmies = getArmiesToUse(theGame.getMoveFrom());
+						theGame.attack(numArmies);
+					} // end if
+					else {
+						JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						theGame.clearSelections();
+					} // end else
+				} // end if
+				else {
+					JOptionPane.showMessageDialog(null, "Cannot attack your own country. Please choose another",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} // end else
+			} // end else if
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
-		}// end
-			// actionPerformed
+		}// end actionPerformed
+	}// end AttackListener
+	// private boolean firstAttackPast = false, continueFlag = false;
+	// int diceAllowed = 0, actualNumDice = 0;
+	//
+	// @Override
+	// public void actionPerformed(ActionEvent arg0) {
+	//
+	// if (attackFromFlag == false && attackFlag == false) {
+	// if
+	// (theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier()))
+	// {
+	// attackFromFlag = true;
+	// attackFrom = theGame.getSelectedCountry();
+	// } else {
+	// attackFlag = true;
+	// attack = theGame.getSelectedCountry();
+	// }
+	// } else {
+	// if (attackFromFlag) {
+	//
+	// if
+	// (theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier()))
+	// {
+	// JOptionPane.showMessageDialog(null, "Cannot attack your own country.
+	// Please choose another",
+	// "Error", JOptionPane.ERROR_MESSAGE);
+	// } else if
+	// (!attackFrom.getNeighbors().contains(theGame.getSelectedCountry())) {
+	// JOptionPane.showMessageDialog(null,
+	// "Attacking Countries must be neighbors. Please choose another", "Error",
+	// JOptionPane.ERROR_MESSAGE);
+	// } else {
+	// if (attackFrom.getForcesVal() > 1) {
+	//
+	// int forces = attackFrom.getForcesVal();
+	// if (forces >= 4) {
+	// diceAllowed = 3;
+	// } else if (forces == 3) {
+	// diceAllowed = 2;
+	// } else
+	// diceAllowed = 1;
+	//
+	// while (!continueFlag) {
+	// String sNumDice = JOptionPane.showInputDialog(
+	// "How many dice would you like to throw? You can throw up to " +
+	// diceAllowed);
+	// try {
+	// actualNumDice = Integer.parseInt(sNumDice);
+	// if (actualNumDice <= diceAllowed || actualNumDice > 0) {
+	// continueFlag = true;
+	// } else {
+	// } // error
+	//
+	// } catch (NumberFormatException e) {
+	// // invalid number
+	// }
+	//
+	// }
+	// }
+	// // TODO start animation here, I think
+	// Boolean attackResult = false;
+	// System.out.println(
+	// theGame.getSelectedCountry() + " " +
+	// theGame.getSelectedCountry().getForcesVal());
+	// System.out.println(attackFrom + " " + attackFrom.getForcesVal());
+	// attackResult = theGame.attack(attackFrom, theGame.getSelectedCountry(),
+	// actualNumDice);
+	// if (attackResult) {
+	// System.out.println(
+	// theGame.getSelectedCountry() + " " +
+	// theGame.getSelectedCountry().getForcesVal());
+	// System.out.println(attackFrom + " " + attackFrom.getForcesVal());
+	// JOptionPane.showMessageDialog(null, attackFrom.toString() + " won the
+	// attack!");
+	// int units = theGame.getUnits(attackFrom);
+	// theGame.moveUnitsToCountry(units, attackFrom, attack,
+	// theGame.getCurrentPlayer());
+	//
+	// attackFromFlag = false;
+	// theGame.removeLosers();
+	// gameOver = theGame.isFinished();
+	// }
+	//
+	// }
+	// } else if (attackFlag) {
+	// if
+	// (!theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier()))
+	// {
+	// JOptionPane.showMessageDialog(null, "Must attack with a Country you own.
+	// Please choose another",
+	// "Error", JOptionPane.ERROR_MESSAGE);
+	// } else if (!attack.getNeighbors().contains(theGame.getSelectedCountry()))
+	// {
+	// JOptionPane.showMessageDialog(null,
+	// "Attacking Countries must be neighbors. Please choose another", "Error",
+	// JOptionPane.ERROR_MESSAGE);
+	// } else {
+	// if (attackFrom.getForcesVal() > 1) {
+	//
+	// int forces = attackFrom.getForcesVal();
+	// if (forces >= 4) {
+	// diceAllowed = 3;
+	// } else if (forces == 3) {
+	// diceAllowed = 2;
+	// } else
+	// diceAllowed = 1;
+	//
+	// while (!continueFlag) {
+	// String sNumDice = JOptionPane.showInputDialog(
+	// "How many dice would you like to throw? You can throw up to " +
+	// diceAllowed);
+	// try {
+	// actualNumDice = Integer.parseInt(sNumDice);
+	// if (actualNumDice <= diceAllowed || actualNumDice > 0) {
+	// continueFlag = true;
+	// } else {
+	// } // error
+	//
+	// } catch (NumberFormatException e) {
+	// // invalid number
+	// }
+	//
+	// }
+	// }
+	// boolean attackResult = false;
+	// System.out.println(
+	// theGame.getSelectedCountry() + " " +
+	// theGame.getSelectedCountry().getForcesVal());
+	// System.out.println(attack + " " + attack.getForcesVal());
+	// attackResult = theGame.attack(theGame.getSelectedCountry(), attack,
+	// actualNumDice);
+	// if (attackResult) {
+	// System.out.println(
+	// theGame.getSelectedCountry() + " " +
+	// theGame.getSelectedCountry().getForcesVal());
+	// System.out.println(attack + " " + attack.getForcesVal());
+	// JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
+	// attackFlag = false;
 
-		public int getArmiesToAttack(Country countryToRemoveUnits) {
-			boolean moveFlag = false, continueFlag = false;
-			int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
-			String unitsToMove = "";
+	public int getArmiesToUse(Country countryToRemoveUnits) {
+		boolean moveFlag = false, continueFlag = false;
+		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
+		String unitsToMove = "";
 
-			while (!moveFlag) {
-				unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
-				try {
-					unitsToReturn = Integer.parseInt(unitsToMove);
-					continueFlag = true;
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				if (continueFlag) {
-					if (unitsToReturn > totalUnits) {
-						JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
-					} else {
-						// theGame.getSelectedCountry().removeUnits(unitsToReturn);
-						moveFlag = true;
-					}
+		while (!moveFlag) {
+			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to use? You must leave 1.");
+			try {
+				unitsToReturn = Integer.parseInt(unitsToMove);
+				continueFlag = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			if (continueFlag) {
+				if (unitsToReturn >= totalUnits) {
+					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
+					moveFlag = true;
 				}
 			}
-			return unitsToReturn;
+		}
+		return unitsToReturn;
 
-		}// end getArmiesToAttack
-	}// end AttackListener
-
+	}// end getArmiesToAttack
 	/*
 	 * Listener for the place and reinforcement buttons. Lets users place troops
 	 * on previously unclaimed countries or reinforce countries they already
 	 * own.
 	 */
+
 	private class PlaceAndReinforceListener implements ActionListener {
 		boolean continueFlag = false, deployFlag = false;
 		int numOfOwnedCountries;
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println("Place clicked");
-			if (theGame.isPlacePhase()) {
-				// next player place army
-				numOfOwnedCountries = theGame.getCurrentPlayer().getCountries().size();
-				theGame.placeArmies(theGame.getSelectedCountry(), 1);
-				drawingPanel.repaint();
-				theGame.roundOfPlacement();
-				if (numOfOwnedCountries < theGame.getCurrentPlayer().getCountries().size())
-					theGame.nextPlayer();
-			} else if (theGame.isReinforcePhase() && !theGame.isPlayPhase()) {
-				int remainingTroops = theGame.getCurrentPlayer().getAvailableTroops();
-				theGame.placeArmies(theGame.getSelectedCountry(), 1);
-				drawingPanel.repaint();
-				// player can reinforce countries
-				theGame.roundOfReinforcement();
-				if (remainingTroops > theGame.getCurrentPlayer().getAvailableTroops())
-					theGame.nextPlayer();
-
-			} // end if
-			else if (theGame.isDeployPhase()) {
-				deployFlag = false;
-				while (!deployFlag) {
-					int armiesToPlaceInt = 0;
-					String armiesToPlaceStr = JOptionPane
-							.showInputDialog("How many armies do you want to place? (You can place "
-									+ theGame.getCurrentPlayer().getAvailableTroops() + ")");
-					try {
-						armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
-						continueFlag = true;
-					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "That was invalid number.", "Error",
-								JOptionPane.ERROR_MESSAGE);
-					}
-					if (continueFlag) {
-						if (armiesToPlaceInt < 0
-								|| armiesToPlaceInt > theGame.getCurrentPlayer().getAvailableTroops()) {
-							JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							theGame.placeArmies(theGame.getSelectedCountry(), armiesToPlaceInt);
-							deployFlag = true;
-						}
-					}
-				}
-			}
+			theGame.play();
+			// //System.out.println("Place clicked");
+			// if (theGame.isPlacePhase()) {
+			// // next player place army
+			// numOfOwnedCountries = theGame.getCurrentPlayer().getCountries()
+			// .size();
+			// //theGame.placeArmies(1);
+			// drawingPanel.repaint();
+			// /* theGame.roundOfPlacement();
+			// if (numOfOwnedCountries < theGame.getCurrentPlayer()
+			// .getCountries().size())
+			// theGame.nextPlayer();*/
+			// theGame.play();
+			// } else if (theGame.isReinforcePhase() && !theGame.isPlayPhase())
+			// {
+			// int remainingTroops = theGame.getCurrentPlayer()
+			// .getAvailableTroops();
+			// theGame.placeArmies(1);
+			// drawingPanel.repaint();
+			// // player can reinforce countries
+			// // theGame.roundOfReinforcement();
+			// // if (remainingTroops > theGame.getCurrentPlayer()
+			// // .getAvailableTroops())
+			// // theGame.nextPlayer();
+			//
+			// } // end if
+			// else if (theGame.isDeployPhase()) {
+			// deployFlag = false;
+			// while (!deployFlag) {
+			// int armiesToPlaceInt = 0;
+			// String armiesToPlaceStr = JOptionPane
+			// .showInputDialog("How many armies do you want to place? (You can
+			// place "
+			// + theGame.getCurrentPlayer()
+			// .getAvailableTroops() + ")");
+			// try {
+			// armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
+			// continueFlag = true;
+			// } catch (NumberFormatException e) {
+			// JOptionPane.showMessageDialog(null,
+			// "That was invalid number.", "Error",
+			// JOptionPane.ERROR_MESSAGE);
+			// }
+			// if (continueFlag) {
+			// if (armiesToPlaceInt < 0
+			// || armiesToPlaceInt > theGame
+			// .getCurrentPlayer()
+			// .getAvailableTroops()) {
+			// JOptionPane.showMessageDialog(null,
+			// "Invalid number.", "Error",
+			// JOptionPane.ERROR_MESSAGE);
+			// } else {
+			// theGame.placeArmies(armiesToPlaceInt);
+			// deployFlag = true;
+			// }//end else
+			// }//end if
+			// }
+			// }
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
 
@@ -1920,14 +2111,12 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			attack = null;
-			attackFromFlag = false;
-			attackFlag = false;
-			attackFrom = null;
-			moveUnitsFlag = false;
-			numOfUnitsToMove = 0;
-			moveUnitsFromCountry = null;
-			theGame.setSelectedCountry(null);
+			/*
+			 * attack = null; attackFromFlag = false; attackFlag = false;
+			 * attackFrom = null; moveUnitsFlag = false; numOfUnitsToMove = 0;
+			 * moveUnitsFromCountry = null; theGame.setSelectedCountry(null);
+			 */
+			theGame.clearSelections();
 			drawingPanel.repaint();
 		}// end actionperformed
 	}// end clearButtonListener

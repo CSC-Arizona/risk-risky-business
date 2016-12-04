@@ -78,7 +78,7 @@ public class Tests {
 	@Test
 	public void testDice() {
 		// 100% Coverage
-		Dice die = new Dice();
+		Dice die = new Dice(1);
 		assertEquals(die.getValue(), 0);
 		die.roll(1);
 		die.roll(3);
