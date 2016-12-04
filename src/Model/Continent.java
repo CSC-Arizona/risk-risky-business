@@ -9,14 +9,12 @@ package Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 public class Continent implements Serializable{
 
 	private Player owner;
 	private ArrayList<Country> myCountries;
 	private int ownerBonus;
 	private String name;
-	
 	/*
 	 * Continent Constructors:
 	 * Continent()
