@@ -24,6 +24,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -44,8 +45,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,6 +63,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -68,6 +76,8 @@ import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import Model.AI;
 import Model.AIStrat;
@@ -260,6 +270,7 @@ public class riskGUI extends JFrame {
 			e.printStackTrace();
 		}*/
 		return error;
+
 	}
 
 	public void saveGame() {
@@ -817,6 +828,7 @@ public class riskGUI extends JFrame {
 				g2.setFont(gotFontBody.deriveFont(Font.BOLD, 30f));
 				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
 						(drawingPanel.getWidth() / 2) - 100, drawingPanel.getHeight() / 2);
+
 				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
 				}
@@ -1511,8 +1523,21 @@ public class riskGUI extends JFrame {
 	private class HelpListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().compareTo("rules") == 0) {
-				JOptionPane.showMessageDialog(riskGUI.this, "Fill this out later, maybe with a hyperlink to the rules",
-						"Rules", JOptionPane.INFORMATION_MESSAGE);
+
+				URL rules = null;
+				try {
+					rules = new URL("http://www.cs.arizona.edu/~mercer/Projects/335/Final/RiskRules.pdf");
+				} catch (MalformedURLException e1) {
+
+					e1.printStackTrace();
+				}
+				JEditorPane ep = new JEditorPane("text/html",
+						"<a href=\"" + rules.toString() + "\">Rules given to us by Rick Mercer</a>" //
+								+ "</body></html>");
+				ep.setEditable(false);
+				ep.addHyperlinkListener(new LinkClickListener(rules));
+				JOptionPane.showMessageDialog(null, ep);
+
 			} else
 				JOptionPane.showMessageDialog(riskGUI.this,
 						"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
@@ -1871,7 +1896,34 @@ public class riskGUI extends JFrame {
 		}// end actionperformed
 	}// end musicListener
 
-	public class StatPanelTurnOnListener implements ActionListener {
+	private class LinkClickListener implements HyperlinkListener {
+		private URL myUrl;
+
+		public LinkClickListener(URL rules) {
+			myUrl = rules;
+
+		}
+
+		@Override
+		public void hyperlinkUpdate(HyperlinkEvent e) {
+			if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+				Desktop myDesktop = Desktop.getDesktop();
+				try {
+					myDesktop.browse(myUrl.toURI());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+
+		}
+	}
+
+	private class StatPanelTurnOnListener implements ActionListener {
 		private boolean turnedOn = false;
 
 		@Override

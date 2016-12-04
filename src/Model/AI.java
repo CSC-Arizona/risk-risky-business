@@ -161,7 +161,7 @@ public class AI extends Player {
 		 * 			do dice roll stuff against attacking and take all units but 1 from attacking from
 		 * 			return false
 		 * else
-		 * 		return true;
+		 * 		return true;t 
 		 * }
 		 */
 		return null;
