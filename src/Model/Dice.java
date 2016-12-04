@@ -15,17 +15,19 @@ import java.util.Random;
 public class Dice implements Serializable, Comparable<Dice> {
 
 	private int value;
-	Random rnd = new Random();
+	
 
 	// initialize to 0 (has not been rolled)
 	public Dice(int i) {
 		this.value = i;
 	}// end constructor
+	
 
 	// Rolls a given number of 6 sided die
 	// Returns a sorted arraylist of dice.
 	// The amount of dice is passed into the function by the numDice method
-	public ArrayList<Dice> roll(int numDice) {
+	public static ArrayList<Dice> roll(int numDice) {
+		Random rnd = new Random();
 		ArrayList<Dice> myRolledDice = new ArrayList<>();
 		int num = 0;
 		for (int i = 0; i < numDice; i++) {

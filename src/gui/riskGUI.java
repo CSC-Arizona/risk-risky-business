@@ -1804,17 +1804,10 @@ public class riskGUI extends JFrame {
 						int numDefenseDice = getNumDefenseDice();
 						
 						
-						int numArmies = getArmiesToUse(theGame.getMoveFrom());
-						theGame.attack(numArmies);
-					
-					
-					
-					
+				//		int numArmies = getArmiesToUse(theGame.getMoveFrom());
+				//		theGame.attack(numArmies);
 					} // end if
-					
-					
-					
-					
+
 					else {
 						JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
 								JOptionPane.ERROR_MESSAGE);
@@ -1829,9 +1822,15 @@ public class riskGUI extends JFrame {
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
 		}// end actionPerformed
-		
-		
 	}// end AttackListener
+	
+	public ArrayList<Dice> rollAttackDice(int numDice){
+		return Dice.roll(numDice);
+	}//end rollAttackDice
+	
+	public ArrayList<Dice> rollDefenseDice(int numDice){
+		return Dice.roll(numDice);
+	}//end rollDefenseDice
 	
 	public int getNumAttackDice(){
 		int forces = theGame.getMoveFrom().getForcesVal();
