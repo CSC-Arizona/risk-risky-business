@@ -222,53 +222,49 @@ public class riskGUI extends JFrame {
 		JFileChooser choose = new JFileChooser();
 		choose.setCurrentDirectory(new File("./SavedGames"));
 		int get = choose.showOpenDialog(null);
-		if(get==JFileChooser.APPROVE_OPTION){
-			try{
+		if (get == JFileChooser.APPROVE_OPTION) {
+			try {
 				ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(choose.getSelectedFile()));
 				theGame = (Game) inFile.readObject();
 				inFile.close();
-			}catch(Exception ex){
+			} catch (Exception ex) {
 				ex.printStackTrace();
-				error=true;
+				error = true;
 			}
 		}
-		
-		/*try {
-			ObjectInputStream inFile = new ObjectInputStream(new FileInputStream("game.ser"));
-			theGame = (Game) inFile.readObject();
-			inFile.close();
 
-			ObjectInputStream inFile2 = new ObjectInputStream(new FileInputStream("moveUnitsFlag.ser"));
-			moveUnitsFlag = (boolean) inFile2.readObject();
-			inFile2.close();
-
-			ObjectInputStream inFile3 = new ObjectInputStream(new FileInputStream("moveUnitsCountry.ser"));
-			moveUnitsFromCountry = (Country) inFile3.readObject();
-			inFile3.close();
-
-			ObjectInputStream inFile4 = new ObjectInputStream(new FileInputStream("attackFromFlag.ser"));
-			attackFromFlag = (boolean) inFile4.readObject();
-			inFile4.close();
-
-			ObjectInputStream inFile5 = new ObjectInputStream(new FileInputStream("attackFlag.ser"));
-			attackFlag = (boolean) inFile5.readObject();
-			inFile5.close();
-
-			ObjectInputStream inFile6 = new ObjectInputStream(new FileInputStream("attackFrom.ser"));
-			attackFrom = (Country) inFile6.readObject();
-			inFile6.close();
-
-			ObjectInputStream inFile7 = new ObjectInputStream(new FileInputStream("attack.ser"));
-			attack = (Country) inFile7.readObject();
-			inFile7.close();
-
-		} catch (IOException e) {
-			error = true;
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			error = true;
-			e.printStackTrace();
-		}*/
+		/*
+		 * try { ObjectInputStream inFile = new ObjectInputStream(new
+		 * FileInputStream("game.ser")); theGame = (Game) inFile.readObject();
+		 * inFile.close();
+		 * 
+		 * ObjectInputStream inFile2 = new ObjectInputStream(new
+		 * FileInputStream("moveUnitsFlag.ser")); moveUnitsFlag = (boolean)
+		 * inFile2.readObject(); inFile2.close();
+		 * 
+		 * ObjectInputStream inFile3 = new ObjectInputStream(new
+		 * FileInputStream("moveUnitsCountry.ser")); moveUnitsFromCountry =
+		 * (Country) inFile3.readObject(); inFile3.close();
+		 * 
+		 * ObjectInputStream inFile4 = new ObjectInputStream(new
+		 * FileInputStream("attackFromFlag.ser")); attackFromFlag = (boolean)
+		 * inFile4.readObject(); inFile4.close();
+		 * 
+		 * ObjectInputStream inFile5 = new ObjectInputStream(new
+		 * FileInputStream("attackFlag.ser")); attackFlag = (boolean)
+		 * inFile5.readObject(); inFile5.close();
+		 * 
+		 * ObjectInputStream inFile6 = new ObjectInputStream(new
+		 * FileInputStream("attackFrom.ser")); attackFrom = (Country)
+		 * inFile6.readObject(); inFile6.close();
+		 * 
+		 * ObjectInputStream inFile7 = new ObjectInputStream(new
+		 * FileInputStream("attack.ser")); attack = (Country)
+		 * inFile7.readObject(); inFile7.close();
+		 * 
+		 * } catch (IOException e) { error = true; e.printStackTrace(); } catch
+		 * (ClassNotFoundException e) { error = true; e.printStackTrace(); }
+		 */
 		return error;
 
 	}
@@ -645,17 +641,17 @@ public class riskGUI extends JFrame {
 					JFileChooser choose = new JFileChooser();
 					choose.setCurrentDirectory(new File("./SavedGames"));
 					int get = choose.showSaveDialog(null);
-					if(get==JFileChooser.APPROVE_OPTION){
-						try{
+					if (get == JFileChooser.APPROVE_OPTION) {
+						try {
 							FileOutputStream gameToDisk = new FileOutputStream(choose.getSelectedFile() + ".ser");
 							ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
 							outFile.writeObject(theGame);
 							outFile.close();
-						}catch(Exception ex){
+						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
 					}
-					//saveGame();
+					// saveGame();
 					System.out.println("SAVE GAME");
 					System.exit(0);
 				} else if (confirm == JOptionPane.NO_OPTION) {
@@ -1648,6 +1644,7 @@ public class riskGUI extends JFrame {
 	private class AttackListener implements ActionListener {
 		private boolean firstAttackPast = false, continueFlag = false;
 		int diceAllowed = 0, actualNumDice = 0;
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
@@ -1671,7 +1668,7 @@ public class riskGUI extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					} else {
 						if (attackFrom.getForcesVal() > 1) {
-							
+
 							int forces = attackFrom.getForcesVal();
 							if (forces >= 4) {
 								diceAllowed = 3;
@@ -1685,20 +1682,18 @@ public class riskGUI extends JFrame {
 										"How many dice would you like to throw? You can throw up to " + diceAllowed);
 								try {
 									actualNumDice = Integer.parseInt(sNumDice);
-									if(actualNumDice <= diceAllowed || actualNumDice > 0)
-									{
+									if (actualNumDice <= diceAllowed || actualNumDice > 0) {
 										continueFlag = true;
-									}
-									else
-									{}	//error
-										
+									} else {
+									} // error
+
 								} catch (NumberFormatException e) {
-									//invalid number
+									// invalid number
 								}
-								
+
 							}
 						}
-						//TODO start animation here, I think
+						// TODO start animation here, I think
 						Boolean attackResult = false;
 						System.out.println(
 								theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
@@ -1710,12 +1705,13 @@ public class riskGUI extends JFrame {
 							System.out.println(attackFrom + " " + attackFrom.getForcesVal());
 							JOptionPane.showMessageDialog(null, attackFrom.toString() + " won the attack!");
 							int units = theGame.getUnits(attackFrom);
-							theGame.moveUnitsToCountry(units,attackFrom, attack, theGame.getCurrentPlayer());
-							
+							theGame.moveUnitsToCountry(units, attackFrom, attack, theGame.getCurrentPlayer());
+
 							attackFromFlag = false;
 							theGame.removeLosers();
 							gameOver = theGame.isFinished();
 						}
+
 					}
 				} else if (attackFlag) {
 					if (!theGame.getCurrentPlayer().equals(theGame.getSelectedCountry().getOccupier())) {
@@ -1726,6 +1722,32 @@ public class riskGUI extends JFrame {
 								"Attacking Countries must be neighbors. Please choose another", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					} else {
+						if (attackFrom.getForcesVal() > 1) {
+
+							int forces = attackFrom.getForcesVal();
+							if (forces >= 4) {
+								diceAllowed = 3;
+							} else if (forces == 3) {
+								diceAllowed = 2;
+							} else
+								diceAllowed = 1;
+
+							while (!continueFlag) {
+								String sNumDice = JOptionPane.showInputDialog(
+										"How many dice would you like to throw? You can throw up to " + diceAllowed);
+								try {
+									actualNumDice = Integer.parseInt(sNumDice);
+									if (actualNumDice <= diceAllowed || actualNumDice > 0) {
+										continueFlag = true;
+									} else {
+									} // error
+
+								} catch (NumberFormatException e) {
+									// invalid number
+								}
+
+							}
+						}
 						boolean attackResult = false;
 						System.out.println(
 								theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
@@ -1745,7 +1767,7 @@ public class riskGUI extends JFrame {
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
 		}// end
-																		// actionPerformed
+			// actionPerformed
 
 		public int getArmiesToAttack(Country countryToRemoveUnits) {
 			boolean moveFlag = false, continueFlag = false;
@@ -1970,7 +1992,7 @@ public class riskGUI extends JFrame {
 			turnOffStatPanel();
 		}// end actionPerformed
 	}// end turned off listener
-	
+
 	private class saveGameListener implements ActionListener {
 
 		@Override
@@ -1978,13 +2000,13 @@ public class riskGUI extends JFrame {
 			JFileChooser choose = new JFileChooser();
 			choose.setCurrentDirectory(new File("./SavedGames"));
 			int get = choose.showSaveDialog(null);
-			if(get==JFileChooser.APPROVE_OPTION){
-				try{
+			if (get == JFileChooser.APPROVE_OPTION) {
+				try {
 					FileOutputStream gameToDisk = new FileOutputStream(choose.getSelectedFile() + ".ser");
 					ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
 					outFile.writeObject(theGame);
 					outFile.close();
-				}catch(Exception ex){
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}

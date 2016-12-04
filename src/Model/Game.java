@@ -545,7 +545,6 @@ public class Game implements Serializable{
 		{
 			if(yours.getForcesVal() == 1)
 			{
-				winFlag = false;
 				break;
 			}
 			else if(theirs.getForcesVal() <=0)
@@ -562,6 +561,7 @@ public class Game implements Serializable{
 				yours.removeUnits(1);
 		}
 		
+				
 		if(winFlag)
 		{
 			Player loser = theirs.getOccupier();
