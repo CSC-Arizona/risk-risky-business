@@ -96,7 +96,6 @@ public class riskGUI extends JFrame {
 	private JPanel splashInfo = new JPanel();
 	private Font gotFontHeader;
 	private Font gotFontBody;
-	private Boolean useMaxDice = true;
 	private String gameType;
 	private Player nextPlayer, currPlayer;
 	private int humans;
