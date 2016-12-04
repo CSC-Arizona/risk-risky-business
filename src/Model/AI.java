@@ -204,7 +204,7 @@ public class AI extends Player implements Serializable{
 	}
 	
 	public boolean finishedAttacking(){
-		if (timesIAttacked == 3){
+		if (timesIAttacked >= 3){
 			timesIAttacked = 0;
 			return true;
 		}

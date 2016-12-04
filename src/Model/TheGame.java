@@ -355,7 +355,7 @@ public class TheGame implements Serializable {
 			
 			//If the AI decided to finish attacking
 			if (((AI)currentPlayer).finishedAttacking())
-				this.skipAttackPhase();
+				this.skipAttackPhaseAI();
 		}// end else if
 
 		// during official reinforcement
@@ -819,6 +819,11 @@ public class TheGame implements Serializable {
 		
 		return tmp;
 	}// end skipAttackPhase
+	
+	public void skipAttackPhaseAI(){
+		skipAttackPhase();
+		nextPhase();
+	}
 
 	public boolean skipCardRedemption() {
 		if (!currentPlayer.mustRedeemCards()) {
