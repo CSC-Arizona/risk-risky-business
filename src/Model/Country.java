@@ -65,6 +65,7 @@ public class Country extends Observable implements Serializable{
 		neighbors.add(neighbor);
 	}// end addNeighbor
 
+
 	/*
 	 * makeButton()
 	 * parameters: int xWidth, int yHeight, ActionListener act
@@ -156,21 +157,28 @@ public class Country extends Observable implements Serializable{
 	}// end getOccupier
 
 	public JButton getMyButton() {
-		return myButton;
+		return getButton();
 	}// end getMyButton
 
 	public ArrayList<Country> getNeighbors() {
 		return neighbors;
 	}// end getNeighbors
 	
-	public void setOccupier(Player player) {
-		occupier = player;
-		setChanged();
-		notifyObservers();
+	public void setForcesToZero(){
+		forcesVal = 0;
+	}//end setForcesToZero
 
+	public void setOccupier(Player player) {
+		//If there was a previous owner
+		if (occupier != null)
+			occupier.loseCountry(this);
+		
+		//Now, set the new owner
+		occupier = player;
+		occupier.occupyCountry(this);
 	}// end setOccupier
 
-	public void setForcesVal(int i) {
+	public void addForcesVal(int i) {
 		forcesVal += i;
 
 	}// end setForcesVal
@@ -214,5 +222,15 @@ public class Country extends Observable implements Serializable{
 		forcesVal -= numOfUnitsToMove;
 
 	}// end removeUnits
+	
+	public boolean isMyNeighbor (Country other){
+		//That means other wasn't in neighbors
+		/*if (neighbors.indexOf(other) == -1){
+			return false;
+		}
+		else
+			return true;*/
+		return neighbors.contains(other);
+	}//end isMyNeighbor
 
 }// end countryClasss
