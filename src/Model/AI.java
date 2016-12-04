@@ -190,13 +190,12 @@ public class AI extends Player implements Serializable{
 		 */
 	
 	public int getAmountToAttackWith(Country from, Country to){
-		timesIAttacked++;
 		System.out.println("Times I attacked: " + timesIAttacked);
 		return from.getForcesVal() - 1; //STUB!
 	}//end getAmoutnToAttackWith
 
 	public Country findAttackingCountry(Country attacking) {
-
+		timesIAttacked++;
 		// System.out.println("find attacking");
 		for (Country c1 : findFringeCountries()) {
 			for (Country c2 : c1.getNeighbors()) {
