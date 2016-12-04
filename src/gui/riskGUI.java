@@ -24,6 +24,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -40,6 +41,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,6 +53,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -59,6 +64,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import Model.AI;
 import Model.AIStrat;
@@ -161,14 +168,14 @@ public class riskGUI extends JFrame {
 		}
 		menu.add(AIDiff);
 	}// end setUpAiMenu
-	
-	public void loadGame(){
-		//TODO
-		splashNumPlayers(); //here for now so that we don't break things. 
+
+	public void loadGame() {
+		// TODO
+		splashNumPlayers(); // here for now so that we don't break things.
 	}
-	
-	public void saveGame(){
-		//TODO
+
+	public void saveGame() {
+		// TODO
 	}
 
 	private void defaultMode() {
@@ -466,10 +473,9 @@ public class riskGUI extends JFrame {
 				int confirm = JOptionPane.showConfirmDialog(null, "Save Data?", "End",
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				// If the user wants to save before quit, then save!
-				if(confirm==JOptionPane.CANCEL_OPTION){
+				if (confirm == JOptionPane.CANCEL_OPTION) {
 					System.out.println("CANCEL CLOSE");
-				}
-				else if (confirm == JOptionPane.OK_OPTION) {
+				} else if (confirm == JOptionPane.OK_OPTION) {
 					saveGame();
 					System.out.println("SAVE GAME");
 					System.exit(0);
@@ -618,8 +624,6 @@ public class riskGUI extends JFrame {
 					currCountryPanel.updatePanel(g);
 				}
 
-				
-
 				if (theGame != null) {
 					drawCurrentPlayer(g2);
 					drawUnits(g2);
@@ -628,9 +632,9 @@ public class riskGUI extends JFrame {
 				// drawGridAndNumbers(g2);
 			} else {
 				g2.setColor(Color.BLACK);
-				g2.setFont(gotFontBody.deriveFont(Font.BOLD,30f));
+				g2.setFont(gotFontBody.deriveFont(Font.BOLD, 30f));
 				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
-						(drawingPanel.getWidth() / 2)-100, drawingPanel.getHeight() / 2);
+						(drawingPanel.getWidth() / 2) - 100, drawingPanel.getHeight() / 2);
 				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
 				}
@@ -1161,8 +1165,19 @@ public class riskGUI extends JFrame {
 	private class HelpListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().compareTo("rules") == 0) {
-				JOptionPane.showMessageDialog(riskGUI.this, "Fill this out later, maybe with a hyperlink to the rules",
-						"Rules", JOptionPane.INFORMATION_MESSAGE);
+				URL rules = null;
+				try {
+					rules = new URL("http://www.cs.arizona.edu/~mercer/Projects/335/Final/RiskRules.pdf");
+				} catch (MalformedURLException e1) {
+
+					e1.printStackTrace();
+				}
+				JEditorPane ep = new JEditorPane("text/html", "<a href=\"" + rules.toString() + "\">Rules given to us by Rick Mercer</a>" //
+						+ "</body></html>");
+				ep.setEditable(false);
+				ep.addHyperlinkListener(new LinkClickListener(rules));
+				JOptionPane.showMessageDialog(null, ep);
+
 			} else
 				JOptionPane.showMessageDialog(riskGUI.this,
 						"This version of Risk was created by Dylan Tobia,\nAbigail Dodd, Sydney Komro, and Jewell Finder."
@@ -1201,7 +1216,7 @@ public class riskGUI extends JFrame {
 			// player move then ai move if ai turn
 			// if(theGame.getCurrentPlayer() instanceof AI)
 			// ((AI) theGame.getCurrentPlayer()).myTurn();
-			//System.out.println("Place clicked");
+			// System.out.println("Place clicked");
 			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
 				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
 
@@ -1451,7 +1466,7 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			gameType = arg0.getActionCommand();
 			System.out.println(gameType);
-			if(gameType.compareTo("New Game!")==0)
+			if (gameType.compareTo("New Game!") == 0)
 				splashNumPlayers();
 			else
 				loadGame();
@@ -1520,4 +1535,31 @@ public class riskGUI extends JFrame {
 				setUpAIMenu();
 		}// end actionperformed
 	}// end musicListener
+
+	private class LinkClickListener implements HyperlinkListener {
+		private URL myUrl;
+
+		public LinkClickListener(URL rules) {
+			myUrl = rules;
+
+		}
+
+		@Override
+		public void hyperlinkUpdate(HyperlinkEvent e) {
+			if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+				Desktop myDesktop = Desktop.getDesktop();
+				try {
+					myDesktop.browse(myUrl.toURI());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+
+		}
+	}
 }
