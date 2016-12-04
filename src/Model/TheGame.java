@@ -347,14 +347,13 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
-			String tmp = ((AI)currentPlayer).aiAttack();
+			moveTo = ((AI)currentPlayer).getCountryToAttack();
+			moveFrom = ((AI)currentPlayer).findAttackingCountry(moveTo);
+			attack(((AI)currentPlayer).getAmountToAttackWith(moveFrom, moveTo));
 			
-			if (tmp == null){
+			//If the AI decided to finish attacking
+			if (((AI)currentPlayer).finishedAttacking())
 				nextPhase();
-			}//end if
-			else{
-				gameLog += tmp;
-			}//end else
 		}// end else if
 
 		// during official reinforcement
@@ -534,29 +533,58 @@ public class TheGame implements Serializable {
 	}// end redeemCards
 
 	public String attack(int numArmies) {
+		
 		gameLog+=moveFrom.getOccupier().getName() + " attacked " + moveTo.getName() + " with " + numArmies + " units.\n";
 		
 		String result = "";
-		if (numArmies <= moveTo.getForcesVal()) {
-			// theirs.setForcesVal(numArmies);
-			moveFrom.removeUnits(numArmies); // you lose the armies fought with
-			result+=moveFrom.getOccupier().getName() + " lost the battle.\n";
-		} else if (moveTo.getForcesVal() < numArmies) {
-			result += moveFrom.getOccupier().getName() + " defeated " + moveTo.getOccupier().getName() + " and took " + moveTo.getName() + ".\n";
-			countriesBefore = getCurrentPlayer().getCountries().size();
-			moveTo.getOccupier().loseCountry(moveTo);
-			moveTo.removeUnits(moveTo.getForcesVal());
+		
+		//attack won
+		if (wasAttackSuccessful(numArmies)){
+			result += currentPlayer.getName() + " defeated " + moveTo.getOccupier() + " and took " + moveTo.getName() + ".\n";
+			
+			//Resetting units
+			moveTo.setForcesToZero();
 			moveTo.setForcesVal(numArmies);
-			moveTo.setOccupier(moveFrom.getOccupier());
-			moveFrom.getOccupier().occupyCountry(moveTo);
-			moveFrom.removeUnits(numArmies); 
-			countriesAfter = getCurrentPlayer().getCountries().size();
-			// players.get(playerLocation).addCard(deck.deal());
-		}//end else if
+			moveFrom.removeUnits(numArmies);
+			
+			//Now, set the occupier of the new country to the attacker
+			moveTo.setOccupier(currentPlayer);
+		}//end if
+		
+		//attack lost
+		else {
+			result += currentPlayer.getName() + " lost the attack.\n";
+			moveFrom.removeUnits(numArmies);
+		}//end else
+		
+		
+//		if (numArmies <= moveTo.getForcesVal()) {
+//			// theirs.setForcesVal(numArmies);
+//			moveFrom.removeUnits(numArmies); // you lose the armies fought with
+//			result+=moveFrom.getOccupier().getName() + " lost the battle.\n";
+//		} else if (moveTo.getForcesVal() < numArmies) {
+//			result += moveFrom.getOccupier().getName() + " defeated " + moveTo.getOccupier().getName() + " and took " + moveTo.getName() + ".\n";
+//			countriesBefore = getCurrentPlayer().getCountries().size();
+//			//moveTo.getOccupier().loseCountry(moveTo);
+//			moveTo.removeUnits(moveTo.getForcesVal());
+//			moveTo.setForcesVal(numArmies);
+//			moveTo.setOccupier(moveFrom.getOccupier());
+//			moveFrom.getOccupier().occupyCountry(moveTo);
+//			moveFrom.removeUnits(numArmies); 
+//			countriesAfter = getCurrentPlayer().getCountries().size();
+//			// players.get(playerLocation).addCard(deck.deal());
+//		}//end else if
 		clearSelections();
 		gameLog+=result;
 		return result;
 	}//end attack
+	
+	/*
+	 * This is where the random dice rolls will eventually need to go
+	 */
+	public boolean wasAttackSuccessful(int numArmies){
+		return numArmies > moveTo.getForcesVal();
+	}//end wasAttackSuccessful
 
 	/**********************************************************************************
 	 *************************** Shuffling Armies in Countries***************************

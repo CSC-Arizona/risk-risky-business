@@ -1262,14 +1262,17 @@ public class riskGUI extends JFrame {
 			JPanel cards = new JPanel();
 			cards.setLayout(new GridLayout(2, 0));
 			JPanel showCards = new JPanel();
-			showCards.setLayout(new GridLayout(3, 2));
-			ArrayList<Card> currCards = theGame.getCurrentPlayer().getCards();
+			int cols = myCards.size();
+			if (cols <1)
+				cols = 1;
+			showCards.setLayout(new GridLayout(0, cols));
+			//ArrayList<Card> currCards = theGame.getCurrentPlayer().getCards();
 			JCheckBox checkBox = new JCheckBox();
 			// Get the image for this card
-			for (int i = 0; i < currCards.size(); i++) {
-				Image im = currCards.get(i).getMyImage();
+			for (int i = 0; i < myCards.size(); i++) {
+				Image im = myCards.get(i).getMyImage();
 				ImageIcon ic = new ImageIcon(im.getScaledInstance(
-						(int) (xWidth * 2), (int) (yHeight * 4),
+						(int) (xWidth * 1), (int) (yHeight * 1.5),
 						Image.SCALE_DEFAULT));
 
 				checkBox = new JCheckBox(ic);
@@ -1763,6 +1766,7 @@ public class riskGUI extends JFrame {
 					if (theGame.getSelectedCountry().getForcesVal() >1){
 						theGame.setMoveFrom();
 						if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())){
+							System.out.println(theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom()));
 							int numArmies = getArmiesToUse(theGame.getMoveFrom());
 							theGame.attack(numArmies);
 						}//end if
@@ -1797,8 +1801,19 @@ public class riskGUI extends JFrame {
 			else if (theGame.getMoveTo()==null){
 				if (!theGame.playerIsOwner()){
 					theGame.setMoveTo();
-					int numArmies = getArmiesToUse(theGame.getMoveFrom());
-					theGame.attack(numArmies);
+					
+					if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())){
+						int numArmies = getArmiesToUse(theGame.getMoveFrom());
+						theGame.attack(numArmies);
+					}//end if
+					else {
+						JOptionPane
+						.showMessageDialog(
+								null,
+								"You can only attack your neighbors.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+						theGame.clearSelections();
+					}//end else
 				}//end if
 				else{
 					JOptionPane

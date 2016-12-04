@@ -135,10 +135,19 @@ public class Country extends Observable implements Serializable{
 	public boolean equals(Country comp) {
 		return name.equals(comp.getName());
 	}// end equals
+	
+	public void setForcesToZero(){
+		forcesVal = 0;
+	}//end setForcesToZero
 
 	public void setOccupier(Player player) {
+		//If there was a previous owner
+		if (occupier != null)
+			occupier.loseCountry(this);
+		
+		//Now, set the new owner
 		occupier = player;
-		player.occupyCountry(this);
+		occupier.occupyCountry(this);
 	}// end setOccupier
 
 	public void setForcesVal(int i) {
@@ -160,6 +169,12 @@ public class Country extends Observable implements Serializable{
 	}// end removeUnits
 	
 	public boolean isMyNeighbor (Country other){
+		//That means other wasn't in neighbors
+		/*if (neighbors.indexOf(other) == -1){
+			return false;
+		}
+		else
+			return true;*/
 		return neighbors.contains(other);
 	}//end isMyNeighbor
 

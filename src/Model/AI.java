@@ -10,11 +10,13 @@ public class AI extends Player {
 
 	private JMenuItem myDiff;
 	private AIStrat myStrat;
+	private int timesIAttacked;
 	// private Game theGame;
 
 	public AI(AIStrat strat, int numOfPlayers) {
 		super(numOfPlayers);
 		myStrat = strat;
+		timesIAttacked = 0;
 	}// end AI constructor
 
 	// get a random number between from 0 and 49
@@ -137,23 +139,25 @@ public class AI extends Player {
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
 	public String aiAttack() {
-		Country attacking = getCountryToAttack();
-		if (attacking == null)
+		
+//		Country attacking = getCountryToAttack();
+//		if (attacking == null)
+//			return null;
+//		Country attackingFrom = findAttackingCountry(attacking);
+//
+//		// change this for dice roll later, but for now, just take over
+//		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+//			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName() + ".\n";
+//			int oldForces = attacking.getForcesVal();
+//			attacking.getOccupier().loseCountry(attacking);
+//			attacking.removeUnits(oldForces);
+//			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
+//			attacking.setOccupier(this);
+//			this.occupyCountry(attacking);
+//			System.out.println(this.getName() + " took " + attacking.getName());
+//			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
+//			return str;
 			return null;
-		Country attackingFrom = findAttackingCountry(attacking);
-
-		// change this for dice roll later, but for now, just take over
-		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
-			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName() + ".\n";
-			int oldForces = attacking.getForcesVal();
-			attacking.getOccupier().loseCountry(attacking);
-			attacking.removeUnits(oldForces);
-			attacking.setForcesVal(attackingFrom.getForcesVal() - 1);
-			attacking.setOccupier(this);
-			this.occupyCountry(attacking);
-			System.out.println(this.getName() + " took " + attacking.getName());
-			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
-			return str;
 		}//end aiAttack
 
 		/*
@@ -174,11 +178,13 @@ public class AI extends Player {
 		 * 		return true;
 		 * }
 		 */
-		return null;
+	
+	public int getAmountToAttackWith(Country from, Country to){
+		timesIAttacked++;
+		return from.getForcesVal() - 1; //STUB!
+	}//end getAmoutnToAttackWith
 
-	}// end aiAttack
-
-	private Country findAttackingCountry(Country attacking) {
+	public Country findAttackingCountry(Country attacking) {
 
 		// System.out.println("find attacking");
 		for (Country c1 : findFringeCountries()) {
@@ -190,9 +196,18 @@ public class AI extends Player {
 		}
 		return null;
 	}
+	
+	public boolean finishedAttacking(){
+		if (timesIAttacked == 3){
+			timesIAttacked = 0;
+			return true;
+		}
+		else
+			return false;
+	}//end finishedAttacking
 
 	// returns a country it can attack
-	private Country getCountryToAttack() {
+	public Country getCountryToAttack() {
 		// System.out.println("get country to attack");
 		Country attackMe = pickRandomFromList(findCountriesToAttack());
 		return attackMe;
