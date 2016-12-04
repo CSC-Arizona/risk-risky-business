@@ -1613,8 +1613,8 @@ public class riskGUI extends JFrame {
 	 * Handles two teams going to war against each other!
 	 */
 	private class AttackListener implements ActionListener {
-		private boolean firstAttackPast = false;
-
+		private boolean firstAttackPast = false, continueFlag = false;
+		int diceAllowed = 0, actualNumDice = 0;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
@@ -1637,17 +1637,48 @@ public class riskGUI extends JFrame {
 								"Attacking Countries must be neighbors. Please choose another", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					} else {
-						int numArmies = theGame.getArmiesToAttack(attackFrom);
-						String attackResult = "";
+						if (attackFrom.getForcesVal() > 1) {
+							
+							int forces = attackFrom.getForcesVal();
+							if (forces >= 4) {
+								diceAllowed = 3;
+							} else if (forces == 3) {
+								diceAllowed = 2;
+							} else
+								diceAllowed = 1;
+
+							while (!continueFlag) {
+								String sNumDice = JOptionPane.showInputDialog(
+										"How many dice would you like to throw? You can throw up to " + diceAllowed);
+								try {
+									actualNumDice = Integer.parseInt(sNumDice);
+									if(actualNumDice <= diceAllowed || actualNumDice > 0)
+									{
+										continueFlag = true;
+									}
+									else
+									{}	//error
+										
+								} catch (NumberFormatException e) {
+									//invalid number
+								}
+								
+							}
+						}
+						//TODO start animation here, I think
+						Boolean attackResult = false;
 						System.out.println(
 								theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
 						System.out.println(attackFrom + " " + attackFrom.getForcesVal());
-						attackResult = theGame.attack(attackFrom, theGame.getSelectedCountry(), numArmies);
-						if (attackResult.compareTo("") != 0) {
+						attackResult = theGame.attack(attackFrom, theGame.getSelectedCountry(), actualNumDice);
+						if (attackResult) {
 							System.out.println(
 									theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
 							System.out.println(attackFrom + " " + attackFrom.getForcesVal());
-							JOptionPane.showMessageDialog(null, attackResult + " won the attack!");
+							JOptionPane.showMessageDialog(null, attackFrom.toString() + " won the attack!");
+							int units = theGame.getUnits(attackFrom);
+							theGame.moveUnitsToCountry(units,attackFrom, attack, theGame.getCurrentPlayer());
+							
 							attackFromFlag = false;
 							theGame.removeLosers();
 							gameOver = theGame.isFinished();
@@ -1662,13 +1693,12 @@ public class riskGUI extends JFrame {
 								"Attacking Countries must be neighbors. Please choose another", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					} else {
-						int numArmies = theGame.getArmiesToAttack(theGame.getSelectedCountry());
-						String attackResult = "";
+						boolean attackResult = false;
 						System.out.println(
 								theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
 						System.out.println(attack + " " + attack.getForcesVal());
-						attackResult = theGame.attack(theGame.getSelectedCountry(), attack, numArmies);
-						if (attackResult.compareTo("") != 0) {
+						attackResult = theGame.attack(theGame.getSelectedCountry(), attack, actualNumDice);
+						if (attackResult) {
 							System.out.println(
 									theGame.getSelectedCountry() + " " + theGame.getSelectedCountry().getForcesVal());
 							System.out.println(attack + " " + attack.getForcesVal());
@@ -1681,7 +1711,8 @@ public class riskGUI extends JFrame {
 			}
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
-		}// end actionPerformed
+		}// end
+																		// actionPerformed
 
 		public int getArmiesToAttack(Country countryToRemoveUnits) {
 			boolean moveFlag = false, continueFlag = false;
