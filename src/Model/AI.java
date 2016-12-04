@@ -62,6 +62,10 @@ public class AI extends Player implements Serializable{
 		}
 		return null;
 	}// end checkAllNeighbors
+	
+	public int chooseMyDiceToRoll(int max){
+		return max;
+	}//end chooseMyDice
 
 	private Country getRandomCountry(Country[] countries) {
 		Random rand = new Random();
@@ -187,6 +191,7 @@ public class AI extends Player implements Serializable{
 	
 	public int getAmountToAttackWith(Country from, Country to){
 		timesIAttacked++;
+		System.out.println("Times I attacked: " + timesIAttacked);
 		return from.getForcesVal() - 1; //STUB!
 	}//end getAmoutnToAttackWith
 
