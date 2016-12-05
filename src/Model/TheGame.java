@@ -639,153 +639,122 @@ public class TheGame implements Serializable {
 				+ moveTo.getName() + ".\n";
 
 		String result = "";
+		int attackResult = wasAttackSuccessful();
 
 		// attack won
-		int[] winsAndLosses = getWinsAndLosses();
-		if (winsAndLosses[0] == 2 || (winsAndLosses[0] == 1 && winsAndLosses[1] == 0)) {
-			// attack was pretty successfull
-			moveTo.removeUnits(winsAndLosses[0]);
-			if (currentPlayer instanceof HumanPlayer && moveTo.getForcesVal() == 0) {
-				JOptionPane.showMessageDialog(null,
-						theGame.getCurrentPlayer().getName()
-								+ " had a successful attack roll with no casualties and took over the country!",
-						"Excellent!", JOptionPane.INFORMATION_MESSAGE);
-			} else if (currentPlayer instanceof HumanPlayer) {
-				JOptionPane.showMessageDialog(null,
-						theGame.getCurrentPlayer().getName() + " had a successful attack roll with no casualties!",
-						"Excellent!", JOptionPane.INFORMATION_MESSAGE);
-			}
 
-			if (moveTo.getForcesVal() == 0) {
-
-				int units = 0;
-
-				// let the AI choose how many to move
-				// STUB!!!! change for AI behavior change
-				if (currentPlayer instanceof AI) {
-					units = moveFrom.getForcesVal() - 1;
-				} // end if
-
-				// let the person choose how many to move
-				else {
-					// Find out how many units they want to move
-					units = 0;
-					while (units == 0) {
-						String unitsToMove = JOptionPane.showInputDialog(
-								"How Many armies do you want to move? You must move at least 1, and have "
-										+ moveFrom.getForcesVal() + ".");
-						try {
-							units = Integer.parseInt(unitsToMove);
-						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, "That was invalid number.", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							units = 0;
-							continue;
-						} // end catch
-
-						if (units < 1 || units > moveFrom.getForcesVal() - 1) {
-							JOptionPane.showMessageDialog(null, "That was invalid number.", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							units = 0;
-						} // end if
-					}
-
-					moveTo.addForcesVal(units);
-					moveFrom.removeUnits(units);
-					moveTo.setOccupier(currentPlayer);
-
-					cardEarned = true;
-
-					// end if
-					clearSelections();
-
-					removeLosers();
-
-					isFinished();
-					gameLog += result;
-					return true;
-				}
-
-			}
-		} else if (winsAndLosses[1] == 2 || (winsAndLosses[0] == 0 && winsAndLosses[1] == 1)) {
-			// ouch
-			moveFrom.removeUnits(winsAndLosses[1]);
+		if (attackResult >0) {
+			result += currentPlayer.getName() + " won the attack.\n";
+			
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " lost the attack", "Ouch!",
-						JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+					theGame.getCurrentPlayer().getName() + " won the attack", "Success",
+					JOptionPane.INFORMATION_MESSAGE);
+			// Resetting units
+			// moveTo.setForcesToZero();
+			// moveTo.addForcesVal(numArmies);
+			// moveFrom.removeUnits(numArmies);
+			moveTo.removeUnits(attackResult);
+			
+			if (moveTo.getForcesVal() == 0) {
+				countryWasTaken();
+			}// end if
+			
+			clearSelections();
+			gameLog += result;
+			return true;
+		}// end if
+
+		// attack lost
+		else if (attackResult < 0){
+			if (currentPlayer instanceof HumanPlayer)
+				JOptionPane.showMessageDialog(null,
+					theGame.getCurrentPlayer().getName() + " lost the attack", "Failure",
+					JOptionPane.INFORMATION_MESSAGE);
+			//Get rid of the negative so we don't accidentally add
+			moveFrom.removeUnits(-1 * attackResult);
 
 			result += currentPlayer.getName() + " lost the attack.\n";
 			clearSelections();
 			gameLog += result;
 			return false;
-		} else if(winsAndLosses[0] == 1 && winsAndLosses[1] == 1){
-			// both took casualties
 
-			moveFrom.removeUnits(winsAndLosses[0]);
-			moveTo.removeUnits(winsAndLosses[1]);
-			if (currentPlayer instanceof HumanPlayer && moveTo.getForcesVal() == 0) {
-				JOptionPane.showMessageDialog(
-						null, "There were casualties on both sides, but in the end "
-								+ theGame.getCurrentPlayer().getName() + " won the attack!",
-						"Not bad!", JOptionPane.INFORMATION_MESSAGE);
-			} else if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, "There were casualties on both sides", "Not bad!",
-						JOptionPane.INFORMATION_MESSAGE);
-
+		}// end else if
+		
+		//Otherwise, lose one and one
+		else {
+			result += currentPlayer.getName() + " was forced to retreat.\n";
+			if (currentPlayer instanceof HumanPlayer)
+				JOptionPane.showMessageDialog(null,
+					theGame.getCurrentPlayer().getName() + " was forced to retreat.", "tie",
+					JOptionPane.INFORMATION_MESSAGE);
+			
+			moveFrom.removeUnits(1);
+			moveTo.removeUnits(1);
+			
 			if (moveTo.getForcesVal() == 0) {
-				int units = 0;
-
-				// let the AI choose how many to move
-				// STUB!!!! change for AI behavior change
-				if (currentPlayer instanceof AI) {
-					units = moveFrom.getForcesVal() - 1;
-				} // end if
-
-				// let the person choose how many to move
-				else {
-					// Find out how many units they want to move
+				countryWasTaken();
+			}// end if
+			
+			clearSelections();
+			gameLog += result;
+			return true;
+		}//end else
+	}// end attack
+	
+	/*
+	 * Makes the necessary changes to the countries if the attackee lost a country
+	 */
+	private void countryWasTaken(){
+		gameLog += currentPlayer.getName() + " defeated "
+				+ moveTo.getOccupier().getName() + " and took "
+				+ moveTo.getName() + ".\n";
+		
+		int units = 0;
+		
+		//let the AI choose how many to move
+		//STUB!!!! change for AI behavior change
+		if (currentPlayer instanceof AI){
+			units = moveFrom.getForcesVal() - 1;
+		}//end if
+		
+		//let the person choose how many to move
+		else {
+			//Find out how many units they want to move
+			units = 0;
+			while (units == 0) {
+				String unitsToMove = JOptionPane
+						.showInputDialog("How Many armies do you want to move? You must move at least 1.");
+				try {
+					units = Integer.parseInt(unitsToMove);
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null,
+							"That was invalid number.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 					units = 0;
-					while (units == 0) {
-						String unitsToMove = JOptionPane.showInputDialog(
-								"How Many armies do you want to move? You must move at least 1, and have "
-										+ moveFrom.getForcesVal() + ".");
-						try {
-							units = Integer.parseInt(unitsToMove);
-						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, "That was invalid number.", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							units = 0;
-							continue;
-						} // end catch
+					continue;
+				}// end catch
+				
+				if (units < 1 || units > moveFrom.getForcesVal() - 1) {
+					JOptionPane.showMessageDialog(null,
+							"That was invalid number.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					units = 0;
+				}//end if
+			}// end while
+		}//end else
+		
+		
+		moveTo.addForcesVal(units);
+		moveFrom.removeUnits(units);
+		moveTo.setOccupier(currentPlayer);
 
-						if (units < 1 || units > moveFrom.getForcesVal() - 1) {
-							JOptionPane.showMessageDialog(null, "That was invalid number.", "Error",
-									JOptionPane.ERROR_MESSAGE);
-							units = 0;
-						} // end if
-					}
-					moveTo.addForcesVal(units);
-					moveFrom.removeUnits(units);
-					moveTo.setOccupier(currentPlayer);
+		cardEarned = true;
+	}//end countryWasTaken
 
-					cardEarned = true;
 
-					// end if
-					clearSelections();
+				
 
-					removeLosers();
-
-					isFinished();
-					gameLog += result;
-					return true;
-				} // end while
-				return false;
-			}
-
-		} // end else
-
-		return false;
-	} // end if
 
 	// attack lost
 
@@ -809,35 +778,42 @@ public class TheGame implements Serializable {
 	// }//end else if
 	/*
 	 * This is where the random dice rolls will eventually need to go
+	 * return -2: Defender won (subtract 2 from attacker)
+	 * return -1: Defender won (subtract 1 from attacker, depending on num dice)
+	 * return 0: Tie (subtract 1 from each)
+	 * return 1: Attacker won (subtract 1 from defender, depending on num dice)
+	 * return 2: Attack won (subtract 2 from defender)
 	 */
-	public boolean wasAttackSuccessful() {
+	public int wasAttackSuccessful() {
+		int attackWins = 0;
+		int defenseWins = 0;
 		int aHigh = attackDice.get(0).getValue();
 		int dHigh = defenseDice.get(0).getValue();
 
 		if (aHigh > dHigh) {
-			return true;
-		} // end if
-		else if (dHigh > aHigh) {
-			return true;
-		} // end else if
-			// otherwise, tie
-		else {
-			// This means it was a true tie
-			if (defenseDice.size() == 1 || attackDice.size() == 1)
-				return false;
 
+			attackWins++;
+		}// end if
+		else {
+			defenseWins++;
+		}// end else if
+		
+		//If both parties rolled more than one, compare the second
+		if (attackDice.size()>1 && defenseDice.size()>1){
 			aHigh = attackDice.get(1).getValue();
 			dHigh = defenseDice.get(1).getValue();
 
 			if (aHigh > dHigh) {
-				return true;
-			} // end if
+
+				attackWins++;
+			}// end if
 				// Ties or d high goes to defender
 			else {
-				return false;
-			} // end else
-		} // end else
+				defenseWins++;
+			}// end else
+		}// end if
 			// return numArmies > moveTo.getForcesVal();
+		return attackWins - defenseWins;
 	}// end wasAttackSuccessful
 		// return numArmies > moveTo.getForcesVal();
 		// end wasAttackSuccessful
