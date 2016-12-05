@@ -22,7 +22,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Model.Faction;
 import Model.Game;
+import Model.TheGame;
 
 /**
  * (Heavily inspired by DuckHuntStart) 
@@ -36,8 +38,9 @@ public class AnimationPanel extends JPanel implements Observer {
 	private JLabel scoreLabel;
 	private Point upperLeft;
 	private Cursor cursor;
-	private Game model;
+	private TheGame model;
 	private int misses;
+	private Faction offense, defense; 
 
 	public AnimationPanel() {
 		loadImages();
@@ -105,43 +108,43 @@ public class AnimationPanel extends JPanel implements Observer {
 	 * TODO: Locations of the first front and back of each sprite, offset of each frame, etc
 	 * (Numbers have not been changed from DuckHunt, but number of frames for each character is correct)
 	 */
-	public static final int SPRITE_DISTANCE = 34;
-	public static final int SPRITE_WIDTH = 32, SPRITE_HEIGHT = 32;
-	public static final int SWOOSH_HEIGHT = 50, SWOOSH_WIDTH = 35;
+	public static final int SPRITE_DISTANCE = 0;
+	public static final int SPRITE_WIDTH = 95, SPRITE_HEIGHT = 104;
+	public static final int SWOOSH_HEIGHT = 100, SWOOSH_WIDTH = 116;
 	
-	public static final int JON_FRONT = 0, JON_BACK = 0, JON_FRAMES = 4;
-	public static final int DROGO_FRONT = 0, DROGO_BACK= 0, DROGO_FRAMES = 3;
-	public static final int DANNY_FRONT = 0, DANNY_BACK = 0, DANNY_FRAMES = 3;
-	public static final int JOFFREY_FRONT = 0, JOFFREY_BACK = 0, JOFFREY_FRAMES = 2;
-	public static final int WUNWUN_FRONT = 0, WUNWUN_BACK = 0, WUNWUN_FRAMES = 4;
-	public static final int WALKER_FRONT = 0, WALKER_BACK = 0, WALKER_FRAMES = 4;
+	public static final int SPRITE_FRONT_X = 130, SPRITE_BACK_X = 520; //Starting X's are the same for all of them
+	public static final int SPRITE_Y = getFaction(Faction.STARK);					    //TODO: getFaction() to set which sprite this is
+	public static final int JON_Y = 304, JON_FRAMES = 4;
+	public static final int DROGO_Y= 411, DROGO_FRAMES = 3;
+	public static final int DANNY_Y = 519, DANNY_FRAMES = 3;
+	public static final int JOFFREY_Y = 622, JOFFREY_FRAMES = 2;
+	public static final int WUNWUN_Y = 107, WUNWUN_FRAMES = 4;
+	public static final int WALKER_Y = 213, WALKER_FRAMES = 4;
 	
-	public static final int OFFENSE_SPOT = 270, DEFENSE_SPOT = 0;
+	public static final int OFFENSE_SPOT = 270, DEFENSE_SPOT = 0; //TODO: This needs going to be where they are placed on the GUI
 	public static final int JIGGLE_MAX = 1, JIGGLE_MIN = -1, JIGGLE_TIME = 15; //Don't think this needs to be changed
 
 	/*
 	 * Animation Counters
 	 */
 
-	private int duckSpriteNum;
 	private int spriteNum = 0;
 	private int jiggle = 0, jiggleCount = 0, frameCounter = 0,
-			dogXValue = 0, dogTickCounter = 0;
+			OffenseXValue = 0, OffenseTickCounter = 0;
 	private boolean jiggleMan = true, starting = true;
-	private int duckFallX, duckFallY;
 
 	/*
 	 * Private Helpers
 	 */
 
 	private void loadImages() {
-		//Not using a background image currently
-//		try {
-//			background = ImageIO.read(new File("images" + File.separator
-//					+ "DuckHuntBackground.png"));
-//		} catch (IOException e) {
-//			System.out.println("Could not find 'DuckHuntBackground.PNG'");
-//		}
+		
+		try {
+			background = ImageIO.read(new File("images" + File.separator
+					+ "GoTMapRisk.jpg"));
+		} catch (IOException e) {
+			System.out.println("Could not find 'GoTMapRisk.jpg'");
+		}
 		try {
 			sheet = ImageIO.read(new File("images" + File.separator
 					+ "GoTSpriteSheet.png"));
@@ -151,22 +154,38 @@ public class AnimationPanel extends JPanel implements Observer {
 		}
 	}
 
+	private static int getFaction(Faction faction) {
+		if(faction == Faction.STARK)
+			return JON_Y; 
+		if(faction == Faction.TARGARYEN)
+			return DANNY_Y; 
+		if(faction == Faction.DOTHRAKI)
+			return DROGO_Y; 
+		if(faction == Faction.LANNISTER)
+			return JOFFREY_Y;
+		if(faction == Faction.WHITEWALKERS)
+			return WALKER_Y;
+		if(faction == Faction.WILDLINGS)
+			return WUNWUN_Y;
+		return 0;
+	}
+
+
 	public BufferedImage getOffenseSprite() {
 		//the back image of the offense
-		return sheet;
-		//return sheet.getSubimage(DOG_LAUGHING_X, DOG_LAUGHING_Y,
-		//		DOG_LAUGHING_WIDTH, DOG_LAUGHING_HEIGHT);
+		return sheet.getSubimage(SPRITE_FRONT_X, JON_Y,
+				SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 
 	public BufferedImage getDefenseSprite() {
 		//the front image of the defense
-		return sheet;
-		//return sheet.getSubimage(DOG_LAUGHING_X, DOG_LAUGHING_Y,
-		//		DOG_LAUGHING_WIDTH, DOG_LAUGHING_HEIGHT);
+		
+		return sheet.getSubimage(SPRITE_FRONT_X, JON_Y,
+				SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 
 	private void jiggleOffense() {
-		//TODO: Taken directly from duckHunt, needs to be changed? 
+		//TODO: Taken directly from duckHunt, should function okay?
 		if (jiggleMan) {
 			jiggle++;
 			if (jiggle > JIGGLE_MAX) {
@@ -186,6 +205,21 @@ public class AnimationPanel extends JPanel implements Observer {
 	}
 	
 	private void jiggleDefense() {
-		//see jiggleOffense
+		if (jiggleMan) {
+			jiggle++;
+			if (jiggle > JIGGLE_MAX) {
+				jiggleMan = false;
+			}
+		} else {
+			jiggle--;
+			if (jiggle < JIGGLE_MIN) {
+				jiggleMan = true;
+			}
+		}
+		if (jiggleCount++ > JIGGLE_TIME) {
+			// Stop jiggling
+			jiggleCount = 0;
+			misses = 0;
+		}
 	}
 }

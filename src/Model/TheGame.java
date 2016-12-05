@@ -1155,4 +1155,12 @@ public class TheGame implements Serializable {
 		cardsToRedeem = cards;
 	}
 
+	public int getHit() {
+		//TODO: 
+		//return 1 if offense loses one and wins one
+		//return 0 if offense loses entirely
+		//return 2 if offense wins entirely
+		return 0;
+	}
+
 }// end theGame
