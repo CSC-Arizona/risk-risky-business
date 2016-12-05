@@ -336,7 +336,11 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
-			currentPlayer.addAvailableTroops(redeemCards());
+			cardsToRedeem = ((AI)currentPlayer).redeemCards();
+			
+			if (cardsToRedeem!=null)
+				currentPlayer.addAvailableTroops(redeemCards());
+			
 			nextPhase();
 		} // end else if
 
@@ -542,6 +546,8 @@ public class TheGame implements Serializable {
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
 		}// end switch case
+		
+		gameLog+= currentPlayer.getName() + " redeemed cards and earned " + numArmies + " armies.\n";
 
 		// Now, discard the cards
 		deck.addToDiscardPile(cardsToRedeem);
@@ -1099,7 +1105,12 @@ public class TheGame implements Serializable {
 		boolean tmp = cardEarned;
 		clearSelections();
 		if (cardEarned) {
-			currentPlayer.addCard(deck.deal());
+			
+			
+			//TODO: REMOVE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!
+			for (int i=0; i < 5; i++)
+				currentPlayer.addCard(deck.deal());
+			
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
 			cardEarned = false;
 		} // end if
