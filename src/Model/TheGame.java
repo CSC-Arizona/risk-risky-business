@@ -23,6 +23,7 @@ public class TheGame implements Serializable {
 	private ArrayList<Dice> attackDice;
 	private ArrayList<Dice> defenseDice;
 	private boolean useMaxDice = true;
+	private ArrayList<Card> cardsToRedeem;
 	public static final String FILE_NAME = "game.ser";
 
 	/**********************************************************************************
@@ -502,10 +503,10 @@ public class TheGame implements Serializable {
 	 * Given the player's current decision, redeem or don't redeem cards
 	 */
 	public int redeemCards() {
-		ArrayList<Card> cards = currentPlayer.redeemCards();
+		//ArrayList<Card> cardsToRedeem = currentPlayer.redeemCards();
 
 		// If cards is null, the player didn't want to redeem anythign
-		if (cards == null)
+		if (cardsToRedeem == null)
 			return 0;
 
 		// If we're here, we're redeeming
@@ -535,7 +536,12 @@ public class TheGame implements Serializable {
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
 		}// end switch case
-
+		
+		//Now, discard the cards
+		deck.addToDiscardPile(cardsToRedeem);
+		currentPlayer.discardCards(cardsToRedeem);
+		cardsToRedeem = null;
+		
 		return numArmies;
 	}// end redeemCards
 	
@@ -1053,6 +1059,10 @@ public class TheGame implements Serializable {
 
 	public ArrayList<Dice> getDefenseDice() {
 		return defenseDice;
+	}
+	
+	public void setCardsToRedeem(ArrayList<Card> cards){
+		cardsToRedeem = cards;
 	}
 
 }// end theGame

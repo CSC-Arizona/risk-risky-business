@@ -152,19 +152,12 @@ public abstract class Player implements Serializable{
 		return cardsToDiscard;
 	}
 	
-	public ArrayList<Card> discardCards(ArrayList<Card> cards) {
-		ArrayList<Card> cardsToDiscard = new ArrayList<>();
-		for (Card card : cards) {
-			cardsToDiscard.add(card);
-		}
-
-		myCards.removeAll(cardsToDiscard);
+	public void discardCards(ArrayList<Card> cards) {
+		myCards.removeAll(cards);
 		
 		//Change whether the cards need to be redeemed
 		if (myCards.size()<5)
 			mustRedeemCards = false;
-				
-		return cardsToDiscard;
 	}
 
 	//used for tourney mode
