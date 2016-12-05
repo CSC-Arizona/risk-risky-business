@@ -110,7 +110,7 @@ public class riskGUI extends JFrame {
 	private ArrayList<Card> selectedCards;
 	private boolean decisionMakingPhase = false, moveUnitsFlag = false;
 	private Country moveUnitsFromCountry;
-	private ArrayList<AIStrat> strat = new ArrayList<AIStrat>();
+	private ArrayList<AIStrategy> strat = new ArrayList<>();
 	private boolean attackFromFlag = false, attackFlag = false;
 	private Country attackFrom, attack;
 	private int numOfArmies = 0;
@@ -349,11 +349,11 @@ public class riskGUI extends JFrame {
 		players.get(4).setFaction("Targaryen");
 		players.get(5).setFaction("Wildlings");
 		players.get(0).setName("Player1");
-		((AI) players.get(1)).setMyStrat(AIStrat.EASY);
-		((AI) players.get(2)).setMyStrat(AIStrat.EASY);
-		((AI) players.get(3)).setMyStrat(AIStrat.EASY);
-		((AI) players.get(4)).setMyStrat(AIStrat.EASY);
-		((AI) players.get(5)).setMyStrat(AIStrat.EASY);
+		((AI) players.get(1)).setStrategy(new EasyAI());
+		((AI) players.get(2)).setStrategy(new EasyAI());
+		((AI) players.get(3)).setStrategy(new EasyAI());
+		((AI) players.get(4)).setStrategy(new EasyAI());
+		((AI) players.get(5)).setStrategy(new EasyAI());
 
 		// Updating the arraylist in the game
 		theGame.setPlayers(players);
@@ -423,7 +423,7 @@ public class riskGUI extends JFrame {
 		int i = 0;
 		for (int j = humans; j < (humans + ai); j++) {
 			players.get(j).setFaction(possHouses.get(i));
-			((AI) players.get(j)).setMyStrat(strat.get(i));
+			((AI) players.get(j)).setStrategy(strat.get(i));
 			i++;
 		}
 
@@ -499,10 +499,11 @@ public class riskGUI extends JFrame {
 			String ais = "";
 
 			while (illegalName == true) {
-				ais = (String) JOptionPane.showInputDialog(null,
-						"Please choose AI " + (i + 1) + "'s Strategy",
-						"Choose a Strategy", JOptionPane.QUESTION_MESSAGE,
-						null, new Object[] { "Easy", "Hard" }, "Easy");
+
+				ais = (String) JOptionPane.showInputDialog(null, "Please choose AI " + (i + 1) + "'s Strategy",
+						"Choose a Strategy", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Medium", "Hard" },
+						"Easy");
+
 				if (ais == null) {
 					JOptionPane.showMessageDialog(null,
 							"Must choose a Strategy.", "Error",
@@ -511,10 +512,13 @@ public class riskGUI extends JFrame {
 					illegalName = false;
 					switch (ais) {
 					case "Easy":
-						strat.add(AIStrat.EASY);
+						strat.add(new EasyAI());
 						break;
 					case "Hard":
-						strat.add(AIStrat.HARD);
+						strat.add(new HardAI());
+						break;
+					case "Medium":
+						strat.add(new MediumAI());
 						break;
 					default:
 						break;
@@ -2039,7 +2043,15 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.play();
+			if (theGame.isPlacePhase()){
+				if (theGame.getSelectedCountry().getOccupier() == null)
+					theGame.play();
+				else {
+					JOptionPane.showMessageDialog(null, "You must pick an unoccupied country",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}//end else
+			}//end if
+			
 			// //System.out.println("Place clicked");
 			// if (theGame.isPlacePhase()) {
 			// // next player place army
@@ -2139,10 +2151,10 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String newDifficulty = (String) JOptionPane.showInputDialog(null,
-					"Please choose a Difficulty", "Set Difficulty",
-					JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy",
-							"Hard" }, "Easy");
+
+			String newDifficulty = (String) JOptionPane.showInputDialog(null, "Please choose a Difficulty",
+					"Set Difficulty", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy","Medium", "Hard" }, "Easy");
+
 
 			for (Player ai : theGame.getPlayers()) {
 				if (ai instanceof AI) {
@@ -2151,11 +2163,13 @@ public class riskGUI extends JFrame {
 						switch (newDifficulty) {
 
 						case "Easy":
-							((AI) ai).setMyStrat(AIStrat.EASY);
+							((AI) ai).setStrategy(new EasyAI((AI)ai));
+							break;
+						case "Medium":
+							((AI) ai).setStrategy(new MediumAI((AI)ai));
 							break;
 						case "Hard":
-							((AI) ai).setMyStrat(AIStrat.HARD);
-							break;
+							((AI) ai).setStrategy(new HardAI((AI)ai));
 						default:
 							break;
 						}// end switch

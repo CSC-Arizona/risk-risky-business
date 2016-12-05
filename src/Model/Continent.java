@@ -15,13 +15,8 @@ public class Continent implements Serializable{
 	private ArrayList<Country> myCountries;
 	private int ownerBonus;
 	private String name;
-	/*
-	 * Continent Constructors:
-	 * Continent()
-	 * purpose: sets name as empty string, owner as null, countries it contains to arrayList, and ownerbonus to 0.
-	 * Continent(ownerBonus, name)
-	 * purpose: sets name to given name and ownerBonus to given bonus value.
-	 */
+
+	private int numOfCountries = 0;
 	public Continent() {
 		this.name = "";
 		owner = null;
@@ -61,6 +56,7 @@ public class Continent implements Serializable{
 	 */
 	public void addCountry(Country country) {
 		myCountries.add(country);
+		numOfCountries++;
 	}// end addCountry
 
 	/*
@@ -102,5 +98,15 @@ public class Continent implements Serializable{
 
 		return str;
 	}// end toString
+	
+	public int getNumOfCountries()
+	{
+		return numOfCountries;
+	}
+	
+ 	public ArrayList<Country> getMyCountries()
+ 	{
+ 		return myCountries;
+ 	}
 
 }

@@ -9,17 +9,17 @@ package Model;
 public class Run6Bots {
 
 	public static void main(String[] args) {
-		Game theGame = Game.getInstance(0,6, true);
+		TheGame theGame = TheGame.getInstance(0,6, true);
 		int i = 0;
 		for(Player player : theGame.getPlayers())
 		{
 			if(i < 3){
-				((AI) player).setMyStrat(AIStrat.EASY);
+				((AI) player).setStrategy(new EasyAI((AI) player));
 				player.setFaction(i);
 				player.setName("");
 			}
 			else{
-				((AI) player).setMyStrat(AIStrat.HARD);
+				((AI) player).setStrategy(new HardAI((AI) player));
 				player.setFaction(i);
 				player.setName("");
 			}
@@ -32,7 +32,7 @@ public class Run6Bots {
 		while(i < 1000)
 		{
 			theGame.startGame();
-			if(((AI) theGame.getCurrentPlayer()).getStrat().compareTo("EASY") == 0)
+			if(((AI) theGame.getCurrentPlayer()).getStrategy() instanceof EasyAI)
 				easyWin++;
 			else
 				hardWin++;
