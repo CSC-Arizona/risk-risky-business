@@ -13,8 +13,9 @@ public interface AIStrategy extends Serializable{
 	public Country placeLeftOverUnits();
 	public Country placeUnit();
 	public void setMe(AI ai);
-	
-	
+	public Country getCountryToAttack();
+	public ArrayList<Country> findCountriesToAttack();
+	public Country findAttackingCountry(Country moveTo);
 	
 
 }
