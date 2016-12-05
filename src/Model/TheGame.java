@@ -350,21 +350,19 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
-/*<<<<<<< HEAD
+
 			//printAllCountriesAndOccupiers();
-			moveTo = ((AI) currentPlayer).getCountryToAttack();
-			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
-			attack();
-=======*/
+//			moveTo = ((AI) currentPlayer).getCountryToAttack();
+//			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
+//			attack();
+
 			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
 			if(moveTo == null)
 				this.skipAttackPhase();
 			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
-			if(moveFrom.getForcesVal() > 1)
+			if(moveFrom != null)
 				attack();
-//>>>>>>> 18daf5c34a1b194e76b246f361d946f663f0cfa2
-			// attack(((AI) currentPlayer).getAmountToAttackWith(moveFrom,
-			// moveTo));
+
 
 			// If the AI decided to finish attacking
 			if (((AI) currentPlayer).finishedAttacking())
@@ -695,6 +693,7 @@ public class TheGame implements Serializable {
 			//Get rid of the negative so we don't accidentally add
 			moveFrom.removeUnits(-1 * attackResult);
 
+			
 			result += currentPlayer.getName() + " lost the attack.\n";
 			clearSelections();
 			gameLog += result;
@@ -847,28 +846,7 @@ public class TheGame implements Serializable {
 		// return numArmies > moveTo.getForcesVal();
 		// end wasAttackSuccessful
 
-	public int[] getWinsAndLosses() {
 
-		int[] counter = new int[2];
-		if (attackDice.size() >= defenseDice.size()) {
-			for (int i = 0; i < defenseDice.size(); i++) {
-				if (attackDice.get(i).getValue() > defenseDice.get(i).getValue()) {
-					counter[0]++;
-				} else
-					counter[1]++;
-
-			}
-		} else {
-			for (int i = 0; i < attackDice.size(); i++) {
-				if (attackDice.get(i).getValue() > defenseDice.get(i).getValue()) {
-					counter[0]++;
-				} else
-					counter[1]++;
-
-			}
-		}
-		return counter;
-	}// end else
 
 	/**********************************************************************************
 	 *************************** Shuffling Armies in Countries***************************
@@ -997,7 +975,6 @@ public class TheGame implements Serializable {
 				System.out.println(player.getName() + " has been wiped off the map.");
 				gameLog += player.getName() + " has been wiped off the map.\n";
 				playersToRemove.add(player);
-				playersToRemoveLocations.add(players.indexOf(player));
 			}
 
 		}
