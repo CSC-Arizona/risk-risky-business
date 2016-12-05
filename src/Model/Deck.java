@@ -1,5 +1,14 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Deck.java
+ * 	Purpose:	Singleton Deck class holding all card objects of the risk game with shuffling and dealing. Also holds a discard pile.
+ */
+
 package Model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +18,7 @@ import Model.Card;
  * Deck has 52 cards: 50 (one for each territory) + 2 (wild cards)
  * NOTE: Deck class is a singleton, should never have more than one! :) 
  */
-public class Deck {
+public class Deck implements Serializable{
 
 	private ArrayList<Card> riskDeck;
 	private int size;
@@ -18,7 +27,7 @@ public class Deck {
 
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
-		discardPile = new ArrayList<>();
+		discardPile = new ArrayList<Card>();
 		fillDeck(riskDeck);
 		shuffle();
 		size = 52;
@@ -28,12 +37,26 @@ public class Deck {
 	public ArrayList<Card> getDeck() {
 		return riskDeck;
 	}
+	
+	public Deck newDeck(){
+		uniqueDeck=new Deck();
+		return uniqueDeck;
+	}
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
 			uniqueDeck = new Deck();
 		return uniqueDeck;
 	}// end getInstance
+	
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	    ois.defaultReadObject();
+	    uniqueDeck = this;
+	}
+
+	private Object readResolve()  {
+	    return uniqueDeck;
+	}
 
 	public void shuffle() {
 		if (size == 0 && discardPile.size() > 0) {

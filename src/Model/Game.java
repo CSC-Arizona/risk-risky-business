@@ -1,26 +1,30 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
 import javax.swing.JOptionPane;
 
-public class Game {
+public class Game implements Serializable{
 	private ArrayList<Player> players;
 	private Map gameMap;
 	private Deck deck;
 	private Country selectedCountry, aiSelectedCountry;
-	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver;
+	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase;
 	private int humans;
 	private int totalPlayers, armiesPlaced, playerLocation;
 	private static Game theGame;
 	private int numRedemptions;
-	private boolean canPlace;
+	private boolean canPlace, tournamentMode;
 	private int countriesBefore;
 	private int countriesAfter;
+	private String gameLog;
+	public static final String FILE_NAME = "game.ser";
 
-	private Game(int numOfHumanPlayers, int numOfAIPlayers) {
+	private Game(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		humans = numOfHumanPlayers;
 		totalPlayers = numOfHumanPlayers + numOfAIPlayers;
 		armiesPlaced = 0;
@@ -33,24 +37,35 @@ public class Game {
 		playerLocation = 0;
 		numRedemptions = 0;
 		canPlace = false;
-		newGame();
+		redeemCardPhase = false;
+		tournamentMode = tourny;
+		if(!tournamentMode)
+			newGame();
+		else
+			newGame(numOfAIPlayers);
 
 	}// end constructor
 
-	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers) {
+	public static Game getInstance(int numOfHumanPlayers, int totalNumOfPlayers, boolean tourny) {
 		if (theGame == null)
-			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers);
+			theGame = new Game(numOfHumanPlayers, totalNumOfPlayers, tourny);
 
 		return theGame;
 	}// end getInstance
 
+	public void clear(){
+		theGame = null;
+	}
+	
 	public void newGame() {
 		if (players != null)
 			players.removeAll(players);
 		selectedCountry = null;
 		aiSelectedCountry = null;
-		gameMap = Map.getInstance();
+		gameMap = Map.getInstance(0);
+		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
+		deck = deck.newDeck();
 		// deck.shuffle();
 		players = new ArrayList<>();
 		addHumanPlayers(humans);
@@ -58,14 +73,31 @@ public class Game {
 		numRedemptions = 0;
 
 	}// end newGame
+	
+	//used for tournament mode
+	public void newGame(int i)
+	{
+		if(players != null)
+			players.removeAll(players);
+		
+		selectedCountry = null;
+		aiSelectedCountry = null;
+		gameMap = Map.getInstance(1);
+		gameMap = gameMap.newTourneyMap();
+		deck = Deck.getInstance();
+		deck=deck.newDeck();
+		// deck.shuffle();
+		players = new ArrayList<>();
+		addAI(i);
+		numRedemptions = 0;
+	}
 
 	// makes sure all country buttons are enabled
 	private void turnOnCountryButtons() {
 		for (Country country : gameMap.getCountries()) {
 			if (country.getMyButton() != null)
 				country.getMyButton().setEnabled(true);
-		}
-
+		}//end for
 	}// end turnOnCountryButtons
 
 	public void setPlayers(ArrayList<Player> thePlayers) {
@@ -79,6 +111,7 @@ public class Game {
 	public void incrementNumRedemptions() {
 		numRedemptions++;
 	}// end incrementNumRedemptions
+	
 
 	/*
 	 * Shuffles the players so they're not always in the same old boring order.
@@ -119,26 +152,28 @@ public class Game {
 			roundOfReinforcement();
 	}// end roundOfPlacement
 
-	public void roundOfReinforcement() {
+	public void roundOfReinforcement() { 
 		while (isReinforcePhase() && getCurrentPlayer() instanceof AI)
-			aiTurn();
+			aiTurn(); 
 	}
 
 	// this is called by the countryClickListener, and "places" an army in a
 	// country, and sets the occupier to whichever player is up
 	public void placeArmies(Country countryToPlace, int numToPlace) {
 		// place initial 50 armies
-		if (armiesPlaced < 50) {
+		if (isPlacePhase()){//armiesPlaced < 50) {
+			System.out.println("I WAS AT A AT CRASH");
 			if (countryToPlace.getOccupier() == null) {
 				players.get(playerLocation).occupyCountry(countryToPlace);
 				countryToPlace.setOccupier(players.get(playerLocation));
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				armiesPlaced++;
 				if (armiesPlaced == 50) {
-					placePhase = false;
-					reinforcePhase = true;
+					//placePhase = false;
+					//reinforcePhase = true;
+					nextPhase();
 				} // end if
-
+				gameLog+=players.get(playerLocation).getName() + " claimed" + countryToPlace.toString() +"\n";
 				System.out.println(armiesPlaced);
 				System.out.println("Next players turn");
 				System.out.println("Army placed at : " + countryToPlace.toString());
@@ -150,58 +185,57 @@ public class Game {
 
 			} // end else
 		} else if (isDeployPhase()) {
+			System.out.println("I WAS AT B AT CRASH");
 			if (players.get(playerLocation).getAvailableTroops() > 0
 					&& countryToPlace.getOccupier().equals(players.get(playerLocation))) {
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
 				if (players.get(playerLocation).getAvailableTroops() == 0) {
-					deployPhase = false;
-					attackPhase = true;
-				}
-
-			}
+					//deployPhase = false;
+					//attackPhase = true;
+					//nextPhase();
+				}//end if
+				gameLog+=players.get(playerLocation).getName() + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
+			}//end if
 		} else if (players.get(playerLocation).getAvailableTroops() > 0)
 		// place remaining armies
 		{
+			System.out.println("I WAS AT C AT CRASH");
 			// placePhase = false;
 			// reinforcePhase = true;
 
 			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				armiesPlaced++;
+				gameLog+="Reinforced " + countryToPlace + " " + armiesPlaced+"\n";
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
-
+				gameLog+=players.get(playerLocation).getName() + " placed " + numToPlace + " units on " + countryToPlace.getName() + "\n";
 			} else
 				System.out.println("You don't occupy this country");
 
 		} else {
-
-			placePhase = false;
-			reinforcePhase = false;
-			playPhase = true;
-			deployPhase = true;
+			System.out.println("I WAS AT D AT CRASH");
+			//placePhase = false;
+			//reinforcePhase = false;
+			//playPhase = true;
+			//deployPhase = true;
+			nextPhase();
 			// we should now be back at the beginning of the players list
 			// already,
 			// so we need to give
 			// that player units for the first turn
-		}
-
+		}//end else
 	}// end placeArmies
 
 	private void addAI(int numOfAI) {
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI(AIStrat.EASY, totalPlayers));// this will change
-															// later,
-		// depending on what difficulty
-		// is chosen;
-
+			players.add(new AI(AIStrat.EASY, totalPlayers));
 	}// end addAi
 
 	public Country getSelectedCountry() {
 		return selectedCountry;
 	}// end
-		// getSelectedCountry
 
 	public void setSelectedCountry(Country selectedCountry) {
 		this.selectedCountry = selectedCountry;
@@ -211,7 +245,6 @@ public class Game {
 		for (int i = 0; i < numOfHumanPlayers; i++) {
 			players.add(new HumanPlayer(totalPlayers));
 		}
-
 	}// end addHumanPlayers
 
 	public Map getGameMap() {
@@ -226,11 +259,13 @@ public class Game {
 		playerLocation++;
 		if (playerLocation >= totalPlayers)
 			playerLocation = 0;
-
+		
+		gameLog+= "\nNext player's turn: " + getCurrentPlayer().getName() + "\n";
 		// If it's the play phase, apply any continent bonuses
 		if (isPlayPhase()) {
 			players.get(playerLocation).addAvailableTroops(gameMap.getContinentBonuses(getCurrentPlayer()));
 			System.out.println("Continent bonus applied:" + gameMap.getContinentBonuses(getCurrentPlayer()));
+			gameLog+="Continent bonus applied: " + gameMap.getContinentBonuses(getCurrentPlayer()) + "\n";
 		}
 
 		if (players.get(playerLocation) instanceof AI) {
@@ -243,7 +278,6 @@ public class Game {
 	private void aiTurn() {
 		boolean done = false;
 		if (gameOver) {// for now do nothing
-			System.out.println("looping in ai turn");
 			return;
 		}
 		while (!done) {
@@ -258,43 +292,42 @@ public class Game {
 				done = true;
 			} else if (isPlayPhase() && isDeployPhase()) {
 				players.get(playerLocation).getTroops();
-				((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
-				int redeem = players.get(playerLocation).redeemCards(); // redeem
-																		// cards
-																		// to
-																		// get
-																		// more
-																		// troops
-				players.get(playerLocation).addTroops(redeem); // add redeemed
-																// troops
+		//		((AI) players.get(playerLocation)).setRedemptions(numRedemptions);
+				int redeem = 0;//TODO replace the 0 with: players.get(playerLocation).redeemCards();
 				if (redeem > 0)
 					numRedemptions++;
 				while (players.get(playerLocation).getAvailableTroops() > 0) {
 					aiReinforcePlacement();
-				}
-				deployPhase = false;
-				attackPhase = true;
+				}//end while
+				//deployPhase = false;
+				//attackPhase = true;
+				nextPhase();
 			} else if (isPlayPhase() && isAttackPhase()) {
-				boolean finishedAttacking = false;
+				String finishedAttacking = "";
 				int aiCountries = players.get(playerLocation).getCountries().size();
-				while (!finishedAttacking) {
+				while (finishedAttacking != null) {
+					gameLog += finishedAttacking+"\n";
 					finishedAttacking = ((AI) players.get(playerLocation)).aiAttack();
 				}
-				if (aiCountries < players.get(playerLocation).getCountries().size())
-					players.get(playerLocation).addCard(deck.deal());
+//	TODO uncomment these lines when cardRedemption is finished
+				//if (aiCountries < players.get(playerLocation).getCountries().size())
+//					players.get(playerLocation).addCard(deck.deal());
 
 				removeLosers();
 				isFinished();
-				attackPhase = false;
-				reinforcePhase = true;
+				//attackPhase = false;
+				//reinforcePhase = true;
+				nextPhase();
 			} else if (isPlayPhase() && isReinforcePhase()) {
 				aiPlayReinforce();
-				reinforcePhase = false;
-				deployPhase = true;
+				//reinforcePhase = false;
+				//deployPhase = true;
+				nextPhase();
 				done = true;
 			}
 		}
 		nextPlayer();
+		//nextPlayer();
 	}
 
 	// calls the ai's reinforce method
@@ -318,6 +351,10 @@ public class Game {
 	public boolean isDeployPhase() {
 		return deployPhase;
 	}// end isDeplyPhase;
+	
+	public boolean isRedeemCardPhase(){
+		return redeemCardPhase;
+	}
 
 	public boolean aiChoicePlacement() {
 		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
@@ -397,13 +434,13 @@ public class Game {
 
 	}// end unitsToReturn
 
-	public int getArmiesToAttack(Country countryToRemoveUnits) {
+	public int getUnits(Country countryToRemoveUnits) {
 		boolean moveFlag = false, continueFlag = false;
 		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
 		String unitsToMove = "";
 
 		while (!moveFlag) {
-			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
+			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to move over? You must leave 1.");
 			try {
 				unitsToReturn = Integer.parseInt(unitsToMove);
 				continueFlag = true;
@@ -430,7 +467,7 @@ public class Game {
 		visited.add(fromCountry);
 		findPath(fromCountry, visited, toCountry, current);
 		if (canPlace) {
-			toCountry.setForcesVal(numUnits);
+			toCountry.addForcesVal(numUnits);
 			fromCountry.removeUnits(numUnits);
 			result = true;
 		}
@@ -488,43 +525,89 @@ public class Game {
 		return null;
 	}// end getPhase
 
-	public String attack(Country yours, Country theirs, int numArmies) {
-		String result = "";
-		if (numArmies <= theirs.getForcesVal()) {
-			// theirs.setForcesVal(numArmies);
-			yours.removeUnits(numArmies); // you lose the armies fought with
-		} else if (theirs.getForcesVal() < numArmies) {
-			countriesBefore = getCurrentPlayer().getCountries().size();
-			theirs.getOccupier().loseCountry(theirs);
-			theirs.removeUnits(theirs.getForcesVal());
-			theirs.setForcesVal(numArmies);
-			theirs.setOccupier(yours.getOccupier());
-			yours.getOccupier().occupyCountry(theirs);
-			yours.removeUnits(numArmies);
-			result = yours.toString();
-			countriesAfter = getCurrentPlayer().getCountries().size();
-			// players.get(playerLocation).addCard(deck.deal());
+	public boolean attack(Country yours, Country theirs, int numDice) {
+		Dice die = new Dice(0);
+		boolean winFlag = false;
+		//Update the gameLog
+//		gameLog+=yours.getOccupier().getName() + " attacked " + theirs.getName() + " with " + numArmies + " units.\n";
+		int enemyDice = 0;
+		if(theirs.getOccupier() instanceof HumanPlayer)
+		{
+			//prompt player for how many dice to throw
 		}
-		return result;
+		else	
+			if(theirs.getForcesVal() >= 2)
+			{
+				enemyDice = 2;
+			}
+			else
+				enemyDice = 1;
+		
+		ArrayList<Dice> attackingDice = die.roll(numDice);
+		ArrayList<Dice> defendingDice = die.roll(enemyDice);
+		
+		for(int i = 0; i < defendingDice.size(); i++)
+		{
+			
+			
+			if(attackingDice.get(i).getValue() > defendingDice.get(i).getValue())
+			{
+				theirs.removeUnits(1);
+				if(theirs.getForcesVal() == 0)
+				{	winFlag = true;
+					break;
+				
+				}
+				
+			}
+			else{
+				yours.removeUnits(1);
+				if(yours.getForcesVal() == 1){
+					winFlag = false;
+					break;
+				}
+			}
+		}
+		
+				
+		if(winFlag)
+		{
+			Player loser = theirs.getOccupier();
+			loser.loseCountry(theirs);
+			theirs.setOccupier(getCurrentPlayer());
+			getCurrentPlayer().occupyCountry(theirs);
+			return true;
+		}
+		else
+			return false;
+
+
 	}// end attack
+
+	
 
 	public boolean isAttackPhase() {
 		return attackPhase;
 	}// end isAttackPhase
 
 	public void skipAttackPhase() {
-		if (countriesBefore < countriesAfter)
+		if (countriesBefore < countriesAfter){
 			getCurrentPlayer().addCard(deck.deal());
-		attackPhase = false;
-		reinforcePhase = true;
+			gameLog+= getCurrentPlayer().getName() + " earned a new card.\n";
+		}
+			
+	//	attackPhase = false;
+	//	reinforcePhase = true;
+		nextPhase();
 		countriesBefore = 0;
 		countriesAfter = 0;
 	}// end skipAttackPhase
 
 	public void finishTurn() {
-		deployPhase = true;
-		attackPhase = false;
-		reinforcePhase = false;
+		//deployPhase = true;
+		//attackPhase = false;
+		//reinforcePhase = false;
+		nextPhase();
 		nextPlayer();
 	}// end finishTurn
 
@@ -535,9 +618,11 @@ public class Game {
 		if (players.size() == 1) {
 			gameOver = true;
 			playPhase = false;
-			attackPhase = false;
+			placePhase = false;
 			reinforcePhase = false;
+			redeemCardPhase = false;
 			deployPhase = false;
+			attackPhase = false;
 		} else
 			gameOver = false;
 
@@ -551,23 +636,129 @@ public class Game {
 	// them from the game.
 	public void removeLosers() {
 		ArrayList<Player> playersToRemove = new ArrayList<>();
+		ArrayList<Integer> playersToRemoveLocations = new ArrayList<>();
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-				System.out.println(player.getName() + " has been defeated.");
+				System.out.println(player.getName() + " has been wiped off the map.");
+				gameLog+=player.getName() + " has been wiped off the map.\n";
 				playersToRemove.add(player);
+				playersToRemoveLocations.add(players.indexOf(player));
 			}
+
 		}
-		ArrayList<Card> cardsToAddToDiscard = new ArrayList<>();
+		ArrayList<Card> cardsToAddToDiscard = new ArrayList<Card>();
 		for (Player player : playersToRemove) {
 			cardsToAddToDiscard.addAll(player.discardCards());
 		}
-		deck.addToDiscardPile(cardsToAddToDiscard);
+		if(cardsToAddToDiscard.size()>0)
+			deck.addToDiscardPile(cardsToAddToDiscard);
 		players.removeAll(playersToRemove);
 		totalPlayers -= playersToRemove.size();
+		for(Integer removedPlayersLoc : playersToRemoveLocations)
+		{
+			if(removedPlayersLoc < playerLocation)
+			{
+				playerLocation--;
+			}
+		}
 
 	}// end removeLosers
+	
+	public boolean skipCardRedemption(){
+		if (!getCurrentPlayer().mustRedeemCards()){
+			nextPhase();
+			return true;
+		}//end if
+		else
+			return false;
+	}//end skipCardRedemption
+	
+	
+	/*
+	 * These methods handle moving our code from one phase to the next
+	 */
+	public void nextPhase() throws IllegalStateException{
+		if (isPlacePhase()){
+			changeToReinforcePhase();
+		}//ed if
+		else if (isReinforcePhase()){
+			changeToRedeemCardsPhase();
+		}//end else if
+		else if (isRedeemCardPhase()){
+			changeToDeployTroopsPhase();
+		}//end else if
+		else if (isDeployPhase()){
+			changeToAttackPhase();
+		}//end else if
+		else if (isAttackPhase()){
+			changeToReinforcePhase();
+		}//end else if
+		else if (isFinished()){
+			System.out.println("The game is over");
+		}
+		else {
+			throw new IllegalStateException("The phase was invalid");
+		}
+	}//end nextPhase
+	
+//	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase;
+	
+	private void changeToReinforcePhase(){
+		placePhase = false;
+		reinforcePhase = true;
+		redeemCardPhase = false;
+		deployPhase = false;
+		attackPhase = false;
+		gameOver = false;
+	}//end changetoReinforcePhase
+	
+	private void changeToRedeemCardsPhase(){
+		playPhase = true;
+		placePhase = false;
+		reinforcePhase = false;
+		redeemCardPhase = true;
+		deployPhase = false;
+		attackPhase = false;
+		gameOver = false;
+	}//end changeToRedeemCardsPhase
+	
+	private void changeToDeployTroopsPhase(){
+		placePhase = false;
+		reinforcePhase = false;
+		redeemCardPhase = false;
+		deployPhase = true;
+		attackPhase = false;
+		gameOver = false;
+	}//end changeToDeployTroopsPhase
+	
+	private void changeToAttackPhase(){
+		placePhase = false;
+		reinforcePhase = false;
+		redeemCardPhase = false;
+		deployPhase = false;
+		attackPhase = true;
+		gameOver = false;
+	}//end changetoattackphase
 
+	
+	
 	public Deck getDeck() {
 		return deck;
+	}
+
+	public Map getMap() {
+		return gameMap;
+	}
+
+	public String getGameLog() {
+		return gameLog;
+	}
+
+	public int getHit() {
+		//TODO: May be changed after dice rolls are implemented 
+		//return 0 = no hit
+		//return 1 = 1 hit, 1 miss
+		//return 2 = all hit
+		return 0;
 	}
 }// end GameClasss
