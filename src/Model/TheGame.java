@@ -395,7 +395,7 @@ public class TheGame implements Serializable {
 			int armiesToPlaceInt = 0;
 			String armiesToPlaceStr = JOptionPane
 					.showInputDialog("How many armies do you want to place? (You can place "
-							+ theGame.getCurrentPlayer().getAvailableTroops()
+							+ currentPlayer.getAvailableTroops()
 							+ ")");
 
 			try {

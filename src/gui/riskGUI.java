@@ -116,16 +116,11 @@ public class riskGUI extends JFrame {
 	private int numOfArmies = 0;
 	private boolean musicOn = true;
 	private boolean useMaxDice = true;
-	private StatPanel currentStatsPanel;
+	private StatPanel currentStatsPanel; 
 	private Border blueline, raisedetched, loweredetched, raisedbevel,
 			loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
-	public static final String MU_FLAG_FILE = "moveUnitsFlag.ser";
-	public static final String MU_COUNTRY_FILE = "moveUnitsCountry.ser";
-	public static final String AF_FLAG_FILE = "attackFromFlag.ser";
-	public static final String A_FLAG_FILE = "attackFlag.ser";
-	public static final String AF_FILE = "attackFrom.ser";
-	public static final String A_FILE = "attack.ser";
+
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment
@@ -204,6 +199,8 @@ public class riskGUI extends JFrame {
 			setUpDrawingPanel();
 			setUpMenu();
 			setUpAIMenu();
+			setUpClearButton();
+			setUpPassButton();
 			drawingPanel.revalidate();
 			drawingPanel.repaint();
 		}
@@ -264,6 +261,7 @@ public class riskGUI extends JFrame {
 	}
 
 	public void saveGame() {
+		/*
 		FileOutputStream gameToDisk = null;
 		FileOutputStream muFlagToDisk = null;
 		FileOutputStream muCountryToDisk = null;
@@ -321,6 +319,8 @@ public class riskGUI extends JFrame {
 			e.printStackTrace();
 		}
 		// TODO
+		 
+		 */
 	}
 
 	private void turnOnStatPanel() {
