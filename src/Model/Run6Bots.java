@@ -19,7 +19,7 @@ public class Run6Bots {
 				player.setName("");
 			}
 			else{
-				((AI) player).setStrategy(new EasyAI((AI) player));
+				((AI) player).setStrategy(new HardAI((AI) player));
 				player.setFaction(i);
 				player.setName("");
 			}
