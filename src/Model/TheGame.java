@@ -501,8 +501,8 @@ public class TheGame implements Serializable {
 			countriesClaimed++;
 		} // end if
 		else {
-			gameLog += currentPlayer.getName() + " place " + num + " units on " + selectedCountry.toString() + "\n";
-		}
+			gameLog += currentPlayer.getName() + " placed " + num + " units on " + selectedCountry.toString() + "\n";
+		}//end else 
 		selectedCountry.addForcesVal(num);
 		currentPlayer.subtractFromAvailableTroops(num);
 	}// end placeArmies
@@ -801,7 +801,7 @@ public class TheGame implements Serializable {
 	// // players.get(playerLocation).addCard(deck.deal());
 	// }//end else if
 	/*
-	 * This is where the random dice rolls will eventually need to go
+	 * 
 	 * return -2: Defender won (subtract 2 from attacker)
 	 * return -1: Defender won (subtract 1 from attacker, depending on num dice)
 	 * return 0: Tie (subtract 1 from each)
