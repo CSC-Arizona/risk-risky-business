@@ -122,7 +122,8 @@ public class MediumAI implements AIStrategy, Serializable {
 		{
 			for(Country neighbor : country.getNeighbors())
 			{
-				if(moveTo.equals(neighbor) && moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)
+				System.out.println("Country: " +country.getName() +" Neighbor: " +neighbor.getName() + " MoveTo: " + moveTo.getName());
+				if(moveTo.equals(neighbor) && (moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1))
 				{
 					attackFrom = country;
 					break;
