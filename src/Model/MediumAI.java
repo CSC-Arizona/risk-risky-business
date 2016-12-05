@@ -90,9 +90,9 @@ public class MediumAI implements AIStrategy, Serializable {
 		if(allNeighboringEnemies == null)
 			return null;
 		
-		int randNum = rand.nextInt(allNeighboringEnemies.size());
 		
-		return allNeighboringEnemies.get(randNum);
+		
+		return allNeighboringEnemies.get(0);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class MediumAI implements AIStrategy, Serializable {
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				if (!neighboringCountry.getOccupier().equals(me) && neighboringCountry.getForcesVal() <= country.getForcesVal()) {
+				if (!neighboringCountry.getOccupier().equals(me) && (neighboringCountry.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)) {
 						countriesWorthAttacking.add(neighboringCountry);
 				} // end if
 			} // end for
@@ -122,7 +122,7 @@ public class MediumAI implements AIStrategy, Serializable {
 		{
 			for(Country neighbor : country.getNeighbors())
 			{
-				if(moveTo.equals(neighbor) && moveTo.getForcesVal() <= country.getForcesVal() )
+				if(moveTo.equals(neighbor) && moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)
 				{
 					attackFrom = country;
 					break;

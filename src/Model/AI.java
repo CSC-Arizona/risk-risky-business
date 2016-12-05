@@ -121,7 +121,7 @@ public class AI extends Player implements Serializable {
 		int i = 0;
 		for(Country country : findFringeCountries())
 		{
-			System.out.println("Fringe at " + country.getName() + " with " + country.getForcesVal() + " forces");
+			//System.out.println("Fringe at " + country.getName() + " with " + country.getForcesVal() + " forces");
 			if(country.getForcesVal() == 1)
 				i++;
 		}
