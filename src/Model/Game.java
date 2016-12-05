@@ -230,7 +230,7 @@ public class Game implements Serializable{
 
 	private void addAI(int numOfAI) {
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI(AIStrat.EASY, totalPlayers));
+			players.add(new AI(new EasyAI(), totalPlayers));
 	}// end addAi
 
 	public Country getSelectedCountry() {
@@ -333,7 +333,7 @@ public class Game implements Serializable{
 
 	// calls the ai's reinforce method
 	private void aiPlayReinforce() {
-		((AI) this.getCurrentPlayer()).getStrategy().reinforce(this.getCurrentPlayer().getCountries());
+		((AI) this.getCurrentPlayer()).getStrategy().reinforce();
 
 	}// end aiPlayReinforce
 
@@ -358,7 +358,7 @@ public class Game implements Serializable{
 	}
 
 	public boolean aiChoicePlacement() {
-		aiSelectedCountry = ((AI) players.get(playerLocation)).getStrategy().pickRandomCountry(this.getCurrentPlayer().getCountries());
+		aiSelectedCountry = ((AI) players.get(playerLocation)).getStrategy().placeUnit();
 		if (checkIfCountryAvailable(aiSelectedCountry)) {
 
 			placeArmies(aiSelectedCountry, 1);
@@ -371,7 +371,7 @@ public class Game implements Serializable{
 	public void aiReinforcePlacement() {
 		Country aiSelectedCountry = null;
 		while (aiSelectedCountry == null) {
-			aiSelectedCountry = ((AI) players.get(playerLocation)).placeNewTroops();
+			aiSelectedCountry = ((AI) players.get(playerLocation)).getStrategy().placeLeftOverUnits();
 		}
 		placeArmies(aiSelectedCountry, 1);
 		aiSelectedCountry = null;
@@ -380,7 +380,7 @@ public class Game implements Serializable{
 	public void aiUnitPlacement() {
 		ArrayList<Country> selectedCountries = new ArrayList<>();
 		while (selectedCountries.get(0) == null) {
-			selectedCountries = ((AI) players.get(playerLocation)).countriesToReinforce();
+			selectedCountries = ((AI) players.get(playerLocation)).getStrategy().placeNewTroops();
 		}
 		int i = 0;
 		while (i < selectedCountries.size()) {

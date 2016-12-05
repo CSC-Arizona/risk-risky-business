@@ -5,22 +5,18 @@ import java.util.Random;
 
 public class MediumAI implements AIStrategy {
 
-	private Player me;
+	private AI me;
 
-	MediumAI(Player me) {
-		this.me = me;
+	public MediumAI() {
+	};
+
+	public MediumAI(AI ai) {
+		me = ai;
 	}
 
 	@Override
-	public ArrayList<Country> countriesToReinforce(ArrayList<Country> countries, Player me) {
-		ArrayList<Country> returnCountry = null;
-		returnCountry = findFringeCountries(countries);
-		return returnCountry;
-	}
-
-	@Override
-	public String reinforce(ArrayList<Country> countries) {
-		for (Country country : countries) {
+	public String reinforce() {
+		for (Country country : me.getCountries()) {
 			if (country.getForcesVal() > 2) {
 				while (country.getForcesVal() > 2) {
 					for (Country neighbor : country.getNeighbors()) {
@@ -39,16 +35,42 @@ public class MediumAI implements AIStrategy {
 	}
 
 	@Override
-	public Country placeNewTroops(ArrayList<Country> countries) {
-		Country returnMe = null;
+	public ArrayList<Country> placeNewTroops() {
+		ArrayList<Country> countries = new ArrayList<>();
 
-		returnMe = pickRandomFromFringe(countries);
-		if (returnMe == null)
-			returnMe = pickRandomCountry(countries);
-
-		return returnMe;
+		int randNum = 0;
+		int i = 0;
+		while (me.getAvailableTroops() > i) {
+			i++;
+			randNum = rand.nextInt(me.getCountries().size());
+			countries.add(me.getCountries().get(randNum));
+		}
+		return countries;
 	}
 
-	
+	@Override
+	public void setMe(AI ai) {
+		me = ai;
+
+	}
+
+	@Override
+	public Country placeLeftOverUnits() {
+
+		return me.pickRandomFromFringe();
+	}
+
+	@Override
+	public Country placeUnit() {
+		Country countryToReturn = null;
+		if (me.getCountries() == null || me.getCountries().size() == 0)
+			countryToReturn = me.pickRandomCountry();
+		else {
+			countryToReturn = me.checkAllNeighbors();
+			if (countryToReturn == null)
+				countryToReturn = me.pickRandomCountry();
+		}
+		return countryToReturn;
+	}
 
 }

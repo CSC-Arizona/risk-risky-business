@@ -10,37 +10,28 @@ import javax.swing.JMenuItem;
 public class AI extends Player implements Serializable{
 
 	private JMenuItem myDiff;
-	private AIStrat myStrat;
+	private Random rand;
 	private AIStrategy strategy;
 	private int timesIAttacked;
 	// private Game theGame;
 
-	public AI(AIStrat strat, int numOfPlayers) {
+	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
-		myStrat = strat;
 		timesIAttacked = 0;
-		strategy = new EasyAI(this);
+		strategy = strat;
+		strategy.setMe(this);
+		rand = new Random();
 	}// end AI constructor
 
-	// get a random number between from 0 and 49
-	// return that country in the array at index randomNumber
-	public Country pickRandomCountry(Country[] countries) {
-		Country countryToSelect = null;
+	
 
-		if (myStrat == AIStrat.EASY || getCountries().size() == 0) {
-			countryToSelect = getRandomCountry(countries);
-		} else {
-			countryToSelect = checkAllNeighbors();
-			if (countryToSelect == null)
-				countryToSelect = getRandomCountry(countries);
-		}
-		return countryToSelect;
-	}// end pickRandomCountry
+	
+
 
 	// checks an ai's countries neighbors, to see if they are occupied. if they
 	// are, go to the next one, otherwise
 	// return that country as a selection. Used for placement in the first turn.
-	private Country checkAllNeighbors() {
+	public Country checkAllNeighbors() {
 		int i = 0, j = 0;
 		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
@@ -60,82 +51,16 @@ public class AI extends Player implements Serializable{
 		return null;
 	}// end checkAllNeighbors
 
-	private Country getRandomCountry(Country[] countries) {
-		Random rand = new Random();
-		int randNum = rand.nextInt(50);
 
-		return countries[randNum];
 
-	}// end getRandomCountry
-
-	// return an arraylist of all countries that have neighbors that arent owned
-	// by me
-	private ArrayList<Country> findFringeCountries() {
-		ArrayList<Country> fringeCountries = new ArrayList<>();
-
-		int i = 0, j = 0;
-		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
-		while (i < getCountries().size()) {
-			j = 0;
-			while (j < neighbors.size()) {
-				if (neighbors.get(j) == null){
-					System.out.println("null neighbor at " + j);
-				}
-				else if (neighbors.get(j).getOccupier() == null){
-					System.out.println(neighbors.get(j).getName() +" had a null occupier");
-				}
-				else if (neighbors.get(j).getOccupier().getFaction() == null){
-					System.out.println(neighbors.get(j).getOccupier().getName() +" had a null faction");
-				}
-				else if (this.getFaction()==null){
-					System.out.println(this.getName() + " had a null faction.");
-				}
-				//Something in the earlier version of this if statement threw a
-				//null pointer exception - hence the if statemens above
-				if (!this.equals(neighbors.get(j).getOccupier())) {
-					fringeCountries.add(getCountries().get(i));
-					j = neighbors.size();
-				}
-				j++;
-			}
-			i++;
-			if (i < getCountries().size())
-				neighbors = getCountries().get(i).getNeighbors();
-		}
-
-		return fringeCountries;
-	}// end findFringeCountries
-
-	private Country pickRandomOwnedCountry() {
+	
+	public Country pickRandomOwnedCountry() {
 		Random rand = new Random();
 		int randNum = rand.nextInt(getCountries().size());
 		return getCountries().get(randNum);
 	}// end pickRandomOwnedCountry
 
-	public Country placeNewTroops() {
-		Country selectedCountry = null;
-		if (myStrat == AIStrat.EASY) {
-			selectedCountry = pickRandomOwnedCountry();
-		} else {
-			selectedCountry = pickRandomFromFringe();
-			if (selectedCountry == null)
-				selectedCountry = pickRandomOwnedCountry();
-
-		}
-		return selectedCountry;
-	}
-
-	private Country pickRandomFromFringe() {
-		ArrayList<Country> fringeCountries = findFringeCountries();
-
-		Random rand = new Random();
-		int randNum = 0;
-	//	System.out.println(fringeCountries.size() + " size of list to choose from");
-		if (fringeCountries.size() == 0)
-			return null;
-		randNum = rand.nextInt(fringeCountries.size());
-		return fringeCountries.get(randNum);
-	}
+	
 
 	// returns true if it is finished attacking, and false otherwise
 	// grabs a country to attack, and the country that it is attacking from
@@ -230,9 +155,7 @@ public class AI extends Player implements Serializable{
 		return countriesToAttack.get(randInt);
 	}// end pickRandomFromList
 
-	public void setMyStrat(AIStrat strat) {
-		myStrat = strat;
-	}// end setMyStrat
+	
 
 	// creates the ai's menuItem for changing difficulty
 	public void makeMenuItem(int i, ActionListener aiDiffChangeListener) {
@@ -248,19 +171,9 @@ public class AI extends Player implements Serializable{
 
 	// returns the ai's current strategy as a string, used for checking if the
 	// ai difficulty menu in the gui was working
-	public String getStrat() {
-		return myStrat.toString();
-	}// end getStrat
+	
 
-	public ArrayList<Country> countriesToReinforce() {
-		ArrayList<Country> selectedCountries = new ArrayList<>();
-		if (myStrat == AIStrat.EASY) {
-			selectedCountries = pickSetOfRandomOwnedCountry();
-		} else
-			selectedCountries = findFringeCountries();
 
-		return selectedCountries;
-	}
 
 	// returns a randomlist of countries to add units to out of the ai's owned
 	// countries
@@ -294,68 +207,66 @@ public class AI extends Player implements Serializable{
 			} // end for
 		} // end for
 
+		
 		if (countriesWorthAttacking.size() == 0)
 			return null;
 
 		return countriesWorthAttacking;
 	}// end findCountriesToAttack
 
+	
+
 	// starts at first country, checks if it is surrounded by friendlies, if it
 	// is
 	// moves all of its units except for one to its neighbors
-	public String reinforce() {
-		String str = "";
+	
+	
+	
+	public  Country pickRandomFromFringe() {
+		ArrayList<Country> fringeCountries = findFringeCountries();
 
-		int surroundCounter = 0;
-		if (myStrat == AIStrat.HARD) {
-			for (Country country : getCountries()) {
+		int randNum = 0;
+		// System.out.println(fringeCountries.size() + " size of list to choose
+		// from");
+		if (fringeCountries.size() == 0)
+			return null;
+		randNum = rand.nextInt(fringeCountries.size());
+		return fringeCountries.get(randNum);
+	}
+	
+	public Country pickRandomCountry()
+	{
+		Map map = Map.getInstance(0);
+		Country[] countries = map.getCountries();
+		int randNum = rand.nextInt(50);
+		return countries[randNum];
+	}
+	public ArrayList<Country> findFringeCountries() {
+		ArrayList<Country> fringeCountries = new ArrayList<>();
 
-				surroundCounter = 0;
-				ArrayList<Country> neighbors = country.getNeighbors();
-				for (Country neighbor : neighbors) {
-					if (neighbor.getOccupier().equals(this))
-						surroundCounter++;
+		int i = 0, j = 0;
+		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
+		while (i < getCountries().size()) {
+			j = 0;
+			while (j < neighbors.size()) {
+
+				if (!this.equals(neighbors.get(j).getOccupier())) {
+					fringeCountries.add(getCountries().get(i));
+					j = neighbors.size();
 				}
-
-				if (surroundCounter == neighbors.size() && country.getForcesVal() > 1) {
-					while (country.getForcesVal() > 1) {
-						for (Country neighbor : neighbors) {
-							country.removeUnits(1);
-							neighbor.setForcesVal(1);
-							str += this.getName() + " removed 1 unit from " + country.getName() + " and moved it to " + neighbor.getName() + ".\n";
-							if (country.getForcesVal() == 1)
-								break;
-						}
-					}
-
-				}
+				j++;
 			}
+			i++;
+			if (i < getCountries().size())
+				neighbors = getCountries().get(i).getNeighbors();
 		}
-		return str;
-	}// end reinforce
+
+		return fringeCountries;
+	}
 		// moves units to other countries if it has more than 2 units occupying
 
-	public void reinforce2() {
 
-		if (myStrat == AIStrat.HARD) {
-			for (Country country : getCountries()) {
-				if (country.getForcesVal() > 2) {
-					while (country.getForcesVal() > 2) {
-						for (Country neighbor : country.getNeighbors()) {
-							if (neighbor.getOccupier().equals(this)) {
-								neighbor.setForcesVal(1);
-								country.removeUnits(1);
-							}
-							if (country.getForcesVal() == 2)
-								break;
-						}
-					}
-				}
-			}
-		}
-	}// end reinforce2
 	
-
 	@Override
 	public ArrayList<Card> redeemCards() {
 		if (getCards().size() == 5) {
@@ -537,6 +448,12 @@ public class AI extends Player implements Serializable{
 	public AIStrategy getStrategy()
 	{
 		return strategy;
+	}
+	
+	public void setStrategy(AIStrategy strat)
+	{
+		strategy = strat;
+		strategy.setMe(this);
 	}
 	
 }

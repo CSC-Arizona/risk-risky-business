@@ -112,7 +112,7 @@ public class TheGame implements Serializable {
 	 */
 	private void addAI() {
 		for (int i = 0; i < ais; i++)
-			players.add(new AI(AIStrat.EASY, totalPlayers));
+			players.add(new AI(new EasyAI(), totalPlayers));
 	}// end addAi
 
 	/*
@@ -310,8 +310,8 @@ public class TheGame implements Serializable {
 			// Ask the AI to pick a country until they pick a country without an
 			// owner
 			while (!placed) {
-				selectedCountry = ((AI) currentPlayer)
-						.pickRandomCountry(gameMap.getCountries());
+				selectedCountry = ((AI) currentPlayer).getStrategy().placeUnit();
+						
 				if (selectedCountry.getOccupier() == null)
 					placed = true;
 			}// end while
@@ -324,7 +324,7 @@ public class TheGame implements Serializable {
 		// During initial reinforce phase
 		else if (isReinforcePhase() && !isPlayPhase()) {
 			while (selectedCountry == null) {
-				selectedCountry = ((AI) currentPlayer).placeNewTroops();
+				selectedCountry = ((AI) currentPlayer).getStrategy().placeLeftOverUnits();
 			}
 			placeArmies(1);
 			nextPlayer();
@@ -360,7 +360,7 @@ public class TheGame implements Serializable {
 
 		// during official reinforcement
 		else if (isReinforcePhase()) {
-			gameLog += ((AI) currentPlayer).reinforce();
+			gameLog += ((AI) currentPlayer).getStrategy().reinforce();
 			nextPhase();
 			nextPlayer();
 		}// end else if
@@ -374,7 +374,7 @@ public class TheGame implements Serializable {
 	private void deployTroops() {
 		if (currentPlayer instanceof AI) {
 			ArrayList<Country> selectedCountries = new ArrayList<Country>();
-			selectedCountries = ((AI) currentPlayer).countriesToReinforce();
+			selectedCountries = ((AI) currentPlayer).getStrategy().placeNewTroops();
 			int i = 0;
 			while (i < selectedCountries.size()
 					&& currentPlayer.getAvailableTroops() > 0) {
@@ -457,8 +457,7 @@ public class TheGame implements Serializable {
 	}// end aiturn
 
 	public boolean aiChoicePlacement() {
-		selectedCountry = ((AI) currentPlayer).pickRandomCountry(gameMap
-				.getCountries());
+		selectedCountry = ((AI) currentPlayer).getStrategy().placeUnit();
 		if (checkIfCountryAvailable(selectedCountry)) {
 			placeArmies(1);
 			selectedCountry = null;
