@@ -61,7 +61,7 @@ public class Deck implements Serializable{
 	public void shuffle() {
 		if (size == 0 && discardPile.size() > 0) {
 			riskDeck.clear();
-			riskDeck = discardPile;
+			riskDeck.addAll(discardPile);
 			Collections.shuffle(riskDeck);
 			size = riskDeck.size();
 			discardPile.clear();
