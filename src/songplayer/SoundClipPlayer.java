@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		SoundClipPlayer.java
+ * 	Purpose:	SoundClipPlayer class controls all sounds played throughout the game including pausing. 
+ */
+
 package songplayer;
 
 import java.io.*;
@@ -5,8 +11,6 @@ import java.net.URL;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
-// To play sound using Clip, the process need to be alive.
-// Hence, we use a Swing application.
 public class SoundClipPlayer extends JFrame {
 
 	private Clip clip;
@@ -22,14 +26,10 @@ public class SoundClipPlayer extends JFrame {
 
 	public void startPlay() {
 		try {
-			// Open an audio input stream.
 			File soundFile = new File("The Rains of Castamere (Instrumental.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
-			// Get a sound clip resource.
 			clip = AudioSystem.getClip();
-			// Open audio clip and load samples from the audio input stream.
 			clip.open(audioIn);
-			// clip.start();
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
@@ -42,14 +42,10 @@ public class SoundClipPlayer extends JFrame {
 	
 	public void startTheme() {
 		try {
-			// Open an audio input stream.
 			File soundFile = new File("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
-			// Get a sound clip resource.
 			clip = AudioSystem.getClip();
-			// Open audio clip and load samples from the audio input stream.
 			clip.open(audioIn);
-			// clip.start();
 			clip.start();
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();

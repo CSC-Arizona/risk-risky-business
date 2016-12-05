@@ -1,3 +1,9 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Deck.java
+ * 	Purpose:	Singleton Deck class holding all card objects of the risk game with shuffling and dealing. Also holds a discard pile.
+ */
+
 package Model;
 
 import java.io.IOException;

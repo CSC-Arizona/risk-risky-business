@@ -26,7 +26,7 @@ public class Tests {
 
 	// No tests for Faction or Continents enums
 	
-	private ArrayList<Player> players; 
+	private ArrayList<Player> players;
 
 	@Test
 	public void testCard() {
@@ -116,6 +116,15 @@ public class Tests {
 	}
 
 	@Test
+	public void testContinent(){
+		players.add(new HumanPlayer(2));
+		players.add(new HumanPlayer(2));
+		
+		Continent cont = new Continent(1, "Test");
+		assertEquals(cont.payOwnerBonus(players.get(0)), 0);
+	}
+	
+	@Test
 	public void testMap() {
 		// 94.5% Coverage 
 		//TODO: Testcase doesn't pass, but it's the full coverage amount. 
@@ -145,24 +154,13 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
 		Game theGame = Game.getInstance(1, 6, false);
-		/*
-		int result = theGame.redeemCards(one, redeem);
-		System.out.println(result);
-		int result2 = theGame.redeemCards(one, redeem);
-		System.out.println(result2);
-		int result3 = theGame.redeemCards(one, redeem);
-		System.out.println(result3);
-		int result4 = theGame.redeemCards(two, redeem);
-		System.out.println(result4);
-		assertTrue(result == 4);
-		*/
 	}
 
 	@Test
@@ -176,7 +174,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -200,7 +198,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);
@@ -224,7 +222,7 @@ public class Tests {
 		Player two = new HumanPlayer(1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
-		skagos.setForcesVal(3);
+		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
 		redeem.add(someCard);

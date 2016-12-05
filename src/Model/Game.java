@@ -152,9 +152,9 @@ public class Game implements Serializable{
 			roundOfReinforcement();
 	}// end roundOfPlacement
 
-	public void roundOfReinforcement() {
+	public void roundOfReinforcement() { 
 		while (isReinforcePhase() && getCurrentPlayer() instanceof AI)
-			aiTurn();
+			aiTurn(); 
 	}
 
 	// this is called by the countryClickListener, and "places" an army in a
@@ -166,7 +166,7 @@ public class Game implements Serializable{
 			if (countryToPlace.getOccupier() == null) {
 				players.get(playerLocation).occupyCountry(countryToPlace);
 				countryToPlace.setOccupier(players.get(playerLocation));
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				armiesPlaced++;
 				if (armiesPlaced == 50) {
 					//placePhase = false;
@@ -188,7 +188,7 @@ public class Game implements Serializable{
 			System.out.println("I WAS AT B AT CRASH");
 			if (players.get(playerLocation).getAvailableTroops() > 0
 					&& countryToPlace.getOccupier().equals(players.get(playerLocation))) {
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				players.get(playerLocation).subtractFromAvailableTroops(numToPlace);
 				if (players.get(playerLocation).getAvailableTroops() == 0) {
 					//deployPhase = false;
@@ -205,7 +205,7 @@ public class Game implements Serializable{
 			// reinforcePhase = true;
 
 			if (countryToPlace.getOccupier().equals(players.get(playerLocation))) {
-				countryToPlace.setForcesVal(numToPlace);
+				countryToPlace.addForcesVal(numToPlace);
 				armiesPlaced++;
 				gameLog+="Reinforced " + countryToPlace + " " + armiesPlaced+"\n";
 				System.out.println("Reinforced " + countryToPlace + " " + armiesPlaced);// selectedCountry.getName());
@@ -230,7 +230,7 @@ public class Game implements Serializable{
 
 	private void addAI(int numOfAI) {
 		for (int i = 0; i < numOfAI; i++)
-			players.add(new AI(AIStrat.EASY, totalPlayers));
+			players.add(new AI(new EasyAI(), totalPlayers));
 	}// end addAi
 
 	public Country getSelectedCountry() {
@@ -285,6 +285,7 @@ public class Game implements Serializable{
 				boolean placed = false;
 				while (!placed) {
 					placed = aiChoicePlacement();
+					
 				}
 				done = true;
 			} else if (isReinforcePhase() && !isPlayPhase()) {
@@ -332,7 +333,7 @@ public class Game implements Serializable{
 
 	// calls the ai's reinforce method
 	private void aiPlayReinforce() {
-		((AI) players.get(playerLocation)).reinforce();
+		((AI) this.getCurrentPlayer()).getStrategy().reinforce();
 
 	}// end aiPlayReinforce
 
@@ -357,7 +358,7 @@ public class Game implements Serializable{
 	}
 
 	public boolean aiChoicePlacement() {
-		aiSelectedCountry = ((AI) players.get(playerLocation)).pickRandomCountry(gameMap.getCountries());
+		aiSelectedCountry = ((AI) players.get(playerLocation)).getStrategy().placeUnit();
 		if (checkIfCountryAvailable(aiSelectedCountry)) {
 
 			placeArmies(aiSelectedCountry, 1);
@@ -370,7 +371,7 @@ public class Game implements Serializable{
 	public void aiReinforcePlacement() {
 		Country aiSelectedCountry = null;
 		while (aiSelectedCountry == null) {
-			aiSelectedCountry = ((AI) players.get(playerLocation)).placeNewTroops();
+			aiSelectedCountry = ((AI) players.get(playerLocation)).getStrategy().placeLeftOverUnits();
 		}
 		placeArmies(aiSelectedCountry, 1);
 		aiSelectedCountry = null;
@@ -379,7 +380,7 @@ public class Game implements Serializable{
 	public void aiUnitPlacement() {
 		ArrayList<Country> selectedCountries = new ArrayList<>();
 		while (selectedCountries.get(0) == null) {
-			selectedCountries = ((AI) players.get(playerLocation)).countriesToReinforce();
+			selectedCountries = ((AI) players.get(playerLocation)).getStrategy().placeNewTroops();
 		}
 		int i = 0;
 		while (i < selectedCountries.size()) {
@@ -467,7 +468,7 @@ public class Game implements Serializable{
 		visited.add(fromCountry);
 		findPath(fromCountry, visited, toCountry, current);
 		if (canPlace) {
-			toCountry.setForcesVal(numUnits);
+			toCountry.addForcesVal(numUnits);
 			fromCountry.removeUnits(numUnits);
 			result = true;
 		}
@@ -613,24 +614,7 @@ public class Game implements Serializable{
 
 	// checks if all countries are occupied by the same player, if so returns
 	// true, otherwise returns false
-	public boolean isFinished() {
 
-		if (players.size() == 1) {
-			gameOver = true;
-			playPhase = false;
-			placePhase = false;
-			reinforcePhase = false;
-			redeemCardPhase = false;
-			deployPhase = false;
-			attackPhase = false;
-		} else
-			gameOver = false;
-
-		return gameOver;
-		// TODO notify gui somehow so that it knows who won, and display that
-		// player's victory, as well is turn off all
-		// buttons
-	}// end isFinished
 
 	// checks if all players have at least one country. If they do not, remove
 	// them from the game.
@@ -752,5 +736,13 @@ public class Game implements Serializable{
 
 	public String getGameLog() {
 		return gameLog;
+	}
+
+	public int getHit() {
+		//TODO: May be changed after dice rolls are implemented 
+		//return 0 = no hit
+		//return 1 = 1 hit, 1 miss
+		//return 2 = all hit
+		return 0;
 	}
 }// end GameClasss
