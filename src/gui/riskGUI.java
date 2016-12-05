@@ -1592,7 +1592,10 @@ public class riskGUI extends JFrame {
 			System.out.println("You wish to trade.");
 
 			if (cardsAreRedeemable()) {
-				
+				theGame.setCardsToRedeem(selectedCards);
+				int armiesToAdd = theGame.redeemCards();
+				theGame.getCurrentPlayer().addAvailableTroops(armiesToAdd);
+				theGame.nextPhase();
 			}// end else if
 
 			// TODO JOptionPane to select the cards the the player wants to
