@@ -1930,7 +1930,7 @@ public class riskGUI extends JFrame {
 										null,
 										"Cannot attack from a country with only one army. Please choose another",
 										"Error", JOptionPane.ERROR_MESSAGE);
-					}
+					}//end else
 				} // end if
 
 				else {
@@ -1946,22 +1946,12 @@ public class riskGUI extends JFrame {
 						theGame.setMoveFrom();
 						if (theGame.getMoveTo().isMyNeighbor(
 								theGame.getMoveFrom())) {
-
-							boolean success = theGame.attack();
+							theGame.attack();
+							
 							ArrayList<Dice> attack = theGame.getAttackDice();
 							ArrayList<Dice> defense = theGame.getDefenseDice();
 
-							if (success)
-								JOptionPane.showMessageDialog(null,
-										theGame.getCurrentPlayer()
-												+ " won the attack", "Success",
-										JOptionPane.INFORMATION_MESSAGE);
-							else
-								JOptionPane.showMessageDialog(null,
-										theGame.getCurrentPlayer()
-												+ " lost the attack",
-										"Failure",
-										JOptionPane.INFORMATION_MESSAGE);
+							
 						} // end if
 						else {
 							JOptionPane.showMessageDialog(null,
@@ -2071,6 +2061,16 @@ public class riskGUI extends JFrame {
 				}//end else
 			}//end if
 			else if (theGame.isReinforcePhase() && !theGame.isPlayPhase()) {
+				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())){
+					theGame.play();
+				}//end if
+				else {
+					JOptionPane.showMessageDialog(null, "You may only reinforce your own country",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}//end else
+			}//end else if
+			
+			else if (theGame.isDeployPhase()){
 				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())){
 					theGame.play();
 				}//end if

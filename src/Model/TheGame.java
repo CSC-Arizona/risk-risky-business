@@ -499,8 +499,8 @@ public class TheGame implements Serializable {
 			countriesClaimed++;
 		} // end if
 		else {
-			gameLog += currentPlayer.getName() + " place " + num + " units on " + selectedCountry.toString() + "\n";
-		}
+			gameLog += currentPlayer.getName() + " placed " + num + " units on " + selectedCountry.toString() + "\n";
+		}//end else 
 		selectedCountry.addForcesVal(num);
 		currentPlayer.subtractFromAvailableTroops(num);
 	}// end placeArmies
@@ -800,7 +800,7 @@ public class TheGame implements Serializable {
 	// // players.get(playerLocation).addCard(deck.deal());
 	// }//end else if
 	/*
-	 * This is where the random dice rolls will eventually need to go
+	 * 
 	 * return -2: Defender won (subtract 2 from attacker)
 	 * return -1: Defender won (subtract 1 from attacker, depending on num dice)
 	 * return 0: Tie (subtract 1 from each)
@@ -812,7 +812,9 @@ public class TheGame implements Serializable {
 		int defenseWins = 0;
 		int aHigh = attackDice.get(0).getValue();
 		int dHigh = defenseDice.get(0).getValue();
-
+		
+		gameLog += "Dice Rolls: \n\t Attacker's highest die= " + attackDice.get(0).getValue() + "\n\t Defender's highest die = "+ defenseDice.get(0).getValue() + "\n";
+		
 		if (aHigh > dHigh) {
 
 			attackWins++;
@@ -826,6 +828,9 @@ public class TheGame implements Serializable {
 			aHigh = attackDice.get(1).getValue();
 			dHigh = defenseDice.get(1).getValue();
 
+			gameLog += "Dice Rolls: \n\t Attacker's second highest die= " + attackDice.get(1).getValue() + "\n\t Defender's second highest die = "+ defenseDice.get(1).getValue()+"\n";
+
+			
 			if (aHigh > dHigh) {
 
 				attackWins++;
