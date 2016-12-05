@@ -350,9 +350,12 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
-			moveTo = ((AI) currentPlayer).getCountryToAttack();
-			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
-			attack();
+			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
+			if(moveTo == null)
+				this.skipAttackPhase();
+			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
+			if(moveFrom.getForcesVal() > 1)
+				attack();
 			// attack(((AI) currentPlayer).getAmountToAttackWith(moveFrom,
 			// moveTo));
 
@@ -630,8 +633,7 @@ public class TheGame implements Serializable {
 	}// end getNumDefenseDice
 
 	public boolean attack() {
-		if (moveFrom.getForcesVal() == 1)
-			return false;
+	
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
@@ -656,7 +658,7 @@ public class TheGame implements Serializable {
 			// moveFrom.removeUnits(numArmies);
 			moveTo.removeUnits(attackResult);
 			
-			if (moveTo.getForcesVal() == 0) {
+			if (moveTo.getForcesVal() <= 0) {
 				countryWasTaken();
 				removeLosers();
 				isFinished();
@@ -694,7 +696,7 @@ public class TheGame implements Serializable {
 			moveFrom.removeUnits(1);
 			moveTo.removeUnits(1);
 			
-			if (moveTo.getForcesVal() == 0) {
+			if (moveTo.getForcesVal() <= 0) {
 				countryWasTaken();
 				removeLosers();
 				isFinished();

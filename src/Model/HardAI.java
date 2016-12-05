@@ -234,4 +234,53 @@ public class HardAI implements AIStrategy, Serializable {
 		Country countryToPlace = blockOrPickFromFringe();
 		return countryToPlace;
 	}
+
+	@Override
+	public Country getCountryToAttack() {
+		ArrayList<Country> allNeighboringCountries = findCountriesToAttack();
+		if(allNeighboringCountries == null)
+			return null;
+		
+		int randNum = rand.nextInt(allNeighboringCountries.size());
+		return allNeighboringCountries.get(randNum);
+	}
+
+	@Override
+	public ArrayList<Country> findCountriesToAttack() {
+		ArrayList<Country> fringeCountries = me.findFringeCountries();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		for (Country country : fringeCountries) {
+			ArrayList<Country> neighbors = country.getNeighbors();
+			for (Country neighboringCountry : neighbors) {
+				if (!neighboringCountry.getOccupier().equals(me) && neighboringCountry.getForcesVal()-2 <= country.getForcesVal()) {
+						countriesWorthAttacking.add(neighboringCountry);
+				} // end if
+			} // end for
+		} // end for
+
+		
+		if (countriesWorthAttacking.size() == 0)
+			return null;
+
+		return countriesWorthAttacking;
+	}
+
+	@Override
+	public Country findAttackingCountry(Country moveTo) {
+		Country attackFrom = null;
+		for(Country country : me.getCountries())
+		{
+			for(Country neighbor : country.getNeighbors())
+			{
+				if(moveTo.equals(neighbor) && moveTo.getForcesVal()-2 <= country.getForcesVal() )
+				{
+					attackFrom = country;
+					break;
+				}
+			}
+			if(attackFrom != null)
+				break;
+		}
+		return attackFrom;
+	}
 }

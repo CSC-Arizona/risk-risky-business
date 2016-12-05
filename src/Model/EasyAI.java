@@ -52,5 +52,53 @@ public class EasyAI implements AIStrategy, Serializable {
 		return countries[randNum];
 
 	}
+	@Override
+	public Country getCountryToAttack() {
+		ArrayList<Country> neighboringEnemies = findCountriesToAttack();
+		if(neighboringEnemies == null)
+			return null;
+		
+		int randInt = rand.nextInt(neighboringEnemies.size());
+		Country attackMe = neighboringEnemies.get(randInt);
+		
+		return attackMe;
+	}
+	@Override
+	public ArrayList<Country> findCountriesToAttack() {
+		ArrayList<Country> fringeCountries = me.findFringeCountries();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		for (Country country : fringeCountries) {
+			ArrayList<Country> neighbors = country.getNeighbors();
+			for (Country neighboringCountry : neighbors) {
+				if (!neighboringCountry.getOccupier().equals(me) && country.getForcesVal() > 1) {
+						countriesWorthAttacking.add(neighboringCountry);
+				} // end if
+			} // end for
+		} // end for
+
+		
+		if (countriesWorthAttacking.size() == 0)
+			return null;
+
+		return countriesWorthAttacking;
+	}
+	@Override
+	public Country findAttackingCountry(Country moveTo) {
+		Country attackFrom = null;
+		for(Country country : me.getCountries())
+		{
+			for(Country neighbor : country.getNeighbors())
+			{
+				if(moveTo.equals(neighbor) && country.getForcesVal() > 1 )
+				{
+					attackFrom = country;
+					break;
+				}
+			}
+			if(attackFrom != null)
+				break;
+		}
+		return attackFrom;
+	}
 
 }
