@@ -1348,7 +1348,7 @@ public class riskGUI extends JFrame {
 			int cols = myCards.size();
 			if (cols < 1)
 				cols = 1;
-			showCards.setLayout(new GridLayout(2, cols));
+			showCards.setLayout(new GridLayout(cols, 2));
 
 			
 			// Get the image for this card
@@ -1603,7 +1603,15 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void itemStateChanged(ItemEvent itE) {
+			
+			//Testing print statements
 			System.out.println("ITEM STATE CALLED!");
+			
+			for (int i=0; i < selectedCards.size(); i++)
+				System.out.print(selectedCards.get(i).getCountry() + " ");
+			
+			System.out.println();
+			//End Testng
 			ArrayList<Card> playCards = theGame.getCurrentPlayer().getCards();
 
 			// the action command is the card's index in the player's arraylist
@@ -1615,7 +1623,7 @@ public class riskGUI extends JFrame {
 				selectedCards.add(playCards.get(index));
 			} // end if
 			else {
-				//selectedCards.remove(playCards.get(index));
+				selectedCards.remove(playCards.get(index));
 			} // end else
 		}// end itemstatechanged
 	}// end cardboxlistener

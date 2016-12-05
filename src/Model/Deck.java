@@ -75,10 +75,11 @@ public class Deck implements Serializable{
 
 	// returns null if the deck has run out of cards.
 	public Card deal() {
+		size = riskDeck.size();
 		if (size > 0) {
 			Card result;
-			result = riskDeck.get(size - 1);
-			riskDeck.remove(size - 1);
+			result = riskDeck.get(0);
+			riskDeck.remove(0);
 			size--;
 			return result;
 		} else {
