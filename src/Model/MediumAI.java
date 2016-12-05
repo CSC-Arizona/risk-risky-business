@@ -1,9 +1,10 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MediumAI implements AIStrategy {
+public class MediumAI implements AIStrategy, Serializable {
 
 	private AI me;
 

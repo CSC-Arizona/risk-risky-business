@@ -1,10 +1,11 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class HardAI implements AIStrategy {
+public class HardAI implements AIStrategy, Serializable {
 
 	private AI me;
 

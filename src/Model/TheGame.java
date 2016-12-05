@@ -658,6 +658,8 @@ public class TheGame implements Serializable {
 			
 			if (moveTo.getForcesVal() == 0) {
 				countryWasTaken();
+				removeLosers();
+				isFinished();
 			}// end if
 			
 			clearSelections();
@@ -694,6 +696,8 @@ public class TheGame implements Serializable {
 			
 			if (moveTo.getForcesVal() == 0) {
 				countryWasTaken();
+				removeLosers();
+				isFinished();
 			}// end if
 			
 			clearSelections();

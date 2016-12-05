@@ -1,9 +1,10 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class EasyAI implements AIStrategy {
+public class EasyAI implements AIStrategy, Serializable {
 
 	private AI me;
 
@@ -12,6 +13,7 @@ public class EasyAI implements AIStrategy {
 	{
 		me = ai;
 	}
+	
 	@Override
 	public ArrayList<Country> placeNewTroops() {
 		ArrayList<Country> countries = new ArrayList<>();

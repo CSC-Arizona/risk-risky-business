@@ -1,9 +1,10 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public interface AIStrategy {
+public interface AIStrategy extends Serializable{
 
 	Random rand = new Random();
 	
