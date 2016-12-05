@@ -444,9 +444,11 @@ public class riskGUI extends JFrame {
 						.showInputDialog("What will be Player " + (i + 1)
 								+ "'s Name?");
 				if (name == null) {
+					//splashLoading1();
 					JOptionPane.showMessageDialog(null, "Must select a name.",
 							"Error", JOptionPane.ERROR_MESSAGE);
-				} else {
+				} 
+				else{
 
 					playerNames.add(name);
 					nameFlag = true;
@@ -458,12 +460,12 @@ public class riskGUI extends JFrame {
 
 	private void splashHouses() {
 		drawingPanel.remove(splashInfo);
-
+		boolean cancel = false;
 		houses = new ArrayList<String>();
 		for (int i = 0; i < humans; i++) {
 			Boolean illegalName = true;
 			String house = "";
-			while (illegalName == true) {
+			while (illegalName == true && cancel==false) {
 				Boolean check = true;
 				house = (String) JOptionPane.showInputDialog(null,
 						"Please choose Player " + (i + 1) + "'s House",
@@ -485,14 +487,19 @@ public class riskGUI extends JFrame {
 				}
 
 				if (house == null && check) {
-					JOptionPane.showMessageDialog(null, "Must choose a House.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+					cancel = true;
 					check = false;
 				} else if (house != null && check)
 					illegalName = false;
 
 			}
-			houses.add(house);
+			if(cancel){
+				splashLoading1();
+				drawingPanel.remove(splashInfo);
+				drawingPanel.repaint();
+			}
+			else
+				houses.add(house);
 		}
 		for (int i = 0; i < ai; i++) {
 			Boolean illegalName = true;
@@ -505,9 +512,7 @@ public class riskGUI extends JFrame {
 						"Easy");
 
 				if (ais == null) {
-					JOptionPane.showMessageDialog(null,
-							"Must choose a Strategy.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					cancel=true;
 				} else {
 					illegalName = false;
 					switch (ais) {
@@ -526,7 +531,13 @@ public class riskGUI extends JFrame {
 				}
 			}
 		}
-		splashNames();
+		if(cancel){
+			splashLoading1();
+			drawingPanel.remove(splashInfo);
+			drawingPanel.repaint();
+		}
+		else
+			splashNames();
 	}// end splashHouses
 
 	private void splashNumPlayers() {
@@ -534,45 +545,68 @@ public class riskGUI extends JFrame {
 
 		System.out.println("How many players?");
 		String human = "", ais = "";
-		boolean continueFlag = false, setFlag = false, aiFlag = false;
+		boolean continueFlag = false, setFlag = false, aiFlag = false, cancel=false;
 
 		while (!continueFlag) {
 			human = JOptionPane.showInputDialog("How Many Human Players?");
-			try {
-				humans = Integer.parseInt(human);
-				continueFlag = true;
-
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null,
-						"Must choose a valid number between 0 and 6.", "Error",
-						JOptionPane.ERROR_MESSAGE);
+			if(human==null){
+				continueFlag=true;
+				cancel=true;
+			}
+			else{
+				try {
+					humans = Integer.parseInt(human);
+					continueFlag = true;
+	
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null,
+							"Must choose a valid number between 0 and 6.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
-		while (!setFlag) {
-			ais = JOptionPane.showInputDialog("How Many AI Players?");
-			try {
-				ai = Integer.parseInt(ais);
-				aiFlag = true;
-
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null,
-						"Must choose a valid number between 0 and 6.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-			if (aiFlag) {
-				if ((ai + humans) > 6 || ai + humans < 3) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Invalid. Total number of players must be between 3 and 6.",
-									"Error", JOptionPane.ERROR_MESSAGE);
-				} else
-					setFlag = true;
-
+		if(cancel){
+			splashLoading1();
+			drawingPanel.remove(splashInfo);
+		}
+		else{
+			while (!setFlag) {
+				ais = JOptionPane.showInputDialog("How Many AI Players?");
+				if(ais==null){
+					setFlag=true;
+					cancel=true;
+				}
+				else{
+					try {
+						ai = Integer.parseInt(ais);
+						aiFlag = true;
+		
+					} catch (NumberFormatException e) {
+						JOptionPane.showMessageDialog(null,
+								"Must choose a valid number between 0 and 6.", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+					if (aiFlag) {
+						if ((ai + humans) > 6 || ai + humans < 3) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Invalid. Total number of players must be between 3 and 6.",
+											"Error", JOptionPane.ERROR_MESSAGE);
+						} else
+							setFlag = true;
+		
+					}
+				}
 			}
 		}
-		splashHouses();
-	}// end splahNumPlayers
+		if(cancel){
+			splashLoading1();
+			drawingPanel.remove(splashInfo);
+		}
+		else
+			splashHouses();
+	}// end splashNumPlayers
 
 	private void splashChooseGame() {
 		drawingPanel.remove(splashInfo);
@@ -609,6 +643,7 @@ public class riskGUI extends JFrame {
 	 * ends. This screen is shown for 10 seconds.
 	 */
 	private void splashLoading1() {
+		drawingPanel.removeAll();
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
 		splashInfo.setSize(500, 150);
@@ -1592,7 +1627,10 @@ public class riskGUI extends JFrame {
 			System.out.println("You wish to trade.");
 
 			if (cardsAreRedeemable()) {
-				
+				theGame.setCardsToRedeem(selectedCards);
+				int armiesToAdd = theGame.redeemCards();
+				theGame.getCurrentPlayer().addAvailableTroops(armiesToAdd);
+				theGame.nextPhase();
 			}// end else if
 
 			// TODO JOptionPane to select the cards the the player wants to
