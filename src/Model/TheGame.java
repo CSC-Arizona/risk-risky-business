@@ -355,18 +355,18 @@ public class TheGame implements Serializable {
 		// During attack phase
 		else if (isAttackPhase()) {
 
-			//printAllCountriesAndOccupiers();
-//			moveTo = ((AI) currentPlayer).getCountryToAttack();
-//			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
-//			attack();
+			// printAllCountriesAndOccupiers();
+			// moveTo = ((AI) currentPlayer).getCountryTo;
+			// moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
+			// attack();
 
 			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
-			if(moveTo == null)
+			if (moveTo == null)
 				this.skipAttackPhase();
-			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
-			if(moveFrom != null)
-				attack();
 
+			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
+			if (moveFrom != null)
+				attack();
 
 			// If the AI decided to finish attacking
 			if (((AI) currentPlayer).finishedAttacking())
@@ -385,16 +385,16 @@ public class TheGame implements Serializable {
 			throw new IllegalStateException("Illegal phase!");
 		} // end else
 	}// end aiturn
-	
+
 	/*
 	 * For testing purposes!!!
 	 */
-	public void printAllCountriesAndOccupiers(){
+	public void printAllCountriesAndOccupiers() {
 		Country[] countries = gameMap.getCountries();
-		for (int i=0; i < countries.length; i++){
+		for (int i = 0; i < countries.length; i++) {
 			System.out.println(countries[i].getName() + ": " + countries[i].getOccupier());
-		}//end for
-	}//end print all
+		} // end for
+	}// end print all
 
 	private void deployTroops() {
 		if (currentPlayer instanceof AI) {
@@ -504,7 +504,7 @@ public class TheGame implements Serializable {
 		} // end if
 		else {
 			gameLog += currentPlayer.getName() + " placed " + num + " units on " + selectedCountry.toString() + "\n";
-		}//end else 
+		} // end else
 		selectedCountry.addForcesVal(num);
 		currentPlayer.subtractFromAvailableTroops(num);
 	}// end placeArmies
@@ -654,7 +654,7 @@ public class TheGame implements Serializable {
 	}// end getNumDefenseDice
 
 	public boolean attack() {
-	
+
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
@@ -666,90 +666,82 @@ public class TheGame implements Serializable {
 
 		// attack won
 
-		if (attackResult >0) {
+		if (attackResult > 0) {
 			result += currentPlayer.getName() + " won the attack.\n";
-			
+
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null,
-					theGame.getCurrentPlayer().getName() + " won the attack", "Success",
-					JOptionPane.INFORMATION_MESSAGE);
-			// Resetting units
-			// moveTo.setForcesToZero();
-			// moveTo.addForcesVal(numArmies);
-			// moveFrom.removeUnits(numArmies);
+				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " won the attack", "Success",
+						JOptionPane.INFORMATION_MESSAGE);
+
 			moveTo.removeUnits(attackResult);
-			
+
 			if (moveTo.getForcesVal() < 1) {
 				countryWasTaken();
 				removeLosers();
 				isFinished();
-			}// end if
-			
+			} // end if
+
 			clearSelections();
 			gameLog += result;
 			return true;
-		}// end if
+		} // end if
 
 		// attack lost
-		else if (attackResult < 0){
+		else if (attackResult < 0) {
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null,
-					theGame.getCurrentPlayer().getName() + " lost the attack", "Failure",
-					JOptionPane.INFORMATION_MESSAGE);
-			//Get rid of the negative so we don't accidentally add
+				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " lost the attack",
+						"Failure", JOptionPane.INFORMATION_MESSAGE);
+			// Get rid of the negative so we don't accidentally add
 			moveFrom.removeUnits(-1 * attackResult);
 
-			
 			result += currentPlayer.getName() + " lost the attack.\n";
 			clearSelections();
 			gameLog += result;
 			return false;
 
-		}// end else if
-		
-		//Otherwise, lose one and one
+		} // end else if
+
+		// Otherwise, lose one and one
 		else {
 			result += currentPlayer.getName() + " was forced to retreat.\n";
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null,
-					theGame.getCurrentPlayer().getName() + " was forced to retreat.", "tie",
-					JOptionPane.INFORMATION_MESSAGE);
-			
+				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " was forced to retreat.",
+						"tie", JOptionPane.INFORMATION_MESSAGE);
+
 			moveFrom.removeUnits(1);
 			moveTo.removeUnits(1);
-			
 
 			if (moveTo.getForcesVal() <= 0) {
 				countryWasTaken();
 				removeLosers();
 				isFinished();
-			}// end if
-			
+			} // end if
+
 			clearSelections();
 			gameLog += result;
 			return true;
-		}//end else
+		} // end else
 	}// end attack
-	
+
 	/*
-	 * Makes the necessary changes to the countries if the attackee lost a country
+	 * Makes the necessary changes to the countries if the attackee lost a
+	 * country
 	 */
-	private void countryWasTaken(){
-		gameLog += currentPlayer.getName() + " defeated "
-				+ moveTo.getOccupier().getName() + " and took "
+	private void countryWasTaken() {
+		gameLog += currentPlayer.getName() + " defeated " + moveTo.getOccupier().getName() + " and took "
 				+ moveTo.getName() + ".\n";
-		
+
 		int units = 0;
-		
-		//let the AI choose how many to move
-		//STUB!!!! change for AI behavior change
-		if (currentPlayer instanceof AI){
+
+		// let the AI choose how many to move
+		// STUB!!!! change for AI behavior change
+		if (currentPlayer instanceof AI) {
 			units = moveFrom.getForcesVal() - 1;
-		}//end if
-		
-		//let the person choose how many to move
+		} // end if
+
+		// let the person choose how many to move
 		else {
-			//Find out how many units they want to move
+			// Find out how many units they want to move
 			units = 0;
 			while (units == 0) {
 				String unitsToMove = JOptionPane
@@ -757,102 +749,71 @@ public class TheGame implements Serializable {
 				try {
 					units = Integer.parseInt(unitsToMove);
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null,
-							"That was invalid number.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
 					units = 0;
 					continue;
-				}// end catch
-				
+				} // end catch
+
 				if (units < 1 || units > moveFrom.getForcesVal() - 1) {
-					JOptionPane.showMessageDialog(null,
-							"That was invalid number.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
 					units = 0;
-				}//end if
-			}// end while
-		}//end else
-		
-		
+				} // end if
+			} // end while
+		} // end else
+
 		moveTo.addForcesVal(units);
 		moveFrom.removeUnits(units);
 		moveTo.setOccupier(currentPlayer);
 
 		cardEarned = true;
-	}//end countryWasTaken
+	}// end countryWasTaken
 
-
-				
-
-
-	// attack lost
-
-	// if (numArmies <= moveTo.getForcesVal()) {
-	// // theirs.setForcesVal(numArmies);
-	// moveFrom.removeUnits(numArmies); // you lose the armies fought with
-	// result+=moveFrom.getOccupier().getName() + " lost the battle.\n";
-	// } else if (moveTo.getForcesVal() < numArmies) {
-	// result += moveFrom.getOccupier().getName() + " defeated " +
-	// moveTo.getOccupier().getName() + " and took " + moveTo.getName() +
-	// ".\n";
-	// countriesBefore = getCurrentPlayer().getCountries().size();
-	// //moveTo.getOccupier().loseCountry(moveTo);
-	// moveTo.removeUnits(moveTo.getForcesVal());
-	// moveTo.setForcesVal(numArmies);
-	// moveTo.setOccupier(moveFrom.getOccupier());
-	// moveFrom.getOccupier().occupyCountry(moveTo);
-	// moveFrom.removeUnits(numArmies);
-	// countriesAfter = getCurrentPlayer().getCountries().size();
-	// // players.get(playerLocation).addCard(deck.deal());
-	// }//end else if
 	/*
 	 * 
-	 * return -2: Defender won (subtract 2 from attacker)
-	 * return -1: Defender won (subtract 1 from attacker, depending on num dice)
-	 * return 0: Tie (subtract 1 from each)
-	 * return 1: Attacker won (subtract 1 from defender, depending on num dice)
-	 * return 2: Attack won (subtract 2 from defender)
+	 * return -2: Defender won (subtract 2 from attacker) return -1: Defender
+	 * won (subtract 1 from attacker, depending on num dice) return 0: Tie
+	 * (subtract 1 from each) return 1: Attacker won (subtract 1 from defender,
+	 * depending on num dice) return 2: Attack won (subtract 2 from defender)
 	 */
 	public int wasAttackSuccessful() {
 		int attackWins = 0;
 		int defenseWins = 0;
 		int aHigh = attackDice.get(0).getValue();
 		int dHigh = defenseDice.get(0).getValue();
-		
-		gameLog += "Dice Rolls: \n\t Attacker's highest die= " + attackDice.get(0).getValue() + "\n\t Defender's highest die = "+ defenseDice.get(0).getValue() + "\n";
-		
+
+		gameLog += "Dice Rolls: \n\t Attacker's highest die= " + attackDice.get(0).getValue()
+				+ "\n\t Defender's highest die = " + defenseDice.get(0).getValue() + "\n";
+
 		if (aHigh > dHigh) {
 
 			attackWins++;
-		}// end if
+		} // end if
 		else {
 			defenseWins++;
-		}// end else if
-		
-		//If both parties rolled more than one, compare the second
-		if (attackDice.size()>1 && defenseDice.size()>1){
+		} // end else if
+
+		// If both parties rolled more than one, compare the second
+		if (attackDice.size() > 1 && defenseDice.size() > 1) {
 			aHigh = attackDice.get(1).getValue();
 			dHigh = defenseDice.get(1).getValue();
 
-			gameLog += "Dice Rolls: \n\t Attacker's second highest die= " + attackDice.get(1).getValue() + "\n\t Defender's second highest die = "+ defenseDice.get(1).getValue()+"\n";
+			gameLog += "Dice Rolls: \n\t Attacker's second highest die= " + attackDice.get(1).getValue()
+					+ "\n\t Defender's second highest die = " + defenseDice.get(1).getValue() + "\n";
 
-			
 			if (aHigh > dHigh) {
 
 				attackWins++;
-			}// end if
+			} // end if
 				// Ties or d high goes to defender
 			else {
 				defenseWins++;
-			}// end else
-		}// end if
+			} // end else
+		} // end if
 			// return numArmies > moveTo.getForcesVal();
 		return attackWins - defenseWins;
 	}// end wasAttackSuccessful
 		// return numArmies > moveTo.getForcesVal();
 		// end wasAttackSuccessful
-
-
 
 	/**********************************************************************************
 	 *************************** Shuffling Armies in Countries***************************
@@ -974,24 +935,31 @@ public class TheGame implements Serializable {
 	}// end printPath
 
 	public void removeLosers() {
-		ArrayList<Player> playersToRemove = new ArrayList<>();
-		ArrayList<Integer> playersToRemoveLocations = new ArrayList<>();
+		System.out.println("Total Players before remove: " + totalPlayers);
+		System.out.println("Player indexes: ");
+		for (Player player : players) {
+			System.out.println(player.getName() + " at index " + players.indexOf(player));
+		}
+		Player removeMe = null;
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
 				System.out.println(player.getName() + " has been wiped off the map.");
 				gameLog += player.getName() + " has been wiped off the map.\n";
-				playersToRemove.add(player);
+				removeMe = player;
 			}
 
 		}
-		ArrayList<Card> cardsToAddToDiscard = new ArrayList<Card>();
-		for (Player player : playersToRemove) {
-			cardsToAddToDiscard.addAll(player.discardCards());
+		if (removeMe != null) {
+			deck.addToDiscardPile(removeMe.discardCards());
+
+			players.remove(removeMe);
+			totalPlayers--;
 		}
-		if (cardsToAddToDiscard.size() > 0)
-			deck.addToDiscardPile(cardsToAddToDiscard);
-		players.removeAll(playersToRemove);
-		totalPlayers -= playersToRemove.size();
+		System.out.println("Total Players after remove: " + totalPlayers);
+		System.out.println("Player indexes: ");
+		for (Player player : players) {
+			System.out.println(player.getName() + " at index " + players.indexOf(player));
+		}
 
 	}// end removeLosers
 
@@ -1009,9 +977,6 @@ public class TheGame implements Serializable {
 			gameOver = false;
 
 		return gameOver;
-		// TODO notify gui somehow so that it knows who won, and display that
-		// player's victory, as well is turn off all
-		// buttons
 	}// end isFinished
 
 	/**********************************************************************************
@@ -1169,10 +1134,10 @@ public class TheGame implements Serializable {
 	}
 
 	public int getHit() {
-		//TODO: 
-		//return 1 if offense loses one and wins one
-		//return 0 if offense loses entirely
-		//return 2 if offense wins entirely
+		// TODO:
+		// return 1 if offense loses one and wins one
+		// return 0 if offense loses entirely
+		// return 2 if offense wins entirely
 		return 0;
 	}
 

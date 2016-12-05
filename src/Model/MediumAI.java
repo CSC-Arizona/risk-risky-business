@@ -118,11 +118,16 @@ public class MediumAI implements AIStrategy, Serializable {
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;
+		if(moveTo == null)
+			return null;
+		
+		
 		for(Country country : me.getCountries())
 		{
 			for(Country neighbor : country.getNeighbors())
 			{
-				if(moveTo.equals(neighbor) && moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)
+				
+				if(moveTo.equals(neighbor) && (moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1))
 				{
 					attackFrom = country;
 					break;

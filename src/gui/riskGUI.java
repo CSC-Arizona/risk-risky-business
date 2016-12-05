@@ -433,7 +433,7 @@ public class riskGUI extends JFrame {
 	}// end splashLoading2
 
 	private void splashNames() {
-
+		boolean cancel=false;
 		System.out.println("What are the players names?");
 		playerNames = new ArrayList<String>();
 		for (int i = 0; i < humans; i++) {
@@ -444,9 +444,8 @@ public class riskGUI extends JFrame {
 						.showInputDialog("What will be Player " + (i + 1)
 								+ "'s Name?");
 				if (name == null) {
-					//splashLoading1();
-					JOptionPane.showMessageDialog(null, "Must select a name.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+					cancel=true;
+					nameFlag=true;
 				} 
 				else{
 
@@ -454,8 +453,13 @@ public class riskGUI extends JFrame {
 					nameFlag = true;
 				}
 			}
+			if(cancel)
+				break;
 		}
-		splashLoading2();
+		if(cancel)
+			splashChooseGame();
+		else
+			splashLoading2();
 	}// end splash names
 
 	private void splashHouses() {
@@ -494,54 +498,55 @@ public class riskGUI extends JFrame {
 
 			}
 			if(cancel){
-				splashLoading1();
-				drawingPanel.remove(splashInfo);
-				drawingPanel.repaint();
+				break;
 			}
 			else
 				houses.add(house);
 		}
-		for (int i = 0; i < ai; i++) {
-			Boolean illegalName = true;
-			String ais = "";
-
-			while (illegalName == true) {
-
-				ais = (String) JOptionPane.showInputDialog(null, "Please choose AI " + (i + 1) + "'s Strategy",
-						"Choose a Strategy", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Medium", "Hard" },
-						"Easy");
-
-				if (ais == null) {
-					cancel=true;
-				} else {
-					illegalName = false;
-					switch (ais) {
-					case "Easy":
-						strat.add(new EasyAI());
+		if(!cancel){
+			for (int i = 0; i < ai; i++) {
+				Boolean illegalName = true;
+				String ais = "";
+	
+				while (illegalName == true) {
+	
+					ais = (String) JOptionPane.showInputDialog(null, "Please choose AI " + (i + 1) + "'s Strategy",
+							"Choose a Strategy", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Medium", "Hard" },
+							"Easy");
+	
+					if (ais == null) {
+						cancel=true;
+						illegalName=false;
 						break;
-					case "Hard":
-						strat.add(new HardAI());
-						break;
-					case "Medium":
-						strat.add(new MediumAI());
-						break;
-					default:
-						break;
+					} else {
+						illegalName = false;
+						switch (ais) {
+						case "Easy":
+							strat.add(new EasyAI());
+							break;
+						case "Hard":
+							strat.add(new HardAI());
+							break;
+						case "Medium":
+							strat.add(new MediumAI());
+							break;
+						default:
+							break;
+						}
 					}
 				}
+				if(cancel)
+					break;
 			}
 		}
 		if(cancel){
-			splashLoading1();
-			drawingPanel.remove(splashInfo);
-			drawingPanel.repaint();
+			splashChooseGame();
 		}
 		else
 			splashNames();
 	}// end splashHouses
 
 	private void splashNumPlayers() {
-		drawingPanel.remove(splashInfo);
 
 		System.out.println("How many players?");
 		String human = "", ais = "";
@@ -566,8 +571,7 @@ public class riskGUI extends JFrame {
 			}
 		}
 		if(cancel){
-			splashLoading1();
-			drawingPanel.remove(splashInfo);
+			splashChooseGame();
 		}
 		else{
 			while (!setFlag) {
@@ -601,8 +605,7 @@ public class riskGUI extends JFrame {
 			}
 		}
 		if(cancel){
-			splashLoading1();
-			drawingPanel.remove(splashInfo);
+			splashChooseGame();
 		}
 		else
 			splashHouses();
@@ -643,7 +646,6 @@ public class riskGUI extends JFrame {
 	 * ends. This screen is shown for 10 seconds.
 	 */
 	private void splashLoading1() {
-		drawingPanel.removeAll();
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
 		splashInfo.setSize(500, 150);
