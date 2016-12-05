@@ -1300,38 +1300,55 @@ public class riskGUI extends JFrame {
 		// displays the cards and has a button for trading in cards
 		public void makePlayingCardPanel(Graphics g) {
 			ArrayList<Card> myCards = theGame.getCurrentPlayer().getCards();
-
+			
+			//reset selected cards everytime we draw this panel
+			selectedCards = new ArrayList<Card>();
+			
+			//The card panel is a new panel
 			JPanel cards = new JPanel();
 			cards.setLayout(new GridLayout(2, 0));
 			JPanel showCards = new JPanel();
 			int cols = myCards.size();
 			if (cols < 1)
 				cols = 1;
-			showCards.setLayout(new GridLayout(0, cols));
-			// ArrayList<Card> currCards =
-			// theGame.getCurrentPlayer().getCards();
+			showCards.setLayout(new GridLayout(2, cols));
+
 			
 			// Get the image for this card
 			for (int i = 0; i < myCards.size(); i++) {
+				ImageIcon im = myCards.get(i).getMyImageIcon();
+				CardPanel card = new CardPanel(im.getImage(), xWidth, yHeight);
+				cards.add(card);
+			} // end for
+			
+//			JCheckBox checkBox = new JCheckBox();
+//			Image im = myCards.get(i).getMyImage();
+//			ImageIcon ic = new ImageIcon(im.getScaledInstance(
+//					(int) (xWidth * 1), (int) (yHeight * 1.5),
+//					Image.SCALE_DEFAULT));
+//
+//			checkBox = new JCheckBox(ic);
+//			checkBox.setActionCommand("" + i);
+//			checkBox.setSelected(false);
+//			checkBox.addItemListener(new CardBoxListener());
+//			/*
+//			 * Image im = currCards.get(i).getMyImage(); JPanel oneCard =
+//			 * new CardPanel(im, xWidth, yHeight); // g.drawImage(im,
+//			 * 0,0,null); Dimension myD = new Dimension((int) (0.75 *
+//			 * xWidth), (int) (1.5 * yHeight));
+//			 * oneCard.setPreferredSize(myD); oneCard.repaint();
+//			 */
+//			showCards.add(checkBox);
+			
+			//Add the checkboxes
+			for (int i=0; i < myCards.size(); i++){
 				JCheckBox checkBox = new JCheckBox();
-				Image im = myCards.get(i).getMyImage();
-				ImageIcon ic = new ImageIcon(im.getScaledInstance(
-						(int) (xWidth * 1), (int) (yHeight * 1.5),
-						Image.SCALE_DEFAULT));
-
-				checkBox = new JCheckBox(ic);
+				checkBox = new JCheckBox();
 				checkBox.setActionCommand("" + i);
 				checkBox.setSelected(false);
 				checkBox.addItemListener(new CardBoxListener());
-				/*
-				 * Image im = currCards.get(i).getMyImage(); JPanel oneCard =
-				 * new CardPanel(im, xWidth, yHeight); // g.drawImage(im,
-				 * 0,0,null); Dimension myD = new Dimension((int) (0.75 *
-				 * xWidth), (int) (1.5 * yHeight));
-				 * oneCard.setPreferredSize(myD); oneCard.repaint();
-				 */
 				showCards.add(checkBox);
-			} // end for
+			}//end for
 
 			cards.add(showCards);
 			if(theGame.getCurrentPlayer().getCards().size()>=3){
@@ -2045,7 +2062,24 @@ public class riskGUI extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.play();
+			if (theGame.isPlacePhase()){
+				if (theGame.getSelectedCountry().getOccupier() == null)
+					theGame.play();
+				else {
+					JOptionPane.showMessageDialog(null, "You must pick an unoccupied country",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}//end else
+			}//end if
+			else if (theGame.isReinforcePhase() && !theGame.isPlayPhase()) {
+				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())){
+					theGame.play();
+				}//end if
+				else {
+					JOptionPane.showMessageDialog(null, "You may only reinforce your own country",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}//end else
+			}//end else if
+			
 			// //System.out.println("Place clicked");
 			// if (theGame.isPlacePhase()) {
 			// // next player place army

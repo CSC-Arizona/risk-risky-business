@@ -205,8 +205,14 @@ public class AI extends Player implements Serializable {
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				if (!neighboringCountry.getOccupier().equals(this)) {
-					countriesWorthAttacking.add(neighboringCountry);
+			//	if (neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
+				if (this.equals(neighboringCountry.getOccupier())){
+					if (country.getForcesVal() - 1 > neighboringCountry.getForcesVal())
+						countriesWorthAttacking.add(neighboringCountry);
+//=======
+//				if (!neighboringCountry.getOccupier().equals(this)) {
+//					countriesWorthAttacking.add(neighboringCountry);
+//>>>>>>> 18daf5c34a1b194e76b246f361d946f663f0cfa2
 				} // end if
 			} // end for
 		} // end for

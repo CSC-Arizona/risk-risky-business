@@ -350,12 +350,19 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
+/*<<<<<<< HEAD
+			//printAllCountriesAndOccupiers();
+			moveTo = ((AI) currentPlayer).getCountryToAttack();
+			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
+			attack();
+=======*/
 			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
 			if(moveTo == null)
 				this.skipAttackPhase();
 			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
 			if(moveFrom.getForcesVal() > 1)
 				attack();
+//>>>>>>> 18daf5c34a1b194e76b246f361d946f663f0cfa2
 			// attack(((AI) currentPlayer).getAmountToAttackWith(moveFrom,
 			// moveTo));
 
@@ -376,6 +383,16 @@ public class TheGame implements Serializable {
 			throw new IllegalStateException("Illegal phase!");
 		} // end else
 	}// end aiturn
+	
+	/*
+	 * For testing purposes!!!
+	 */
+	public void printAllCountriesAndOccupiers(){
+		Country[] countries = gameMap.getCountries();
+		for (int i=0; i < countries.length; i++){
+			System.out.println(countries[i].getName() + ": " + countries[i].getOccupier());
+		}//end for
+	}//end print all
 
 	private void deployTroops() {
 		if (currentPlayer instanceof AI) {
@@ -658,7 +675,7 @@ public class TheGame implements Serializable {
 			// moveFrom.removeUnits(numArmies);
 			moveTo.removeUnits(attackResult);
 			
-			if (moveTo.getForcesVal() <= 0) {
+			if (moveTo.getForcesVal() < 1) {
 				countryWasTaken();
 				removeLosers();
 				isFinished();
@@ -696,6 +713,7 @@ public class TheGame implements Serializable {
 			moveFrom.removeUnits(1);
 			moveTo.removeUnits(1);
 			
+
 			if (moveTo.getForcesVal() <= 0) {
 				countryWasTaken();
 				removeLosers();
@@ -1160,6 +1178,14 @@ public class TheGame implements Serializable {
 
 	public void setCardsToRedeem(ArrayList<Card> cards) {
 		cardsToRedeem = cards;
+	}
+
+	public int getHit() {
+		//TODO: 
+		//return 1 if offense loses one and wins one
+		//return 0 if offense loses entirely
+		//return 2 if offense wins entirely
+		return 0;
 	}
 
 }// end theGame

@@ -687,6 +687,11 @@ public class Game implements Serializable{
 	
 //	private boolean placePhase, playPhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase;
 	
+	private boolean isFinished() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	private void changeToReinforcePhase(){
 		placePhase = false;
 		reinforcePhase = true;
