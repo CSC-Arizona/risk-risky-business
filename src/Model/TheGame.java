@@ -354,6 +354,7 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
+			//printAllCountriesAndOccupiers();
 			moveTo = ((AI) currentPlayer).getCountryToAttack();
 			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
 			attack();
@@ -376,6 +377,16 @@ public class TheGame implements Serializable {
 			throw new IllegalStateException("Illegal phase!");
 		}// end else
 	}// end aiturn
+	
+	/*
+	 * For testing purposes!!!
+	 */
+	public void printAllCountriesAndOccupiers(){
+		Country[] countries = gameMap.getCountries();
+		for (int i=0; i < countries.length; i++){
+			System.out.println(countries[i].getName() + ": " + countries[i].getOccupier());
+		}//end for
+	}//end print all
 
 	private void deployTroops() {
 		if (currentPlayer instanceof AI) {
