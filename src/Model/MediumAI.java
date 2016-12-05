@@ -1,9 +1,10 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MediumAI implements AIStrategy {
+public class MediumAI implements AIStrategy, Serializable {
 
 	private AI me;
 
@@ -80,6 +81,58 @@ public class MediumAI implements AIStrategy {
 				countryToReturn = me.pickRandomCountry();
 		}
 		return countryToReturn;
+	}
+
+	@Override
+	public Country getCountryToAttack() {
+		
+		ArrayList<Country> allNeighboringEnemies = findCountriesToAttack();
+		if(allNeighboringEnemies == null)
+			return null;
+		
+		int randNum = rand.nextInt(allNeighboringEnemies.size());
+		
+		return allNeighboringEnemies.get(randNum);
+	}
+
+	@Override
+	public ArrayList<Country> findCountriesToAttack() {
+		ArrayList<Country> fringeCountries = me.findFringeCountries();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		for (Country country : fringeCountries) {
+			ArrayList<Country> neighbors = country.getNeighbors();
+			for (Country neighboringCountry : neighbors) {
+				if (!neighboringCountry.getOccupier().equals(me) && neighboringCountry.getForcesVal() <= country.getForcesVal()) {
+						countriesWorthAttacking.add(neighboringCountry);
+				} // end if
+			} // end for
+		} // end for
+
+		
+		if (countriesWorthAttacking.size() == 0)
+			return null;
+
+		return countriesWorthAttacking;
+	}
+
+	@Override
+	public Country findAttackingCountry(Country moveTo) {
+		Country attackFrom = null;
+		for(Country country : me.getCountries())
+		{
+			for(Country neighbor : country.getNeighbors())
+			{
+				if(moveTo.equals(neighbor) && moveTo.getForcesVal() <= country.getForcesVal() )
+				{
+					attackFrom = country;
+					break;
+				}
+			}
+			if(attackFrom != null)
+				break;
+		}
+		return attackFrom;
+	
 	}
 
 }

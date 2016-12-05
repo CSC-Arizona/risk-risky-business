@@ -350,10 +350,19 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
+/*<<<<<<< HEAD
 			//printAllCountriesAndOccupiers();
 			moveTo = ((AI) currentPlayer).getCountryToAttack();
 			moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
 			attack();
+=======*/
+			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
+			if(moveTo == null)
+				this.skipAttackPhase();
+			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
+			if(moveFrom.getForcesVal() > 1)
+				attack();
+//>>>>>>> 18daf5c34a1b194e76b246f361d946f663f0cfa2
 			// attack(((AI) currentPlayer).getAmountToAttackWith(moveFrom,
 			// moveTo));
 
@@ -641,8 +650,7 @@ public class TheGame implements Serializable {
 	}// end getNumDefenseDice
 
 	public boolean attack() {
-		if (moveFrom.getForcesVal() == 1)
-			return false;
+	
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
@@ -669,6 +677,8 @@ public class TheGame implements Serializable {
 			
 			if (moveTo.getForcesVal() < 1) {
 				countryWasTaken();
+				removeLosers();
+				isFinished();
 			}// end if
 			
 			clearSelections();
@@ -703,8 +713,11 @@ public class TheGame implements Serializable {
 			moveFrom.removeUnits(1);
 			moveTo.removeUnits(1);
 			
-			if (moveTo.getForcesVal() < 0) {
+
+			if (moveTo.getForcesVal() <= 0) {
 				countryWasTaken();
+				removeLosers();
+				isFinished();
 			}// end if
 			
 			clearSelections();
@@ -1160,6 +1173,14 @@ public class TheGame implements Serializable {
 
 	public void setCardsToRedeem(ArrayList<Card> cards) {
 		cardsToRedeem = cards;
+	}
+
+	public int getHit() {
+		//TODO: 
+		//return 1 if offense loses one and wins one
+		//return 0 if offense loses entirely
+		//return 2 if offense wins entirely
+		return 0;
 	}
 
 }// end theGame

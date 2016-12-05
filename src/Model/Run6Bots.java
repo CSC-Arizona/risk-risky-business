@@ -28,20 +28,22 @@ public class Run6Bots {
 		}
 		
 		i = 0;
-		int hardWin = 0, easyWin = 0;
+		int hardWin = 0, mediumWin = 0, easyWin = 0;
 		while(i < 1000)
 		{
 			theGame.startGame();
-			if(((AI) theGame.getCurrentPlayer()).getStrategy() instanceof EasyAI)
-				easyWin++;
-			else
+			if(((AI) theGame.getCurrentPlayer()).getStrategy() instanceof EasyAI){
+				easyWin++;}
+			else if(((AI) theGame.getCurrentPlayer()).getStrategy() instanceof MediumAI){
+				mediumWin++;}
+			else 
 				hardWin++;
-			
 			i++;
 			theGame.newGame(6);
 		}
 		
 		System.out.println("Easy won " + easyWin + " times.");
+		System.out.println("Medium won " + mediumWin + " times.");
 		System.out.println("Hard won " + hardWin + " times.");
 	}
 

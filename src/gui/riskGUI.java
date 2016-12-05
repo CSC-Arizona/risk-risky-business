@@ -120,12 +120,7 @@ public class riskGUI extends JFrame {
 	private Border blueline, raisedetched, loweredetched, raisedbevel,
 			loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
-	public static final String MU_FLAG_FILE = "moveUnitsFlag.ser";
-	public static final String MU_COUNTRY_FILE = "moveUnitsCountry.ser";
-	public static final String AF_FLAG_FILE = "attackFromFlag.ser";
-	public static final String A_FLAG_FILE = "attackFlag.ser";
-	public static final String AF_FILE = "attackFrom.ser";
-	public static final String A_FILE = "attack.ser";
+
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment
@@ -204,6 +199,8 @@ public class riskGUI extends JFrame {
 			setUpDrawingPanel();
 			setUpMenu();
 			setUpAIMenu();
+			setUpClearButton(); 
+			setUpPassButton(); 
 			drawingPanel.revalidate();
 			drawingPanel.repaint();
 		}
@@ -264,6 +261,7 @@ public class riskGUI extends JFrame {
 	}
 
 	public void saveGame() {
+		/*
 		FileOutputStream gameToDisk = null;
 		FileOutputStream muFlagToDisk = null;
 		FileOutputStream muCountryToDisk = null;
@@ -321,6 +319,8 @@ public class riskGUI extends JFrame {
 			e.printStackTrace();
 		}
 		// TODO
+		 
+		 */
 	}
 
 	private void turnOnStatPanel() {
@@ -839,6 +839,7 @@ public class riskGUI extends JFrame {
 			yHeight = (int) (drawD.getHeight() / 40);
 
 			drawFactions(g2);
+			
 			if (!gameOver) {
 				if (!splash) {
 					updateCountryButtons();
@@ -853,6 +854,7 @@ public class riskGUI extends JFrame {
 				}
 				// drawGridAndNumbers(g2);
 			} else {
+				drawUnits(g2);
 				g2.setColor(Color.BLACK);
 				g2.setFont(gotFontBody.deriveFont(Font.BOLD, 30f));
 				g2.drawString(theGame.getCurrentPlayer().getName()
@@ -1349,9 +1351,16 @@ public class riskGUI extends JFrame {
 			}//end for
 
 			cards.add(showCards);
-			JButton trade = new JButton("Trade in Cards");
-			trade.addActionListener(new TradeClickListener());
-			cards.add(trade);
+			if(theGame.getCurrentPlayer().getCards().size()>=3){
+				JButton trade = new JButton("Click Images Above to Choose Cards to Trade. \n Click Here to Trade in Cards");
+				trade.addActionListener(new TradeClickListener());
+				cards.add(trade);
+			}
+			else{
+				JLabel trade = new JLabel("\t\t View Your Cards Above.\n Click \'Skip to the Next Phase\' Button to the Right to Move to Deployment Phase");
+				trade.setHorizontalAlignment(JLabel.CENTER);
+				cards.add(trade);
+			}
 			cards.setBorder(raisedWithColor);
 			this.add(cards, BorderLayout.CENTER);
 			showCards.repaint();
@@ -1569,7 +1578,7 @@ public class riskGUI extends JFrame {
 				selectedCards.add(playCards.get(index));
 			} // end if
 			else {
-				selectedCards.remove(playCards.get(index));
+				//selectedCards.remove(playCards.get(index));
 			} // end else
 		}// end itemstatechanged
 	}// end cardboxlistener
@@ -1598,10 +1607,20 @@ public class riskGUI extends JFrame {
 			// theGame.incrementNumRedemptions();
 			// theGame.getCurrentPlayer().discardCards(cards);
 			// theGame.getDeck().addToDiscardPile(cards);
-			// } else
-			JOptionPane.showMessageDialog(riskGUI.this,
-					"Illegal amount of cards set to redeem.",
-					"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
+			else{
+				
+				if(selectedCards.size()<0 || selectedCards.size()>3){
+					JOptionPane.showMessageDialog(riskGUI.this,
+							"Illegal amount of cards chosen.",
+							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else{
+					JOptionPane.showMessageDialog(riskGUI.this,
+							"Cannot redeem cards chosen. Try again.",
+							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
+				}
+				selectedCards.clear();
+			}
 			repaint();
 		}// end actionPerformed
 	}// end tradeClickListener
@@ -2051,6 +2070,15 @@ public class riskGUI extends JFrame {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}//end else
 			}//end if
+			else if (theGame.isReinforcePhase() && !theGame.isPlayPhase()) {
+				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())){
+					theGame.play();
+				}//end if
+				else {
+					JOptionPane.showMessageDialog(null, "You may only reinforce your own country",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}//end else
+			}//end else if
 			
 			// //System.out.println("Place clicked");
 			// if (theGame.isPlacePhase()) {

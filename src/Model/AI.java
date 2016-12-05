@@ -12,7 +12,7 @@ import java.util.Random;
 
 import javax.swing.JMenuItem;
 
-public class AI extends Player implements Serializable{
+public class AI extends Player implements Serializable {
 
 	private JMenuItem myDiff;
 	private Random rand;
@@ -27,11 +27,6 @@ public class AI extends Player implements Serializable{
 		strategy.setMe(this);
 		rand = new Random();
 	}// end AI constructor
-
-	
-
-	
-
 
 	// checks an ai's countries neighbors, to see if they are occupied. if they
 	// are, go to the next one, otherwise
@@ -55,71 +50,59 @@ public class AI extends Player implements Serializable{
 		}
 		return null;
 	}// end checkAllNeighbors
-	
-	public int chooseMyDiceToRoll(int max){
+
+	public int chooseMyDiceToRoll(int max) {
 		return max;
-	}//end chooseMyDice
+	}// end chooseMyDice
 
-
-
-	
 	public Country pickRandomOwnedCountry() {
 		Random rand = new Random();
 		int randNum = rand.nextInt(getCountries().size());
 		return getCountries().get(randNum);
 	}// end pickRandomOwnedCountry
 
-	
-
 	// returns true if it is finished attacking, and false otherwise
 	// grabs a country to attack, and the country that it is attacking from
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
 	public String aiAttack() {
-		
-//		Country attacking = getCountryToAttack();
-//		if (attacking == null)
-//			return null;
-//		Country attackingFrom = findAttackingCountry(attacking);
-//
-//		// change this for dice roll later, but for now, just take over
-//		if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
-//			String str = this.getName() + " defeated " + attacking.getOccupier().getName() + " and took " + attacking.getName() + ".\n";
-//			int oldForces = attacking.getForcesVal();
-//			attacking.getOccupier().loseCountry(attacking);
-//			attacking.removeUnits(oldForces);
-//			attacking.addForcesVal(attackingFrom.getForcesVal() - 1);
-//			attacking.setOccupier(this);
-//			this.occupyCountry(attacking);
-//			System.out.println(this.getName() + " took " + attacking.getName());
-//			attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
-//			return str;
-			return null;
-		}//end aiAttack
 
-		/*
-		 * for when dice roll exists
-		 * if(myStrat == AIStrat.EASY){
-		 * 	if(attackingFrom.getForcesVal() > 1){
-		 * 		do dice roll stuff against attacking and take all units but 1 from attackinFrom
-		 * 		return false;		
-		 * 	}
-		 * else
-		 * 		return true;
-		 * }
-		 * else{
-		 * 	if(attackingFrom.getForces() == attacking.getForces() or up to 2 less)
-		 * 			do dice roll stuff against attacking and take all units but 1 from attacking from
-		 * 			return false
-		 * else
-		 * 		return true;t 
-		 * }
-		 */
-	
-	public int getAmountToAttackWith(Country from, Country to){
+		// Country attacking = getCountryToAttack();
+		// if (attacking == null)
+		// return null;
+		// Country attackingFrom = findAttackingCountry(attacking);
+		//
+		// // change this for dice roll later, but for now, just take over
+		// if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
+		// String str = this.getName() + " defeated " +
+		// attacking.getOccupier().getName() + " and took " +
+		// attacking.getName() + ".\n";
+		// int oldForces = attacking.getForcesVal();
+		// attacking.getOccupier().loseCountry(attacking);
+		// attacking.removeUnits(oldForces);
+		// attacking.addForcesVal(attackingFrom.getForcesVal() - 1);
+		// attacking.setOccupier(this);
+		// this.occupyCountry(attacking);
+		// System.out.println(this.getName() + " took " + attacking.getName());
+		// attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
+		// return str;
+		return null;
+	}// end aiAttack
+
+	/*
+	 * for when dice roll exists if(myStrat == AIStrat.EASY){
+	 * if(attackingFrom.getForcesVal() > 1){ do dice roll stuff against
+	 * attacking and take all units but 1 from attackinFrom return false; } else
+	 * return true; } else{ if(attackingFrom.getForces() ==
+	 * attacking.getForces() or up to 2 less) do dice roll stuff against
+	 * attacking and take all units but 1 from attacking from return false else
+	 * return true;t }
+	 */
+
+	public int getAmountToAttackWith(Country from, Country to) {
 		System.out.println("Times I attacked: " + timesIAttacked);
-		return from.getForcesVal() - 1; //STUB!
-	}//end getAmoutnToAttackWith
+		return from.getForcesVal() - 1; // STUB!
+	}// end getAmoutnToAttackWith
 
 	public Country findAttackingCountry(Country attacking) {
 		timesIAttacked++;
@@ -133,15 +116,32 @@ public class AI extends Player implements Serializable{
 		}
 		return null;
 	}
-	
-	public boolean finishedAttacking(){
-		if (timesIAttacked >= 3){
-			timesIAttacked = 0;
-			return true;
+
+	public boolean finishedAttacking() {
+		int i = 0;
+		for(Country country : findFringeCountries())
+		{
+			System.out.println("Fringe at " + country.getName() + " with " + country.getForcesVal() + " forces");
+			if(country.getForcesVal() == 1)
+				i++;
 		}
-		else
-			return false;
-	}//end finishedAttacking
+		
+		if(i == findFringeCountries().size())
+			return true;
+		else if(strategy instanceof MediumAI || strategy instanceof HardAI)
+		{
+			if(strategy.findCountriesToAttack() == null)
+				return true;
+		}
+		
+		return false;
+//		
+//		if (timesIAttacked >= 3) {
+//			timesIAttacked = 0;
+//			return true;
+//		} else
+//			return false;
+	}// end finishedAttacking
 
 	// returns a country it can attack
 	public Country getCountryToAttack() {
@@ -164,8 +164,6 @@ public class AI extends Player implements Serializable{
 		return countriesToAttack.get(randInt);
 	}// end pickRandomFromList
 
-	
-
 	// creates the ai's menuItem for changing difficulty
 	public void makeMenuItem(int i, ActionListener aiDiffChangeListener) {
 		myDiff = new JMenuItem("AI " + i);
@@ -180,9 +178,6 @@ public class AI extends Player implements Serializable{
 
 	// returns the ai's current strategy as a string, used for checking if the
 	// ai difficulty menu in the gui was working
-	
-
-
 
 	// returns a randomlist of countries to add units to out of the ai's owned
 	// countries
@@ -190,7 +185,7 @@ public class AI extends Player implements Serializable{
 		ArrayList<Country> countries = new ArrayList<>();
 		Random rand = new Random();
 		int randNum = 0;
-		int i=0;
+		int i = 0;
 		while (getAvailableTroops() > i) {
 			i++;
 			randNum = rand.nextInt(getCountries().size());
@@ -203,7 +198,7 @@ public class AI extends Player implements Serializable{
 	// if it isn't owned by me
 	// check if i have more units on my country than that country, if I do, add
 	// that country to my list of countriesWorthAttacking
-	private ArrayList<Country> findCountriesToAttack() {
+	public ArrayList<Country> findCountriesToAttack() {
 		// System.out.println("find countries to attack");
 		ArrayList<Country> fringeCountries = findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
@@ -214,28 +209,26 @@ public class AI extends Player implements Serializable{
 				if (this.equals(neighboringCountry.getOccupier())){
 					if (country.getForcesVal() - 1 > neighboringCountry.getForcesVal())
 						countriesWorthAttacking.add(neighboringCountry);
+//=======
+//				if (!neighboringCountry.getOccupier().equals(this)) {
+//					countriesWorthAttacking.add(neighboringCountry);
+//>>>>>>> 18daf5c34a1b194e76b246f361d946f663f0cfa2
 				} // end if
 			} // end for
 		} // end for
 
-		
 		if (countriesWorthAttacking.size() == 0)
 			return null;
 
 		return countriesWorthAttacking;
 	}// end findCountriesToAttack
 
-	
-
 	// starts at first country, checks if it is surrounded by friendlies, if it
 	// is
 	// moves all of its units except for one to its neighbors
-	
-	
-	
-	public  Country pickRandomFromFringe() {
-		ArrayList<Country> fringeCountries = findFringeCountries();
 
+	public Country pickRandomFromFringe() {
+		ArrayList<Country> fringeCountries = findFringeCountries();
 
 		int randNum = 0;
 		// System.out.println(fringeCountries.size() + " size of list to choose
@@ -245,17 +238,16 @@ public class AI extends Player implements Serializable{
 		randNum = rand.nextInt(fringeCountries.size());
 		return fringeCountries.get(randNum);
 	}
-	
-	public Country pickRandomCountry()
-	{
+
+	public Country pickRandomCountry() {
 		Map map = Map.getInstance(0);
 		Country[] countries = map.getCountries();
 		int randNum = rand.nextInt(50);
 		return countries[randNum];
 	}
+
 	public ArrayList<Country> findFringeCountries() {
 		ArrayList<Country> fringeCountries = new ArrayList<>();
-
 
 		int i = 0, j = 0;
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
@@ -276,89 +268,90 @@ public class AI extends Player implements Serializable{
 
 		return fringeCountries;
 	}
-		// moves units to other countries if it has more than 2 units occupying
+	// moves units to other countries if it has more than 2 units occupying
 
-
-
-
-	
 	@Override
 	public ArrayList<Card> redeemCards() {
 		if (getCards().size() == 5) {
 			return findmyCardsToRedeem();
-		}//end if
+		} // end if
 		else
 			return null;
-//			int numArmies = -1;
-//
-//			Card one = myCardsToRedeem.get(0);
-//			Card two = myCardsToRedeem.get(1);
-//			Card three = myCardsToRedeem.get(2);
-//
-//			// redeemable: three of the same unit type, one of each type, two + wild
-//			// if can redeem:
-//			if ((one.getUnit().compareTo(two.getUnit()) == 0 && one.getUnit().compareTo(three.getUnit()) == 0
-//					&& three.getUnit().compareTo(two.getUnit()) == 0)
-//					|| (one.getUnit().compareTo(two.getUnit()) != 0 && one.getUnit().compareTo(three.getUnit()) != 0
-//							&& three.getUnit().compareTo(two.getUnit()) != 0)
-//					|| (one.getUnit().compareTo("WILD") == 0 )
-//					|| (two.getUnit().compareTo("WILD") == 0 )
-//					|| (three.getUnit().compareTo("WILD") == 0)) {
-//
-//				numArmies = 0;
-//				redemptions++;
-//				switch (redemptions) {
-//				case 1:
-//					numArmies = 4;
-//					break;
-//				case 2:
-//					numArmies = 6;
-//					break;
-//				case 3:
-//					numArmies = 8;
-//					break;
-//				case 4:
-//					numArmies = 10;
-//					break;
-//				case 5:
-//					numArmies = 12;
-//					break;
-//				case 6:
-//					numArmies = 15;
-//					break;
-//				default:
-//					numArmies = 15 + 5 * (redemptions - 6);
-//					break;
-//				}
-//
-//				// if any one of the redeemable cards contains a country that the
-//				// player has, add 2 armies to that country.
-//				boolean added = false;
-//				for (Card c : myCardsToRedeem) {
-//					for (Country t : this.getCountries()) {
-//						if (c.getCountry().compareTo(t.getName()) == 0) {
-//							// add 2 armies to that country
-//							added = true;
-//							int currentForces = t.getForcesVal();
-//							System.out.println("current Forces" + currentForces + t.getName());
-//							t.addForcesVal(2);
-//							System.out.println("updated Forces" + t.getForcesVal() + t.getName());
-//							break; //can only redeem a country card for extra armies once per turn
-//						}
-//					}
-//					if(added)
-//						break;
-//				}
-//				if (!added)
-//					System.out.println("no country cards to redeem");
-//			} else
-//				System.out.println("unable to redeem cards");
-//			
-//			this.discardCards(myCardsToRedeem);
-//			deck.addToDiscardPile(myCardsToRedeem);
-//			return numArmies;
-//		}
-//		return 0;
+		// int numArmies = -1;
+		//
+		// Card one = myCardsToRedeem.get(0);
+		// Card two = myCardsToRedeem.get(1);
+		// Card three = myCardsToRedeem.get(2);
+		//
+		// // redeemable: three of the same unit type, one of each type, two +
+		// wild
+		// // if can redeem:
+		// if ((one.getUnit().compareTo(two.getUnit()) == 0 &&
+		// one.getUnit().compareTo(three.getUnit()) == 0
+		// && three.getUnit().compareTo(two.getUnit()) == 0)
+		// || (one.getUnit().compareTo(two.getUnit()) != 0 &&
+		// one.getUnit().compareTo(three.getUnit()) != 0
+		// && three.getUnit().compareTo(two.getUnit()) != 0)
+		// || (one.getUnit().compareTo("WILD") == 0 )
+		// || (two.getUnit().compareTo("WILD") == 0 )
+		// || (three.getUnit().compareTo("WILD") == 0)) {
+		//
+		// numArmies = 0;
+		// redemptions++;
+		// switch (redemptions) {
+		// case 1:
+		// numArmies = 4;
+		// break;
+		// case 2:
+		// numArmies = 6;
+		// break;
+		// case 3:
+		// numArmies = 8;
+		// break;
+		// case 4:
+		// numArmies = 10;
+		// break;
+		// case 5:
+		// numArmies = 12;
+		// break;
+		// case 6:
+		// numArmies = 15;
+		// break;
+		// default:
+		// numArmies = 15 + 5 * (redemptions - 6);
+		// break;
+		// }
+		//
+		// // if any one of the redeemable cards contains a country that the
+		// // player has, add 2 armies to that country.
+		// boolean added = false;
+		// for (Card c : myCardsToRedeem) {
+		// for (Country t : this.getCountries()) {
+		// if (c.getCountry().compareTo(t.getName()) == 0) {
+		// // add 2 armies to that country
+		// added = true;
+		// int currentForces = t.getForcesVal();
+		// System.out.println("current Forces" + currentForces + t.getName());
+		// t.addForcesVal(2);
+		// System.out.println("updated Forces" + t.getForcesVal() +
+		// t.getName());
+		// break; //can only redeem a country card for extra armies once per
+		// turn
+		// }
+		// }
+		// if(added)
+		// break;
+		// }
+		// if (!added)
+		// System.out.println("no country cards to redeem");
+		// } else
+		// System.out.println("unable to redeem cards");
+		//
+		// this.discardCards(myCardsToRedeem);
+		// deck.addToDiscardPile(myCardsToRedeem);
+		// return numArmies;
+		// }
+		// return 0;
 	}
 
 	private ArrayList<Card> findmyCardsToRedeem() {
@@ -384,9 +377,11 @@ public class AI extends Player implements Serializable{
 		}
 		if (infantryCount >= 3 || (wildCount == 1 && infantryCount >= 2) || (wildCount == 2 && infantryCount >= 1)) {
 			myThreeCards = findThreeInfantry();
-		} else if (calvaryCount >= 3 || (wildCount == 1 && calvaryCount >= 2) || (wildCount == 2 && calvaryCount >= 1)) {
+		} else if (calvaryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
+				|| (wildCount == 2 && calvaryCount >= 1)) {
 			myThreeCards = findThreeCalvary();
-		} else if (artilleryCount >= 3 || (wildCount == 1 && calvaryCount >= 2) || (wildCount == 2 && artilleryCount >= 1)) {
+		} else if (artilleryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
+				|| (wildCount == 2 && artilleryCount >= 1)) {
 			myThreeCards = findThreeArtillery();
 		} else {
 			myThreeCards = findOneOfEach();
@@ -459,16 +454,17 @@ public class AI extends Player implements Serializable{
 		}
 		return threeInfantry;
 	}// end findThreeInfantry
-	
-	public AIStrategy getStrategy()
-	{
+
+	public AIStrategy getStrategy() {
 		return strategy;
 	}
-	
-	public void setStrategy(AIStrategy strat)
-	{
+
+	public void setStrategy(AIStrategy strat) {
 		strategy = strat;
 		strategy.setMe(this);
 	}
-	
+
+	public void incrementTimesIAttacked() {
+		timesIAttacked++;
+	}
 }
