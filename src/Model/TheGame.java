@@ -666,10 +666,7 @@ public class TheGame implements Serializable {
 			if (currentPlayer instanceof HumanPlayer)
 				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " won the attack", "Success",
 						JOptionPane.INFORMATION_MESSAGE);
-			// Resetting units
-			// moveTo.setForcesToZero();
-			// moveTo.addForcesVal(numArmies);
-			// moveFrom.removeUnits(numArmies);
+
 			moveTo.removeUnits(attackResult);
 
 			if (moveTo.getForcesVal() < 1) {
@@ -765,26 +762,6 @@ public class TheGame implements Serializable {
 		cardEarned = true;
 	}// end countryWasTaken
 
-	// attack lost
-
-	// if (numArmies <= moveTo.getForcesVal()) {
-	// // theirs.setForcesVal(numArmies);
-	// moveFrom.removeUnits(numArmies); // you lose the armies fought with
-	// result+=moveFrom.getOccupier().getName() + " lost the battle.\n";
-	// } else if (moveTo.getForcesVal() < numArmies) {
-	// result += moveFrom.getOccupier().getName() + " defeated " +
-	// moveTo.getOccupier().getName() + " and took " + moveTo.getName() +
-	// ".\n";
-	// countriesBefore = getCurrentPlayer().getCountries().size();
-	// //moveTo.getOccupier().loseCountry(moveTo);
-	// moveTo.removeUnits(moveTo.getForcesVal());
-	// moveTo.setForcesVal(numArmies);
-	// moveTo.setOccupier(moveFrom.getOccupier());
-	// moveFrom.getOccupier().occupyCountry(moveTo);
-	// moveFrom.removeUnits(numArmies);
-	// countriesAfter = getCurrentPlayer().getCountries().size();
-	// // players.get(playerLocation).addCard(deck.deal());
-	// }//end else if
 	/*
 	 * 
 	 * return -2: Defender won (subtract 2 from attacker) return -1: Defender
@@ -994,9 +971,6 @@ public class TheGame implements Serializable {
 			gameOver = false;
 
 		return gameOver;
-		// TODO notify gui somehow so that it knows who won, and display that
-		// player's victory, as well is turn off all
-		// buttons
 	}// end isFinished
 
 	/**********************************************************************************
