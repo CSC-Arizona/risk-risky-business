@@ -839,6 +839,7 @@ public class riskGUI extends JFrame {
 			yHeight = (int) (drawD.getHeight() / 40);
 
 			drawFactions(g2);
+			
 			if (!gameOver) {
 				if (!splash) {
 					updateCountryButtons();
@@ -853,6 +854,7 @@ public class riskGUI extends JFrame {
 				}
 				// drawGridAndNumbers(g2);
 			} else {
+				drawUnits(g2);
 				g2.setColor(Color.BLACK);
 				g2.setFont(gotFontBody.deriveFont(Font.BOLD, 30f));
 				g2.drawString(theGame.getCurrentPlayer().getName()
