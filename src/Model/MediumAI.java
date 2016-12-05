@@ -16,16 +16,25 @@ public class MediumAI implements AIStrategy {
 
 	@Override
 	public String reinforce() {
+		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
 			if (country.getForcesVal() > 2) {
-				while (country.getForcesVal() > 2) {
+				stopFlag = false;
+				while (country.getForcesVal() > 2 && stopFlag == false) {
+					int i = 0;
 					for (Country neighbor : country.getNeighbors()) {
-						if (neighbor.getOccupier().equals(this)) {
+						if (neighbor.getOccupier().equals(me)) {
 							neighbor.addForcesVal(1);
 							country.removeUnits(1);
 						}
 						if (country.getForcesVal() == 2)
 							break;
+						
+						i++;
+						if(i >= country.getNeighbors().size())
+						{
+							stopFlag = true;
+						}
 					}
 				}
 			}

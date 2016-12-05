@@ -614,24 +614,7 @@ public class Game implements Serializable{
 
 	// checks if all countries are occupied by the same player, if so returns
 	// true, otherwise returns false
-	public boolean isFinished() {
 
-		if (players.size() == 1) {
-			gameOver = true;
-			playPhase = false;
-			placePhase = false;
-			reinforcePhase = false;
-			redeemCardPhase = false;
-			deployPhase = false;
-			attackPhase = false;
-		} else
-			gameOver = false;
-
-		return gameOver;
-		// TODO notify gui somehow so that it knows who won, and display that
-		// player's victory, as well is turn off all
-		// buttons
-	}// end isFinished
 
 	// checks if all players have at least one country. If they do not, remove
 	// them from the game.

@@ -9,7 +9,7 @@ package Model;
 public class Run6Bots {
 
 	public static void main(String[] args) {
-		Game theGame = Game.getInstance(0,6, true);
+		TheGame theGame = TheGame.getInstance(0,6, true);
 		int i = 0;
 		for(Player player : theGame.getPlayers())
 		{
