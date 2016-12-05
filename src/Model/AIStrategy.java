@@ -6,13 +6,13 @@ import java.util.Random;
 
 public interface AIStrategy extends Serializable{
 
-	Random rand = new Random();
+	public static Random rand = new Random();
 	
-	String reinforce();
-	ArrayList<Country> placeNewTroops();
-	Country placeLeftOverUnits();
-	Country placeUnit();
-	void setMe(AI ai);
+	public String reinforce();
+	public ArrayList<Country> placeNewTroops();
+	public Country placeLeftOverUnits();
+	public Country placeUnit();
+	public void setMe(AI ai);
 	
 	
 	
