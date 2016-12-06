@@ -28,6 +28,7 @@ public class TheGame implements Serializable {
 	private boolean useMaxDice = true;
 	private ArrayList<Card> cardsToRedeem;
 	public static final String FILE_NAME = "game.ser";
+	private int attackerHits;
 
 	/**********************************************************************************
 	 ********************************** Game Creation************************************
@@ -95,6 +96,7 @@ public class TheGame implements Serializable {
 		canPlace = false;
 		gameOver = false;
 		countriesClaimed = 0;
+		attackerHits=-1;
 		changeToPlacementPhase();
 	}// end newGame
 
@@ -602,8 +604,23 @@ public class TheGame implements Serializable {
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
 		}// end switch case
-
-		gameLog += currentPlayer.getName() + " redeemed cards and earned " + numArmies + " armies.\n";
+		
+		gameLog += currentPlayer.getName() + " redeemed cards. Earned " + numArmies + "extra armies to deploy ";
+		
+		boolean added = false;
+		for (Card c : cardsToRedeem) {
+			for (Country t : currentPlayer.getCountries()) {
+				if (c.getCountry().compareTo(t.getName()) == 0) {
+					// add 2 armies to that country
+					added = true;
+					t.addForcesVal(2);
+					gameLog+= "and 2 bonus armies on " + t.getName() + "\n";
+					break; //can only redeem a country card for extra armies once per turn
+				}
+			}
+			if(added)
+				break;
+		}
 
 		// Now, discard the cards
 		deck.addToDiscardPile(cardsToRedeem, discard);
@@ -612,6 +629,10 @@ public class TheGame implements Serializable {
 
 		return numArmies;
 	}// end redeemCards
+	
+	public void setMaxDice(boolean flag){
+		useMaxDice=flag;
+	}
 
 	public int getNumAttackDice() {
 		int forces = moveFrom.getForcesVal();
@@ -725,7 +746,7 @@ public class TheGame implements Serializable {
 
 		if (attackResult > 0) {
 			result += currentPlayer.getName() + " won the attack.\n";
-
+			attackerHits=2;
 			if (currentPlayer instanceof HumanPlayer)
 				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " won the attack", "Success",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -745,6 +766,7 @@ public class TheGame implements Serializable {
 
 		// attack lost
 		else if (attackResult < 0) {
+			attackerHits=0;
 			if (currentPlayer instanceof HumanPlayer)
 				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " lost the attack", "Failure",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -760,6 +782,7 @@ public class TheGame implements Serializable {
 
 		// Otherwise, lose one and one
 		else {
+			attackerHits=1;
 			result += currentPlayer.getName() + " was forced to retreat.\n";
 			if (currentPlayer instanceof HumanPlayer)
 				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " was forced to retreat.", "tie",
@@ -1185,11 +1208,11 @@ public class TheGame implements Serializable {
 	}
 
 	public int getHit() {
-		// TODO:
+		return attackerHits;
+		// attackerHits is set in attack
 		// return 1 if offense loses one and wins one
 		// return 0 if offense loses entirely
 		// return 2 if offense wins entirely
-		return 0;
 	}
 
 }// end theGame

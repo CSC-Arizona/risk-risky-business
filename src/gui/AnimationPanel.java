@@ -59,6 +59,7 @@ public class AnimationPanel extends JPanel implements Observer {
 		gr.drawImage(background, 0, 0, null);
 
 		if (starting) {
+			gr.drawImage(getOffenseSprite(), OffenseXValue, OFFENSE_Y, null);
 			// Draw the characters
 			// roll 
 			// draw the swoosh attack
@@ -86,6 +87,7 @@ public class AnimationPanel extends JPanel implements Observer {
 	public void updateAnimations() {
 		// What do I need to draw? (check state)
 		if (starting) {
+	
 			// Draw the characters
 			// roll 
 			// draw the swoosh attack
@@ -121,7 +123,7 @@ public class AnimationPanel extends JPanel implements Observer {
 	public static final int WUNWUN_Y = 107, WUNWUN_FRAMES = 4;
 	public static final int WALKER_Y = 213, WALKER_FRAMES = 4;
 	
-	public static final int OFFENSE_SPOT = 270, DEFENSE_SPOT = 0; //TODO: This needs going to be where they are placed on the GUI
+	public static final int OFFENSE_Y = 270, DEFENSE_Y = 0; //TODO: This needs going to be where they are placed on the GUI
 	public static final int JIGGLE_MAX = 1, JIGGLE_MIN = -1, JIGGLE_TIME = 15; //Don't think this needs to be changed
 
 	/*
@@ -130,7 +132,7 @@ public class AnimationPanel extends JPanel implements Observer {
 
 	private int spriteNum = 0;
 	private int jiggle = 0, jiggleCount = 0, frameCounter = 0,
-			OffenseXValue = 0, OffenseTickCounter = 0;
+			OffenseXValue = 0, OffenseTickCounter = 0, DefenseXValue;
 	private boolean jiggleMan = true, starting = true;
 
 	/*
