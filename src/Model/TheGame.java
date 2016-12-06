@@ -16,7 +16,7 @@ public class TheGame implements Serializable {
 	private Country selectedCountry;
 	private Country moveFrom, moveTo;
 	private boolean placePhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase, mainGamePhase,
-			cardEarned;
+			cardEarned, gameStarted;
 	private static TheGame theGame;
 	private boolean tournamentMode, canPlace;
 	private String gameLog;
@@ -43,6 +43,7 @@ public class TheGame implements Serializable {
 		countriesAfter = 0;
 		cardEarned = false;
 		tournamentMode = tourny;
+		gameStarted = false;
 		if (!tournamentMode)
 			newGame();
 		else
@@ -97,6 +98,7 @@ public class TheGame implements Serializable {
 		gameOver = false;
 		countriesClaimed = 0;
 		attackerHits=-1;
+		gameStarted = false;
 		changeToPlacementPhase();
 	}// end newGame
 
@@ -307,7 +309,7 @@ public class TheGame implements Serializable {
 	public void startGame() {
 		// Randomly picks a player from the total number of players
 		int firstPlayer = (int) (Math.random() * totalPlayers);
-
+		gameStarted = true;
 		Player first = players.remove(firstPlayer);
 
 		for (int i = 0; i < players.size(); i++) {
@@ -1215,4 +1217,8 @@ public class TheGame implements Serializable {
 		// return 2 if offense wins entirely
 	}
 
+	public boolean isGameStarted()
+	{
+		return gameStarted;
+	}
 }// end theGame

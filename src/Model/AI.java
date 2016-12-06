@@ -17,12 +17,10 @@ public class AI extends Player implements Serializable {
 	private JMenuItem myDiff;
 	private Random rand;
 	private AIStrategy strategy;
-	private int timesIAttacked;
 	// private Game theGame;
 
 	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
-		timesIAttacked = 0;
 		strategy = strat;
 		strategy.setMe(this);
 		rand = new Random();
@@ -99,24 +97,6 @@ public class AI extends Player implements Serializable {
 	 * return true;t }
 	 */
 
-	public int getAmountToAttackWith(Country from, Country to) {
-		System.out.println("Times I attacked: " + timesIAttacked);
-		return from.getForcesVal() - 1; // STUB!
-	}// end getAmoutnToAttackWith
-
-	public Country findAttackingCountry(Country attacking) {
-		timesIAttacked++;
-		// System.out.println("find attacking");
-		for (Country c1 : findFringeCountries()) {
-			for (Country c2 : c1.getNeighbors()) {
-				if (c2.equals(attacking)) {
-					return c1;
-				}
-			}
-		}
-		return null;
-	}
-
 	public boolean finishedAttacking() {
 		int i = 0;
 		for(Country country : findFringeCountries())
@@ -135,12 +115,7 @@ public class AI extends Player implements Serializable {
 		}
 		
 		return false;
-//		
-//		if (timesIAttacked >= 3) {
-//			timesIAttacked = 0;
-//			return true;
-//		} else
-//			return false;
+
 	}// end finishedAttacking
 
 	// returns a country it can attack
@@ -388,7 +363,4 @@ public class AI extends Player implements Serializable {
 		strategy.setMe(this);
 	}
 
-	public void incrementTimesIAttacked() {
-		timesIAttacked++;
-	}
 }
