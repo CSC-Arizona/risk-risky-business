@@ -427,6 +427,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players);
 		theGame.startGame();
+		
 
 	}// end splashLoading2
 
@@ -904,7 +905,8 @@ public class riskGUI extends JFrame {
 				}
 
 			}
-
+			
+			
 		}// end paintComponenet
 
 		private void drawUnits(Graphics2D g2) {
@@ -1058,7 +1060,9 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			repaint();
+			this.invalidate();
+			this.validate();
+			this.repaint();
 		}// end update
 
 	}// end boardPanel

@@ -32,9 +32,9 @@ public class Country extends Observable implements Serializable{
 	 * Country(): Constructor 
 	 * sets all instance variables and default button size
 	 */
-	public Country(String name, double x, double y, Continent continent) {
+	public Country(String name, double x, double y, Continent continent) { 
 		this.name = name;
-		this.x = x;
+		this.x = x; 
 		this.y = y;
 		xWidth = 1;
 		yHeight = 1;
@@ -170,12 +170,14 @@ public class Country extends Observable implements Serializable{
 
 	public void setOccupier(Player player) {
 		//If there was a previous owner
-		if (occupier != null)
+		if (occupier != null) 
 			occupier.loseCountry(this);
 		
 		//Now, set the new owner
 		occupier = player;
 		occupier.occupyCountry(this);
+		setChanged();
+		notifyObservers();
 	}// end setOccupier
 
 	public void addForcesVal(int i) {
@@ -219,7 +221,7 @@ public class Country extends Observable implements Serializable{
 	 * purpose: subtracts the given number of units from the forcesVal instance variable
 	 */
 	public void removeUnits(int numOfUnitsToMove) {
-		forcesVal -= numOfUnitsToMove;
+		forcesVal -= numOfUnitsToMove; 
 
 	}// end removeUnits
 	

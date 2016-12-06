@@ -36,9 +36,10 @@ public class Run6Bots {
 		i = 0;
 		int hardWin = 0, mediumWin = 0, easyWin = 0;
 
-		while (i < 100) {
+		while (i < 10) {
 
 			System.out.println("New Game");
+			System.out.println("Game " + (i+1));
 			theGame.startGame();
 			System.out.println(theGame.getCurrentPlayer().getName() + " Won.");
 			if (((AI) theGame.getCurrentPlayer()).getStrategy() instanceof EasyAI) {

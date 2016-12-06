@@ -24,7 +24,7 @@ public class Continent implements Serializable{
 		ownerBonus = 0;
 	}// end continent constructor #1
 
-	public Continent(int ownerBonus, String name) {
+	public Continent(int ownerBonus, String name) { 
 		this.name = name;
 		owner = null;
 		this.myCountries = new ArrayList<Country>();
@@ -70,7 +70,7 @@ public class Continent implements Serializable{
 		Player owner = myCountries.get(0).getOccupier();
 		int i = 1;
 		
-		if (owner == null)
+		if (owner == null) 
 			return null;
 
 		while (i < myCountries.size()) {
@@ -86,7 +86,7 @@ public class Continent implements Serializable{
 	 * Override Object's toString() method for continent
 	 */
 	public String toString() {
-		findOwner();
+		findOwner(); 
 		String str = "";
 
 		str += name + " is held by ";
