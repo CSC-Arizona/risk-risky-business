@@ -31,14 +31,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,6 +57,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.AncestorListener;
@@ -1342,20 +1340,35 @@ public class riskGUI extends JFrame {
 			selectedCards = new ArrayList<Card>();
 			
 			//The card panel is a new panel
-			JPanel cards = new JPanel();
-			cards.setLayout(new GridLayout(2, 0));
+			JPanel pane = new JPanel();
+			pane.setLayout(new BorderLayout());
 			JPanel showCards = new JPanel();
 			int cols = myCards.size();
 			if (cols < 1)
 				cols = 1;
-			showCards.setLayout(new GridLayout(cols, 2));
+			showCards.setLayout(new GridLayout(1, cols));
 
 			
 			// Get the image for this card
 			for (int i = 0; i < myCards.size(); i++) {
+				JPanel both = new JPanel();
+				both.setLayout(new BorderLayout());
+				
+				//add card
 				ImageIcon im = myCards.get(i).getMyImageIcon();
 				CardPanel card = new CardPanel(im.getImage(), xWidth, yHeight);
-				cards.add(card);
+				both.add(card, BorderLayout.CENTER);
+				
+				//add checkboxes
+				JCheckBox checkBox = new JCheckBox();
+				checkBox = new JCheckBox();
+				checkBox.setActionCommand("" + i);
+				checkBox.setSelected(false);
+				checkBox.addItemListener(new CardBoxListener());
+				checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+				both.add(checkBox, BorderLayout.SOUTH);
+				
+				showCards.add(both);
 			} // end for
 			
 //			JCheckBox checkBox = new JCheckBox();
@@ -1377,32 +1390,23 @@ public class riskGUI extends JFrame {
 //			 */
 //			showCards.add(checkBox);
 			
-			//Add the checkboxes
-			for (int i=0; i < myCards.size(); i++){
-				JCheckBox checkBox = new JCheckBox();
-				checkBox = new JCheckBox();
-				checkBox.setActionCommand("" + i);
-				checkBox.setSelected(false);
-				checkBox.addItemListener(new CardBoxListener());
-				showCards.add(checkBox);
-			}//end for
 
-			cards.add(showCards);
+			pane.add(showCards, BorderLayout.CENTER);
 			if(theGame.getCurrentPlayer().getCards().size()>=3){
 				JButton trade = new JButton("Click Images Above to Choose Cards to Trade. \n Click Here to Trade in Cards");
 				trade.addActionListener(new TradeClickListener());
-				cards.add(trade);
+				pane.add(trade, BorderLayout.SOUTH);
 			}
 			else{
 				JLabel trade = new JLabel("\t\t View Your Cards Above.\n Click \'Skip to the Next Phase\' Button to the Right to Move to Deployment Phase");
 				trade.setHorizontalAlignment(JLabel.CENTER);
-				cards.add(trade);
+				pane.add(trade, BorderLayout.SOUTH);
 			}
-			cards.setBorder(raisedWithColor);
-			this.add(cards, BorderLayout.CENTER);
+			pane.setBorder(raisedWithColor);
+			this.add(pane, BorderLayout.CENTER);
 			showCards.repaint();
 			showCards.revalidate();
-			cards.revalidate();
+			pane.revalidate();
 			this.revalidate();
 		}// end makeCardPanel
 

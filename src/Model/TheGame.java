@@ -648,7 +648,7 @@ public class TheGame implements Serializable {
 	}// end getNumAttackDice
 
 	public int getNumDefenseDice() {
-		
+
 		int forces = moveTo.getForcesVal();
 		if (useMaxDice) {
 			if (forces > 1)
@@ -665,7 +665,7 @@ public class TheGame implements Serializable {
 				return 1;
 			} // end else
 
-			if (theGame.getMoveTo().getOccupier() instanceof HumanPlayer) {
+			if (moveTo.getOccupier() instanceof HumanPlayer) {
 				int diceToUse = -1;
 
 				while (diceToUse == -1) {
@@ -687,7 +687,7 @@ public class TheGame implements Serializable {
 
 				return diceToUse;
 			} // end if
-			return ((AI) theGame.getMoveTo().getOccupier()).chooseMyDiceToRoll(diceAllowed);
+			return ((AI) moveTo.getOccupier()).chooseMyDiceToRoll(diceAllowed);
 		} // end else
 	}// end getNumDefenseDice
 
