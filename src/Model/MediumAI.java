@@ -89,7 +89,8 @@ public class MediumAI implements AIStrategy, Serializable {
 		if (allNeighboringEnemies == null)
 			return null;
 
-		return allNeighboringEnemies.get(0);
+		int randNum = rand.nextInt(allNeighboringEnemies.size());
+		return allNeighboringEnemies.get(randNum);
 	}
 
 	@Override
