@@ -611,7 +611,7 @@ public class TheGame implements Serializable {
 	}// end getNumAttackDice
 
 	public int getNumDefenseDice() {
-		int forces = theGame.getMoveTo().getForcesVal();
+		int forces = moveTo.getForcesVal();
 		if (useMaxDice) {
 			if (forces > 1)
 				return 2;
