@@ -39,7 +39,7 @@ public class Run6Bots {
 		System.out.println("the game is starting");
 		theGame.startGame();
 		
-		while(i < 1000)
+		while(i < 10)
 		{
 			
 			if(((AI) theGame.getCurrentPlayer()).getStrategy() instanceof EasyAI){
