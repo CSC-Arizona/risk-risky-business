@@ -326,7 +326,7 @@ public class TheGame implements Serializable {
 		else if (isReinforcePhase() && !isPlayPhase()) {
 			while (selectedCountry == null) {
 				selectedCountry = ((AI) currentPlayer).getStrategy().placeLeftOverUnits();
-			}
+			}//end 
 			placeArmies(1);
 			nextPlayer();
 			// If the next player has no more troops, then go to redeem cards!
@@ -379,7 +379,10 @@ public class TheGame implements Serializable {
 			nextPhase();
 			nextPlayer();
 		} // end else if
-
+		//Do nothing if the game is over!
+		else if (isFinished()){
+			
+		}//end else if
 		// Otherwise, problem!
 		else {
 			throw new IllegalStateException("Illegal phase!");
@@ -470,6 +473,9 @@ public class TheGame implements Serializable {
 			nextPhase();
 			nextPlayer();
 		} // end else if
+		else if (isFinished()){
+			//Do nothing!
+		}//end else if
 		else {
 			throw new IllegalStateException("Illegal phase!");
 		} // end else
