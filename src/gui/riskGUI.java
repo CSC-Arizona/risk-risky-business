@@ -1812,8 +1812,11 @@ public class riskGUI extends JFrame {
 								"About", JOptionPane.INFORMATION_MESSAGE);
 			} else if (e.getActionCommand().compareTo("max") == 0) {
 				useMaxDice = true;
-			} else if (e.getActionCommand().compareTo("prompt") == 0)
+				//theGame.setMaxDice(useMaxDice);
+			} else if (e.getActionCommand().compareTo("prompt") == 0){
 				useMaxDice = false;
+				//theGame.setMaxDice(useMaxDice);
+			}
 		}// actionPerformed
 	}// end helpListener
 
