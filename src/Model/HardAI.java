@@ -37,7 +37,19 @@ public class HardAI implements AIStrategy, Serializable {
 			}
 			i++;
 		}
-
+		i = 0;
+		if(returnMe == null || returnMe.size() == 0)
+		{
+			returnMe = new ArrayList<>();
+			int randNum = 0;
+			
+			while (me.getAvailableTroops() > i) {
+				i++;
+				randNum = rand.nextInt(me.getCountries().size());
+				returnMe.add(me.getCountries().get(randNum));
+			}
+			
+		}
 
 		return returnMe;
 
@@ -105,7 +117,7 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public String reinforce() {
 		String str = "";
-		System.out.println("gets here");
+		//System.out.println("gets here");
 		int surroundCounter = 0;
 
 		for (Country country : me.getCountries()) {
@@ -268,6 +280,9 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;
+		
+		if(moveTo == null)
+			return null;
 		for(Country country : me.getCountries())
 		{
 			for(Country neighbor : country.getNeighbors())

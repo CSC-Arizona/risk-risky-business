@@ -94,17 +94,27 @@ public class TheGame implements Serializable {
 		if (players != null)
 			players.removeAll(players);
 
+		gameOver = false;
 		selectedCountry = null;
+		countriesClaimed = 0;
+		totalPlayers = 6;
 		gameMap = Map.getInstance(1);
 		gameMap = gameMap.newTourneyMap();
 		deck = Deck.getInstance();
 		deck = deck.newDeck();
 		// deck.shuffle();
 		players = new ArrayList<>();
+		mainGamePhase = false;
+		placePhase = true;
+		reinforcePhase = false;
+		redeemCardPhase = false;
+		deployPhase = false;
+		attackPhase = false;
+		
 		addAI();
-		currentPlayer = players.get(0);
+		canPlace = false;
 		numRedemptions = 0;
-		changeToPlacementPhase();
+		
 	}// end newGame
 
 	/*
@@ -114,9 +124,30 @@ public class TheGame implements Serializable {
 	 * players
 	 */
 	private void addAI() {
-		for (int i = 0; i < ais; i++)
-			players.add(new AI(new EasyAI(), totalPlayers));
-	}// end addAi
+		if (tournamentMode) {
+			for(int i = 0; i< ais; i++)
+			{
+				if(i < 2)
+				{
+					players.add(new AI(new EasyAI(), totalPlayers));
+					
+				}
+				else if(i < 4)
+				{
+					players.add(new AI(new MediumAI(), totalPlayers));
+				}
+				else
+					players.add(new AI(new HardAI(), totalPlayers));
+				
+				
+				players.get(i).setName("");
+				players.get(i).setFaction(i);
+			}
+		} else
+			for (int i = 0; i < ais; i++)
+				players.add(new AI(new EasyAI(), totalPlayers));
+	}// end
+																																				// addAi
 
 	/*
 	 * addAI
@@ -153,7 +184,7 @@ public class TheGame implements Serializable {
 			changeToReinforcePhase();
 		} // end else if
 		else if (isGameOver()) {
-			System.out.println("The game is over");
+			//System.out.println("The game is over");
 		} else {
 			throw new IllegalStateException("The phase was invalid");
 		}
@@ -296,7 +327,9 @@ public class TheGame implements Serializable {
 		// Then, continue as long as an AI is playing
 		while (currentPlayer instanceof AI) {
 			aiTurn();
-			System.out.println(getPhase());
+			if (gameOver)
+				break;
+			//System.out.println(getPhase());
 		} // end while
 	}// end play
 
@@ -336,11 +369,11 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
-			cardsToRedeem = ((AI)currentPlayer).redeemCards();
-			
-			if (cardsToRedeem!=null)
+			cardsToRedeem = ((AI) currentPlayer).redeemCards();
+
+			if (cardsToRedeem != null)
 				currentPlayer.addAvailableTroops(redeemCards());
-			
+
 			nextPhase();
 		} // end else if
 
@@ -365,7 +398,7 @@ public class TheGame implements Serializable {
 				this.skipAttackPhase();
 
 			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
-			if (moveFrom != null)
+			if (moveFrom != null && moveTo != null)
 				attack();
 
 			// If the AI decided to finish attacking
@@ -381,9 +414,9 @@ public class TheGame implements Serializable {
 		} // end else if
 
 		// Otherwise, problem!
-		else {
-			throw new IllegalStateException("Illegal phase!");
-		} // end else
+//		else {
+//			System.out.println("game over");
+//		} // end else
 	}// end aiturn
 
 	/*
@@ -401,6 +434,10 @@ public class TheGame implements Serializable {
 			ArrayList<Country> selectedCountries = new ArrayList<Country>();
 			selectedCountries = ((AI) currentPlayer).getStrategy().placeNewTroops();
 			int i = 0;
+
+			
+			
+				
 			while (i < selectedCountries.size() && currentPlayer.getAvailableTroops() > 0) {
 				selectedCountry = selectedCountries.get(i);
 				placeArmies(1);
@@ -546,8 +583,8 @@ public class TheGame implements Serializable {
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
 		}// end switch case
-		
-		gameLog+= currentPlayer.getName() + " redeemed cards and earned " + numArmies + " armies.\n";
+
+		gameLog += currentPlayer.getName() + " redeemed cards and earned " + numArmies + " armies.\n";
 
 		// Now, discard the cards
 		deck.addToDiscardPile(cardsToRedeem);
@@ -611,7 +648,8 @@ public class TheGame implements Serializable {
 	}// end getNumAttackDice
 
 	public int getNumDefenseDice() {
-		int forces = theGame.getMoveTo().getForcesVal();
+		
+		int forces = moveTo.getForcesVal();
 		if (useMaxDice) {
 			if (forces > 1)
 				return 2;
@@ -655,6 +693,7 @@ public class TheGame implements Serializable {
 
 	public boolean attack() {
 
+		
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
@@ -935,15 +974,11 @@ public class TheGame implements Serializable {
 	}// end printPath
 
 	public void removeLosers() {
-		System.out.println("Total Players before remove: " + totalPlayers);
-		System.out.println("Player indexes: ");
-		for (Player player : players) {
-			System.out.println(player.getName() + " at index " + players.indexOf(player));
-		}
+		
 		Player removeMe = null;
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-				System.out.println(player.getName() + " has been wiped off the map.");
+				//System.out.println(player.getName() + " has been wiped off the map.");
 				gameLog += player.getName() + " has been wiped off the map.\n";
 				removeMe = player;
 			}
@@ -955,11 +990,7 @@ public class TheGame implements Serializable {
 			players.remove(removeMe);
 			totalPlayers--;
 		}
-		System.out.println("Total Players after remove: " + totalPlayers);
-		System.out.println("Player indexes: ");
-		for (Player player : players) {
-			System.out.println(player.getName() + " at index " + players.indexOf(player));
-		}
+		
 
 	}// end removeLosers
 
@@ -1070,12 +1101,12 @@ public class TheGame implements Serializable {
 		boolean tmp = cardEarned;
 		clearSelections();
 		if (cardEarned) {
-			
-			
-			//TODO: REMOVE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!
-			for (int i=0; i < 5; i++)
+
+			// TODO: REMOVE
+			// MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!
+			for (int i = 0; i < 5; i++)
 				currentPlayer.addCard(deck.deal());
-			
+
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
 			cardEarned = false;
 		} // end if
