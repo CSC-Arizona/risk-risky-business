@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 public class Card implements Serializable{
 	private String country;
 	private String unit;
+	private int unitType;
 	private String filename;
 	private ImageIcon myImage;
 
@@ -30,7 +31,25 @@ public class Card implements Serializable{
 		this.unit = unit;
 		this.filename = this.findMyFileName();
 		myImage = new ImageIcon(filename);
+		setMyUnitType();
 	}// end card constructor
+	
+	private void setMyUnitType(){
+		if (unit.equalsIgnoreCase("infantry")){
+			unitType = 1;
+		}//end if
+		else if (unit.equalsIgnoreCase("artillery")){
+			unitType = 3;
+		}//end else if
+		else if (unit.equalsIgnoreCase("cavalry")){
+			unitType = 2;
+		}//end else uf
+		else if (unit.equalsIgnoreCase("wild")){
+			unitType = 0;
+		}//end else if
+		else 
+			throw new IllegalStateException("Illegal card type: "+unit);
+	}
 
 	/*
 	 * getMyImage()
@@ -105,6 +124,24 @@ public class Card implements Serializable{
 		return unit;
 	}// end getUnit
 	
+	public boolean equals(Card other){
+		//If they're the same type
+		if (unitType == other.getUnitType())
+			return true;
+		
+		//If one or more is wild
+		if (unitType == 0 || other.getUnitType() == 0)
+			return true;
+		
+		//otherwise, no match!
+		else
+			return false;
+	}
+	
+	public int getUnitType() {
+		return unitType;
+	}
+
 	/*
 	 * Override toString method for Card Objects
 	 */
