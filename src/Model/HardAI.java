@@ -38,17 +38,16 @@ public class HardAI implements AIStrategy, Serializable {
 			i++;
 		}
 		i = 0;
-		if(returnMe == null || returnMe.size() == 0)
-		{
+		if (returnMe == null || returnMe.size() == 0) {
 			returnMe = new ArrayList<>();
 			int randNum = 0;
-			
+
 			while (me.getAvailableTroops() > i) {
 				i++;
 				randNum = rand.nextInt(me.getCountries().size());
 				returnMe.add(me.getCountries().get(randNum));
 			}
-			
+
 		}
 
 		return returnMe;
@@ -117,7 +116,7 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public String reinforce() {
 		String str = "";
-		//System.out.println("gets here");
+		// System.out.println("gets here");
 		int surroundCounter = 0;
 
 		for (Country country : me.getCountries()) {
@@ -204,8 +203,7 @@ public class HardAI implements AIStrategy, Serializable {
 		return null;
 	}
 
-	private ArrayList<Country> findFringeOnCont(Continent cont)
-	{
+	private ArrayList<Country> findFringeOnCont(Continent cont) {
 		ArrayList<Country> continentFringeList = new ArrayList<>();
 		int i = 0, j = 0;
 		ArrayList<Country> countriesIOwn = findCountriesOnCont(cont);
@@ -226,12 +224,11 @@ public class HardAI implements AIStrategy, Serializable {
 		}
 		return continentFringeList;
 	}
+
 	private ArrayList<Country> findCountriesOnCont(Continent cont) {
 		ArrayList<Country> iOwn = new ArrayList<>();
-		for(Country country : cont.getMyCountries())
-		{
-			if(country.getOccupier().equals(me))
-			{
+		for (Country country : cont.getMyCountries()) {
+			if (country.getOccupier().equals(me)) {
 				iOwn.add(country);
 			}
 		}
@@ -250,9 +247,9 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public Country getCountryToAttack() {
 		ArrayList<Country> allNeighboringCountries = findCountriesToAttack();
-		if(allNeighboringCountries == null)
+		if (allNeighboringCountries == null)
 			return null;
-		
+
 		int randNum = rand.nextInt(allNeighboringCountries.size());
 		return allNeighboringCountries.get(randNum);
 	}
@@ -264,15 +261,16 @@ public class HardAI implements AIStrategy, Serializable {
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				if (!neighboringCountry.getOccupier().equals(me) && neighboringCountry.getForcesVal() <= country.getForcesVal()) {
-						countriesWorthAttacking.add(neighboringCountry);
+				if (!neighboringCountry.getOccupier().equals(me)
+						&& (neighboringCountry.getForcesVal() < country.getForcesVal()
+								&& country.getForcesVal() > 1)) {
+					countriesWorthAttacking.add(neighboringCountry);
 				} // end if
 			} // end for
 		} // end for
 
-		
 		if (countriesWorthAttacking.size() == 0)
-			return null;
+			countriesWorthAttacking = theMediumWay();
 
 		return countriesWorthAttacking;
 	}
@@ -280,22 +278,40 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;
-		
-		if(moveTo == null)
+
+		if (moveTo == null)
 			return null;
-		for(Country country : me.getCountries())
-		{
-			for(Country neighbor : country.getNeighbors())
-			{
-				if(moveTo.equals(neighbor) && moveTo.getForcesVal()-2 <= country.getForcesVal() )
-				{
+		for (Country country : me.getCountries()) {
+			for (Country neighbor : country.getNeighbors()) {
+				if (moveTo.equals(neighbor) && moveTo.getForcesVal() - 2 <= country.getForcesVal()) {
 					attackFrom = country;
 					break;
 				}
 			}
-			if(attackFrom != null)
+			if (attackFrom != null)
 				break;
 		}
 		return attackFrom;
 	}
+
+	public ArrayList<Country> theMediumWay() {
+		ArrayList<Country> fringeCountries = me.findFringeCountries();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		for (Country country : fringeCountries) {
+			ArrayList<Country> neighbors = country.getNeighbors();
+			for (Country neighboringCountry : neighbors) {
+				if (!neighboringCountry.getOccupier().equals(me)
+						&& (neighboringCountry.getForcesVal() <= country.getForcesVal()
+								&& country.getForcesVal() > 1)) {
+					countriesWorthAttacking.add(neighboringCountry);
+				} // end if
+			} // end for
+		} // end for
+
+		if (countriesWorthAttacking.size() == 0)
+			return null;
+
+		return countriesWorthAttacking;
+	}
+
 }

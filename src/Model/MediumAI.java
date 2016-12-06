@@ -30,10 +30,9 @@ public class MediumAI implements AIStrategy, Serializable {
 						}
 						if (country.getForcesVal() == 2)
 							break;
-						
+
 						i++;
-						if(i >= country.getNeighbors().size())
-						{
+						if (i >= country.getNeighbors().size()) {
 							stopFlag = true;
 						}
 					}
@@ -85,13 +84,11 @@ public class MediumAI implements AIStrategy, Serializable {
 
 	@Override
 	public Country getCountryToAttack() {
-		
+
 		ArrayList<Country> allNeighboringEnemies = findCountriesToAttack();
-		if(allNeighboringEnemies == null)
+		if (allNeighboringEnemies == null)
 			return null;
-		
-		
-		
+
 		return allNeighboringEnemies.get(0);
 	}
 
@@ -102,13 +99,14 @@ public class MediumAI implements AIStrategy, Serializable {
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				if (!neighboringCountry.getOccupier().equals(me) && (neighboringCountry.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)) {
-						countriesWorthAttacking.add(neighboringCountry);
+				if (!neighboringCountry.getOccupier().equals(me)
+						&& (neighboringCountry.getForcesVal() <= country.getForcesVal()
+								&& country.getForcesVal() > 1)) {
+					countriesWorthAttacking.add(neighboringCountry);
 				} // end if
 			} // end for
 		} // end for
 
-		
 		if (countriesWorthAttacking.size() == 0)
 			return null;
 
@@ -118,26 +116,24 @@ public class MediumAI implements AIStrategy, Serializable {
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;
-		if(moveTo == null)
+		if (moveTo == null)
 			return null;
-		
-		
-		for(Country country : me.getCountries())
-		{
-			for(Country neighbor : country.getNeighbors())
-			{
-				
-				if(moveTo.equals(neighbor) && (moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1))
-				{
+
+		for (Country country : me.getCountries()) {
+			for (Country neighbor : country.getNeighbors()) {
+
+				if (moveTo.equals(neighbor)
+						&& (moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)) {
 					attackFrom = country;
 					break;
 				}
 			}
-			if(attackFrom != null)
+			if (attackFrom != null)
 				break;
 		}
 		return attackFrom;
-	
+
 	}
 
+	
 }

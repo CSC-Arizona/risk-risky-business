@@ -145,9 +145,9 @@ public class TheGame implements Serializable {
 					players.add(new AI(new MediumAI(), totalPlayers));
 				} else
 					players.add(new AI(new HardAI(), totalPlayers));
-
-				players.get(i).setName("");
 				players.get(i).setFaction(i);
+				players.get(i).setName("");
+				
 			}
 		} else
 			for (int i = 0; i < ais; i++)
@@ -335,7 +335,7 @@ public class TheGame implements Serializable {
 			aiTurn();
 			if (gameOver)
 				break;
-			System.out.println(getPhase());
+			//System.out.println(getPhase());
 		} // end while
 	}// end play
 
@@ -988,8 +988,8 @@ public class TheGame implements Serializable {
 		Player removeMe = null;
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-				// System.out.println(player.getName() + " has been wiped off
-				// the map.");
+				 System.out.println(player.getName() + " has been wiped off"
+				+" the map.");
 				gameLog += player.getName() + " has been wiped off the map.\n";
 				removeMe = player;
 			}
