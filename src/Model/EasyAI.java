@@ -107,6 +107,8 @@ public class EasyAI implements AIStrategy, Serializable {
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;
+		if(moveTo == null)
+			return null;
 		for(Country country : me.getCountries())
 		{
 			for(Country neighbor : country.getNeighbors())
