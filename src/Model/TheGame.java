@@ -1,5 +1,7 @@
 package Model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,6 +12,7 @@ public class TheGame implements Serializable {
 	private Player currentPlayer;
 	private Map gameMap;
 	private Deck deck;
+	private DiscardPile discard;
 	private Country selectedCountry;
 	private Country moveFrom, moveTo;
 	private boolean placePhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase, mainGamePhase,
@@ -54,6 +57,15 @@ public class TheGame implements Serializable {
 
 		return theGame;
 	}// end getInstance
+	
+	/*private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	    ois.defaultReadObject();
+	    theGame = this;
+	}
+
+	private Object readResolve()  {
+	    return theGame;
+	}*/
 
 	/*
 	 * clears the instance variable game so a new game can be created
@@ -76,6 +88,7 @@ public class TheGame implements Serializable {
 		gameMap = gameMap.newMap();
 		deck = Deck.getInstance();
 		deck = deck.newDeck();
+		discard=new DiscardPile();
 		players = new ArrayList<>();
 		addHumanPlayers();
 		addAI();
@@ -99,6 +112,7 @@ public class TheGame implements Serializable {
 		gameMap = gameMap.newTourneyMap();
 		deck = Deck.getInstance();
 		deck = deck.newDeck();
+		discard=new DiscardPile();
 		// deck.shuffle();
 		players = new ArrayList<>();
 		addAI();
@@ -363,14 +377,15 @@ public class TheGame implements Serializable {
 			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
 			if (moveTo == null)
 				this.skipAttackPhase();
-
-			moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
-			if (moveFrom != null)
-				attack();
-
-			// If the AI decided to finish attacking
-			if (((AI) currentPlayer).finishedAttacking())
-				this.skipAttackPhase();
+			else{
+				moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
+				if (moveFrom != null)
+					attack();
+	
+				// If the AI decided to finish attacking
+				if (((AI) currentPlayer).finishedAttacking())
+					this.skipAttackPhase();
+			}
 		} // end else if
 
 		// during official reinforcement
@@ -413,7 +428,7 @@ public class TheGame implements Serializable {
 			int armiesToPlaceInt = 0;
 			String armiesToPlaceStr = JOptionPane
 					.showInputDialog("How many armies do you want to place? (You can place "
-							+ theGame.getCurrentPlayer().getAvailableTroops() + ")");
+							+ currentPlayer.getAvailableTroops() + ")");
 
 			try {
 				armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
@@ -550,7 +565,7 @@ public class TheGame implements Serializable {
 		gameLog+= currentPlayer.getName() + " redeemed cards and earned " + numArmies + " armies.\n";
 
 		// Now, discard the cards
-		deck.addToDiscardPile(cardsToRedeem);
+		deck.addToDiscardPile(cardsToRedeem, discard);
 		currentPlayer.discardCards(cardsToRedeem);
 		cardsToRedeem = null;
 
@@ -611,7 +626,7 @@ public class TheGame implements Serializable {
 	}// end getNumAttackDice
 
 	public int getNumDefenseDice() {
-		int forces = theGame.getMoveTo().getForcesVal();
+		int forces = moveTo.getForcesVal();
 		if (useMaxDice) {
 			if (forces > 1)
 				return 2;
@@ -627,7 +642,7 @@ public class TheGame implements Serializable {
 				return 1;
 			} // end else
 
-			if (theGame.getMoveTo().getOccupier() instanceof HumanPlayer) {
+			if (moveTo.getOccupier() instanceof HumanPlayer) {
 				int diceToUse = -1;
 
 				while (diceToUse == -1) {
@@ -649,7 +664,7 @@ public class TheGame implements Serializable {
 
 				return diceToUse;
 			} // end if
-			return ((AI) theGame.getMoveTo().getOccupier()).chooseMyDiceToRoll(diceAllowed);
+			return ((AI) moveTo.getOccupier()).chooseMyDiceToRoll(diceAllowed);
 		} // end else
 	}// end getNumDefenseDice
 
@@ -670,7 +685,7 @@ public class TheGame implements Serializable {
 			result += currentPlayer.getName() + " won the attack.\n";
 
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " won the attack", "Success",
+				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " won the attack", "Success",
 						JOptionPane.INFORMATION_MESSAGE);
 
 			moveTo.removeUnits(attackResult);
@@ -689,7 +704,7 @@ public class TheGame implements Serializable {
 		// attack lost
 		else if (attackResult < 0) {
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " lost the attack",
+				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " lost the attack",
 						"Failure", JOptionPane.INFORMATION_MESSAGE);
 			// Get rid of the negative so we don't accidentally add
 			moveFrom.removeUnits(-1 * attackResult);
@@ -705,7 +720,7 @@ public class TheGame implements Serializable {
 		else {
 			result += currentPlayer.getName() + " was forced to retreat.\n";
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, theGame.getCurrentPlayer().getName() + " was forced to retreat.",
+				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " was forced to retreat.",
 						"tie", JOptionPane.INFORMATION_MESSAGE);
 
 			moveFrom.removeUnits(1);
@@ -950,7 +965,8 @@ public class TheGame implements Serializable {
 
 		}
 		if (removeMe != null) {
-			deck.addToDiscardPile(removeMe.discardCards());
+			discard.addToPile(removeMe.discardCards());
+			//deck.addToDiscardPile(removeMe.discardCards());
 
 			players.remove(removeMe);
 			totalPlayers--;
@@ -1008,6 +1024,10 @@ public class TheGame implements Serializable {
 
 	public Deck getDeck() {
 		return deck;
+	}
+	
+	public DiscardPile getDiscardPile(){
+		return discard;
 	}
 
 	public void setDeck(Deck deck) {
@@ -1074,7 +1094,7 @@ public class TheGame implements Serializable {
 			
 			//TODO: REMOVE MEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!
 			for (int i=0; i < 5; i++)
-				currentPlayer.addCard(deck.deal());
+				currentPlayer.addCard(deck.deal(discard));
 			
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
 			cardEarned = false;
