@@ -135,7 +135,7 @@ public class HardAI implements AIStrategy, Serializable {
 						neighbor.addForcesVal(1);
 						str += me.getName() + " removed 1 unit from " + country.getName() + " and moved it to "
 								+ neighbor.getName() + ".\n";
-						if (country.getForcesVal() == 1)
+						if (country.getForcesVal() <= 1)
 							break;
 					}
 				}
@@ -288,7 +288,8 @@ public class HardAI implements AIStrategy, Serializable {
 					break;
 				}
 			}
-			if (attackFrom != null)
+
+			if(attackFrom != null && attackFrom.getForcesVal() >1)
 				break;
 		}
 		return attackFrom;

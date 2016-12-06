@@ -93,6 +93,8 @@ public class TheGame implements Serializable {
 		currentPlayer = players.get(0);
 		numRedemptions = 0;
 		canPlace = false;
+		gameOver = false;
+		countriesClaimed = 0;
 		changeToPlacementPhase();
 	}// end newGame
 
@@ -546,9 +548,15 @@ public class TheGame implements Serializable {
 		if (isPlacePhase()) {
 			// Sets player to this country's occupier and adds country
 			// to player's list
-			selectedCountry.setOccupier(currentPlayer);
-			gameLog += currentPlayer.getName() + " claimed " + selectedCountry.toString() + "\n";
-			countriesClaimed++;
+			
+			//Put inside of this if statement to prevent null pointer exceptions when you close
+			//the game before selecting a country for the first time
+			if (selectedCountry != null){
+				selectedCountry.setOccupier(currentPlayer);
+				gameLog += currentPlayer.getName() + " claimed " + selectedCountry.toString() + "\n";
+				countriesClaimed++;
+			}//end if
+			
 		} // end if
 		else {
 			gameLog += currentPlayer.getName() + " placed " + num + " units on " + selectedCountry.toString() + "\n";

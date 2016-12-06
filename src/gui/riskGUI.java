@@ -857,6 +857,8 @@ public class riskGUI extends JFrame {
 	private class BoardPanel extends JPanel implements Observer {
 		@Override
 		public void paintComponent(Graphics g) {
+			if (theGame != null)
+				gameOver = theGame.isGameOver();
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.white);
 			super.paintComponent(g2);
@@ -1078,7 +1080,8 @@ public class riskGUI extends JFrame {
 			// It's a border layout
 			this.setLayout(new BorderLayout());
 
-			JLabel phase = new JLabel("Phase");
+			JLabel phase = new JLabel(theGame.getPhase());
+			phase.setHorizontalAlignment(SwingConstants.CENTER);
 			phase.setBorder(raisedWithColor);
 			phase.setFont(gotFontHeader);
 			this.add(phase, BorderLayout.NORTH);
@@ -1106,6 +1109,7 @@ public class riskGUI extends JFrame {
 		 * Anytime you make this view, a new currentplayerstats panel needs to
 		 * be made to reflect the current player
 		 */
+		@SuppressWarnings("serial")
 		private class CurrentPlayerStatsPanel extends JPanel {
 
 			private CurrentPlayerStatsPanel() {
@@ -1346,17 +1350,19 @@ public class riskGUI extends JFrame {
 			int cols = myCards.size();
 			if (cols < 1)
 				cols = 1;
-			showCards.setLayout(new GridLayout(1, cols));
+			showCards.setLayout(new GridLayout(0, 5));
 
 			
 			// Get the image for this card
 			for (int i = 0; i < myCards.size(); i++) {
 				JPanel both = new JPanel();
 				both.setLayout(new BorderLayout());
+				both.setPreferredSize(new Dimension((int)(1.5*xWidth), (int)(3*yHeight)));
 				
 				//add card
 				ImageIcon im = myCards.get(i).getMyImageIcon();
 				CardPanel card = new CardPanel(im.getImage(), xWidth, yHeight);
+				card.setPreferredSize(new Dimension((int)(1.5*xWidth), (int)(3*yHeight)));
 				both.add(card, BorderLayout.CENTER);
 				
 				//add checkboxes
@@ -1371,6 +1377,7 @@ public class riskGUI extends JFrame {
 				showCards.add(both);
 			} // end for
 			
+			showCards.setBorder(raisedWithColor);
 //			JCheckBox checkBox = new JCheckBox();
 //			Image im = myCards.get(i).getMyImage();
 //			ImageIcon ic = new ImageIcon(im.getScaledInstance(
@@ -1393,16 +1400,26 @@ public class riskGUI extends JFrame {
 
 			pane.add(showCards, BorderLayout.CENTER);
 			if(theGame.getCurrentPlayer().getCards().size()>=3){
-				JButton trade = new JButton("Click Images Above to Choose Cards to Trade. \n Click Here to Trade in Cards");
+				JButton trade = new JButton("Choose Cards to Trade.");
+				trade.setFont(gotFontBody.deriveFont(6));
 				trade.addActionListener(new TradeClickListener());
 				pane.add(trade, BorderLayout.SOUTH);
 			}
 			else{
-				JLabel trade = new JLabel("\t\t View Your Cards Above.\n Click \'Skip to the Next Phase\' Button to the Right to Move to Deployment Phase");
+				JPanel hold = new JPanel();
+				hold.setLayout(new GridLayout(2,0));
+				JLabel trade = new JLabel("\t\t View Your Cards Above.\n ");
+				JLabel trade2 = new JLabel("Click \'Skip to the Next Phase\' Button to the Right to Move to Deploy Phase");
+				trade.setFont(gotFontBody.deriveFont(4));
 				trade.setHorizontalAlignment(JLabel.CENTER);
-				pane.add(trade, BorderLayout.SOUTH);
+				trade2.setFont(gotFontBody.deriveFont(4));
+				trade2.setHorizontalAlignment(JLabel.CENTER);
+				hold.add(trade);
+				hold.add(trade2);
+				hold.setBorder(raisedWithColor);
+				pane.add(hold, BorderLayout.SOUTH);
 			}
-			pane.setBorder(raisedWithColor);
+			
 			this.add(pane, BorderLayout.CENTER);
 			showCards.repaint();
 			showCards.revalidate();
@@ -1493,10 +1510,11 @@ public class riskGUI extends JFrame {
 				// directions.setFont(labFont);
 
 				if (theGame.isRedeemCardPhase()) {
-					if (!theGame.isPlayPhase())
-						directions.setFont(gotFontHeader.deriveFont(Font.BOLD,
-								18));
+					//if (!theGame.isPlayPhase())
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD,
+								28));
 					directions.setText("Redeem your cards");
+					directions.setBorder(raisedWithColor);
 					this.add(directions, BorderLayout.NORTH);
 					makePlayingCardPanel(g);
 				} // end if

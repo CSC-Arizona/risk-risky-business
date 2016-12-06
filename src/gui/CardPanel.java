@@ -25,8 +25,8 @@ public class CardPanel extends JPanel {
 	}// end constructor
 
 	public void paintComponent(Graphics g) {
-		xWidth = this.getWidth()/40;
-		yHeight = this.getHeight()/40;
-		g.drawImage(myImage, 10, 10, this.getWidth()-10, this.getHeight()-10, null);//(int) (0.5 * xWidth), (int) (1.5 * yHeight), null);
+	//	xWidth = this.getWidth()/40;
+	//	yHeight = this.getHeight()/40;
+		g.drawImage(myImage, 15, 15, (int) (3.25 * xWidth), (int) (8 * yHeight), null); //this.getWidth()-10, this.getHeight()-10, null);//(int) (0.5 * xWidth), (int) (1.5 * yHeight), null);
 	}// end paintComponent
 }// end CardPanel
