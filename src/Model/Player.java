@@ -8,6 +8,7 @@ package Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JMenuItem;
 
@@ -94,6 +95,7 @@ public abstract class Player implements Serializable{
 	}// end equals
 
 	public ArrayList<Country> getCountries() {
+	//	Collections.shuffle(myCountries);
 		return myCountries;
 	}// end getCountries
 

@@ -17,17 +17,25 @@ public class MediumAI implements AIStrategy, Serializable {
 
 	@Override 
 	public String reinforce() {
+		String log = "";
+		int numRes = 0;
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
-			if (country.getForcesVal() > 2) {
+			if (country.getForcesVal() > 5) {
 				stopFlag = false;
 				while (country.getForcesVal() > 2 && stopFlag == false) {
 					int i = 0;
 					for (Country neighbor : country.getNeighbors()) {
 						if (neighbor.getOccupier().equals(me)) {
-							neighbor.addForcesVal(1);
-							country.removeUnits(1);
+							numRes++;
+							neighbor.addForcesVal(2);
+							country.removeUnits(2);
+							log += me.getName() + " removed 2 units from " + country.getName()+ " and placed them on " + neighbor.getName() + ".\n";
 						}
+						
+						if (numRes == 10)
+							return log;
+						
 						if (country.getForcesVal() == 2)
 							break;
 
@@ -50,7 +58,7 @@ public class MediumAI implements AIStrategy, Serializable {
 		int randNum = 0;
 		int i = 0;
  		while (me.getAvailableTroops() > i) {
-			i++;
+			i+=2;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
 		}
@@ -81,7 +89,11 @@ public class MediumAI implements AIStrategy, Serializable {
 		}
 		return countryToReturn; 
 	}
-
+	
+	public String toString(){
+		return "MED";
+	}
+	
 	@Override
 	public Country getCountryToAttack() {
 

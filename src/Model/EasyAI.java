@@ -24,7 +24,7 @@ public class EasyAI implements AIStrategy, Serializable {
 		int randNum = 0; 
 		int i = 0;
 		while (me.getAvailableTroops() > i) { 
-			i++;
+			i+=2;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
 		}
@@ -38,32 +38,52 @@ public class EasyAI implements AIStrategy, Serializable {
 
 	@Override
 	public String reinforce() { 
-		boolean stopFlag = false;
-		for (Country country : me.getCountries()) {
-			//System.out.println("b: "+ ++b);
-			if (country.getForcesVal() > 2) {
-				stopFlag = false;
-				while (country.getForcesVal() > 2 && stopFlag == false) {
-					//System.out.println("C: "+ ++c);
-					int i = 0;
-					for (Country neighbor : country.getNeighbors()) {
-						if (neighbor.getOccupier().equals(me)) {
-							neighbor.addForcesVal(1);
-							country.removeUnits(1);
-						} 
-						if (country.getForcesVal() == 2)
-							break;
-						
-						i++;
-						if(i >= country.getNeighbors().size())
-						{
-							stopFlag = true;
-						}
-					}
-				}
-			}
-		}
-		return null;
+		String log = "";
+		ArrayList<Country> countries = me.getCountries();
+		
+		
+		for (int i=0; i < 10; i++){
+			int ran = (int)(Math.random() * countries.size());
+			Country c = countries.get(ran);
+			
+			if (c.getForcesVal() > 3){
+				ran = (int)(Math.random() * c.getNeighbors().size());
+				Country n = c.getNeighbors().get(ran);
+				n.addForcesVal(2);
+				c.removeUnits(2);
+				log+=me.getName() + " removed 2 units from " + c.getName() + " and placed them on " + n.getName() + ".\n";
+			}//end if
+		}//end for
+		
+		
+		
+		return log;
+//		boolean stopFlag = false;
+//		for (Country country : me.getCountries()) {
+//			//System.out.println("b: "+ ++b);
+//			if (country.getForcesVal() > 3) {
+//				stopFlag = false;
+//				while (country.getForcesVal() > 2 && stopFlag == false) {
+//					//System.out.println("C: "+ ++c);
+//					int i = 0;
+//					for (Country neighbor : country.getNeighbors()) {
+//						if (neighbor.getOccupier().equals(me)) {
+//							neighbor.addForcesVal(2);
+//							country.removeUnits(2);
+//						} 
+//						if (country.getForcesVal() == 2)
+//							break;
+//						
+//						i++;
+//						if(i >= country.getNeighbors().size())
+//						{
+//							stopFlag = true;
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return null;
 	}
 
 	@Override
@@ -109,6 +129,12 @@ public class EasyAI implements AIStrategy, Serializable {
 
 		return countriesWorthAttacking;
 	}
+	
+	public String toString(){
+		return "EASY";
+	}
+	
+	
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;

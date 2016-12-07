@@ -28,8 +28,8 @@ public class TheGame implements Serializable {
 	private DiscardPile discard;
 	private Country selectedCountry;
 	private Country moveFrom, moveTo;
-	private boolean placePhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase, mainGamePhase,
-			cardEarned, gameStarted;
+	private boolean placePhase, reinforcePhase, deployPhase, attackPhase,
+			gameOver, redeemCardPhase, mainGamePhase, cardEarned, gameStarted;
 	private static TheGame theGame;
 	private boolean tournamentMode, canPlace;
 	private String gameLog;
@@ -42,7 +42,8 @@ public class TheGame implements Serializable {
 	private ArrayList<Card> cardsToRedeem;
 	public static final String FILE_NAME = "game.ser";
 	private int attackerHits;
-	private int numAttacks;
+	private int numAttacks, numDeploys, numReinforces, numCard;
+	private double attackTime, deployTime, reinforceTime, cardTime;
 
 	/**********************************************************************************
 	 ********************************** Game Creation************************************
@@ -52,7 +53,7 @@ public class TheGame implements Serializable {
 		numAttacks = 0;
 		humans = numOfHumanPlayers;
 		ais = numOfAIPlayers;
-		totalPlayers = humans + ais; 
+		totalPlayers = humans + ais;
 		countriesClaimed = 0;
 		countriesBefore = 0;
 		countriesAfter = 0;
@@ -66,21 +67,15 @@ public class TheGame implements Serializable {
 	}// end constructor
 
 	/*
-	 * Return an instance of the singleton game  
+	 * Return an instance of the singleton game
 	 */
-	public static TheGame getInstance(int numOfHumanPlayers, int totalNumOfPlayers, boolean tourny) {
+	public static TheGame getInstance(int numOfHumanPlayers,
+			int totalNumOfPlayers, boolean tourny) {
 		if (theGame == null)
 			theGame = new TheGame(numOfHumanPlayers, totalNumOfPlayers, tourny);
 
 		return theGame;
 	}// end getInstance
-
-	/*
-	 * private void readObject(ObjectInputStream ois) throws IOException,
-	 * ClassNotFoundException { ois.defaultReadObject(); theGame = this; }
-	 * 
-	 * private Object readResolve() { return theGame; }
-	 */
 
 	/*
 	 * clears the instance variable game so a new game can be created
@@ -106,13 +101,13 @@ public class TheGame implements Serializable {
 		discard = new DiscardPile();
 		players = new ArrayList<>();
 		addHumanPlayers();
-		addAI(); 
+		addAI();
 		currentPlayer = players.get(0);
 		numRedemptions = 0;
 		canPlace = false;
 		gameOver = false;
 		countriesClaimed = 0;
-		attackerHits=-1;
+		attackerHits = -1;
 		gameStarted = false;
 		changeToPlacementPhase();
 	}// end newGame
@@ -135,7 +130,6 @@ public class TheGame implements Serializable {
 		deck = Deck.getInstance();
 		deck = deck.newDeck();
 		discard = new DiscardPile();
-		// deck.shuffle();
 		players = new ArrayList<>();
 		mainGamePhase = false;
 		placePhase = true;
@@ -168,7 +162,7 @@ public class TheGame implements Serializable {
 					players.add(new AI(new HardAI(), totalPlayers));
 				players.get(i).setFaction(i);
 				players.get(i).setName("");
-				
+
 			}
 		} else
 			for (int i = 0; i < ais; i++)
@@ -211,7 +205,8 @@ public class TheGame implements Serializable {
 			changeToReinforcePhase();
 		} // end else if
 		else if (isGameOver()) {
-			gameLog += "The Game is Over.\n" +currentPlayer.getName() +" has won.";
+			gameLog += "The Game is Over.\n" + currentPlayer.getName()
+					+ " has won.";
 		} else {
 			throw new IllegalStateException("The phase was invalid");
 		}
@@ -285,9 +280,11 @@ public class TheGame implements Serializable {
 		attackPhase = false;
 		gameOver = false;
 
-		currentPlayer.addAvailableTroops(gameMap.getContinentBonuses(currentPlayer));
+		currentPlayer.addAvailableTroops(gameMap
+				.getContinentBonuses(currentPlayer));
 		currentPlayer.getTroops();
-		gameLog += "Continent bonus applied: " + gameMap.getContinentBonuses(getCurrentPlayer()) + "\n";
+		gameLog += "Continent bonus applied: "
+				+ gameMap.getContinentBonuses(getCurrentPlayer()) + "\n";
 	}// end changeToDeployTroopsPhase
 
 	private void changeToAttackPhase() {
@@ -315,7 +312,8 @@ public class TheGame implements Serializable {
 
 		currentPlayer = players.get(i);
 		selectedCountry = null;
-		gameLog += "\nNext player's turn: " + getCurrentPlayer().getName() + "\n";
+		gameLog += "\nNext player's turn: " + getCurrentPlayer().getName()
+				+ "\n";
 	}// end nextPlayer
 
 	/**********************************************************************************
@@ -333,7 +331,7 @@ public class TheGame implements Serializable {
 			// Remove a random player
 			Player tmp = players.remove(ranToMove);
 			// And reinsert him at the end
-			players.add(tmp); 
+			players.add(tmp);
 		} // end for
 
 		// And lets the lucky winner go first!
@@ -342,8 +340,8 @@ public class TheGame implements Serializable {
 		// calls roundOfPlacement to let any AIs who may have been set to
 		// go first play their parts
 		currentPlayer = players.get(0);
-		
-		//Only play if the first player is an AI
+
+		// Only play if the first player is an AI
 		if (currentPlayer instanceof AI)
 			play();
 	}// end startGame
@@ -369,15 +367,16 @@ public class TheGame implements Serializable {
 	 * Tells the AI to play one move
 	 */
 	private void aiTurn() throws IllegalStateException {
-		if (isPlacePhase()) { 
+		if (isPlacePhase()) {
 			boolean placed = false;
 			// Ask the AI to pick a country until they pick a country without an
 			// owner
 			while (!placed) {
-				selectedCountry = ((AI) currentPlayer).getStrategy().placeUnit();
+				selectedCountry = ((AI) currentPlayer).getStrategy()
+						.placeUnit();
 
 				if (selectedCountry.getOccupier() == null)
-					placed = true; 
+					placed = true;
 			} // end while
 			placeArmies(1);
 			nextPlayer();
@@ -388,8 +387,9 @@ public class TheGame implements Serializable {
 		// During initial reinforce phase
 		else if (isReinforcePhase() && !isPlayPhase()) {
 			while (selectedCountry == null) {
-				selectedCountry = ((AI) currentPlayer).getStrategy().placeLeftOverUnits();
-			}//end 
+				selectedCountry = ((AI) currentPlayer).getStrategy()
+						.placeLeftOverUnits();
+			}// end
 			placeArmies(1);
 			nextPlayer();
 			// If the next player has no more troops, then go to redeem cards!
@@ -397,58 +397,77 @@ public class TheGame implements Serializable {
 				nextPhase();
 		} // end else if
 
+		// Do nothing if the game is over!
+		else if (isFinished()) {
+
+		}// end else if
+
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
-			//System.out.println("Current player cards: "+currentPlayer.getCards().size());
+			long startTime = System.nanoTime();
+
+			// System.out.println("Current player cards: "+currentPlayer.getCards().size());
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
 			if (cardsToRedeem != null)
 				currentPlayer.addAvailableTroops(redeemCards());
 
 			skipCardRedemption();
+			long endTime = System.nanoTime();
+
+			cardTime += 1000000000 * (endTime - startTime) / ++numCard;
+			// System.out.println("card" + cardTime);
 		} // end else if
 
 		// During deployment
 		else if (isDeployPhase()) {
+			long startTime = System.nanoTime();
 			deployTroops();
 
 			if (currentPlayer.getAvailableTroops() == 0)
 				nextPhase();
+			long endTime = System.nanoTime();
+
+			deployTime += 1000000000 * (endTime - startTime) / ++numDeploys;
+			// System.out.println("deploy" + deployTime);
 		} // end else if
 
 		// During attack phase
 		else if (isAttackPhase()) {
-			// printAllCountriesAndOccupiers();
-			// moveTo = ((AI) currentPlayer).getCountryTo;
-			// moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
-			// attack();
+//			long startTime = System.nanoTime();
 
 			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
 			if (moveTo == null)
 				this.skipAttackPhase();
 
-			else{
-				moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
-				if (moveFrom != null) 
+			else {
+				moveFrom = ((AI) currentPlayer).getStrategy()
+						.findAttackingCountry(moveTo);
+				if (moveFrom != null)
 					attack();
-	
+
 				// If the AI decided to finish attacking
 				if (((AI) currentPlayer).finishedAttacking())
 					this.skipAttackPhase();
 			}
-
+//			long endTime = System.nanoTime();
+//
+//			attackTime += 1000000000 * (endTime - startTime) / numAttacks;
+			// System.out.println("attack" + attackTime);
 		} // end else if
 
 		// during official reinforcement
 		else if (isReinforcePhase()) {
+//			long startTime = System.nanoTime();
 			gameLog += ((AI) currentPlayer).getStrategy().reinforce();
 			nextPhase();
 			nextPlayer();
+//			long endTime = System.nanoTime();
+//
+//			reinforceTime += 1000000000 * (endTime - startTime)
+//					/ ++numReinforces;
+			// System.out.println("reinforce" + reinforceTime);
 		} // end else if
-		//Do nothing if the game is over! 
-		else if (isFinished()){
-			
-		}//end else if
 	}// end aiturn
 
 	/*
@@ -457,19 +476,27 @@ public class TheGame implements Serializable {
 	public void printAllCountriesAndOccupiers() {
 		Country[] countries = gameMap.getCountries();
 		for (int i = 0; i < countries.length; i++) {
-			System.out.println(countries[i].getName() + ": " + countries[i].getOccupier());
+			System.out.println(countries[i].getName() + ": "
+					+ countries[i].getOccupier());
 		} // end for
 	}// end print all
 
 	private void deployTroops() {
+//		if (numAttacks%100==0)
+//			System.out.println("Current troops = " + currentPlayer.getAvailableTroops());
 		if (currentPlayer instanceof AI) {
 			ArrayList<Country> selectedCountries = new ArrayList<Country>();
-			selectedCountries = ((AI) currentPlayer).getStrategy().placeNewTroops();
+			selectedCountries = ((AI) currentPlayer).getStrategy()
+					.placeNewTroops();
 			int i = 0;
 
-			while (i < selectedCountries.size() && currentPlayer.getAvailableTroops() > 0) {
+			while (i < selectedCountries.size()
+					&& currentPlayer.getAvailableTroops() > 0) {
 				selectedCountry = selectedCountries.get(i);
-				placeArmies(1);
+				if (currentPlayer.getAvailableTroops() > 1)
+					placeArmies(2);
+				else
+					placeArmies(1);
 				i++;
 			} // end while
 		} // end if
@@ -477,18 +504,23 @@ public class TheGame implements Serializable {
 			// if (selectedCountry != null){
 			boolean continueFlag = false;
 			int armiesToPlaceInt = 0;
-			String armiesToPlaceStr = JOptionPane.showInputDialog(
-					"How many armies do you want to place? (You can place " + currentPlayer.getAvailableTroops() + ")");
+			String armiesToPlaceStr = JOptionPane
+					.showInputDialog("How many armies do you want to place? (You can place "
+							+ currentPlayer.getAvailableTroops() + ")");
 
 			try {
 				armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
 				continueFlag = true;
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			} // end catch
 			if (continueFlag) {
-				if (armiesToPlaceInt < 0 || armiesToPlaceInt > currentPlayer.getAvailableTroops()) {
-					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				if (armiesToPlaceInt < 0
+						|| armiesToPlaceInt > currentPlayer
+								.getAvailableTroops()) {
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					placeArmies(armiesToPlaceInt);
 				} // end else
@@ -535,9 +567,9 @@ public class TheGame implements Serializable {
 			nextPhase();
 			nextPlayer();
 		} // end else if
-		else if (isFinished()){
-			//Do nothing!
-		}//end else if
+		else if (isFinished()) {
+			// Do nothing!
+		}// end else if
 		else {
 			throw new IllegalStateException("Illegal phase!");
 		} // end else
@@ -566,18 +598,21 @@ public class TheGame implements Serializable {
 		if (isPlacePhase()) {
 			// Sets player to this country's occupier and adds country
 			// to player's list
-			
-			//Put inside of this if statement to prevent null pointer exceptions when you close
-			//the game before selecting a country for the first time
-			if (selectedCountry != null){
+
+			// Put inside of this if statement to prevent null pointer
+			// exceptions when you close
+			// the game before selecting a country for the first time
+			if (selectedCountry != null) {
 				selectedCountry.setOccupier(currentPlayer);
-				gameLog += currentPlayer.getName() + " claimed " + selectedCountry.toString() + "\n";
+				gameLog += currentPlayer.getName() + " claimed "
+						+ selectedCountry.toString() + "\n";
 				countriesClaimed++;
-			}//end if
-			
+			}// end if
+
 		} // end if
 		else {
-			gameLog += currentPlayer.getName() + " placed " + num + " units on " + selectedCountry.toString() + "\n";
+			gameLog += currentPlayer.getName() + " placed " + num
+					+ " units on " + selectedCountry.toString() + "\n";
 		} // end else
 		selectedCountry.addForcesVal(num);
 		currentPlayer.subtractFromAvailableTroops(num);
@@ -620,9 +655,10 @@ public class TheGame implements Serializable {
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
 		}// end switch case
-		
-		gameLog += currentPlayer.getName() + " redeemed cards. Earned " + numArmies + "extra armies to deploy ";
-		
+
+		gameLog += currentPlayer.getName() + " redeemed cards. Earned "
+				+ numArmies + "extra armies to deploy ";
+
 		boolean added = false;
 		for (Card c : cardsToRedeem) {
 			for (Country t : currentPlayer.getCountries()) {
@@ -630,11 +666,12 @@ public class TheGame implements Serializable {
 					// add 2 armies to that country
 					added = true;
 					t.addForcesVal(2);
-					gameLog+= "and 2 bonus armies on " + t.getName() + "\n";
-					break; //can only redeem a country card for extra armies once per turn
+					gameLog += "and 2 bonus armies on " + t.getName() + "\n";
+					break; // can only redeem a country card for extra armies
+							// once per turn
 				}
 			}
-			if(added)
+			if (added)
 				break;
 		}
 
@@ -645,9 +682,9 @@ public class TheGame implements Serializable {
 
 		return numArmies;
 	}// end redeemCards
-	
-	public void setMaxDice(boolean flag){
-		useMaxDice=flag;
+
+	public void setMaxDice(boolean flag) {
+		useMaxDice = flag;
 	}
 
 	public int getNumAttackDice() {
@@ -684,18 +721,21 @@ public class TheGame implements Serializable {
 
 			while (diceToUse == -1) {
 				String sNumDice = JOptionPane
-						.showInputDialog("How many dice would you like to throw? You can throw up to " + diceAllowed);
+						.showInputDialog("How many dice would you like to throw? You can throw up to "
+								+ diceAllowed);
 
 				try {
 					diceToUse = Integer.parseInt(sNumDice);
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Dice Error", JOptionPane.ERROR_MESSAGE);
 					continue;
 				} // end catch
 
 				if (diceToUse > diceAllowed || diceToUse < 0) {
 					diceToUse = -1;
-					JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Dice Error", JOptionPane.ERROR_MESSAGE);
 				} // end if
 			} // end while
 
@@ -725,19 +765,22 @@ public class TheGame implements Serializable {
 				int diceToUse = -1;
 
 				while (diceToUse == -1) {
-					String sNumDice = JOptionPane.showInputDialog(
-							"How many dice would you like to throw? You can throw up to " + diceAllowed);
+					String sNumDice = JOptionPane
+							.showInputDialog("How many dice would you like to throw? You can throw up to "
+									+ diceAllowed);
 
 					try {
 						diceToUse = Integer.parseInt(sNumDice);
 					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Invalid number.",
+								"Dice Error", JOptionPane.ERROR_MESSAGE);
 						continue;
 					} // end catch
 
 					if (diceToUse > diceAllowed || diceToUse < 0) {
 						diceToUse = -1;
-						JOptionPane.showMessageDialog(null, "Invalid number.", "Dice Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Invalid number.",
+								"Dice Error", JOptionPane.ERROR_MESSAGE);
 					} // end if
 				} // end while
 
@@ -749,11 +792,25 @@ public class TheGame implements Serializable {
 
 	public boolean attack() {
 		numAttacks++;
+
+//		if (numAttacks % 100 == 0) {
+//			System.out.println("Phase = " + getPhase());
+//			System.out.println("Current player = " + currentPlayer.getName());
+//			System.out.println("Attacks = " + numAttacks);
+//			System.out.println("Attack time = " + attackTime);
+//			System.out.println("Deploy time = " + deployTime);
+//			System.out.println("Card time = " + cardTime);
+//			System.out.println("Reinforce time = " + reinforceTime);
+//			System.out.println("Countries size = "
+//					+ currentPlayer.getCountries().size());
+//		}
+
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
-		gameLog += moveFrom.getOccupier().getName() + " attacked " + moveTo.getOccupier().getName() + " at "
-				+ moveTo.getName() + ".\n";
+		gameLog += moveFrom.getOccupier().getName() + " attacked "
+				+ moveTo.getOccupier().getName() + " at " + moveTo.getName()
+				+ ".\n";
 
 		String result = "";
 		int attackResult = wasAttackSuccessful();
@@ -762,9 +819,10 @@ public class TheGame implements Serializable {
 
 		if (attackResult > 0) {
 			result += currentPlayer.getName() + " won the attack.\n";
-			attackerHits=2;
+			attackerHits = 2;
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " won the attack", "Success",
+				JOptionPane.showMessageDialog(null, currentPlayer.getName()
+						+ " won the attack", "Success",
 						JOptionPane.INFORMATION_MESSAGE);
 
 			moveTo.removeUnits(attackResult);
@@ -782,9 +840,10 @@ public class TheGame implements Serializable {
 
 		// attack lost
 		else if (attackResult < 0) {
-			attackerHits=0;
+			attackerHits = 0;
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " lost the attack", "Failure",
+				JOptionPane.showMessageDialog(null, currentPlayer.getName()
+						+ " lost the attack", "Failure",
 						JOptionPane.INFORMATION_MESSAGE);
 			// Get rid of the negative so we don't accidentally add
 			moveFrom.removeUnits(-1 * attackResult);
@@ -798,10 +857,11 @@ public class TheGame implements Serializable {
 
 		// Otherwise, lose one and one
 		else {
-			attackerHits=1;
+			attackerHits = 1;
 			result += currentPlayer.getName() + " was forced to retreat.\n";
 			if (currentPlayer instanceof HumanPlayer)
-				JOptionPane.showMessageDialog(null, currentPlayer.getName() + " was forced to retreat.", "tie",
+				JOptionPane.showMessageDialog(null, currentPlayer.getName()
+						+ " was forced to retreat.", "tie",
 						JOptionPane.INFORMATION_MESSAGE);
 
 			moveFrom.removeUnits(1);
@@ -824,7 +884,8 @@ public class TheGame implements Serializable {
 	 * country
 	 */
 	private void countryWasTaken() {
-		gameLog += currentPlayer.getName() + " defeated " + moveTo.getOccupier().getName() + " and took "
+		gameLog += currentPlayer.getName() + " defeated "
+				+ moveTo.getOccupier().getName() + " and took "
 				+ moveTo.getName() + ".\n";
 
 		int units = 0;
@@ -845,13 +906,17 @@ public class TheGame implements Serializable {
 				try {
 					units = Integer.parseInt(unitsToMove);
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"That was invalid number.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 					units = 0;
 					continue;
 				} // end catch
 
 				if (units < 1 || units > moveFrom.getForcesVal() - 1) {
-					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"That was invalid number.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 					units = 0;
 				} // end if
 			} // end while
@@ -877,8 +942,10 @@ public class TheGame implements Serializable {
 		int aHigh = attackDice.get(0).getValue();
 		int dHigh = defenseDice.get(0).getValue();
 
-		gameLog += "Dice Rolls: \n\t Attacker's highest die= " + attackDice.get(0).getValue()
-				+ "\n\t Defender's highest die = " + defenseDice.get(0).getValue() + "\n";
+		gameLog += "Dice Rolls: \n\t Attacker's highest die= "
+				+ attackDice.get(0).getValue()
+				+ "\n\t Defender's highest die = "
+				+ defenseDice.get(0).getValue() + "\n";
 
 		if (aHigh > dHigh) {
 
@@ -893,8 +960,10 @@ public class TheGame implements Serializable {
 			aHigh = attackDice.get(1).getValue();
 			dHigh = defenseDice.get(1).getValue();
 
-			gameLog += "Dice Rolls: \n\t Attacker's second highest die= " + attackDice.get(1).getValue()
-					+ "\n\t Defender's second highest die = " + defenseDice.get(1).getValue() + "\n";
+			gameLog += "Dice Rolls: \n\t Attacker's second highest die= "
+					+ attackDice.get(1).getValue()
+					+ "\n\t Defender's second highest die = "
+					+ defenseDice.get(1).getValue() + "\n";
 
 			if (aHigh > dHigh) {
 
@@ -931,16 +1000,20 @@ public class TheGame implements Serializable {
 		String unitsToMove = "";
 
 		while (!moveFlag) {
-			unitsToMove = JOptionPane.showInputDialog("How Many armies? You must leave 1.");
+			unitsToMove = JOptionPane
+					.showInputDialog("How Many armies? You must leave 1.");
 			try {
 				unitsToReturn = Integer.parseInt(unitsToMove);
 				continueFlag = true;
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if (continueFlag) {
 				if (unitsToReturn >= totalUnits) {
-					JOptionPane.showMessageDialog(null, "You must leave 1 army.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"You must leave 1 army.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				} else {
 					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
 					moveFlag = true;
@@ -957,16 +1030,19 @@ public class TheGame implements Serializable {
 		String unitsToMove = "";
 
 		while (!moveFlag) {
-			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to attack with?");
+			unitsToMove = JOptionPane
+					.showInputDialog("How many armies do you want to attack with?");
 			try {
 				unitsToReturn = Integer.parseInt(unitsToMove);
 				continueFlag = true;
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if (continueFlag) {
 				if (unitsToReturn >= totalUnits || unitsToReturn < 0) {
-					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
 					moveFlag = true;
@@ -977,7 +1053,8 @@ public class TheGame implements Serializable {
 
 	}// end getArmiesToAttack
 
-	public boolean moveUnitsToCountry(int numUnits, Country fromCountry, Country toCountry, Player current) {
+	public boolean moveUnitsToCountry(int numUnits, Country fromCountry,
+			Country toCountry, Player current) {
 
 		boolean result = false;
 		ArrayList<Country> visited = new ArrayList<Country>();
@@ -992,10 +1069,12 @@ public class TheGame implements Serializable {
 		return result;
 	}// end moveUnitsToCountry
 
-	private void findPath(Country fromCountry, ArrayList<Country> visited, Country toCountry, Player currentP) {
+	private void findPath(Country fromCountry, ArrayList<Country> visited,
+			Country toCountry, Player currentP) {
 		if (canPlace)
 			return;
-		ArrayList<Country> countries = visited.get(visited.size() - 1).getNeighbors();
+		ArrayList<Country> countries = visited.get(visited.size() - 1)
+				.getNeighbors();
 		for (Country c : countries) {
 			if (!(c.getOccupier().equals(currentP)))
 				continue;
@@ -1004,7 +1083,7 @@ public class TheGame implements Serializable {
 			if (c.equals(toCountry)) {
 				visited.add(c);
 				canPlace = true;
-				//printPath(visited);
+				// printPath(visited);
 				visited.remove(visited.size() - 1);
 				break;
 			}
@@ -1022,21 +1101,21 @@ public class TheGame implements Serializable {
 		}
 	}// end findPath
 
-//	private void printPath(ArrayList<Country> visited) {
-//		for (Country node : visited) {
-//			System.out.print(node);
-//			System.out.print(" ");
-//		}
-//		System.out.println();
-//	}// end printPath
+	// private void printPath(ArrayList<Country> visited) {
+	// for (Country node : visited) {
+	// System.out.print(node);
+	// System.out.print(" ");
+	// }
+	// System.out.println();
+	// }// end printPath
 
 	public void removeLosers() {
 
 		Player removeMe = null;
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-				 System.out.println(player.getName() + " has been wiped off"
-				+" the map.");
+				System.out.println(player.getName() + " has been wiped off"
+						+ " the map.");
 				gameLog += player.getName() + " has been wiped off the map.\n";
 				removeMe = player;
 			}
@@ -1048,6 +1127,9 @@ public class TheGame implements Serializable {
 
 			players.remove(removeMe);
 			totalPlayers--;
+			for (int i =0; i < players.size(); i++){
+				System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
+			}
 		}
 
 	}// end removeLosers
@@ -1082,8 +1164,8 @@ public class TheGame implements Serializable {
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
-	
-	public int getNumAttacks(){
+
+	public int getNumAttacks() {
 		return numAttacks;
 	}
 
@@ -1167,8 +1249,8 @@ public class TheGame implements Serializable {
 		boolean tmp = cardEarned;
 		clearSelections();
 		if (cardEarned) {
-
-			currentPlayer.addCard(deck.deal(discard));
+			if (!tournamentMode)
+				currentPlayer.addCard(deck.deal(discard));
 
 			gameLog += currentPlayer.getName() + " earned a new card.\n";
 			cardEarned = false;
@@ -1235,8 +1317,7 @@ public class TheGame implements Serializable {
 		// return 2 if offense wins entirely
 	}
 
-	public boolean isGameStarted()
-	{
+	public boolean isGameStarted() {
 		return gameStarted;
 	}
 }// end theGame
