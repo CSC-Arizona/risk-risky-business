@@ -5,7 +5,7 @@ package Model;
  * 
  * by Abigail Dodd, Sydney Komro, Dylan Tobia, Jewell Finder
  * 
- * Creates a strategy for AI players that controls the way that they
+ * Creates an easy strategy for AI players that controls the way that they
  * place units, fight, and reinforce 
  */
 

@@ -47,6 +47,11 @@ public class Continent implements Serializable{
 		else
 			return 0;
 	}// end payOwnerbonus
+	
+	
+	public int getBonus(){
+		return ownerBonus;
+	}
 
 	/*
 	 * addCountry()
