@@ -431,7 +431,6 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players);
 		theGame.startGame();
-
 		//animations(attacker, defender); 
 
 
@@ -1160,7 +1159,8 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			repaint();
+			drawingPanel.revalidate();
+			drawingPanel.repaint();
 		}// end update
 
 	}// end boardPanel
@@ -1940,11 +1940,11 @@ public class riskGUI extends JFrame {
 								+ "prompted with how many units you wish to move there. If you have not conquered the country yet, you will need\n"
 								+ "to reselect your attacking, and attack from countries. When you are finished attacking, press the \"Skip Phase\"\n"
 								+ "button located at the top right of the screen. Now you are in the reinforce phase. Click a country you own that\n"
-								+ "has more than 1 unit on it, and click the transfer troops button. You will be prompted with how many units you \n"
-								+ "wish to move from it, keep in mind you must leave 1. Then click an attached, friendly country, to place those units\n"
-								+ "there. WHen you are finished, press the \"Skip Phase\" button at the top right of the screen, to advance to the next\n"
-								+ "players turn. Continue this until the game is over, or you wish to stop. To save, click File-Save Game, or close the\n"
-								+ "window, which will then prompt you if you wish to save the game or not.\n"
+								+ "has more than 1 unit on it, and click the transfer troops button. Then click an attached, friendly country to place\n"
+								+ "units upon, and click the transfer troops button. You will be prompted with how many units you wish to move from it.\n"
+								+ "Keep in mind you MUST leave 1.When you are finished, press the \"Skip Phase\" button at the top right of the screen,\n "
+								+ "to advance to the next players turn. Continue this until the game is over, or you wish to stop. To save, click \n"
+								+ "File-Save Game, or close the window, which will then prompt you if you wish to save the game or not.\n"
 								+ "                                                                               Happy conquering!");
 			}
 		}// actionPerformed
