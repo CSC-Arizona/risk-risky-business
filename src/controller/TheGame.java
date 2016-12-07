@@ -1072,12 +1072,12 @@ public class TheGame implements Serializable {
 			players.remove(removeMe);
 			totalPlayers--;
 
-			for (int i =0; i < players.size(); i++){
-				if(players.get(i) instanceof AI)
-					System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
-				else
-					System.out.println("\t Human Player");
-			}
+//			for (int i =0; i < players.size(); i++){
+//				if(players.get(i) instanceof AI)
+//					System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
+//				else
+//					System.out.println("\t Human Player");
+//			}
 		}
 
 	}// end removeLosers

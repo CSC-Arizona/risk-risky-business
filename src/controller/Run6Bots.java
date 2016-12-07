@@ -26,7 +26,7 @@ public class Run6Bots {
 
 
 			// System.out.println("New Game");
-			// System.out.println("Game " + (i+1));
+			 System.out.println("Game " + (i+1));
 			theGame.startGame();
 			// System.out.println(theGame.getCurrentPlayer().getName() + "
 			// Won.");

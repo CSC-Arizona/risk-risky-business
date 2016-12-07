@@ -1,5 +1,15 @@
 package Model;
 
+/*
+ * EasyAI
+ * 
+ * by Abigail Dodd, Sydney Komro, Dylan Tobia, Jewell Finder
+ * 
+ * Creates a medium strategy for AI players that controls the way that they
+ * place units, fight, and reinforce 
+ */
+
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;

@@ -1,5 +1,14 @@
 package Model;
 
+/*
+ * EasyAI
+ * 
+ * by Abigail Dodd, Sydney Komro, Dylan Tobia, Jewell Finder
+ * 
+ * Creates a strategy for AI players that controls the way that they
+ * place units, fight, and reinforce 
+ */
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -7,9 +16,6 @@ import java.util.Random;
 public class EasyAI implements AIStrategy, Serializable {
 
 	private AI me;
-	static int a,b,c,d,e,f,g,h,wa,fa;
-	
-	  
 	 
 	public EasyAI(){};
 	public EasyAI(AI ai)
@@ -17,33 +23,42 @@ public class EasyAI implements AIStrategy, Serializable {
 		me = ai;
 	}
 	
+	/*
+	 * placeNewTroops
+	 * 		Places troops on fringe countries during deployment
+	 */
 	@Override
 	public ArrayList<Country> placeNewTroops() {
 		ArrayList<Country> countries = new ArrayList<>();
 		Random rand = new Random();
 		int randNum = 0; 
 		int i = 0;
-//		while (me.getAvailableTroops() > i) { 
-//			i+=2;]
 			ArrayList<Country> fringes = me.findFringeCountries();
 			randNum = rand.nextInt(fringes.size());
 			countries.add(fringes.get(randNum));
-//		}
 		return countries;
 	}
 
+	/*
+	 * setter for the ai
+	 */
 	@Override
 	public void setMe(AI ai) {
 		me = ai;
 	}
 
+	/*
+	 * reinforce
+	 * 		Reinforces occupied countries after placement and after battles
+	 * 		Returns a string of what it did for the game log
+	 */
 	@Override
 	public String reinforce() { 
 		String log = "";
 		ArrayList<Country> countries = me.getCountries();
 		
 		
-		for (int i=0; i < 1; i++){
+		for (int i=0; i < 0; i++){
 			int ran = (int)(Math.random() * countries.size());
 			Country c = countries.get(ran);
 			
@@ -59,11 +74,19 @@ public class EasyAI implements AIStrategy, Serializable {
 		return log;
 	}
 
+	/*
+	 * placeLeftOverUnits
+	 * 		Reinforces countries after initial placement
+	 */
 	@Override
 	public Country placeLeftOverUnits() { 
 		return me.pickRandomOwnedCountry();
 	}
 
+	/*
+	 * placeUnit
+	 * 		Chooses a country to occupy during game setup
+	 */
 	@Override
 	public Country placeUnit() {
 		int randNum = rand.nextInt(50);
@@ -72,6 +95,12 @@ public class EasyAI implements AIStrategy, Serializable {
 		return countries[randNum]; 
 
 	}
+	
+	/*
+	 * getCountryToAttack
+	 * 		chooses a country to go to war with during attack.
+	 * 		The country is chosen randomly from its fringe countries
+	 */
 	@Override
 	public Country getCountryToAttack() {
 		ArrayList<Country> neighboringEnemies = findCountriesToAttack(); 
@@ -83,6 +112,12 @@ public class EasyAI implements AIStrategy, Serializable {
 
 		return attackMe; 
 	}
+	
+	/*
+	 * findCountriesToAttack
+	 * 		Gets a collection of countries worth attacking from the fringe
+	 * 		countries
+	 */
 	@Override 
 	public ArrayList<Country> findCountriesToAttack() {
 		ArrayList<Country> fringeCountries = me.findFringeCountries();
@@ -103,11 +138,19 @@ public class EasyAI implements AIStrategy, Serializable {
 		return countriesWorthAttacking;
 	}
 	
+	/*
+	 * toString
+	 * 		No explanation needed
+	 */
 	public String toString(){
 		return "EASY";
 	}
 	
-	
+	/*
+	 * findAttackingCountry
+	 * 		Given the country we wat to attack (moveTo), find a
+	 * 		good country to attack it from
+	 */
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
 		Country attackFrom = null;
