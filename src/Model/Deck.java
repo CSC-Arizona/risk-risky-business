@@ -23,13 +23,14 @@ public class Deck implements Serializable{
 	private ArrayList<Card> riskDeck;
 	private int size;
 	private static Deck uniqueDeck;
-	private static ArrayList<Card> discardPile;
+	//private static ArrayList<Card> discardPile;
 
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
-		discardPile = new ArrayList<Card>();
+		//discardPile = new ArrayList<Card>();
 		fillDeck(riskDeck);
-		shuffle();
+		DiscardPile placeHolder = new DiscardPile();
+		shuffle(placeHolder);
 		size = 52;
 	}// end constructor
 
@@ -58,13 +59,13 @@ public class Deck implements Serializable{
 	    return uniqueDeck;
 	}
 
-	public void shuffle() {
-		if (size == 0 && discardPile.size() > 0) {
+	public void shuffle(DiscardPile pile) {
+		if (size == 0 && pile.getSize()>0) {
 			riskDeck.clear();
-			riskDeck = discardPile;
+			riskDeck.addAll(pile.getPile());
 			Collections.shuffle(riskDeck);
 			size = riskDeck.size();
-			discardPile.clear();
+			pile.removeAll();
 		} else {
 			riskDeck.clear();
 			fillDeck(riskDeck);
@@ -74,16 +75,17 @@ public class Deck implements Serializable{
 	}// end shuffle
 
 	// returns null if the deck has run out of cards.
-	public Card deal() {
+	public Card deal(DiscardPile pile) {
+		size = riskDeck.size();
 		if (size > 0) {
 			Card result;
-			result = riskDeck.get(size - 1);
-			riskDeck.remove(size - 1);
+			result = riskDeck.get(0);
+			riskDeck.remove(0);
 			size--;
 			return result;
 		} else {
-			shuffle();
-			return deal();
+			shuffle(pile);
+			return deal(pile);
 		}
 	}// end deal
 
@@ -98,8 +100,8 @@ public class Deck implements Serializable{
 			return false;
 	}
 
-	public void discard(Card c) {
-		discardPile.add(c);
+	public void discard(Card c, DiscardPile pile) {
+		pile.addToPile(c);
 	}
 
 	// possible units: infantry, cavalry, artillery. Add all territories
@@ -159,7 +161,7 @@ public class Deck implements Serializable{
 		deck.add(new Card("WILD", "WILD"));
 	}// end fillDeck
 
-	public void addToDiscardPile(ArrayList<Card> cards) {
-		discardPile.addAll(cards);
+	public void addToDiscardPile(ArrayList<Card> cards, DiscardPile pile) {
+		pile.addToPile(cards);
 	}
 }// end Deck Class

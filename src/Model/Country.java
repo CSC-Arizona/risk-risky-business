@@ -25,16 +25,16 @@ public class Country extends Observable implements Serializable{
 	private double buttonWidth;
 	private double buttonHeight;
 	private Player occupier;
-	private JButton myButton;
+	private JButton myButton; 
 	private ArrayList<Country> neighbors;
 
 	/*
 	 * Country(): Constructor 
 	 * sets all instance variables and default button size
 	 */
-	public Country(String name, double x, double y, Continent continent) {
+	public Country(String name, double x, double y, Continent continent) { 
 		this.name = name;
-		this.x = x;
+		this.x = x; 
 		this.y = y;
 		xWidth = 1;
 		yHeight = 1;
@@ -170,17 +170,20 @@ public class Country extends Observable implements Serializable{
 
 	public void setOccupier(Player player) {
 		//If there was a previous owner
-		if (occupier != null)
+		if (occupier != null) 
 			occupier.loseCountry(this);
 		
-		//Now, set the new owner
+		//Now, set the new owner 
 		occupier = player;
 		occupier.occupyCountry(this);
-	}// end setOccupier
+		setChanged();
+		notifyObservers();
+	}// end setOccupier 
 
 	public void addForcesVal(int i) {
 		forcesVal += i;
-
+		setChanged();
+		notifyObservers();
 	}// end setForcesVal
 
 	/*
@@ -219,7 +222,9 @@ public class Country extends Observable implements Serializable{
 	 * purpose: subtracts the given number of units from the forcesVal instance variable
 	 */
 	public void removeUnits(int numOfUnitsToMove) {
-		forcesVal -= numOfUnitsToMove;
+		forcesVal -= numOfUnitsToMove; 
+		setChanged();
+		notifyObservers();
 
 	}// end removeUnits
 	

@@ -9,19 +9,14 @@ package Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Continent implements Serializable{
+public class Continent implements Serializable{ 
 
 	private Player owner;
 	private ArrayList<Country> myCountries;
 	private int ownerBonus;
 	private String name;
-	/*
-	 * Continent Constructors:
-	 * Continent()
-	 * purpose: sets name as empty string, owner as null, countries it contains to arrayList, and ownerbonus to 0.
-	 * Continent(ownerBonus, name)
-	 * purpose: sets name to given name and ownerBonus to given bonus value.
-	 */
+
+	private int numOfCountries = 0;
 	public Continent() {
 		this.name = "";
 		owner = null;
@@ -29,7 +24,7 @@ public class Continent implements Serializable{
 		ownerBonus = 0;
 	}// end continent constructor #1
 
-	public Continent(int ownerBonus, String name) {
+	public Continent(int ownerBonus, String name) { 
 		this.name = name;
 		owner = null;
 		this.myCountries = new ArrayList<Country>();
@@ -61,6 +56,7 @@ public class Continent implements Serializable{
 	 */
 	public void addCountry(Country country) {
 		myCountries.add(country);
+		numOfCountries++;
 	}// end addCountry
 
 	/*
@@ -74,7 +70,7 @@ public class Continent implements Serializable{
 		Player owner = myCountries.get(0).getOccupier();
 		int i = 1;
 		
-		if (owner == null)
+		if (owner == null) 
 			return null;
 
 		while (i < myCountries.size()) {
@@ -90,7 +86,7 @@ public class Continent implements Serializable{
 	 * Override Object's toString() method for continent
 	 */
 	public String toString() {
-		findOwner();
+		findOwner(); 
 		String str = "";
 
 		str += name + " is held by ";
@@ -102,5 +98,15 @@ public class Continent implements Serializable{
 
 		return str;
 	}// end toString
+	
+	public int getNumOfCountries()
+	{
+		return numOfCountries;
+	}
+	
+ 	public ArrayList<Country> getMyCountries()
+ 	{
+ 		return myCountries;
+ 	}
 
 }

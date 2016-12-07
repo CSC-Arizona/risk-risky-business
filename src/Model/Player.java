@@ -8,6 +8,7 @@ package Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JMenuItem;
 
@@ -23,14 +24,14 @@ public abstract class Player implements Serializable{
 	// private Continent[] allContinents; TODO
 
 	public Player(int numOfPlayers) {
-
+ 
 		this.name = null;
 		this.faction = null;
 		this.availTroops = 43 - ((numOfPlayers - 3) * 5);
 
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
-	}// end constructor
+	}// end constructor 
 	
 	
 	public void getTroops() {
@@ -73,7 +74,7 @@ public abstract class Player implements Serializable{
 	public void setName(String name) {
 		if ((name == null || name.equals("")) && faction != null) {
 			this.name = faction.getDefaultPlayerName();
-		}
+		} 
 		else
 			this.name = name;
 	}// end setName
@@ -94,6 +95,7 @@ public abstract class Player implements Serializable{
 	}// end equals
 
 	public ArrayList<Country> getCountries() {
+	//	Collections.shuffle(myCountries);
 		return myCountries;
 	}// end getCountries
 
@@ -152,7 +154,7 @@ public abstract class Player implements Serializable{
 		return cardsToDiscard;
 	}
 	
-	public void discardCards(ArrayList<Card> cards) {
+	public void discardCards(ArrayList<Card> cards) { 
 		myCards.removeAll(cards);
 		
 		//Change whether the cards need to be redeemed
