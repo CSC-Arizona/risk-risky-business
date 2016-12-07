@@ -182,7 +182,8 @@ public class Country extends Observable implements Serializable{
 
 	public void addForcesVal(int i) {
 		forcesVal += i;
-
+		setChanged();
+		notifyObservers();
 	}// end setForcesVal
 
 	/*
@@ -222,6 +223,8 @@ public class Country extends Observable implements Serializable{
 	 */
 	public void removeUnits(int numOfUnitsToMove) {
 		forcesVal -= numOfUnitsToMove; 
+		setChanged();
+		notifyObservers();
 
 	}// end removeUnits
 	

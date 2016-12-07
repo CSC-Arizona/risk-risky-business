@@ -20,7 +20,7 @@ public class Run6Bots {
 			TheGame theGame = TheGame.getInstance(0, 6, true);
 			int i = 0;
 			int hardWin = 0, mediumWin = 0, easyWin = 0, numAttacks=0;
-			while (i < 3) {
+			while (i < 500) {
 				long startTime = System.nanoTime();
 				//if (i % 200 == 0)
 					System.out.print(i + " ");
@@ -43,6 +43,7 @@ public class Run6Bots {
 			
 			
 			System.out.println("Test #" + j);
+			}
 			System.out.println("\nEasy won " + easyWin + " times.");
 			System.out.println("Medium won " + mediumWin + " times.");
 			System.out.println("Hard won " + hardWin + " times.");
@@ -52,4 +53,4 @@ public class Run6Bots {
 		
 	}
 
-}
+
