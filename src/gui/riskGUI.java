@@ -986,7 +986,7 @@ public class riskGUI extends JFrame {
 						g2.drawImage(targaryen.getImage(),
 								((int) country.getX() * xWidth) + 50,
 								((int) country.getY() * yHeight) + 5, 30, 30,
-								null);
+								null); 
 						break;
 					case LANNISTER:
 						g2.drawImage(lannister.getImage(),
@@ -1060,9 +1060,7 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			this.invalidate();
-			this.validate();
-			this.repaint();
+			repaint();
 		}// end update
 
 	}// end boardPanel

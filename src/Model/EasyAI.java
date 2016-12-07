@@ -18,7 +18,7 @@ public class EasyAI implements AIStrategy, Serializable {
 	public ArrayList<Country> placeNewTroops() {
 		ArrayList<Country> countries = new ArrayList<>();
 		Random rand = new Random();
-		int randNum = 0;
+		int randNum = 0; 
 		int i = 0;
 		while (me.getAvailableTroops() > i) {
 			i++;
@@ -34,13 +34,13 @@ public class EasyAI implements AIStrategy, Serializable {
 	}
 
 	@Override
-	public String reinforce() {
+	public String reinforce() { 
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
 			if (country.getForcesVal() > 2) {
 				stopFlag = false;
 				while (country.getForcesVal() > 2 && stopFlag == false) {
-					int i = 0;
+					int i = 0; 
 					for (Country neighbor : country.getNeighbors()) {
 						if (neighbor.getOccupier().equals(me)) {
 							neighbor.addForcesVal(1);
@@ -62,21 +62,21 @@ public class EasyAI implements AIStrategy, Serializable {
 	}
 
 	@Override
-	public Country placeLeftOverUnits() {
+	public Country placeLeftOverUnits() { 
 		return me.pickRandomOwnedCountry();
 	}
 
 	@Override
 	public Country placeUnit() {
 		int randNum = rand.nextInt(50);
-		Map map = Map.getInstance(0);
+		Map map = Map.getInstance(1);
 		Country[] countries = map.getCountries();
 		return countries[randNum]; 
 
 	}
 	@Override
 	public Country getCountryToAttack() {
-		ArrayList<Country> neighboringEnemies = findCountriesToAttack();
+		ArrayList<Country> neighboringEnemies = findCountriesToAttack(); 
 		if(neighboringEnemies == null)
 			return null;
 		
