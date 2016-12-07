@@ -1159,8 +1159,16 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			drawingPanel.revalidate();
-			drawingPanel.repaint();
+		
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				drawingPanel.update(drawingPanel.getGraphics());
+			
 		}// end update
 
 	}// end boardPanel
