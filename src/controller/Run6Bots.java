@@ -14,13 +14,13 @@ public class Run6Bots {
 
 	public static void main(String[] args) {
 		int j = 0;
-		while (true){
-			j++;
+//		while (true){
+//			j++;
 			
 			TheGame theGame = TheGame.getInstance(0, 6, true);
 			int i = 0;
 			int hardWin = 0, mediumWin = 0, easyWin = 0, numAttacks=0;
-			while (i < 1000) {
+			while (i < 50) {
 				long startTime = System.nanoTime();
 				//if (i % 200 == 0)
 					System.out.print(i + " ");
@@ -39,16 +39,16 @@ public class Run6Bots {
 				numAttacks +=theGame.getNumAttacks();
 				theGame.newGame(6);
 				long endTime = System.nanoTime();
-				System.out.println("The tests took " + (double)(1000000000 * (endTime - startTime)) + " seconds to run.\n");
+				System.out.println("The tests took " + (double)((endTime - startTime)/1000000000) + " seconds to run.\n");
 			}
 			
 			System.out.println("Test #" + j);
 			System.out.println("\nEasy won " + easyWin + " times.");
 			System.out.println("Medium won " + mediumWin + " times.");
 			System.out.println("Hard won " + hardWin + " times.");
-			System.out.println("On average, AIs made " + numAttacks/1000 + " attacks per game.");
+			System.out.println("On average, AIs made " + numAttacks/50 + " attacks per game.");
 			
-		}
+//		}
 		
 	}
 
