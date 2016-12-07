@@ -25,6 +25,7 @@ public class Run6Bots {
 		while (i < 1000) {
 
 
+			System.out.println("Game : " + (i+1));
 			// System.out.println("New Game");
 			// System.out.println("Game " + (i+1));
 			theGame.startGame();
