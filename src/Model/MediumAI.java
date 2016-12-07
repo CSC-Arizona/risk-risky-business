@@ -33,7 +33,7 @@ public class MediumAI implements AIStrategy, Serializable {
 							log += me.getName() + " removed 2 units from " + country.getName()+ " and placed them on " + neighbor.getName() + ".\n";
 						}
 						
-						if (numRes == 10)
+						if (numRes == 5)
 							return log;
 						
 						if (country.getForcesVal() == 2)
