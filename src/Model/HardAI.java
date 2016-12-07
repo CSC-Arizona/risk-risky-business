@@ -10,7 +10,7 @@ public class HardAI implements AIStrategy, Serializable {
 	private AI me;
 
 	public HardAI() {
-	};
+	}; 
 
 	public HardAI(AI ai) {
 		me = ai;
@@ -116,12 +116,11 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public String reinforce() {
 		String str = "";
-		// System.out.println("gets here");
 		int surroundCounter = 0;
 
 		for (Country country : me.getCountries()) {
-
-			surroundCounter = 0;
+  
+			surroundCounter = 0; 
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighbor : neighbors) {
 				if (neighbor.getOccupier().equals(me))
@@ -180,7 +179,7 @@ public class HardAI implements AIStrategy, Serializable {
 		for (Country country : cont.getMyCountries()) {
 			if (country.getOccupier().equals(me))
 				counter++;
-		}
+		} 
 		return counter;
 	}
 
@@ -209,7 +208,7 @@ public class HardAI implements AIStrategy, Serializable {
 		ArrayList<Country> countriesIOwn = findCountriesOnCont(cont);
 		ArrayList<Country> neighbors = countriesIOwn.get(i).getNeighbors();
 		while (i < countriesIOwn.size()) {
-			j = 0;
+			j = 0; 
 			while (j < neighbors.size()) {
 
 				if (!me.equals(neighbors.get(j).getOccupier())) {
@@ -254,7 +253,7 @@ public class HardAI implements AIStrategy, Serializable {
 		return allNeighboringCountries.get(randNum);
 	}
 
-	@Override
+	@Override 
 	public ArrayList<Country> findCountriesToAttack() {
 		ArrayList<Country> fringeCountries = me.findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();

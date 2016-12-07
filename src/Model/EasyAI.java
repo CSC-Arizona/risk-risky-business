@@ -7,7 +7,10 @@ import java.util.Random;
 public class EasyAI implements AIStrategy, Serializable {
 
 	private AI me;
-
+	static int a,b,c,d,e,f,g,h,wa,fa;
+	
+	  
+	 
 	public EasyAI(){};
 	public EasyAI(AI ai)
 	{
@@ -18,9 +21,9 @@ public class EasyAI implements AIStrategy, Serializable {
 	public ArrayList<Country> placeNewTroops() {
 		ArrayList<Country> countries = new ArrayList<>();
 		Random rand = new Random();
-		int randNum = 0;
+		int randNum = 0; 
 		int i = 0;
-		while (me.getAvailableTroops() > i) {
+		while (me.getAvailableTroops() > i) { 
 			i++;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
@@ -34,18 +37,20 @@ public class EasyAI implements AIStrategy, Serializable {
 	}
 
 	@Override
-	public String reinforce() {
+	public String reinforce() { 
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
+			//System.out.println("b: "+ ++b);
 			if (country.getForcesVal() > 2) {
 				stopFlag = false;
 				while (country.getForcesVal() > 2 && stopFlag == false) {
+					//System.out.println("C: "+ ++c);
 					int i = 0;
 					for (Country neighbor : country.getNeighbors()) {
 						if (neighbor.getOccupier().equals(me)) {
 							neighbor.addForcesVal(1);
 							country.removeUnits(1);
-						}
+						} 
 						if (country.getForcesVal() == 2)
 							break;
 						
@@ -62,30 +67,30 @@ public class EasyAI implements AIStrategy, Serializable {
 	}
 
 	@Override
-	public Country placeLeftOverUnits() {
+	public Country placeLeftOverUnits() { 
 		return me.pickRandomOwnedCountry();
 	}
 
 	@Override
 	public Country placeUnit() {
 		int randNum = rand.nextInt(50);
-		Map map = Map.getInstance(0);
+		Map map = Map.getInstance(1);
 		Country[] countries = map.getCountries();
-		return countries[randNum];
+		return countries[randNum]; 
 
 	}
 	@Override
 	public Country getCountryToAttack() {
-		ArrayList<Country> neighboringEnemies = findCountriesToAttack();
+		ArrayList<Country> neighboringEnemies = findCountriesToAttack(); 
 		if(neighboringEnemies == null)
 			return null;
 		
 		int randInt = rand.nextInt(neighboringEnemies.size());
 		Country attackMe = neighboringEnemies.get(randInt);
-		
-		return attackMe;
+
+		return attackMe; 
 	}
-	@Override
+	@Override 
 	public ArrayList<Country> findCountriesToAttack() {
 		ArrayList<Country> fringeCountries = me.findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();

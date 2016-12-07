@@ -30,7 +30,7 @@ public abstract class Player implements Serializable{
 
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
-	}// end constructor
+	}// end constructor 
 	
 	
 	public void getTroops() {
@@ -73,7 +73,7 @@ public abstract class Player implements Serializable{
 	public void setName(String name) {
 		if ((name == null || name.equals("")) && faction != null) {
 			this.name = faction.getDefaultPlayerName();
-		}
+		} 
 		else
 			this.name = name;
 	}// end setName
@@ -152,7 +152,7 @@ public abstract class Player implements Serializable{
 		return cardsToDiscard;
 	}
 	
-	public void discardCards(ArrayList<Card> cards) {
+	public void discardCards(ArrayList<Card> cards) { 
 		myCards.removeAll(cards);
 		
 		//Change whether the cards need to be redeemed

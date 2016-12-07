@@ -16,7 +16,7 @@ public class TheGame implements Serializable {
 	private Country selectedCountry;
 	private Country moveFrom, moveTo;
 	private boolean placePhase, reinforcePhase, deployPhase, attackPhase, gameOver, redeemCardPhase, mainGamePhase,
-			cardEarned;
+			cardEarned, gameStarted;
 	private static TheGame theGame;
 	private boolean tournamentMode, canPlace;
 	private String gameLog;
@@ -29,20 +29,23 @@ public class TheGame implements Serializable {
 	private ArrayList<Card> cardsToRedeem;
 	public static final String FILE_NAME = "game.ser";
 	private int attackerHits;
+	private int numAttacks;
 
 	/**********************************************************************************
 	 ********************************** Game Creation************************************
 	 **********************************************************************************/
 	private TheGame(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		// Getting the sizes
+		numAttacks = 0;
 		humans = numOfHumanPlayers;
 		ais = numOfAIPlayers;
-		totalPlayers = humans + ais;
+		totalPlayers = humans + ais; 
 		countriesClaimed = 0;
 		countriesBefore = 0;
 		countriesAfter = 0;
 		cardEarned = false;
 		tournamentMode = tourny;
+		gameStarted = false;
 		if (!tournamentMode)
 			newGame();
 		else
@@ -50,7 +53,7 @@ public class TheGame implements Serializable {
 	}// end constructor
 
 	/*
-	 * Return an instance of the singleton game
+	 * Return an instance of the singleton game  
 	 */
 	public static TheGame getInstance(int numOfHumanPlayers, int totalNumOfPlayers, boolean tourny) {
 		if (theGame == null)
@@ -90,13 +93,14 @@ public class TheGame implements Serializable {
 		discard = new DiscardPile();
 		players = new ArrayList<>();
 		addHumanPlayers();
-		addAI();
+		addAI(); 
 		currentPlayer = players.get(0);
 		numRedemptions = 0;
 		canPlace = false;
 		gameOver = false;
 		countriesClaimed = 0;
 		attackerHits=-1;
+		gameStarted = false;
 		changeToPlacementPhase();
 	}// end newGame
 
@@ -194,7 +198,7 @@ public class TheGame implements Serializable {
 			changeToReinforcePhase();
 		} // end else if
 		else if (isGameOver()) {
-			// System.out.println("The game is over");
+			gameLog += "The Game is Over.\n" +currentPlayer.getName() +" has won.";
 		} else {
 			throw new IllegalStateException("The phase was invalid");
 		}
@@ -307,7 +311,7 @@ public class TheGame implements Serializable {
 	public void startGame() {
 		// Randomly picks a player from the total number of players
 		int firstPlayer = (int) (Math.random() * totalPlayers);
-
+		gameStarted = true;
 		Player first = players.remove(firstPlayer);
 
 		for (int i = 0; i < players.size(); i++) {
@@ -316,7 +320,7 @@ public class TheGame implements Serializable {
 			// Remove a random player
 			Player tmp = players.remove(ranToMove);
 			// And reinsert him at the end
-			players.add(tmp);
+			players.add(tmp); 
 		} // end for
 
 		// And lets the lucky winner go first!
@@ -325,7 +329,10 @@ public class TheGame implements Serializable {
 		// calls roundOfPlacement to let any AIs who may have been set to
 		// go first play their parts
 		currentPlayer = players.get(0);
-		play();
+		
+		//Only play if the first player is an AI
+		if (currentPlayer instanceof AI)
+			play();
 	}// end startGame
 
 	public void play() {
@@ -339,7 +346,7 @@ public class TheGame implements Serializable {
 			aiTurn();
 			if (gameOver)
 				break;
-			//System.out.println(getPhase());
+
 		} // end while
 	}// end play
 
@@ -379,12 +386,13 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
+			//System.out.println("Current player cards: "+currentPlayer.getCards().size());
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
 			if (cardsToRedeem != null)
 				currentPlayer.addAvailableTroops(redeemCards());
 
-			nextPhase();
+			skipCardRedemption();
 		} // end else if
 
 		// During deployment
@@ -429,10 +437,6 @@ public class TheGame implements Serializable {
 		else if (isFinished()){
 			
 		}//end else if
-		// Otherwise, problem!
-		// else {
-		// System.out.println("game over");
-		// } // end else
 	}// end aiturn
 
 	/*
@@ -732,7 +736,7 @@ public class TheGame implements Serializable {
 	}// end getNumDefenseDice
 
 	public boolean attack() {
-
+		numAttacks++;
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
@@ -988,7 +992,7 @@ public class TheGame implements Serializable {
 			if (c.equals(toCountry)) {
 				visited.add(c);
 				canPlace = true;
-				printPath(visited);
+				//printPath(visited);
 				visited.remove(visited.size() - 1);
 				break;
 			}
@@ -1006,13 +1010,13 @@ public class TheGame implements Serializable {
 		}
 	}// end findPath
 
-	private void printPath(ArrayList<Country> visited) {
-		for (Country node : visited) {
-			System.out.print(node);
-			System.out.print(" ");
-		}
-		System.out.println();
-	}// end printPath
+//	private void printPath(ArrayList<Country> visited) {
+//		for (Country node : visited) {
+//			System.out.print(node);
+//			System.out.print(" ");
+//		}
+//		System.out.println();
+//	}// end printPath
 
 	public void removeLosers() {
 
@@ -1065,6 +1069,10 @@ public class TheGame implements Serializable {
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public int getNumAttacks(){
+		return numAttacks;
 	}
 
 	public void setCurrentPlayer(Player currentPlayer) {
@@ -1215,4 +1223,8 @@ public class TheGame implements Serializable {
 		// return 2 if offense wins entirely
 	}
 
+	public boolean isGameStarted()
+	{
+		return gameStarted;
+	}
 }// end theGame

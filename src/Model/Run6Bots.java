@@ -11,38 +11,13 @@ public class Run6Bots {
 	public static void main(String[] args) {
 		TheGame theGame = TheGame.getInstance(0, 6, true);
 		int i = 0;
-		// for(Player player : theGame.getPlayers())
-		// {
-		// if(i < 2){
-		// ((AI) player).setStrategy(new EasyAI((AI) player));
-		// player.setFaction(i);
-		// player.setName("");
-		// }
-		// else if(i < 4)
-		// {
-		// ((AI) player).setStrategy(new MediumAI((AI) player));
-		// player.setFaction(i);
-		// player.setName("");
-		// }
-		// else{
-		// ((AI) player).setStrategy(new HardAI((AI) player));
-		// player.setFaction(i);
-		// player.setName("");
-		// }
-		//
-		// i++;
-		// }
-
-		i = 0;
 		int hardWin = 0, mediumWin = 0, easyWin = 0;
 
-		System.out.println("the game is starting");
-		System.out.println("GAME " + (i + 1));
+		while (i < 3) {
 
-		theGame.startGame();
-
-		while (i < 50) {
-
+			System.out.println("New Game");
+			System.out.println("Game " + (i+1));
+			theGame.startGame();
 			System.out.println(theGame.getCurrentPlayer().getName() + " Won.");
 			if (((AI) theGame.getCurrentPlayer()).getStrategy() instanceof EasyAI) {
 				easyWin++;
@@ -51,10 +26,8 @@ public class Run6Bots {
 			} else
 				hardWin++;
 			i++;
-
-			System.out.println("GAME " + (i + 1));
+			System.out.println("Attacks made in this game: " + theGame.getNumAttacks());
 			theGame.newGame(6);
-			theGame.startGame();
 
 		}
 

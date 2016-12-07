@@ -17,12 +17,19 @@ public class AI extends Player implements Serializable {
 	private JMenuItem myDiff;
 	private Random rand;
 	private AIStrategy strategy;
-	private int timesIAttacked;
+	private ArrayList<Country> fringes;
+
+	private int numAttacks;
+	
+	//DELETE USSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+	static int w1, w2,f1,w3,f2,f3,w4,w5,w6,w7,w8,w9,wa,fa;
 	// private Game theGame;
+
 
 	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
-		timesIAttacked = 0;
+		numAttacks = 0;
+		fringes = null;
 		strategy = strat;
 		strategy.setMe(this);
 		rand = new Random();
@@ -32,7 +39,7 @@ public class AI extends Player implements Serializable {
 	// are, go to the next one, otherwise
 	// return that country as a selection. Used for placement in the first turn.
 	public Country checkAllNeighbors() {
-		int i = 0, j = 0;
+		int i = 0, j = 0; 
 		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size()) {
@@ -65,91 +72,45 @@ public class AI extends Player implements Serializable {
 	// grabs a country to attack, and the country that it is attacking from
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
-	public String aiAttack() {
-
-		// Country attacking = getCountryToAttack();
-		// if (attacking == null)
-		// return null;
-		// Country attackingFrom = findAttackingCountry(attacking);
-		//
-		// // change this for dice roll later, but for now, just take over
-		// if (attackingFrom.getForcesVal() - 1 > attacking.getForcesVal()) {
-		// String str = this.getName() + " defeated " +
-		// attacking.getOccupier().getName() + " and took " +
-		// attacking.getName() + ".\n";
-		// int oldForces = attacking.getForcesVal();
-		// attacking.getOccupier().loseCountry(attacking);
-		// attacking.removeUnits(oldForces);
-		// attacking.addForcesVal(attackingFrom.getForcesVal() - 1);
-		// attacking.setOccupier(this);
-		// this.occupyCountry(attacking);
-		// System.out.println(this.getName() + " took " + attacking.getName());
-		// attackingFrom.removeUnits(attackingFrom.getForcesVal() - 1);
-		// return str;
-		return null;
-	}// end aiAttack
-
-	/*
-	 * for when dice roll exists if(myStrat == AIStrat.EASY){
-	 * if(attackingFrom.getForcesVal() > 1){ do dice roll stuff against
-	 * attacking and take all units but 1 from attackinFrom return false; } else
-	 * return true; } else{ if(attackingFrom.getForces() ==
-	 * attacking.getForces() or up to 2 less) do dice roll stuff against
-	 * attacking and take all units but 1 from attacking from return false else
-	 * return true;t }
-	 */
-
-	public int getAmountToAttackWith(Country from, Country to) {
-		System.out.println("Times I attacked: " + timesIAttacked);
-		return from.getForcesVal() - 1; // STUB!
-	}// end getAmoutnToAttackWith
-
-	public Country findAttackingCountry(Country attacking) {
-		timesIAttacked++;
-		// System.out.println("find attacking");
-		for (Country c1 : findFringeCountries()) {
-			for (Country c2 : c1.getNeighbors()) {
-				if (c2.equals(attacking)) {
-					return c1;
-				}
-			}
-		}
-		return null;
-	}
-
 	public boolean finishedAttacking() {
+		
+		numAttacks++;
+		
+		
+		
 		int i = 0;
-		for(Country country : findFringeCountries())
-		{
-			//System.out.println("Fringe at " + country.getName() + " with " + country.getForcesVal() + " forces");
-			if(country.getForcesVal() == 1)
+		for (Country country : findFringeCountries()) {
+			if (country.getForcesVal() == 1)
 				i++;
 		}
-		
-		if(i == findFringeCountries().size())
+
+		if (i == findFringeCountries().size())
 			return true;
-		else if(strategy instanceof MediumAI || strategy instanceof HardAI)
-		{
-			if(strategy.findCountriesToAttack() == null)
+		else if (strategy instanceof MediumAI || strategy instanceof HardAI) {
+			if (strategy.findCountriesToAttack() == null)
 				return true;
 		}
-		
-		return false;
 //		
-//		if (timesIAttacked >= 3) {
-//			timesIAttacked = 0;
-//			return true;
-//		} else
-//			return false;
-	}// end finishedAttacking
+//		return false;
+		
+		if (strategy instanceof EasyAI && numAttacks >=3){
+			numAttacks = 0;
+			return true;
+		}
+			
+		else if (strategy instanceof MediumAI && numAttacks >=7){
+			numAttacks = 0;
+			return true;
+		}
+		else if (strategy instanceof HardAI && numAttacks >=13){
+			numAttacks = 0;
+			return true;
+		}
+		else
+			return false;
 
-	// returns a country it can attack
-	public Country getCountryToAttack() {
-		// System.out.println("get country to attack");
-		Country attackMe = pickRandomFromList(findCountriesToAttack());
-		return attackMe;
-	}// end
-		// getCountryToAttack
+
+	}// end finishedAttacking
 
 	// picks a random country from the list of countries to attack
 	private Country pickRandomFromList(ArrayList<Country> countriesToAttack) {
@@ -187,41 +148,14 @@ public class AI extends Player implements Serializable {
 		int randNum = 0;
 		int i = 0;
 		while (getAvailableTroops() > i) {
+//			System.out.println("While3: "+ ++w3);//next: w4, f2
+
 			i++;
 			randNum = rand.nextInt(getCountries().size());
 			countries.add(getCountries().get(randNum));
 		}
 		return countries;
 	}// end pickSetOfRandomOwnedCountry
-
-	// gets all fringe countries, then for each neihbor that fringe country has,
-	// if it isn't owned by me
-	// check if i have more units on my country than that country, if I do, add
-	// that country to my list of countriesWorthAttacking
-	public ArrayList<Country> findCountriesToAttack() {
-		// System.out.println("find countries to attack");
-		ArrayList<Country> fringeCountries = findFringeCountries();
-		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
-		for (Country country : fringeCountries) {
-			ArrayList<Country> neighbors = country.getNeighbors();
-			for (Country neighboringCountry : neighbors) {
-			//	if (neighboringCountry.getOccupier().getFaction().compareTo(this.getFaction()) != 0) {
-				if (this.equals(neighboringCountry.getOccupier())){
-					if (country.getForcesVal() - 1 > neighboringCountry.getForcesVal())
-						countriesWorthAttacking.add(neighboringCountry);
-//=======
-//				if (!neighboringCountry.getOccupier().equals(this)) {
-//					countriesWorthAttacking.add(neighboringCountry);
-//>>>>>>> 18daf5c34a1b194e76b246f361d946f663f0cfa2
-				} // end if
-			} // end for
-		} // end for
-
-		if (countriesWorthAttacking.size() == 0)
-			return null;
-
-		return countriesWorthAttacking;
-	}// end findCountriesToAttack
 
 	// starts at first country, checks if it is surrounded by friendlies, if it
 	// is
@@ -231,8 +165,6 @@ public class AI extends Player implements Serializable {
 		ArrayList<Country> fringeCountries = findFringeCountries();
 
 		int randNum = 0;
-		// System.out.println(fringeCountries.size() + " size of list to choose
-		// from");
 		if (fringeCountries.size() == 0)
 			return null;
 		randNum = rand.nextInt(fringeCountries.size());
@@ -247,6 +179,9 @@ public class AI extends Player implements Serializable {
 	}
 
 	public ArrayList<Country> findFringeCountries() {
+		if (fringes != null)
+			return fringes;
+
 		ArrayList<Country> fringeCountries = new ArrayList<>();
 
 		int i = 0, j = 0;
@@ -254,7 +189,6 @@ public class AI extends Player implements Serializable {
 		while (i < getCountries().size()) {
 			j = 0;
 			while (j < neighbors.size()) {
-
 				if (!this.equals(neighbors.get(j).getOccupier())) {
 					fringeCountries.add(getCountries().get(i));
 					j = neighbors.size();
@@ -266,12 +200,13 @@ public class AI extends Player implements Serializable {
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 
+		fringes = fringeCountries;
 		return fringeCountries;
 	}
 
 	@Override
 	public ArrayList<Card> redeemCards() {
-		if (getCards().size() == 5) {
+		if (getCards().size() >= 5) {
 			return findmyCardsToRedeem();
 		} // end if
 		else
@@ -279,105 +214,228 @@ public class AI extends Player implements Serializable {
 	}
 
 	private ArrayList<Card> findmyCardsToRedeem() {
+		ArrayList<Card> cards = null;
 
-		ArrayList<Card> myThreeCards = new ArrayList<>();
-		int infantryCount = 0, calvaryCount = 0, artilleryCount = 0, wildCount = 0;
-		// step through 5 cards, and count how many of each
-		for (Card card : getCards()) {
-			switch (card.getUnit()) {
-			case "infantry":
-				infantryCount++;
-				break;
-			case "calvary":
-				calvaryCount++;
-				break;
-			case "artillery":
-				artilleryCount++;
-				break;
-			case "WILD":
-				wildCount++;
-				break;
-			}
-		}
-		if (infantryCount >= 3 || (wildCount == 1 && infantryCount >= 2) || (wildCount == 2 && infantryCount >= 1)) {
-			myThreeCards = findThreeInfantry();
-		} else if (calvaryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
-				|| (wildCount == 2 && calvaryCount >= 1)) {
-			myThreeCards = findThreeCalvary();
-		} else if (artilleryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
-				|| (wildCount == 2 && artilleryCount >= 1)) {
-			myThreeCards = findThreeArtillery();
-		} else {
-			myThreeCards = findOneOfEach();
-		}
+		cards = findThreeInfantry();
+		if (cards != null)
+			return cards;
 
-		return myThreeCards;
-	}// end findmyCardsToRedeem
+		cards = findThreeCalvary();
+		if (cards != null)
+			return cards;
+
+		cards = findThreeArtillery();
+		if (cards != null)
+			return cards;
+
+		cards = findOneOfEach();
+		if (cards != null)
+			return cards;
+
+		throw new IllegalStateException("Didn't redeem cards!");
+
+	}// end findMyCardsToRedeem
 
 	private ArrayList<Card> findOneOfEach() {
-		ArrayList<Card> myThreeCards = new ArrayList<>();
-		boolean infantry = false, calvary = false, artillery = false;
-		for (Card card : getCards()) {
-			if (!infantry && (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0)) {
-				myThreeCards.add(card);
-				infantry = true;
-			}
+		Card inf = new Card(null, "infantry", false);
+		Card cal = new Card(null, "cavalry", false);
+		Card art = new Card(null, "artillery", false);
+		ArrayList<Card> cards = getCards();
+		boolean infFound = false, calFound = false, artFound = false;
+		ArrayList<Card> trade = new ArrayList<Card>();
 
-			if (!calvary && (card.getUnit().compareTo("calvary") == 0 || card.getUnit().compareTo("WILD") == 0)) {
-				myThreeCards.add(card);
-				calvary = true;
-			}
+		int i = 0;
+		while (i < cards.size() && trade.size() < 3) {
+			// If it's an infantry or wild, add it
+			if (!infFound) {
+				if (cards.get(i).equals(inf)) {
+					trade.add(cards.get(i));
+					infFound = true;
+					continue;
+				} // end if
 
-			if (!artillery && (card.getUnit().compareTo("artillery") == 0 || card.getUnit().compareTo("WILD") == 0)) {
-				myThreeCards.add(card);
-				artillery = true;
-			}
-		}
-		return myThreeCards;
-	}// end findOneOfEach
+			} // end if
 
-	private ArrayList<Card> findThreeArtillery() {
-		ArrayList<Card> threeArtillery = new ArrayList<>();
-		for (Card card : getCards()) {
-			if (card.getUnit().compareTo("artillery") == 0) {
-				threeArtillery.add(card);
-			}
+			if (!calFound) {
+				if (cards.get(i).equals(cal)) {
+					trade.add(cards.get(i));
+					calFound = true;
+					continue;
+				} // end if
+			} // end if
 
-			if (threeArtillery.size() == 3) {
-				break;
-			}
-		}
-		return threeArtillery;
-	}// end findThreeArtillery
+			if (!artFound) {
+				if (cards.get(i).equals(art)) {
+					trade.add(cards.get(i));
+					artFound = true;
+					continue;
+				} // end if
+			} // end if
 
-	private ArrayList<Card> findThreeCalvary() {
-		ArrayList<Card> threeCalvary = new ArrayList<>();
-		for (Card card : getCards()) {
-			if (card.getUnit().compareTo("calvary") == 0) {
-				threeCalvary.add(card);
-			}
+			i++;
+		} // end while
 
-			if (threeCalvary.size() == 3) {
-				break;
-			}
-		}
-		return threeCalvary;
-	}// end findThreeCalvary
+		if (trade.size() == 3)
+			return trade;
+		else
+			return null;
+	}// end one of each
 
 	private ArrayList<Card> findThreeInfantry() {
+		Card inf = new Card(null, "infantry", false);
+		ArrayList<Card> cards = getCards();
+		ArrayList<Card> trade = new ArrayList<Card>();
 
-		ArrayList<Card> threeInfantry = new ArrayList<>();
-		for (Card card : getCards()) {
-			if (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0) {
-				threeInfantry.add(card);
-			}
+		int i = 0;
+		while (i < cards.size() && trade.size() < 3) {
+			// If it's an infantry or wild, add it
+			if (cards.get(i).equals(inf))
+				trade.add(cards.get(i));
 
-			if (threeInfantry.size() == 3) {
-				break;
-			}
-		}
-		return threeInfantry;
-	}// end findThreeInfantry
+			i++;
+		} // end while
+
+		if (trade.size() == 3)
+			return trade;
+		else
+			return null;
+	}// end infantry
+
+	private ArrayList<Card> findThreeCalvary() {
+		Card cav = new Card(null, "cavalry", false);
+		ArrayList<Card> cards = getCards();
+		ArrayList<Card> trade = new ArrayList<Card>();
+
+		int i = 0;
+		while (i < cards.size() && trade.size() < 3) {
+			// If it's an infantry or wild, add it
+			if (cards.get(i).equals(cav))
+				trade.add(cards.get(i));
+
+			i++;
+		} // end while
+
+		if (trade.size() == 3)
+			return trade;
+		else
+			return null;
+	}// end infantry
+
+	private ArrayList<Card> findThreeArtillery() {
+		Card art = new Card(null, "artillery", false);
+		ArrayList<Card> cards = getCards();
+		ArrayList<Card> trade = new ArrayList<Card>();
+
+		int i = 0;
+		while (i < cards.size() && trade.size() < 3) {
+			// If it's an infantry or wild, add it
+			if (cards.get(i).equals(art))
+				trade.add(cards.get(i));
+
+			i++;
+		} // end while
+
+		if (trade.size() == 3)
+			return trade;
+		else
+			return null;
+	}// end infantry
+
+	// private ArrayList<Card> findmyCardsToRedeem() {
+	//
+	// ArrayList<Card> myThreeCards = new ArrayList<>();
+	// int infantryCount = 0, calvaryCount = 0, artilleryCount = 0, wildCount =
+	// 0;
+	// // step through 5 cards, and count how many of each
+	// for (Card card : getCards()) {
+	// switch (card.getUnitType()) {
+	// case 1:
+	// infantryCount++;
+	// break;
+	// case 2:
+	// calvaryCount++;
+	// break;
+	// case 3:
+	// artilleryCount++;
+	// break;
+	// case 0:
+	// wildCount++;
+	// break;
+	// }
+	// }
+	// if (infantryCount >= 3 || (wildCount == 1 && infantryCount >= 2) ||
+	// (wildCount == 2 && infantryCount >= 1)) {
+	// myThreeCards = findThreeInfantry();
+	// } else if (calvaryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
+	// || (wildCount == 2 && calvaryCount >= 1)) {
+	// myThreeCards = findThreeCalvary();
+	// } else if (artilleryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
+	// || (wildCount == 2 && artilleryCount >= 1)) {
+	// myThreeCards = findThreeArtillery();
+	// } else {
+	// myThreeCards = findOneOfEach();
+	// }
+	//
+	// return myThreeCards;
+	// }// end findmyCardsToRedeem
+	//
+	// private ArrayList<Card> findOneOfEach() {
+	// ArrayList<Card> myThreeCards = new ArrayList<>();
+	// boolean infantry = false, calvary = false, artillery = false;
+	// for (Card card : getCards()) {
+	// if (!infantry && (card.getUnit().compareTo("infantry") == 0 ||
+	// card.getUnit().compareTo("WILD") == 0)) {
+	// myThreeCards.add(card);
+	// infantry = true;
+	// }
+	//
+	// if (!calvary && (card.getUnit().compareTo("calvary") == 0 ||
+	// card.getUnit().compareTo("WILD") == 0)) {
+	// myThreeCards.add(card);
+	// calvary = true;
+	// }
+	//
+	// if (!artillery && (card.getUnit().compareTo("artillery") == 0 ||
+	// card.getUnit().compareTo("WILD") == 0)) {
+	// myThreeCards.add(card);
+	// artillery = true;
+	// }
+	// }
+	// return myThreeCards;
+	// }// end findOneOfEach
+	//
+	// private ArrayList<Card> findThreeArtillery() {
+	// ArrayList<Card> threeArtillery = new ArrayList<>();
+	// for (Card card : getCards()) {
+	// if (card.getUnit().compareTo("artillery") == 0) {
+	// threeArtillery.add(card);
+	// }
+	//
+	// if (threeArtillery.size() == 3) {
+	// break;
+	// }
+	// }
+	// return threeArtillery;
+	// }// end findThreeArtillery
+	//
+	// private ArrayList<Card> findThreeCalvary() {
+	// ArrayList<Card> threeCalvary = new ArrayList<>();
+	// for (Card card : getCards()) {
+	// if (card.getUnit().compareTo("calvary") == 0) {
+	// threeCalvary.add(card);
+	// }
+	//
+	// if (threeCalvary.size() == 3) {
+	// break;
+	// }
+	// }
+	// return threeCalvary;
+	// }// end findThreeCalvary
+	//
+	// private ArrayList<Card> findThreeInfantry() {
+	//
+	// ArrayList<Card> threeInfantry = new ArrayList<>();
+	// for (Card card : getCards()) {
 
 	public AIStrategy getStrategy() {
 		return strategy;
@@ -388,7 +446,4 @@ public class AI extends Player implements Serializable {
 		strategy.setMe(this);
 	}
 
-	public void incrementTimesIAttacked() {
-		timesIAttacked++;
-	}
 }

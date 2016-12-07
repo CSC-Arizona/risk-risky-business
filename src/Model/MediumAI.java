@@ -11,11 +11,11 @@ public class MediumAI implements AIStrategy, Serializable {
 	public MediumAI() {
 	};
 
-	public MediumAI(AI ai) {
+	public MediumAI(AI ai) { 
 		me = ai;
 	}
 
-	@Override
+	@Override 
 	public String reinforce() {
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
@@ -49,7 +49,7 @@ public class MediumAI implements AIStrategy, Serializable {
 
 		int randNum = 0;
 		int i = 0;
-		while (me.getAvailableTroops() > i) {
+ 		while (me.getAvailableTroops() > i) {
 			i++;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
@@ -65,7 +65,7 @@ public class MediumAI implements AIStrategy, Serializable {
 
 	@Override
 	public Country placeLeftOverUnits() {
-
+ 
 		return me.pickRandomFromFringe();
 	}
 
@@ -74,12 +74,12 @@ public class MediumAI implements AIStrategy, Serializable {
 		Country countryToReturn = null;
 		if (me.getCountries() == null || me.getCountries().size() == 0)
 			countryToReturn = me.pickRandomCountry();
-		else {
+		else { 
 			countryToReturn = me.checkAllNeighbors();
 			if (countryToReturn == null)
 				countryToReturn = me.pickRandomCountry();
 		}
-		return countryToReturn;
+		return countryToReturn; 
 	}
 
 	@Override
@@ -89,13 +89,14 @@ public class MediumAI implements AIStrategy, Serializable {
 		if (allNeighboringEnemies == null)
 			return null;
 
-		return allNeighboringEnemies.get(0);
+		int randNum = rand.nextInt(allNeighboringEnemies.size());
+		return allNeighboringEnemies.get(randNum);
 	}
 
 	@Override
 	public ArrayList<Country> findCountriesToAttack() {
 		ArrayList<Country> fringeCountries = me.findFringeCountries();
-		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
+		ArrayList<Country> countriesWorthAttacking = new ArrayList<>(); 
 		for (Country country : fringeCountries) {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
