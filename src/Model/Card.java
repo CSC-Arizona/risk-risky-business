@@ -89,7 +89,7 @@ public class Card implements Serializable{
 	 * Assists in matching the card objects with the card images on file.
 	 */
 	private String removeWhiteSpace(String orig) {
-		String str = "";
+		String str = ""; 
 		int i = 0;
 
 		while (i < orig.length()) {
