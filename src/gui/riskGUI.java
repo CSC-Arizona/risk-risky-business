@@ -115,7 +115,7 @@ public class riskGUI extends JFrame {
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
-	private Faction attacker = Faction.STARK;
+	private Faction attacker = Faction.DOTHRAKI;
 	private Faction defender = Faction.WILDLINGS;
 
 	public riskGUI() {
@@ -780,7 +780,7 @@ public class riskGUI extends JFrame {
 //			Thread.currentThread().interrupt();
 //			System.out.println("nahhh");
 //		}
-		
+		 
 		AnimationPanel p = new AnimationPanel(theGame);
 		
 		p.setLocation(width/2-250, height/2-250);
@@ -790,7 +790,7 @@ public class riskGUI extends JFrame {
 		//this.remove(drawingPanel);
 		animationFrame.add(p, BorderLayout.CENTER);
 		animationFrame.setVisible(true);
-		//animationFrame.revalidate();
+		animationFrame.revalidate();
 		p.update(getGraphics());
 		//this.add(p);
 		//this.revalidate();

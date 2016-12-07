@@ -74,10 +74,13 @@ public class AnimationPanel extends JPanel {
 			gr.drawImage(getOffenseSprite(), OffenseXValue, OFFENSE_Y, null);
 			gr.drawImage(getDefenseSprite(), DefenseXValue, DEFENSE_Y, null);
 			wind++;
-			if(wind%5==1)
-				spriteStatus++;
-			if(frameCounter==12){
+			if(wind%5==1){
+				spriteOStatus++;
+				spriteDStatus++;
+			}
+			if(frameCounter==12){ 
 				starting=false;
+				
 				attack=true;
 			}
 			frameCounter++;
@@ -93,8 +96,10 @@ public class AnimationPanel extends JPanel {
 			gr.drawImage(getOffenseSprite(), OffenseXValue, OFFENSE_Y, null);
 			gr.drawImage(getDefenseSprite(), DefenseXValue, DEFENSE_Y, null);
 			wind++;
-			if(wind%5==1)
-				spriteStatus++;
+			if(wind%5==1){
+				spriteOStatus++;
+				spriteDStatus++;
+			}
 			
 			gr.drawImage(SWOOSH, swooshX, swooshY, null);
 			drawAttack();
@@ -102,18 +107,20 @@ public class AnimationPanel extends JPanel {
 		else if (model.getHit() == 0) {
 			int i=0;
 			for(Dice c : attackDice){
-				gr.drawImage(redDice.get(c.getValue()-1),(60*(i+1)),10,50,50, null);
-				i++;
+				gr.drawImage(redDice.get(c.getValue()-1),(60*(i+1)),100,50,150, null);
+				i++; 
 			}
 			for(Dice c : defenseDice){
-				gr.drawImage(whiteDice.get(c.getValue()-1),(60*(i+1)),10,50,50, null);
+				gr.drawImage(whiteDice.get(c.getValue()-1),(60*(i+1)),100,50,150, null);
 				i++;
 			}
 			gr.drawImage(getOffenseSprite(), jiggleOffense(), OFFENSE_Y, null);
 			gr.drawImage(getDefenseSprite(), DefenseXValue, DEFENSE_Y, null);
 			wind++;
-			if(wind%5==1)
-				spriteStatus++;
+			if(wind%5==1){
+				spriteOStatus++;
+				spriteDStatus++;
+			}
 			// if getHit == 0, offense misses entirely
 			// wiggle the offense
 
@@ -130,8 +137,10 @@ public class AnimationPanel extends JPanel {
 			gr.drawImage(getOffenseSprite(), jiggleOffense(), OFFENSE_Y, null);
 			gr.drawImage(getDefenseSprite(), jiggleDefense(), DEFENSE_Y, null);
 			wind++;
-			if(wind%5==1)
-				spriteStatus++;
+			if(wind%5==1){
+				spriteOStatus++;
+				spriteDStatus++;
+			}
 			// if getHit == 1, winner won one and lost one
 			// wiggle both
 
@@ -148,8 +157,10 @@ public class AnimationPanel extends JPanel {
 			gr.drawImage(getOffenseSprite(), OffenseXValue, OFFENSE_Y, null);
 			gr.drawImage(getDefenseSprite(), jiggleDefense(), DEFENSE_Y, null);
 			wind++;
-			if(wind%5==1)
-				spriteStatus++;
+			if(wind%5==1){
+				spriteOStatus++;
+				spriteDStatus++;
+			}
 			// critical hit! All offense blows land
 			// wiggle defense
 		}
@@ -358,28 +369,28 @@ public class AnimationPanel extends JPanel {
 		return DefenseXValue;
 	}
 	
-	private int swooshStatus=0, swooshX=125, swooshY=295, spriteStatus=0;
+	private int swooshStatus=0, swooshX=125, swooshY=295, spriteOStatus=0, spriteDStatus=0;
 	
 	private void spriteInTheWind(int offenseFrames, int defenseFrames){
 		sheet.getSubimage(SPRITE_BACK_X, getNextOffense(), SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 	
 	private int getNextOffense(){
-		if(spriteStatus<sprite_offense_frames){
-			return SPRITE_BACK_X + (SPRITE_WIDTH*spriteStatus);
+		if(spriteOStatus<sprite_offense_frames){
+			return SPRITE_BACK_X + (SPRITE_WIDTH*spriteOStatus);
 		}
 		else{
-			spriteStatus=0;
+			spriteOStatus=0;
 			return SPRITE_BACK_X;
 		}
 	}
 	
 	private int getNextDefense(){
-		if(spriteStatus<sprite_defense_frames){
-			return SPRITE_FRONT_X + (SPRITE_WIDTH*spriteStatus);
+		if(spriteDStatus<sprite_defense_frames){
+			return SPRITE_FRONT_X + (SPRITE_WIDTH*spriteDStatus);
 		}
 		else{
-			spriteStatus=0;
+			spriteDStatus=0;
 			return SPRITE_FRONT_X;
 		}
 	}

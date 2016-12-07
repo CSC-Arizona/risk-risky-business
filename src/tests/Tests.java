@@ -83,7 +83,11 @@ public class Tests {
 		assertEquals(50, testDeck.getSize());
 		testDeck.shuffle(discard);
 		assertEquals(52, testDeck.getSize());
-
+		assertNotEquals(discard.getPile(), null);
+		discard.addToPile(testDeck.deal(discard));
+		assertEquals(discard.getSize(), 1);
+		discard.removeAll();
+		assertEquals(discard.getSize(), 0);
 	}
 
 	@Test
