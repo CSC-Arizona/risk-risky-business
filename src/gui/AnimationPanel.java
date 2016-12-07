@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.Color;
+
+import java.awt.Dimension;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -35,26 +38,34 @@ public class AnimationPanel extends JPanel {
 	private int wind=0;
 	private boolean attack=false;
 
-	public AnimationPanel(TheGame game) {
+//	public AnimationPanel(TheGame game) {
+//		loadImages();
+//		model = game;
+//		setSize(500,500);
+//		setPreferredSize(new Dimension(500,500));
+////		Dice one = new Dice(1); 
+////		Dice two = new Dice(2);
+////		Dice three = new Dice(3);
+////		Dice four = new Dice(4);
+////		Dice five = new Dice(5);
+////		attackDice.add(one);
+////		attackDice.add(two);
+////		attackDice.add(three);
+////		defenseDice.add(four);
+////		defenseDice.add(five);
+//		attackDice= model.getAttackDice();
+//		defenseDice= model.getDefenseDice();
+//		//this.setSize(500, 500);
+//		//this.repaint();
+//	}
+	
+	public void setUpEverything(TheGame game)
+	{
 		loadImages();
 		model = game;
-//		Dice one = new Dice(1);
-//		Dice two = new Dice(2);
-//		Dice three = new Dice(3);
-//		Dice four = new Dice(4);
-//		Dice five = new Dice(5);
-//		attackDice.add(one);
-//		attackDice.add(two);
-//		attackDice.add(three);
-//		defenseDice.add(four);
-//		defenseDice.add(five);
-		attackDice= model.getAttackDice();
-		defenseDice= model.getDefenseDice();
-		setLocation(500,500);
-		//this.setSize(500, 500);
-		this.update(getGraphics());
-		this.repaint();
+		repaint();
 	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D gr = (Graphics2D) g;
@@ -169,8 +180,10 @@ public class AnimationPanel extends JPanel {
 
 	public void updateAnimations() {
 		// What do I need to draw? (check state)
+		
 		if (starting) {
 			//spriteInTheWind();
+			this.repaint();
 		} 
 		else if(attack){
 			drawAttack();
@@ -409,5 +422,13 @@ public class AnimationPanel extends JPanel {
 	private void jiggleBoth() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void resetStart() {
+		starting = true;
+		frameCounter = 0;
+		wind = 0;
+		spriteOStatus = 0;
+		spriteDStatus = 0;
 	}
 }
