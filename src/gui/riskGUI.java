@@ -925,7 +925,7 @@ public class riskGUI extends JFrame {
 
 		// Draw country panel
 		currCountryPanel = new CountryPanel();
-		if(humans!=0 && !theGame.isFinished())
+		if(theGame.getNumHumans()!=0 && !theGame.isFinished())
 			drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
@@ -933,7 +933,7 @@ public class riskGUI extends JFrame {
 
 		//player.stopTheme();
 		//player.startPlay();
-		if(humans!=0)
+		if(theGame.getNumHumans()!=0)
 			setUpStatButton();
 	}// end setUpDrawingPanel
 
@@ -997,7 +997,7 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 
 			if (!gameOver) {
-				if (!splash && !(humans==0)) {
+				if (!splash && !(theGame.getNumHumans()==0)) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
@@ -1163,23 +1163,25 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-				System.out.println("nahhh");
+			if(theGame.getNumHumans()==0){
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
+					System.out.println("nahhh");
+				}
+				this.remove(drawingPanel);
+				this.revalidate();
+				this.repaint();
+				setUpDrawingPanel();
+				setUpMenu();
+				//setUpClearButton();
+				//setUpPassButton();
+				setUpAIMenu();
+				this.revalidate();
+				this.repaint();
+				drawingPanel.update(drawingPanel.getGraphics());
 			}
-			this.remove(drawingPanel);
-			this.revalidate();
-			this.repaint();
-			setUpDrawingPanel();
-			setUpMenu();
-			//setUpClearButton();
-			//setUpPassButton();
-			setUpAIMenu();
-			this.revalidate();
-			this.repaint();
-			drawingPanel.update(drawingPanel.getGraphics());
 			this.revalidate();
 			this.repaint();
 

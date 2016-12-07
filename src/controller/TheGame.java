@@ -1059,11 +1059,15 @@ public class TheGame implements Serializable {
 		if (removeMe != null) {
 			discard.addToPile(removeMe.discardCards());
 			// deck.addToDiscardPile(removeMe.discardCards());
-
+			if(removeMe instanceof HumanPlayer)
+				humans--;
 			players.remove(removeMe);
 			totalPlayers--;
 			for (int i =0; i < players.size(); i++){
-				System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
+				if(players.get(i) instanceof AI)
+					System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
+				else
+					System.out.println("\t Human Player");
 			}
 		}
 
@@ -1094,6 +1098,10 @@ public class TheGame implements Serializable {
 
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
+	}
+	
+	public int getNumHumans(){
+		return humans;
 	}
 
 	public Player getCurrentPlayer() {
