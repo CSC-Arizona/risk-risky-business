@@ -124,7 +124,6 @@ public class riskGUI extends JFrame {
 	private Faction defender;// = Faction.WILDLINGS;
 
 
-
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try {
@@ -282,7 +281,6 @@ public class riskGUI extends JFrame {
 
 	public void saveGame() {
 		/*
-<<<<<<< HEAD
 		 * FileOutputStream gameToDisk = null; FileOutputStream muFlagToDisk =
 		 * null; FileOutputStream muCountryToDisk = null; FileOutputStream
 		 * afFlagToDisk = null; FileOutputStream aFlagToDisk = null;
@@ -321,66 +319,6 @@ public class riskGUI extends JFrame {
 		 * (FileNotFoundException e) { e.printStackTrace(); } catch (IOException
 		 * e) { e.printStackTrace(); } // TODO
 		 * 
-=======
-		FileOutputStream gameToDisk = null;
-		FileOutputStream muFlagToDisk = null;
-		FileOutputStream muCountryToDisk = null;
-		FileOutputStream afFlagToDisk = null;
-		FileOutputStream aFlagToDisk = null;
-		FileOutputStream afToDisk = null;
-		FileOutputStream aToDisk = null;
-
-		try {
-			// save Game
-			gameToDisk = new FileOutputStream(Game.FILE_NAME);
-			ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
-			outFile.writeObject(theGame);
-			outFile.close();
-
-			// save Move Units Flag
-			muFlagToDisk = new FileOutputStream(MU_FLAG_FILE);
-			ObjectOutputStream outFile2 = new ObjectOutputStream(muFlagToDisk);
-			outFile2.writeObject(moveUnitsFlag);
-			outFile2.close();
-
-			// save Move Units Country
-			muCountryToDisk = new FileOutputStream(MU_COUNTRY_FILE);
-			ObjectOutputStream outFile3 = new ObjectOutputStream(
-					muCountryToDisk);
-			outFile3.writeObject(moveUnitsFromCountry);
-			outFile3.close();
-
-			// save attack from flag
-			afFlagToDisk = new FileOutputStream(AF_FLAG_FILE);
-			ObjectOutputStream outFile4 = new ObjectOutputStream(afFlagToDisk);
-			outFile4.writeObject(attackFromFlag);
-			outFile4.close();
-
-			// save attack flag
-			aFlagToDisk = new FileOutputStream(A_FLAG_FILE);
-			ObjectOutputStream outFile5 = new ObjectOutputStream(aFlagToDisk);
-			outFile5.writeObject(attackFlag);
-			outFile5.close();
-
-			// save attack from
-			afToDisk = new FileOutputStream(AF_FILE);
-			ObjectOutputStream outFile6 = new ObjectOutputStream(afToDisk);
-			outFile6.writeObject(attackFrom);
-			outFile6.close();
-
-			// save attack
-			aToDisk = new FileOutputStream(A_FILE);
-			ObjectOutputStream outFile7 = new ObjectOutputStream(aToDisk);
-			outFile7.writeObject(attack);
-			outFile7.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// TODO
-		 
->>>>>>> master
 		 */
 	}
 
@@ -896,6 +834,7 @@ public class riskGUI extends JFrame {
 	}
 	
 	private void animations(Faction attacker, Faction defender){
+		setUpAnimationFrame();
 		System.out.println("begin");
 		animationPanel.resetStart();
 		drawingPanel.add(animationPanel);
@@ -986,7 +925,7 @@ public class riskGUI extends JFrame {
 
 		// Draw country panel
 		currCountryPanel = new CountryPanel();
-		if(theGame.getNumHumans()!=0 && !theGame.isFinished())
+		if(theGame.getNumHumans()!=0 || theGame.isFinished())
 			drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
@@ -994,7 +933,7 @@ public class riskGUI extends JFrame {
 
 		//player.stopTheme();
 		//player.startPlay();
-		if(theGame.getNumHumans()!=0)
+		if(theGame.getNumHumans()!=0 || theGame.isFinished())
 			setUpStatButton();
 	}// end setUpDrawingPanel
 
@@ -1058,7 +997,7 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 
 			if (!gameOver) {
-				if (!splash && !(theGame.getNumHumans()==0)) {
+				if (!splash && (!(theGame.getNumHumans()==0) || theGame.isFinished())) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
@@ -1224,16 +1163,27 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-		
+			if(theGame.getNumHumans()==0 && !theGame.isFinished()){  
 				try {
-					Thread.sleep(250);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Thread.sleep(10);
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
+					System.out.println("nahhh");
 				}
-				
+				this.remove(drawingPanel);
+				this.revalidate();
+				this.repaint();
+				setUpDrawingPanel(); 
+				setUpMenu();
+				//setUpClearButton();
+				//setUpPassButton();
+				setUpAIMenu();
+				this.revalidate();
+				this.repaint();
 				drawingPanel.update(drawingPanel.getGraphics());
-			
+			}
+			this.revalidate();
+			this.repaint();
 
 		}// end update
 
