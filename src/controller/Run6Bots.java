@@ -17,7 +17,7 @@ public class Run6Bots {
 		int i = 0;
 		int hardWin = 0, mediumWin = 0, easyWin = 0;
 
-		while (i < 3) {
+		while (i < 10) {
 
 			System.out.println("New Game");
 			System.out.println("Game " + (i+1));

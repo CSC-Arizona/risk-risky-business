@@ -491,14 +491,15 @@ public class TheGame implements Serializable {
 					.placeNewTroops();
 			int i = 0;
 
-			while (i < selectedCountries.size()
-					&& currentPlayer.getAvailableTroops() > 0) {
+			while (currentPlayer.getAvailableTroops() > 0) {
 				selectedCountry = selectedCountries.get(i);
 				if (currentPlayer.getAvailableTroops() > 1)
 					placeArmies(2);
 				else
 					placeArmies(1);
 				i++;
+				if (i==selectedCountries.size())
+					i = 0;
 			} // end while
 		} // end if
 		else {
