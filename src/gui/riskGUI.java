@@ -116,6 +116,7 @@ public class riskGUI extends JFrame {
 	private boolean musicOn = true;
 	private boolean animationsOn = true;
 	private boolean useMaxDice = true;
+	private int attackMaxDie, defendMaxDie;
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
@@ -148,7 +149,8 @@ public class riskGUI extends JFrame {
 		loweredbevel = BorderFactory.createLoweredBevelBorder();
 		empty = BorderFactory.createEmptyBorder();
 		raisedWithColor = BorderFactory.createCompoundBorder(raisedetched, blueline);
-
+		attackMaxDie = 3;
+		defendMaxDie = 2;
 
 		selectedCards = new ArrayList<Card>();
 		attacker = Faction.STARK;
@@ -747,13 +749,37 @@ public class riskGUI extends JFrame {
 		settings.add(animationStatus);
 		
 		JMenu maxDice = new JMenu("Defualt Dice");
-		JMenuItem setMax = new JMenuItem("Always Max");
-		setMax.addActionListener(new HelpListener());
-		setMax.setActionCommand("max");
-		maxDice.add(setMax);
-		JMenuItem prompt = new JMenuItem("Prompt user");
-		prompt.setActionCommand("prompt");
-		maxDice.add(prompt);
+		JMenu attackDice = new JMenu("Attack Dice");
+		JMenu defendDice = new JMenu("Defend Dice");
+		JMenuItem setMaxAttack = new JMenuItem("Max Attack Dice");
+		setMaxAttack.addActionListener(new HelpListener());
+		setMaxAttack.setActionCommand("attack max");
+		maxDice.add(attackDice);
+		maxDice.add(defendDice);
+
+		JMenuItem setAttackTwo = new JMenuItem("2 Dice");
+		setAttackTwo.addActionListener(new HelpListener());
+		setAttackTwo.setActionCommand("attack 2");
+		
+		JMenuItem setAttackOne = new JMenuItem("1 Die");
+		setAttackOne.addActionListener(new HelpListener());
+		setAttackOne.setActionCommand("attack 1");
+		JMenuItem setMaxDefend = new JMenuItem("Max Defend Dice");
+		setMaxDefend.addActionListener(new HelpListener());
+		setMaxDefend.setActionCommand("defend max");
+		
+		JMenuItem setDefendOne = new JMenuItem("1 Die");
+		setDefendOne.addActionListener(new HelpListener());
+		setDefendOne.setActionCommand("defend min");
+		
+		
+		
+		attackDice.add(setMaxAttack);
+		attackDice.add(setAttackTwo);
+		attackDice.add(setAttackOne);
+		defendDice.add(setMaxDefend);
+		defendDice.add(setDefendOne);
+		
 		settings.add(maxDice);
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
@@ -1862,13 +1888,26 @@ public class riskGUI extends JFrame {
 					  + "\n                                    This is a recreation of the popular board game, Risk.\n"
 					  + "                                         Created for our CS335 class as our final project.",
 						"About", JOptionPane.INFORMATION_MESSAGE);
-			} else if (e.getActionCommand().compareTo("max") == 0) {
-				useMaxDice = true;
+			} else if (e.getActionCommand().compareTo("attack max") == 0) {
+				attackMaxDie = 3;
+				theGame.changeAttackDice(3);
 				// theGame.setMaxDice(useMaxDice);
-			} else if (e.getActionCommand().compareTo("prompt") == 0) {
-				useMaxDice = false;
+			} else if (e.getActionCommand().compareTo("attack 2") == 0) {
+				attackMaxDie = 2;
+				theGame.changeAttackDice(2);
 				// theGame.setMaxDice(useMaxDice);
-			} else if (e.getActionCommand().compareTo("how to play") == 0) {
+			} 
+			else if (e.getActionCommand().compareTo("attack 1") ==0){
+				attackMaxDie = 1;
+				theGame.changeAttackDice(1);
+			}else if (e.getActionCommand().compareTo("defend max") ==0){
+				defendMaxDie = 2;
+				theGame.changeDefendDice(2);
+			}else if (e.getActionCommand().compareTo("defend min") ==0){
+				defendMaxDie = 1;
+				theGame.changeDefendDice(1);
+			}else if (e.getActionCommand().compareTo("how to play") == 0) {
+			
 				JOptionPane.showMessageDialog(riskGUI.this,
 						"                                 Welcome to our implementation of Risk, Game of Thrones Edition!\n"
 								+ "The game will first ask if you want to play a New Game, or load a previous save. If you would like to load\n"
