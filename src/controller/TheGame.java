@@ -111,6 +111,8 @@ public class TheGame implements Serializable {
 		countriesClaimed = 0;
 		attackerHits = -1;
 		gameStarted = false;
+		cardEarned = false;
+		gameLog = "";
 		changeToPlacementPhase();
 	}// end newGame
 
@@ -139,7 +141,9 @@ public class TheGame implements Serializable {
 		redeemCardPhase = false;
 		deployPhase = false;
 		attackPhase = false;
-
+		gameLog = "";
+		cardEarned = false;
+		
 		addAI();
 		canPlace = false;
 		numRedemptions = 0;
@@ -406,7 +410,7 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
-			long startTime = System.nanoTime();
+//			long startTime = System.nanoTime();
 
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
@@ -414,22 +418,22 @@ public class TheGame implements Serializable {
 				currentPlayer.addAvailableTroops(redeemCards());
 
 			skipCardRedemption();
-			long endTime = System.nanoTime();
-
-			cardTime += 1000000000 * (endTime - startTime) / ++numCard;
+//			long endTime = System.nanoTime();
+//
+//			cardTime += 1000000000 * (endTime - startTime) / ++numCard;
 			// System.out.println("card" + cardTime);
 		} // end else if
 
 		// During deployment
 		else if (isDeployPhase()) {
-			long startTime = System.nanoTime();
+//			long startTime = System.nanoTime();
 			deployTroops();
 
 			if (currentPlayer.getAvailableTroops() == 0)
 				nextPhase();
-			long endTime = System.nanoTime();
-
-			deployTime += 1000000000 * (endTime - startTime) / ++numDeploys;
+//			long endTime = System.nanoTime();
+//
+//			deployTime += 1000000000 * (endTime - startTime) / ++numDeploys;
 			// System.out.println("deploy" + deployTime);
 		} // end else if
 

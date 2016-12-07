@@ -42,7 +42,7 @@ public class EasyAI implements AIStrategy, Serializable {
 		ArrayList<Country> countries = me.getCountries();
 		
 		
-		for (int i=0; i < 3; i++){
+		for (int i=0; i < 1; i++){
 			int ran = (int)(Math.random() * countries.size());
 			Country c = countries.get(ran);
 			

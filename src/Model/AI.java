@@ -76,10 +76,10 @@ public class AI extends Player implements Serializable {
 		
 		//If you're close to finished, just conquerrrrr
 		if (getCountries().size() > 44)
-			return true;
+			return false;
 		
-//		if (getCountries().size() <3)
-//			return false;
+		if (getCountries().size() <5)
+			return true;
 		
 		numAttacks++;
 		if (strategy instanceof EasyAI && numAttacks >=7){
