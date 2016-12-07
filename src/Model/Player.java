@@ -24,7 +24,7 @@ public abstract class Player implements Serializable{
 	// private Continent[] allContinents; TODO
 
 	public Player(int numOfPlayers) {
-
+ 
 		this.name = null;
 		this.faction = null;
 		this.availTroops = 43 - ((numOfPlayers - 3) * 5);

@@ -95,6 +95,7 @@ public class TheGame implements Serializable {
 	public void newGame() {
 		if (players != null)
 			players.removeAll(players);
+		numAttacks = 0;
 		selectedCountry = null;
 		gameMap = Map.getInstance(0);
 		gameMap = gameMap.newMap();
@@ -124,7 +125,7 @@ public class TheGame implements Serializable {
 	public void newGame(int i) {
 		if (players != null)
 			players.removeAll(players);
-
+		numAttacks = 0;
 		gameOver = false;
 		selectedCountry = null;
 		countriesClaimed = 0;
@@ -143,6 +144,13 @@ public class TheGame implements Serializable {
 		attackPhase = false;
 		gameLog = "";
 		cardEarned = false;
+		
+		
+		//Counters
+		attackTime = 0;
+		deployTime = 0;
+		reinforceTime = 0;
+		cardTime = 0;
 		
 		addAI();
 		canPlace = false;
@@ -420,7 +428,7 @@ public class TheGame implements Serializable {
 			skipCardRedemption();
 //			long endTime = System.nanoTime();
 //
-//			cardTime += 1000000000 * (endTime - startTime) / ++numCard;
+//			cardTime += (endTime - startTime) /1000000000;
 			// System.out.println("card" + cardTime);
 		} // end else if
 
@@ -433,7 +441,7 @@ public class TheGame implements Serializable {
 				nextPhase();
 //			long endTime = System.nanoTime();
 //
-//			deployTime += 1000000000 * (endTime - startTime) / ++numDeploys;
+//			deployTime += (endTime - startTime) /1000000000;
 			// System.out.println("deploy" + deployTime);
 		} // end else if
 
@@ -457,7 +465,7 @@ public class TheGame implements Serializable {
 			}
 //			long endTime = System.nanoTime();
 //
-//			attackTime += 1000000000 * (endTime - startTime) / numAttacks;
+//			attackTime += (endTime - startTime) / 1000000000;
 			// System.out.println("attack" + attackTime);
 		} // end else if
 
@@ -469,8 +477,7 @@ public class TheGame implements Serializable {
 			nextPlayer();
 //			long endTime = System.nanoTime();
 //
-//			reinforceTime += 1000000000 * (endTime - startTime)
-//					/ ++numReinforces;
+//			reinforceTime +=  (endTime - startTime)/1000000000;
 			// System.out.println("reinforce" + reinforceTime);
 		} // end else if
 	}// end aiturn
@@ -728,7 +735,7 @@ public class TheGame implements Serializable {
 	public boolean attack() {
 		numAttacks++;
 
-//		if (numAttacks % 100 == 0) {
+//		if (numAttacks % 500 == 0) {
 //			System.out.println("Phase = " + getPhase());
 //			System.out.println("Current player = " + currentPlayer.getName());
 //			System.out.println("Attacks = " + numAttacks);
@@ -1049,8 +1056,8 @@ public class TheGame implements Serializable {
 		Player removeMe = null;
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-				System.out.println(player.getName() + " has been wiped off"
-						+ " the map.");
+//				System.out.println(player.getName() + " has been wiped off"
+//						+ " the map.");
 				gameLog += player.getName() + " has been wiped off the map.\n";
 				removeMe = player;
 			}
@@ -1059,11 +1066,16 @@ public class TheGame implements Serializable {
 		if (removeMe != null) {
 			discard.addToPile(removeMe.discardCards());
 			// deck.addToDiscardPile(removeMe.discardCards());
-
+			if(removeMe instanceof HumanPlayer)
+				humans--;
 			players.remove(removeMe);
 			totalPlayers--;
+
 			for (int i =0; i < players.size(); i++){
-				System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
+				if(players.get(i) instanceof AI)
+					System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
+				else
+					System.out.println("\t Human Player");
 			}
 		}
 
@@ -1094,6 +1106,10 @@ public class TheGame implements Serializable {
 
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
+	}
+	
+	public int getNumHumans(){
+		return humans;
 	}
 
 	public Player getCurrentPlayer() {

@@ -77,23 +77,9 @@ public class AI extends Player implements Serializable {
 		if (getCountries().size() > 44)
 			return false;
 		
-		if (getCountries().size() <5)
-			return true;
+	
+
 		
-		numAttacks++;
-//		if (strategy instanceof EasyAI && numAttacks >=7){
-//			numAttacks = 0;
-//			return true;
-//		}
-			
-//		if (strategy instanceof MediumAI && numAttacks >=13){
-//			numAttacks = 0;
-//			return true;
-//		}
-//		else if (strategy instanceof HardAI && numAttacks >=21){
-//			numAttacks = 0;
-//			return true;
-//		}
 		
 		
 		int i = 0;

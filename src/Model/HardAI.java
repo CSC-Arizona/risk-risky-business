@@ -18,9 +18,25 @@ public class HardAI implements AIStrategy, Serializable {
 
 	@Override
 	public ArrayList<Country> placeNewTroops() {
+<<<<<<< HEAD
 		ArrayList<Country> countries = new ArrayList<>();
 		ArrayList<Country> fringes = me.findFringeCountries();
 		int randNum = 0;
+=======
+		ArrayList<Country> returnMe = new ArrayList<>();
+		ArrayList<Continent> conts = Map.getAllContinents();
+		Collections.shuffle(conts);// shuffle continents up so that you don't
+									// always select the same continent over and
+									// over again
+		int index = 0;
+		Continent chosen = null;
+		
+		while (chosen == null){
+			chosen = conts.get(index);
+		}
+		
+		ArrayList<Country> mine = me.getCountries();
+>>>>>>> finalForm
 		int i = 0;
  		while (me.getAvailableTroops() > i) {
 			i+=2;
@@ -179,13 +195,23 @@ public class HardAI implements AIStrategy, Serializable {
 			if (surroundCounter == neighbors.size() && country.getForcesVal() > 1) {
 				while (country.getForcesVal() > 4) {
 					for (Country neighbor : neighbors) {
-						country.removeUnits(2);
-						neighbor.addForcesVal(2);
-						str += me.getName() + " removed 1 unit from " + country.getName() + " and moved it to "
-								+ neighbor.getName() + ".\n";
+						if (country.getForcesVal() > 6){
+							country.removeUnits(3);
+							neighbor.addForcesVal(3);
+							str += me.getName() + " removed 3 units from " + country.getName() + " and moved them to "
+									+ neighbor.getName() + ".\n";
+						}
+						else {
+							country.removeUnits(2);
+							neighbor.addForcesVal(2);
+							str += me.getName() + " removed 2 units from " + country.getName() + " and moved them to "
+									+ neighbor.getName() + ".\n";
+						}
+						
+						
 						numRes++;
 						
-						if (numRes == 15)
+						if (numRes == 10)
 							return str;
 						
 						if (country.getForcesVal() <= 1)
