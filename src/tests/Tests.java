@@ -65,11 +65,6 @@ public class Tests {
 		assertEquals(incorrectlyNamed, 0);
 	}
 
-	private Object File(String filename) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Test
 	public void testDeck() {
 		// 91% coverage
@@ -196,6 +191,14 @@ public class Tests {
 	}
 
 	@Test
+	public void testContinentBonus(){ 
+		Map map = Map.getInstance(1); 
+		Player player = new HumanPlayer(1);
+		
+		assertEquals(map.getContinentBonuses(player), 0);
+	}
+	
+	@Test
 	public void testHumanPlayer() {
 		// 100% coverage
 
@@ -211,6 +214,11 @@ public class Tests {
 		assertEquals(human.redeemCards(), c);
 	}
 
+	@Test(expected=IllegalStateException.class)
+	public void testFalseCard(){
+		Card fake = new Card("Failure", "aliens");
+	}
+	
 	@Test
 	public void testRedeemCards() { 
 		Continent blue = new Continent(0, "Blue");
@@ -320,17 +328,10 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		//Game theGame = Game.getInstance(1, 6, false);
-		//theGame.newGame();
-		// int result = theGame.redeemCards(one, redeem);
-		// System.out.println(result);
-		// assertTrue(result == -1);
-
 	}
 
 	@Test
 	public void testFaction() {
-		// 85% ENUM - MAY NOT BE OVER 90%
 		assertEquals(Faction.DOTHRAKI.getName(), "Khal of the Dothraki");
 		assertEquals(Faction.WILDLINGS.getName(), "the Wildling");
 		assertEquals(Faction.STARK.getName(), "of house Stark");
@@ -484,6 +485,8 @@ public class Tests {
 		countries = aiH.getStrategy().placeNewTroops();
 		attackMe = aiH.getStrategy().getCountryToAttack();
 		attackFrom = aiH.getStrategy().findAttackingCountry(attackMe);
+		
+		aiE.checkAllNeighbors(); 
 		
 	}
 
