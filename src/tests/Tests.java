@@ -83,7 +83,11 @@ public class Tests {
 		assertEquals(50, testDeck.getSize());
 		testDeck.shuffle(discard);
 		assertEquals(52, testDeck.getSize());
-
+		assertNotEquals(discard.getPile(), null);
+		discard.addToPile(testDeck.deal(discard));
+		assertEquals(discard.getSize(), 1);
+		discard.removeAll();
+		assertEquals(discard.getSize(), 0);
 	}
 
 	@Test
@@ -144,6 +148,7 @@ public class Tests {
 
 	@Test
 	public void testContinent() {
+		//85.6% coverage
 		if (players == null)
 			players = new ArrayList<>();
 		players.add(new HumanPlayer(2));
@@ -181,9 +186,18 @@ public class Tests {
 
 	@Test
 	public void testHumanPlayer() {
-		// % coverage
+		// 100% coverage
 
 		Player human = new HumanPlayer(1);
+		ArrayList<Card> c = new ArrayList<Card>();
+		Card one = new Card("The Wall", "cavalry", true);
+		Card two = new Card("Skagos", "artillery", true);
+		Card three = new Card("The Wall Else", "infantry",true);
+		c.add(one);
+		c.add(two);
+		c.add(three);
+		((HumanPlayer)human).setCardsToRedeem(c);
+		assertEquals(human.redeemCards(), c);
 	}
 
 	@Test

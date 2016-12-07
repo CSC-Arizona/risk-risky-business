@@ -64,6 +64,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.plaf.ComponentUI;
 
 import controller.TheGame;
 import Model.*;
@@ -73,10 +74,12 @@ import songplayer.SoundClipPlayer;
 public class riskGUI extends JFrame {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		new riskGUI().setVisible(true);
+		new riskGUI().setVisible(true); 
 	}
 
 	private static BoardPanel drawingPanel; 
+	private static AnimationPanel animationPanel;
+	private JFrame animationFrame;
 	private JMenuBar menu;
 	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
@@ -99,7 +102,7 @@ public class riskGUI extends JFrame {
 	private Player nextPlayer, currPlayer;
 	private int humans;
 	private int ai = -1;
-	private int numOfUnitsToMove = 0;
+	private int numOfUnitsToMove = 0; 
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
 	private ArrayList<String> possHouses;
@@ -111,12 +114,15 @@ public class riskGUI extends JFrame {
 	private Country attackFrom, attack;
 	private int numOfArmies = 0;
 	private boolean musicOn = true;
+	private boolean animationsOn = true;
 	private boolean useMaxDice = true;
+	private int attackMaxDie, defendMaxDie;
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
-	private Faction attacker = Faction.STARK;
-	private Faction defender = Faction.WILDLINGS;
+	private Faction attacker;// = Faction.STARK;
+	private Faction defender;// = Faction.WILDLINGS;
+
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -126,8 +132,8 @@ public class riskGUI extends JFrame {
 			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File("LibreBaskerville-Regular.otf"));
 			gotFontBody = gotFontBody.deriveFont(24f);
 		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			e.printStackTrace(); 
+		} catch (IOException e) {  
 			e.printStackTrace();
 		}
 
@@ -143,10 +149,12 @@ public class riskGUI extends JFrame {
 		loweredbevel = BorderFactory.createLoweredBevelBorder();
 		empty = BorderFactory.createEmptyBorder();
 		raisedWithColor = BorderFactory.createCompoundBorder(raisedetched, blueline);
-
+		attackMaxDie = 3;
+		defendMaxDie = 2;
 
 		selectedCards = new ArrayList<Card>();
-
+		attacker = Faction.STARK;
+		defender = Faction.WILDLINGS;
 		splash = true; // comment me out for default mode
 		// splash = false; // comment me out for splash screens
 		setUpImages();
@@ -154,9 +162,30 @@ public class riskGUI extends JFrame {
 		setUpMenu();
 		setUpHouseArray();
 		setUpSplash(); // comment me out for default mode
+		
 		// comment me out for splash screens
 
 	}// end riskGui constructor
+
+	private void setUpAnimationFrame() {
+//		animationFrame = new JFrame(); 
+//		 
+//		animationFrame.setSize(700, 700);
+//		animationFrame.setLocation(width/2 - 350,height/2 - 350);
+//		animationFrame.setLayout(null);
+//		animationFrame.setTitle("Attack");
+//		animationFrame.setBackground(Color.WHITE);
+		
+		animationPanel = new AnimationPanel();
+		animationPanel.setUpEverything(theGame);
+		
+		animationPanel.setSize(500,500);
+		animationPanel.setPreferredSize(new Dimension(500,500));
+		animationPanel.setLocation(100,100);
+		//this.remove(drawingPanel);
+		//drawingPanel.add(animationPanel);
+		//animationFrame.add(animationPanel, BorderLayout.CENTER);
+	}
 
 	private void setUpAIMenu() {
 		int i = 1;
@@ -335,8 +364,10 @@ public class riskGUI extends JFrame {
 		setUpClearButton();
 		setUpPassButton();
 		setUpAIMenu();
+	
 		// player.startPlay();
 		drawingPanel.repaint();
+		
 	}// end defualtMode
 
 	private void setUpHouseArray() {
@@ -379,6 +410,7 @@ public class riskGUI extends JFrame {
 		setUpClearButton();
 		setUpPassButton();
 		setUpAIMenu();
+		setUpAnimationFrame();
 		ArrayList<Player> players = theGame.getPlayers();
 		for (int i = 0; i < humans; i++) {
 			players.get(i).setFaction(houses.get(i));
@@ -396,7 +428,9 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players);
 		theGame.startGame();
-		//animations(attacker, defender);
+
+		//animations(attacker, defender); 
+
 
 	}// end splashLoading2
 
@@ -676,10 +710,10 @@ public class riskGUI extends JFrame {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
+						System.out.println("SAVE GAME");
+						System.exit(0);
 					}
 					// saveGame();
-					System.out.println("SAVE GAME");
-					System.exit(0);
 				} else if (confirm == JOptionPane.NO_OPTION) {
 					System.exit(0);
 				}
@@ -705,14 +739,47 @@ public class riskGUI extends JFrame {
 		JMenuItem musicStatus = new JMenuItem(music);
 		musicStatus.addActionListener(new musicListener());
 		settings.add(musicStatus);
+		String animations = "";
+		if (animationsOn)
+			animations = "Turn Off Animations";
+		else
+			animations = "Turn On Animations";
+		JMenuItem animationStatus = new JMenuItem(animations);
+		animationStatus.addActionListener(new animationListener());
+		settings.add(animationStatus);
+		
 		JMenu maxDice = new JMenu("Defualt Dice");
-		JMenuItem setMax = new JMenuItem("Always Max");
-		setMax.addActionListener(new HelpListener());
-		setMax.setActionCommand("max");
-		maxDice.add(setMax);
-		JMenuItem prompt = new JMenuItem("Prompt user");
-		prompt.setActionCommand("prompt");
-		maxDice.add(prompt);
+		JMenu attackDice = new JMenu("Attack Dice");
+		JMenu defendDice = new JMenu("Defend Dice");
+		JMenuItem setMaxAttack = new JMenuItem("Max Attack Dice");
+		setMaxAttack.addActionListener(new HelpListener());
+		setMaxAttack.setActionCommand("attack max");
+		maxDice.add(attackDice);
+		maxDice.add(defendDice);
+
+		JMenuItem setAttackTwo = new JMenuItem("2 Dice");
+		setAttackTwo.addActionListener(new HelpListener());
+		setAttackTwo.setActionCommand("attack 2");
+		
+		JMenuItem setAttackOne = new JMenuItem("1 Die");
+		setAttackOne.addActionListener(new HelpListener());
+		setAttackOne.setActionCommand("attack 1");
+		JMenuItem setMaxDefend = new JMenuItem("Max Defend Dice");
+		setMaxDefend.addActionListener(new HelpListener());
+		setMaxDefend.setActionCommand("defend max");
+		
+		JMenuItem setDefendOne = new JMenuItem("1 Die");
+		setDefendOne.addActionListener(new HelpListener());
+		setDefendOne.setActionCommand("defend min");
+		
+		
+		
+		attackDice.add(setMaxAttack);
+		attackDice.add(setAttackTwo);
+		attackDice.add(setAttackOne);
+		defendDice.add(setMaxDefend);
+		defendDice.add(setDefendOne);
+		
 		settings.add(maxDice);
 		JMenu help = new JMenu("Help");
 		menu = new JMenuBar();
@@ -766,40 +833,51 @@ public class riskGUI extends JFrame {
 	
 	private void animations(Faction attacker, Faction defender){
 		System.out.println("begin");
-		JFrame animationFrame = new JFrame();
+		animationPanel.resetStart();
+		drawingPanel.add(animationPanel);
+		//animationPanel.setLocation(width/2 -350, height/2 - 350);
 		
-		animationFrame.setSize(700, 700);
-		animationFrame.setLocation(width/2 -250, height/2 - 250);
-		animationFrame.setLayout(new BorderLayout());
-		animationFrame.setTitle("Attack");
-		animationFrame.setBackground(Color.WHITE);
+		animationPanel.setLocation(width/2 -350, height/2 - 350);
+//		JFrame animationFrame = new JFrame();
+//		
+//		animationFrame.setSize(700, 700);
+//		animationFrame.setLocation(width/2 -250, height/2 - 250);
+//		animationFrame.setLayout(null);
+//		animationFrame.setTitle("Attack");
+//		animationFrame.setBackground(Color.WHITE);
 		
 //		try {
 //			Thread.sleep(5000);
 //		} catch (InterruptedException ex) {
-//			Thread.currentThread().interrupt();
-//			System.out.println("nahhh");
+//			Thread.currentThread().interrupt(); 
+//			System.out.println("nahhh");   
 //		}
 		
-		AnimationPanel p = new AnimationPanel(theGame);
+//		AnimationPanel p = new AnimationPanel();
+//		p.setUpEverything(theGame);
+//		
+//		p.setLocation(0, 0);
+//		p.setSize(500,500);
 		
-		//p.setLocation(100, 100);
-		p.setPreferredSize(new Dimension(500,500));
-		p.setDefenseFaction(defender);
-		p.setOffenseFaction(attacker);
+
+		animationPanel.setDefenseFaction(defender);
+		animationPanel.setOffenseFaction(attacker);
 		//this.remove(drawingPanel);
-		animationFrame.add(p);
-		animationFrame.setVisible(true);
+
+		//animationFrame.setVisible(true);
 		//animationFrame.revalidate();
-		p.repaint();
+		//animationPanel.revalidate();
+		
+		animationPanel.update(getGraphics());
+		System.out.print(animationPanel.getLocation());
 		//this.add(p);
 		//this.revalidate();
-		//this.repaint();
+		//this.repaint();   
 		//drawingPanel.add(p);
 		//drawingPanel.repaint();
 		int i=0;
 		while(i<65){
-			p.updateAnimations();
+			animationPanel.updateAnimations();
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException ex) {
@@ -807,19 +885,21 @@ public class riskGUI extends JFrame {
 				System.out.println("nahhh");
 			}
 			//animationFrame.revalidate();
-			animationFrame.repaint();
+			//animationFrame.repaint();
+			animationPanel.update(getGraphics());
 			i++;
 		}
 		
-		animationFrame.setVisible(false);
+		//animationFrame.setVisible(false);
 		//this.remove(p);
 		//this.add(drawingPanel);
 		//this.revalidate();
 		//this.repaint();
-		//drawingPanel.remove(p);
+		drawingPanel.remove(animationPanel);
 		//this.repaint();
 		//this.repaint();
-		
+		this.repaint();
+		drawingPanel.repaint();
 		System.out.println("end");
 	}
 
@@ -888,6 +968,7 @@ public class riskGUI extends JFrame {
 	 * Other JPanels Below
 	 ********************************/
 	private class BoardPanel extends JPanel implements Observer {
+		
 		@Override
 		public void paintComponent(Graphics g) {
 			if (theGame != null)
@@ -1807,13 +1888,26 @@ public class riskGUI extends JFrame {
 					  + "\n                                    This is a recreation of the popular board game, Risk.\n"
 					  + "                                         Created for our CS335 class as our final project.",
 						"About", JOptionPane.INFORMATION_MESSAGE);
-			} else if (e.getActionCommand().compareTo("max") == 0) {
-				useMaxDice = true;
+			} else if (e.getActionCommand().compareTo("attack max") == 0) {
+				attackMaxDie = 3;
+				theGame.changeAttackDice(3);
 				// theGame.setMaxDice(useMaxDice);
-			} else if (e.getActionCommand().compareTo("prompt") == 0) {
-				useMaxDice = false;
+			} else if (e.getActionCommand().compareTo("attack 2") == 0) {
+				attackMaxDie = 2;
+				theGame.changeAttackDice(2);
 				// theGame.setMaxDice(useMaxDice);
-			} else if (e.getActionCommand().compareTo("how to play") == 0) {
+			} 
+			else if (e.getActionCommand().compareTo("attack 1") ==0){
+				attackMaxDie = 1;
+				theGame.changeAttackDice(1);
+			}else if (e.getActionCommand().compareTo("defend max") ==0){
+				defendMaxDie = 2;
+				theGame.changeDefendDice(2);
+			}else if (e.getActionCommand().compareTo("defend min") ==0){
+				defendMaxDie = 1;
+				theGame.changeDefendDice(1);
+			}else if (e.getActionCommand().compareTo("how to play") == 0) {
+			
 				JOptionPane.showMessageDialog(riskGUI.this,
 						"                                 Welcome to our implementation of Risk, Game of Thrones Edition!\n"
 								+ "The game will first ask if you want to play a New Game, or load a previous save. If you would like to load\n"
@@ -1990,7 +2084,8 @@ public class riskGUI extends JFrame {
 							attacker = theGame.getMoveFrom().getOccupier().getFaction();
 							defender = theGame.getMoveTo().getOccupier().getFaction();
 							theGame.attack();
-							animations(attacker, defender);
+							if(animationsOn)
+								animations(attacker, defender);
 
 							ArrayList<Dice> attack = theGame.getAttackDice();
 							ArrayList<Dice> defense = theGame.getDefenseDice();
@@ -2027,7 +2122,8 @@ public class riskGUI extends JFrame {
 						defender = theGame.getMoveTo().getOccupier().getFaction();
 						
 						theGame.attack();
-						animations(attacker, defender);
+						if(animationsOn)
+							animations(attacker, defender);
 
 						// Saved so that they can be used for animations
 						ArrayList<Dice> attack = theGame.getAttackDice();
@@ -2128,7 +2224,8 @@ public class riskGUI extends JFrame {
 	private class NewGameListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.clear();
+			if(theGame != null)
+				theGame.clear();
 			splashNumPlayers();
 		}// end action performed
 	}// end game listener
@@ -2209,6 +2306,18 @@ public class riskGUI extends JFrame {
 			} else {
 				player.pause();
 			}
+			setUpMenu();
+			if (!splash)
+				setUpAIMenu();
+		}// end actionperformed
+	}// end musicListener
+	
+	private class animationListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			animationsOn = !animationsOn;
 			setUpMenu();
 			if (!splash)
 				setUpAIMenu();

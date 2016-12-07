@@ -38,7 +38,7 @@ public class TheGame implements Serializable {
 	private int countriesBefore, countriesAfter;
 	private ArrayList<Dice> attackDice;
 	private ArrayList<Dice> defenseDice;
-	private boolean useMaxDice = true;
+	private int maxAttackDice, maxDefendDice;
 	private ArrayList<Card> cardsToRedeem;
 	public static final String FILE_NAME = "game.ser";
 	private int attackerHits;
@@ -60,6 +60,8 @@ public class TheGame implements Serializable {
 		cardEarned = false;
 		tournamentMode = tourny;
 		gameStarted = false;
+		maxAttackDice = 3;
+		maxDefendDice = 2;
 		if (!tournamentMode)
 			newGame();
 		else
@@ -406,7 +408,6 @@ public class TheGame implements Serializable {
 		else if (isRedeemCardPhase()) {
 			long startTime = System.nanoTime();
 
-			// System.out.println("Current player cards: "+currentPlayer.getCards().size());
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
 			if (cardsToRedeem != null)
@@ -655,7 +656,6 @@ public class TheGame implements Serializable {
 			numArmies = 15 + 5 * (numRedemptions - 6);
 			break;
 		}// end switch case
-
 		gameLog += currentPlayer.getName() + " redeemed cards. Earned "
 				+ numArmies + "extra armies to deploy ";
 
@@ -683,13 +683,9 @@ public class TheGame implements Serializable {
 		return numArmies;
 	}// end redeemCards
 
-	public void setMaxDice(boolean flag) {
-		useMaxDice = flag;
-	}
-
 	public int getNumAttackDice() {
 		int forces = moveFrom.getForcesVal();
-		if (useMaxDice) {
+		if (maxAttackDice == 3) {
 			if (forces > 3) {
 				return 3;
 			} // end if
@@ -699,96 +695,30 @@ public class TheGame implements Serializable {
 			else {
 				return 1;
 			} // end else
-		} else {
-			int diceAllowed = 0;
-			if (forces > 3) {
-				diceAllowed = 3;
-			} // end if
-			else if (forces > 2) {
-				diceAllowed = 2;
-			} // end else if
-			else {
+		} else if(maxAttackDice == 2)
+		{
+			if(forces > 2)
+				return 2;
+			else 
 				return 1;
-			} // end else
-
-			// Let the AI choose
-			if (currentPlayer instanceof AI) {
-				return ((AI) currentPlayer).chooseMyDiceToRoll(diceAllowed);
-			} // end if
-
-			// Otherwise, it's a human
-			int diceToUse = -1;
-
-			while (diceToUse == -1) {
-				String sNumDice = JOptionPane
-						.showInputDialog("How many dice would you like to throw? You can throw up to "
-								+ diceAllowed);
-
-				try {
-					diceToUse = Integer.parseInt(sNumDice);
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Invalid number.",
-							"Dice Error", JOptionPane.ERROR_MESSAGE);
-					continue;
-				} // end catch
-
-				if (diceToUse > diceAllowed || diceToUse < 0) {
-					diceToUse = -1;
-					JOptionPane.showMessageDialog(null, "Invalid number.",
-							"Dice Error", JOptionPane.ERROR_MESSAGE);
-				} // end if
-			} // end while
-
-			return diceToUse;
-		}
+		} // end else if
+		else
+			return 1;	
 	}// end getNumAttackDice
 
 	public int getNumDefenseDice() {
 
 		int forces = moveTo.getForcesVal();
-		if (useMaxDice) {
+		if (maxDefendDice == 2) {
 			if (forces > 1)
 				return 2;
 			else
 				return 1;
 		} // end if
-		else {
-			int diceAllowed = 0;
-			if (forces > 1) {
-				diceAllowed = 2;
-			} // end else if
-			else {
-				return 1;
-			} // end else
 
-			if (moveTo.getOccupier() instanceof HumanPlayer) {
-				int diceToUse = -1;
-
-				while (diceToUse == -1) {
-					String sNumDice = JOptionPane
-							.showInputDialog("How many dice would you like to throw? You can throw up to "
-									+ diceAllowed);
-
-					try {
-						diceToUse = Integer.parseInt(sNumDice);
-					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Invalid number.",
-								"Dice Error", JOptionPane.ERROR_MESSAGE);
-						continue;
-					} // end catch
-
-					if (diceToUse > diceAllowed || diceToUse < 0) {
-						diceToUse = -1;
-						JOptionPane.showMessageDialog(null, "Invalid number.",
-								"Dice Error", JOptionPane.ERROR_MESSAGE);
-					} // end if
-				} // end while
-
-				return diceToUse;
-			} // end if
-			return ((AI) moveTo.getOccupier()).chooseMyDiceToRoll(diceAllowed);
-		} // end else
-	}// end getNumDefenseDice
+		else 
+			return 1;
+	} // end else
 
 	public boolean attack() {
 		numAttacks++;
@@ -1319,5 +1249,13 @@ public class TheGame implements Serializable {
 
 	public boolean isGameStarted() {
 		return gameStarted;
+	}
+
+	public void changeAttackDice(int i) {
+		maxAttackDice = i;
+	}
+
+	public void changeDefendDice(int i) {
+		maxDefendDice = i;
 	}
 }// end theGame
