@@ -28,6 +28,7 @@ public class DiscardPile implements Serializable{
 	
 	public void addToPile(ArrayList<Card> e){
 		pile.addAll(e);
+		size+=e.size();
 	}
 	
 	public void removeAll(){
