@@ -729,8 +729,13 @@ public class TheGame implements Serializable {
 			return 1;
 	} // end else
 
+	/*
+	 * Attack: 	get the correct amount of die, and then check if the attackWasSuccesful or not.
+	 * 			Subtract units from countries that took damage, and check if the defending country has 0 units.
+	 * 			If so, have the attacker occupy that country. Then check if a user has been defeated, and if the game
+	 * 			is finished.
+	 */
 	public boolean attack() {
-		numAttacks++;
 
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
@@ -817,8 +822,7 @@ public class TheGame implements Serializable {
 
 		int units = 0;
 
-		// let the AI choose how many to move
-		// STUB!!!! change for AI behavior change
+		// Move all of ai's units but one to the new country
 		if (currentPlayer instanceof AI) {
 			units = moveFrom.getForcesVal() - 1;
 		} // end if
@@ -949,34 +953,10 @@ public class TheGame implements Serializable {
 
 	}// end unitsToReturn
 
-	public int getArmiesToAttack(Country countryToRemoveUnits) {
-		boolean moveFlag = false, continueFlag = false;
-		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
-		String unitsToMove = "";
-
-		while (!moveFlag) {
-			unitsToMove = JOptionPane
-					.showInputDialog("How many armies do you want to attack with?");
-			try {
-				unitsToReturn = Integer.parseInt(unitsToMove);
-				continueFlag = true;
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "That was invalid number.",
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-			if (continueFlag) {
-				if (unitsToReturn >= totalUnits || unitsToReturn < 0) {
-					JOptionPane.showMessageDialog(null, "Invalid number.",
-							"Error", JOptionPane.ERROR_MESSAGE);
-				} else {
-					moveFlag = true;
-				}
-			}
-		}
-		return unitsToReturn;
-
-	}// end getArmiesToAttack
-
+	/*
+	 * Moves numUnits from fromCountry to toCountry, but checks if both countries are owned by current,
+	 * and that they are both connected by other friendly countries
+	 */
 	public boolean moveUnitsToCountry(int numUnits, Country fromCountry,
 			Country toCountry, Player current) {
 
@@ -993,6 +973,9 @@ public class TheGame implements Serializable {
 		return result;
 	}// end moveUnitsToCountry
 
+	/*
+	 * finds the shortest path between two connected countries on the map
+	 */
 	private void findPath(Country fromCountry, ArrayList<Country> visited,
 			Country toCountry, Player currentP) {
 		if (canPlace)
@@ -1023,7 +1006,11 @@ public class TheGame implements Serializable {
 
 		}
 	}// end findPath
-
+	
+	
+	/*
+	 * Checks if there are any players who have zero countries. If so, remove them from the list of players.
+	 */
 	public void removeLosers() {
 
 		Player removeMe = null;
@@ -1045,6 +1032,10 @@ public class TheGame implements Serializable {
 
 	}// end removeLosers
 
+	/*
+	 * checks if there is only 1 player left in the list of players. If so, the game is over, and sets
+	 * the flags accordingly. Returns true if game over, false otherwise.
+	 */
 	public boolean isFinished() {
 
 		if (players.size() == 1) {
@@ -1160,6 +1151,10 @@ public class TheGame implements Serializable {
 		return currentPlayer.equals(selectedCountry.getOccupier());
 	}// end playerIsOwner
 
+	
+	/*
+	 * Skips to the next phase after attack phase
+	 */
 	public boolean skipAttackPhase() {
 		boolean tmp = cardEarned;
 		clearSelections();
@@ -1176,10 +1171,8 @@ public class TheGame implements Serializable {
 	}// end skipAttackPhase
 
 	/*
-	 * public void skipAttackPhaseAI(){ skipAttackPhase(); nextPhase(); }//end
-	 * skipAI
+	 * skip to the next phase after card redemption phase
 	 */
-
 	public boolean skipCardRedemption() {
 		if (!currentPlayer.mustRedeemCards()) {
 			nextPhase();
@@ -1194,17 +1187,26 @@ public class TheGame implements Serializable {
 		return numRedemptions;
 	}// end getNumRedemptions
 
+	/*
+	 * skips players reinforcement phase, and then calls play
+	 */
 	public void passReinforcementPhase() {
 		clearSelections();
 		play();
 	}// end passReinforce
 
+	/*
+	 * resets moveFrom, moveTo, and selectedCountry
+	 */
 	public void clearSelections() {
 		moveFrom = null;
 		moveTo = null;
 		selectedCountry = null;
 	}// end clearSelections
 
+	/*
+	 * transfers numArmies 
+	 */
 	public boolean transferTroops(int numArmies) {
 		canPlace = false;
 		return moveUnitsToCountry(numArmies, moveFrom, moveTo, currentPlayer);
