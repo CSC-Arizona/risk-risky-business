@@ -116,11 +116,10 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public String reinforce() {
 		String str = "";
-		// System.out.println("gets here");
 		int surroundCounter = 0;
 
 		for (Country country : me.getCountries()) {
-
+  
 			surroundCounter = 0; 
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighbor : neighbors) {
@@ -252,27 +251,6 @@ public class HardAI implements AIStrategy, Serializable {
 
 		int randNum = rand.nextInt(allNeighboringCountries.size());
 		return allNeighboringCountries.get(randNum);
-		
-//		boolean found = false;
-//		ArrayList<Country> countries = me.getCountries();
-//		Country attackMe = null;
-//		
-//		while (!found){
-//			//System.out.println("Whilea: " + ++wa);
-//			int ran = (int)(Math.random() * countries.size());
-//			attackMe = countries.get(ran);
-//			
-//			for (Country c : attackMe.getNeighbors()){
-//				//System.out.println("Fa: " + ++fa);
-//				if (!this.equals(c.getOccupier())){
-//					found = true;
-//					break;
-//				}//end if
-//			}//end for
-//			
-//		}//end while
-//		
-//		return attackMe;
 	}
 
 	@Override 

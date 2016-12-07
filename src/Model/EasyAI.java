@@ -24,7 +24,6 @@ public class EasyAI implements AIStrategy, Serializable {
 		int randNum = 0; 
 		int i = 0;
 		while (me.getAvailableTroops() > i) { 
-			//System.out.println("A: "+ ++a);
 			i++;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
@@ -51,7 +50,7 @@ public class EasyAI implements AIStrategy, Serializable {
 						if (neighbor.getOccupier().equals(me)) {
 							neighbor.addForcesVal(1);
 							country.removeUnits(1);
-						}
+						} 
 						if (country.getForcesVal() == 2)
 							break;
 						
@@ -88,37 +87,16 @@ public class EasyAI implements AIStrategy, Serializable {
 		
 		int randInt = rand.nextInt(neighboringEnemies.size());
 		Country attackMe = neighboringEnemies.get(randInt);
-//		
-//		boolean found = false;
-//		ArrayList<Country> countries = me.getCountries();
-//		Country attackMe = null;
-//		
-//		while (!found){
-//			//System.out.println("Whilea: " + ++wa);
-//			int ran = (int)(Math.random() * countries.size());
-//			attackMe = countries.get(ran);
-//			
-//			for (Country c : attackMe.getNeighbors()){
-//				//System.out.println("Fa: " + ++fa);
-//				if (!this.equals(c.getOccupier())){
-//					found = true;
-//					break;
-//				}//end if
-//			}//end for
-//			
-//		}//end while
-//		
-		return attackMe;
+
+		return attackMe; 
 	}
-	@Override
+	@Override 
 	public ArrayList<Country> findCountriesToAttack() {
 		ArrayList<Country> fringeCountries = me.findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
 		for (Country country : fringeCountries) {
-			//System.out.println("d: "+ ++d);
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
-				//System.out.println("e: "+ ++e);
 				if (!neighboringCountry.getOccupier().equals(me) && country.getForcesVal() > 1) {
 						countriesWorthAttacking.add(neighboringCountry);
 				} // end if
