@@ -51,7 +51,7 @@ public class TheGame implements Serializable {
 	}// end constructor
 
 	/*
-	 * Return an instance of the singleton game
+	 * Return an instance of the singleton game  
 	 */
 	public static TheGame getInstance(int numOfHumanPlayers, int totalNumOfPlayers, boolean tourny) {
 		if (theGame == null)

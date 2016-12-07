@@ -121,7 +121,7 @@ public class HardAI implements AIStrategy, Serializable {
 
 		for (Country country : me.getCountries()) {
 
-			surroundCounter = 0;
+			surroundCounter = 0; 
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighbor : neighbors) {
 				if (neighbor.getOccupier().equals(me))

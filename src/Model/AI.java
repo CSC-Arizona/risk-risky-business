@@ -515,16 +515,6 @@ public class AI extends Player implements Serializable {
 //
 //		ArrayList<Card> threeInfantry = new ArrayList<>();
 //		for (Card card : getCards()) {
-//			if (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0) {
-//				threeInfantry.add(card);
-//			}
-//
-//			if (threeInfantry.size() == 3) {
-//				break;
-//			}
-//		}
-//		return threeInfantry;
-//	}// end findThreeInfantry
 
 	public AIStrategy getStrategy() {
 		return strategy;

@@ -575,7 +575,7 @@ public class riskGUI extends JFrame {
 		else{
 			while (!setFlag) {
 				ais = JOptionPane.showInputDialog("How Many AI Players?");
-				if(ais==null){
+				if(ais==null){ 
 					setFlag=true;
 					cancel=true;
 				}
@@ -751,9 +751,14 @@ public class riskGUI extends JFrame {
 		if (!splash)
 			menu.add(settings);
 
+		JMenuItem howToPlay = new JMenuItem("How To Use this GUI");
+		howToPlay.addActionListener(new HelpListener());
+		howToPlay.setActionCommand("how to play");
 		JMenuItem rules = new JMenuItem("Rules");
 		help.add(rules);
+		help.add(howToPlay);
 		help.add(about);
+		
 		this.setJMenuBar(menu);
 
 		rules.setActionCommand("rules");
@@ -1818,6 +1823,37 @@ public class riskGUI extends JFrame {
 			} else if (e.getActionCommand().compareTo("prompt") == 0){
 				useMaxDice = false;
 				//theGame.setMaxDice(useMaxDice);
+			}
+			else if(e.getActionCommand().compareTo("how to play") == 0)
+			{
+				JOptionPane.showMessageDialog(riskGUI.this, 
+						"                                 Welcome to our implementation of Risk, Game of Thrones Edition!\n"
+						+"The game will first ask if you want to play a New Game, or load a previous save. If you would like to load\n"
+						+"the file types are .ser files. Next it will ask you the usual questions, how many humans, ai's, what \n"
+						+"faction you would like to play as, and what difficulty you would like the ai's to be. Then the game begins. \n"
+						+"To place an army, click on the NAME of a country, and then the \"Place Army\" button, if that country is not\n"
+						+"currently occupied, it will place a unit for you. Then it is the next players turn. Continue doing this until\n"
+						+"all countries are occupied. Then it will move on to the reinforcement phase. Just like with placing armies,\n"
+						+"to reinforce a country, select its NAME, and then the \"Place Army\" button. You can only reinforce countries\n"
+						+"you own. When all of your units have been placed, it will move on to the next phase, beginning with the redeem\n"
+						+"card phase. In this phase, the center panel will show you how many cards you currently have (If you have any).\n"
+						+"To redeem cards, click the radio boxes beneath the cards you wish to redeem, and click the \"Trade in Cards\"\n"
+						+"button. To continue to the next phase, the Deploy Phase, press the \"Skip Phase\" button located on the top\n"
+						+"right of the screen. You can never skip the Deploy phase, and just like before, you must reinforce countries\n"
+						+"that only you own. When you are finished you will automatically be moved to the Attack Phase. To attack a \n"
+						+"country, click either the country you want to attack's NAME, or the country you want to attack from's NAME\n"
+						+"and click either the \"Go To War\" button, or the \"Attack\" button (They are the same button, located at\n"
+						+"the bottom of the info pane). Then click the other country you wish to attack, or attack from, and click the\n"
+						+"attack button. You will be alerted to the outcome of the attack. If you have conquered a country, you will be\n"
+						+"prompted with how many units you wish to move there. If you have not conquered the country yet, you will need\n"
+						+"to reselect your attacking, and attack from countries. When you are finished attacking, press the \"Skip Phase\"\n"
+						+"button located at the top right of the screen. Now you are in the reinforce phase. Click a country you own that\n"
+						+"has more than 1 unit on it, and click the transfer troops button. You will be prompted with how many units you \n"
+						+"wish to move from it, keep in mind you must leave 1. Then click an attached, friendly country, to place those units\n"
+						+"there. WHen you are finished, press the \"Skip Phase\" button at the top right of the screen, to advance to the next\n"
+						+"players turn. Continue this until the game is over, or you wish to stop. To save, click File-Save Game, or close the\n"
+						+"window, which will then prompt you if you wish to save the game or not.\n"
+						+"                                                                               Happy conquering!");
 			}
 		}// actionPerformed
 	}// end helpListener
