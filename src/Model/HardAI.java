@@ -18,25 +18,10 @@ public class HardAI implements AIStrategy, Serializable {
 
 	@Override
 	public ArrayList<Country> placeNewTroops() {
-<<<<<<< HEAD
+
 		ArrayList<Country> countries = new ArrayList<>();
 		ArrayList<Country> fringes = me.findFringeCountries();
 		int randNum = 0;
-=======
-		ArrayList<Country> returnMe = new ArrayList<>();
-		ArrayList<Continent> conts = Map.getAllContinents();
-		Collections.shuffle(conts);// shuffle continents up so that you don't
-									// always select the same continent over and
-									// over again
-		int index = 0;
-		Continent chosen = null;
-		
-		while (chosen == null){
-			chosen = conts.get(index);
-		}
-		
-		ArrayList<Country> mine = me.getCountries();
->>>>>>> finalForm
 		int i = 0;
  		while (me.getAvailableTroops() > i) {
 			i+=2;

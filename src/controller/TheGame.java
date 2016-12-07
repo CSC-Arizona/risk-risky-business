@@ -521,6 +521,7 @@ public class TheGame implements Serializable {
 					.showInputDialog("How many armies do you want to place? (You can place "
 							+ currentPlayer.getAvailableTroops() + ")");
 
+
 			try {
 				armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
 				continueFlag = true;
