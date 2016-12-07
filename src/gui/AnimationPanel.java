@@ -63,6 +63,8 @@ public class AnimationPanel extends JPanel {
 	{
 		loadImages();
 		model = game;
+		attackDice= model.getAttackDice();
+		defenseDice= model.getDefenseDice();
 		repaint();
 	}
 
@@ -118,11 +120,11 @@ public class AnimationPanel extends JPanel {
 		else if (model.getHit() == 0) {
 			int i=0;
 			for(Dice c : attackDice){
-				gr.drawImage(redDice.get(c.getValue()-1),(60*(i+1)),100,50,150, null);
-				i++; 
+				gr.drawImage(redDice.get(c.getValue()-1),OffenseXValue+100+((i+1)*50)+10,OFFENSE_Y, 50,50, null);
+				i++;
 			}
 			for(Dice c : defenseDice){
-				gr.drawImage(whiteDice.get(c.getValue()-1),(60*(i+1)),100,50,150, null);
+				gr.drawImage(whiteDice.get(c.getValue()-1),DefenseXValue-((i+1)*50)-10,DEFENSE_Y,50,50, null);
 				i++;
 			}
 			gr.drawImage(getOffenseSprite(), jiggleOffense(), OFFENSE_Y, null);
@@ -138,13 +140,13 @@ public class AnimationPanel extends JPanel {
 		} else if (model.getHit() == 1) {
 			int i=0;
 			for(Dice c : attackDice){
-				gr.drawImage(redDice.get(c.getValue()-1),(60*(i+1)),10,50,50, null);
+				gr.drawImage(redDice.get(c.getValue()-1),OffenseXValue+100+((i+1)*50)+10,OFFENSE_Y,50,50, null);
 				i++;
 			}
 			for(Dice c : defenseDice){
-				gr.drawImage(whiteDice.get(c.getValue()-1),(60*(i+1)),10,50,50, null);
+				gr.drawImage(whiteDice.get(c.getValue()-1),DefenseXValue-((i+1)*50)-10,DEFENSE_Y,50,50, null);
 				i++;
-			}
+			} 
 			gr.drawImage(getOffenseSprite(), jiggleOffense(), OFFENSE_Y, null);
 			gr.drawImage(getDefenseSprite(), jiggleDefense(), DEFENSE_Y, null);
 			wind++;
@@ -158,11 +160,11 @@ public class AnimationPanel extends JPanel {
 		} else {
 			int i=0;
 			for(Dice c : attackDice){
-				gr.drawImage(redDice.get(c.getValue()-1),(60*(i+1)),10,50,50, null);
+				gr.drawImage(redDice.get(c.getValue()-1),OffenseXValue+100+((i+1)*50)+10,OFFENSE_Y,50,50, null);
 				i++;
 			}
 			for(Dice c : defenseDice){
-				gr.drawImage(whiteDice.get(c.getValue()-1),(60*(i+1)),10,50,50, null);
+				gr.drawImage(whiteDice.get(c.getValue()-1),DefenseXValue-((i+1)*50)-10,DEFENSE_Y,50,50, null);
 				i++;
 			}
 			gr.drawImage(getOffenseSprite(), OffenseXValue, OFFENSE_Y, null);
@@ -425,10 +427,15 @@ public class AnimationPanel extends JPanel {
 	}
 
 	public void resetStart() {
+		attackDice= model.getAttackDice();
+		defenseDice= model.getDefenseDice();
 		starting = true;
 		frameCounter = 0;
 		wind = 0;
 		spriteOStatus = 0;
 		spriteDStatus = 0;
+		swooshStatus=0;
+		swooshX=125;
+		swooshY=295;
 	}
 }
