@@ -492,6 +492,8 @@ public class Tests {
 
 	@Test
 	public void testAIStrat() {
-
+		AI aiE = new AI(new EasyAI(), 0);
+		assertEquals(aiE.chooseMyDiceToRoll(1), 1);	
 	}
+	
 }
