@@ -122,10 +122,8 @@ public class riskGUI extends JFrame {
 			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File("LibreBaskerville-Regular.otf"));
 			gotFontBody = gotFontBody.deriveFont(24f);
 		} catch (FontFormatException e) {
-			System.out.println("What'd you do???");
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("What'd you do???");
 			e.printStackTrace();
 		}
 
@@ -142,7 +140,6 @@ public class riskGUI extends JFrame {
 		empty = BorderFactory.createEmptyBorder();
 		raisedWithColor = BorderFactory.createCompoundBorder(raisedetched, blueline);
 
-		System.out.println("Width = " + width + " Height = " + height);
 
 		selectedCards = new ArrayList<Card>();
 
@@ -1769,7 +1766,6 @@ public class riskGUI extends JFrame {
 	private class CountryClickListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(e.getActionCommand() + " pressed.");
 			// step through all countries until the same name as the
 			// actionCommand, then return that country
 			// No country is selected if it's the card phase
@@ -1834,50 +1830,6 @@ public class riskGUI extends JFrame {
 
 			drawingPanel.repaint();
 		}// end actionPerformed
-			// Old Version below
-
-		// for now just allow players to move armies
-		// player move then ai move if ai turn
-		// if(theGame.getCurrentPlayer() instanceof AI)
-		// ((AI) theGame.getCurrentPlayer()).myTurn();
-		// System.out.println("Place clicked");
-		// if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
-		// if (theGame.getSelectedCountry().getOccupier()
-		// .equals(theGame.getCurrentPlayer())) {
-		//
-		// if (!moveUnitsFlag) {
-		// if (theGame.getSelectedCountry().getForcesVal() <= 1) {
-		// JOptionPane
-		// .showMessageDialog(
-		// null,
-		// "You must choose a country with more than one army.",
-		// "Error", JOptionPane.ERROR_MESSAGE);
-		// } else {
-		// numOfUnitsToMove = getUnitsToMove(theGame
-		// .getSelectedCountry());
-		// moveUnitsFlag = true;
-		// moveUnitsFromCountry = theGame.getSelectedCountry();
-		// }
-		// } else {
-		// boolean result = theGame.moveUnitsToCountry(
-		// numOfUnitsToMove, moveUnitsFromCountry,
-		// theGame.getSelectedCountry(),
-		// theGame.getCurrentPlayer());
-		// // theGame.getSelectedCountry().setForcesVal(numOfUnitsToMove);
-		// if (result)
-		// moveUnitsFlag = false;
-		// else
-		// JOptionPane
-		// .showMessageDialog(
-		// null,
-		// "Invalid Country Choice. Please choose another",
-		// "Error", JOptionPane.ERROR_MESSAGE);
-		// } // end else
-		// } // end if
-		// theGame.setSelectedCountry(null);
-		// drawingPanel.repaint();
-		// }
-		// }// end actionPerformed
 
 		// pops up a pane to ask how many units to move, which returns a string
 		// it then tries to parse that string into an int, and if it does
@@ -2068,63 +2020,6 @@ public class riskGUI extends JFrame {
 				} // end else
 			} // end else if
 
-			// //System.out.println("Place clicked");
-			// if (theGame.isPlacePhase()) {
-			// // next player place army
-			// numOfOwnedCountries = theGame.getCurrentPlayer().getCountries()
-			// .size();
-			// //theGame.placeArmies(1);
-			// drawingPanel.repaint();
-			// /* theGame.roundOfPlacement();
-			// if (numOfOwnedCountries < theGame.getCurrentPlayer()
-			// .getCountries().size())
-			// theGame.nextPlayer();*/
-			// theGame.play();
-			// } else if (theGame.isReinforcePhase() && !theGame.isPlayPhase())
-			// {
-			// int remainingTroops = theGame.getCurrentPlayer()
-			// .getAvailableTroops();
-			// theGame.placeArmies(1);
-			// drawingPanel.repaint();
-			// // player can reinforce countries
-			// // theGame.roundOfReinforcement();
-			// // if (remainingTroops > theGame.getCurrentPlayer()
-			// // .getAvailableTroops())
-			// // theGame.nextPlayer();
-			//
-			// } // end if
-			// else if (theGame.isDeployPhase()) {
-			// deployFlag = false;
-			// while (!deployFlag) {
-			// int armiesToPlaceInt = 0;
-			// String armiesToPlaceStr = JOptionPane
-			// .showInputDialog("How many armies do you want to place? (You can
-			// place "
-			// + theGame.getCurrentPlayer()
-			// .getAvailableTroops() + ")");
-			// try {
-			// armiesToPlaceInt = Integer.parseInt(armiesToPlaceStr);
-			// continueFlag = true;
-			// } catch (NumberFormatException e) {
-			// JOptionPane.showMessageDialog(null,
-			// "That was invalid number.", "Error",
-			// JOptionPane.ERROR_MESSAGE);
-			// }
-			// if (continueFlag) {
-			// if (armiesToPlaceInt < 0
-			// || armiesToPlaceInt > theGame
-			// .getCurrentPlayer()
-			// .getAvailableTroops()) {
-			// JOptionPane.showMessageDialog(null,
-			// "Invalid number.", "Error",
-			// JOptionPane.ERROR_MESSAGE);
-			// } else {
-			// theGame.placeArmies(armiesToPlaceInt);
-			// deployFlag = true;
-			// }//end else
-			// }//end if
-			// }
-			// }
 			theGame.setSelectedCountry(null);
 			drawingPanel.repaint();
 
@@ -2152,7 +2047,6 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			gameType = arg0.getActionCommand();
-			System.out.println(gameType);
 			if (gameType.compareTo("New Game!") == 0)
 				splashNumPlayers();
 			else

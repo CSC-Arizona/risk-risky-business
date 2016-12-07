@@ -196,7 +196,7 @@ public class TheGame implements Serializable {
 			changeToReinforcePhase();
 		} // end else if
 		else if (isGameOver()) {
-			// System.out.println("The game is over");
+			gameLog += "The Game is Over.\n" +currentPlayer.getName() +" has won.";
 		} else {
 			throw new IllegalStateException("The phase was invalid");
 		}
@@ -344,7 +344,7 @@ public class TheGame implements Serializable {
 			aiTurn();
 			if (gameOver)
 				break;
-			//System.out.println(getPhase());
+
 		} // end while
 	}// end play
 
@@ -435,10 +435,6 @@ public class TheGame implements Serializable {
 		else if (isFinished()){
 			
 		}//end else if
-		// Otherwise, problem!
-		// else {
-		// System.out.println("game over");
-		// } // end else
 	}// end aiturn
 
 	/*
@@ -994,7 +990,7 @@ public class TheGame implements Serializable {
 			if (c.equals(toCountry)) {
 				visited.add(c);
 				canPlace = true;
-				printPath(visited);
+				//printPath(visited);
 				visited.remove(visited.size() - 1);
 				break;
 			}
@@ -1012,13 +1008,13 @@ public class TheGame implements Serializable {
 		}
 	}// end findPath
 
-	private void printPath(ArrayList<Country> visited) {
-		for (Country node : visited) {
-			System.out.print(node);
-			System.out.print(" ");
-		}
-		System.out.println();
-	}// end printPath
+//	private void printPath(ArrayList<Country> visited) {
+//		for (Country node : visited) {
+//			System.out.print(node);
+//			System.out.print(" ");
+//		}
+//		System.out.println();
+//	}// end printPath
 
 	public void removeLosers() {
 
