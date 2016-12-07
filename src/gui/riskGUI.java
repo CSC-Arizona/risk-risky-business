@@ -98,7 +98,7 @@ public class riskGUI extends JFrame {
 	private Player nextPlayer, currPlayer;
 	private int humans;
 	private int ai = -1;
-	private int numOfUnitsToMove = 0;
+	private int numOfUnitsToMove = 0; 
 	private ArrayList<String> houses;
 	private ArrayList<String> playerNames;
 	private ArrayList<String> possHouses;
@@ -395,7 +395,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players);
 		theGame.startGame();
-		//animations(attacker, defender);
+		animations(attacker, defender);
 
 	}// end splashLoading2
 
@@ -782,15 +782,15 @@ public class riskGUI extends JFrame {
 		
 		AnimationPanel p = new AnimationPanel(theGame);
 		
-		//p.setLocation(100, 100);
+		p.setLocation(width/2-250, height/2-250);
 		p.setPreferredSize(new Dimension(500,500));
 		p.setDefenseFaction(defender);
 		p.setOffenseFaction(attacker);
 		//this.remove(drawingPanel);
-		animationFrame.add(p);
+		animationFrame.add(p, BorderLayout.CENTER);
 		animationFrame.setVisible(true);
 		//animationFrame.revalidate();
-		p.repaint();
+		p.update(getGraphics());
 		//this.add(p);
 		//this.revalidate();
 		//this.repaint();
@@ -806,11 +806,12 @@ public class riskGUI extends JFrame {
 				System.out.println("nahhh");
 			}
 			//animationFrame.revalidate();
-			animationFrame.repaint();
+			p.update(getGraphics());
 			i++;
 		}
 		
 		animationFrame.setVisible(false);
+		drawingPanel.repaint();
 		//this.remove(p);
 		//this.add(drawingPanel);
 		//this.revalidate();

@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -49,19 +50,23 @@ public class AnimationPanel extends JPanel {
 //		defenseDice.add(five);
 		attackDice= model.getAttackDice();
 		defenseDice= model.getDefenseDice();
+		setLocation(500,500);
 		//this.setSize(500, 500);
+		this.update(getGraphics());
 		this.repaint();
 	}
-
+	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D gr = (Graphics2D) g;
-		super.paintComponent(gr);
+		super.paintComponent(gr); 
 
 		 if (model == null) {
 			 System.out.println("model is null");
 			 return;
 		 }
 		 System.out.println("model is not");
+		 gr.setColor(Color.RED);
+		 //gr.drawRect(500, 500, 1000, 1000);
 		
 		// gr.drawImage(background, 0, 0, null);
 

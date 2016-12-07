@@ -159,6 +159,7 @@ public class Tests {
 
 	@Test
 	public void testContinent() {
+		//85.6% coverage
 		if (players == null)
 			players = new ArrayList<>();
 		players.add(new HumanPlayer(2));
