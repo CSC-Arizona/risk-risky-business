@@ -66,6 +66,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.ComponentUI;
 
+import controller.TheGame;
 import Model.*;
 import songplayer.SoundClipPlayer;
 

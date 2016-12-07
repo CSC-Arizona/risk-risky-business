@@ -4,7 +4,11 @@
  * 	Purpose:	This tournament mode class plays the game with just all AI players to test the AI strategies
  */
 
-package Model;
+package controller;
+
+import Model.AI;
+import Model.EasyAI;
+import Model.MediumAI;
 
 public class Run6Bots {
 

@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import controller.TheGame;
 import Model.Dice;
 import Model.Faction;
-import Model.TheGame;
 
 /**
  * (Heavily inspired by DuckHuntStart)

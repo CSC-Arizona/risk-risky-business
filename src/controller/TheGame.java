@@ -1,4 +1,4 @@
-package Model;
+package controller;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,6 +6,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+
+import Model.AI;
+import Model.Card;
+import Model.Country;
+import Model.Deck;
+import Model.Dice;
+import Model.DiscardPile;
+import Model.EasyAI;
+import Model.HardAI;
+import Model.HumanPlayer;
+import Model.Map;
+import Model.MediumAI;
+import Model.Player;
 
 public class TheGame implements Serializable {
 	private ArrayList<Player> players;
@@ -356,7 +369,7 @@ public class TheGame implements Serializable {
 	 * Tells the AI to play one move
 	 */
 	private void aiTurn() throws IllegalStateException {
-		if (isPlacePhase()) {
+		if (isPlacePhase()) { 
 			boolean placed = false;
 			// Ask the AI to pick a country until they pick a country without an
 			// owner
@@ -364,7 +377,7 @@ public class TheGame implements Serializable {
 				selectedCountry = ((AI) currentPlayer).getStrategy().placeUnit();
 
 				if (selectedCountry.getOccupier() == null)
-					placed = true;
+					placed = true; 
 			} // end while
 			placeArmies(1);
 			nextPlayer();
@@ -405,7 +418,6 @@ public class TheGame implements Serializable {
 
 		// During attack phase
 		else if (isAttackPhase()) {
-
 			// printAllCountriesAndOccupiers();
 			// moveTo = ((AI) currentPlayer).getCountryTo;
 			// moveFrom = ((AI) currentPlayer).findAttackingCountry(moveTo);
@@ -417,7 +429,7 @@ public class TheGame implements Serializable {
 
 			else{
 				moveFrom = ((AI) currentPlayer).getStrategy().findAttackingCountry(moveTo);
-				if (moveFrom != null)
+				if (moveFrom != null) 
 					attack();
 	
 				// If the AI decided to finish attacking
@@ -433,7 +445,7 @@ public class TheGame implements Serializable {
 			nextPhase();
 			nextPlayer();
 		} // end else if
-		//Do nothing if the game is over!
+		//Do nothing if the game is over! 
 		else if (isFinished()){
 			
 		}//end else if
