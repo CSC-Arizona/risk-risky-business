@@ -1005,10 +1005,10 @@ public class riskGUI extends JFrame {
 				// drawGridAndNumbers(g2);
 			} else {
 				drawUnits(g2);
-				g2.setColor(Color.BLACK);
-				g2.setFont(gotFontBody.deriveFont(Font.BOLD, 30f));
-				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
-						(drawingPanel.getWidth() / 2) - 100, drawingPanel.getHeight() / 2);
+//				g2.setColor(Color.BLACK);
+//				g2.setFont(gotFontBody.deriveFont(Font.BOLD, 30f));
+//				g2.drawString(theGame.getCurrentPlayer().getName() + " has achieved total victory.",
+//						(drawingPanel.getWidth() / 2) - 100, drawingPanel.getHeight() / 2);
 
 				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
@@ -1045,7 +1045,7 @@ public class riskGUI extends JFrame {
 					break;
 				case LANNISTER:
 					g2.drawImage(lannister.getImage(), 0, 0, 100, 100, null);
-					break;
+					break; 
 				case DOTHRAKI:
 					g2.drawImage(dothraki.getImage(), 0, 0, 100, 100, null);
 					break;
@@ -1063,12 +1063,15 @@ public class riskGUI extends JFrame {
 			g2.setFont(gotFontBody.deriveFont(20f));
 			g2.drawString("Current Player: " + currentPlayer.getName(), 110, 25);
 			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
-			if (!theGame.isPlacePhase() && theGame.isReinforcePhase())
+			if(theGame.isPlayPhase()&& theGame.isReinforcePhase()){
+			}
+			else if (!theGame.isPlacePhase() && theGame.isReinforcePhase())
 				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units left to place.",
 						110, 65);
-			if (theGame.isDeployPhase())
+			
+			else if (theGame.isDeployPhase())
 				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110,
-						65);
+						65);  
 
 			// TODO display amount of troops "Picked up" when moving troops
 			// around at end of turn
@@ -1599,8 +1602,12 @@ public class riskGUI extends JFrame {
 				directions.setHorizontalAlignment(JLabel.CENTER);
 				// Font labFont = gotFontBody.deriveFont(Font.BOLD, 32);
 				// directions.setFont(labFont);
-
-				if (theGame.isRedeemCardPhase()) {
+				if(theGame.isFinished()){
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
+					directions.setText(theGame.getCurrentPlayer().getName() + " has achieved total victory.");
+					this.add(directions, BorderLayout.CENTER);
+				}
+				else if (theGame.isRedeemCardPhase()) {
 					// if (!theGame.isPlayPhase())
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 28));
 					directions.setText("Redeem your cards");
