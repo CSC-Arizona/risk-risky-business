@@ -19,11 +19,10 @@ public class AI extends Player implements Serializable {
 	private ArrayList<Country> fringes;
 
 	private int numAttacks;
-	
-	//DELETE USSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-	static int w1, w2,f1,w3,f2,f3,w4,w5,w6,w7,w8,w9,wa,fa;
-	// private Game theGame;
 
+	// DELETE USSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+	static int w1, w2, f1, w3, f2, f3, w4, w5, w6, w7, w8, w9, wa, fa;
+	// private Game theGame;
 
 	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
@@ -38,7 +37,7 @@ public class AI extends Player implements Serializable {
 	// are, go to the next one, otherwise
 	// return that country as a selection. Used for placement in the first turn.
 	public Country checkAllNeighbors() {
-		int i = 0, j = 0; 
+		int i = 0, j = 0;
 		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size()) {
@@ -72,16 +71,11 @@ public class AI extends Player implements Serializable {
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
 	public boolean finishedAttacking() {
-		
-		//If you're close to finished, just conquerrrrr
+
+		// If you're close to finished, just conquerrrrr
 		if (getCountries().size() > 44)
 			return false;
-		
-	
 
-		
-		
-		
 		int i = 0;
 		for (Country country : findFringeCountries()) {
 			if (country.getForcesVal() == 1)
@@ -94,11 +88,10 @@ public class AI extends Player implements Serializable {
 			if (strategy.findCountriesToAttack() == null)
 				return true;
 		}
-//		
-//		return false;
-		
-		return false;
+		//
+		// return false;
 
+		return false;
 
 	}// end finishedAttacking
 
@@ -138,7 +131,7 @@ public class AI extends Player implements Serializable {
 		int randNum = 0;
 		int i = 0;
 		while (getAvailableTroops() > i) {
-//			System.out.println("While3: "+ ++w3);//next: w4, f2
+			// System.out.println("While3: "+ ++w3);//next: w4, f2
 
 			i++;
 			randNum = rand.nextInt(getCountries().size());
@@ -169,8 +162,8 @@ public class AI extends Player implements Serializable {
 	}
 
 	public ArrayList<Country> findFringeCountries() {
-//		if (fringes != null)
-//			return fringes;
+		// if (fringes != null)
+		// return fringes;
 
 		ArrayList<Country> fringeCountries = new ArrayList<>();
 
