@@ -200,12 +200,12 @@ public class riskGUI extends JFrame {
 		menu.add(AIDiff);
 	}// end setUpAiMenu
 
-	public void loadGame() {
+	public void loadGame() { 
 		// TODO
 		// splashNumPlayers(); //here for now so that we don't break things.
 		boolean error = setUpLoad();
 		if (error) {
-			JOptionPane.showMessageDialog(null, "No game data has been saved. Start a new game.", "Error",
+			JOptionPane.showMessageDialog(null, "No game data has been succesfully loaded. Start a new game.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			splashNumPlayers();
 		} else {
@@ -238,6 +238,9 @@ public class riskGUI extends JFrame {
 				ex.printStackTrace();
 				error = true;
 			}
+		}
+		else{
+			error=true;
 		}
 
 		/*
