@@ -913,7 +913,7 @@ public class riskGUI extends JFrame {
 		drawingPanel.setLayout(null);
 		drawingPanel.setSize(width - 40, height - 70);
 		drawingPanel.setLocation(10, 10);
-		drawingPanel.setBackground(Color.LIGHT_GRAY);
+		drawingPanel.setBackground(Color.BLACK);
 		drawingPanel.repaint();
 
 		// Prepare to draw the buttons!
@@ -924,13 +924,16 @@ public class riskGUI extends JFrame {
 
 		// Draw country panel
 		currCountryPanel = new CountryPanel();
-		drawingPanel.add(currCountryPanel);
+		if(humans!=0 && !theGame.isFinished())
+			drawingPanel.add(currCountryPanel);
 		this.add(drawingPanel, BorderLayout.CENTER);
 		drawingPanel.repaint();
+		this.repaint();
 
-		player.stopTheme();
-		player.startPlay();
-		setUpStatButton();
+		//player.stopTheme();
+		//player.startPlay();
+		if(humans!=0)
+			setUpStatButton();
 	}// end setUpDrawingPanel
 
 	private void setUpImages() {
@@ -976,7 +979,7 @@ public class riskGUI extends JFrame {
 			if (theGame != null)
 				gameOver = theGame.isGameOver();
 			Graphics2D g2 = (Graphics2D) g;
-			g2.setColor(Color.white);
+			g2.setColor(Color.black);
 			super.paintComponent(g2);
 
 			Image tmp;
@@ -993,7 +996,7 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 
 			if (!gameOver) {
-				if (!splash) {
+				if (!splash && !(humans==0)) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
@@ -1159,8 +1162,29 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			drawingPanel.revalidate();
-			drawingPanel.repaint();
+
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+				System.out.println("nahhh");
+			}
+//			this.remove(drawingPanel);
+//			this.revalidate();
+//			this.repaint();
+//			setUpDrawingPanel();
+//			setUpMenu();
+//			//setUpClearButton();
+//			//setUpPassButton();
+			//setUpAIMenu();
+//			this.revalidate();
+//			this.repaint();
+			//drawingPanel.repaint();
+			drawingPanel.update(drawingPanel.getGraphics());
+			//this.revalidate();
+			//this.repaint();
+
+
 		}// end update
 
 	}// end boardPanel
@@ -1171,8 +1195,8 @@ public class riskGUI extends JFrame {
 
 	private class StatPanel extends JPanel {
 		private Player currPlayer;
-		private CurrentPlayerStatsPanel currPanel;
-		private AllPlayerStatsPanel allPanel;
+		private CurrentPlayerStatsPanel currPanel; 
+		private AllPlayerStatsPanel allPanel; 
 		private ArrayList<Player> allPlayers;
 
 		public StatPanel() {
