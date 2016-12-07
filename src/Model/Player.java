@@ -152,7 +152,7 @@ public abstract class Player implements Serializable{
 		return cardsToDiscard;
 	}
 	
-	public void discardCards(ArrayList<Card> cards) {
+	public void discardCards(ArrayList<Card> cards) { 
 		myCards.removeAll(cards);
 		
 		//Change whether the cards need to be redeemed

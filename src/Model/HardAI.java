@@ -10,7 +10,7 @@ public class HardAI implements AIStrategy, Serializable {
 	private AI me;
 
 	public HardAI() {
-	};
+	}; 
 
 	public HardAI(AI ai) {
 		me = ai;
@@ -252,6 +252,27 @@ public class HardAI implements AIStrategy, Serializable {
 
 		int randNum = rand.nextInt(allNeighboringCountries.size());
 		return allNeighboringCountries.get(randNum);
+		
+//		boolean found = false;
+//		ArrayList<Country> countries = me.getCountries();
+//		Country attackMe = null;
+//		
+//		while (!found){
+//			//System.out.println("Whilea: " + ++wa);
+//			int ran = (int)(Math.random() * countries.size());
+//			attackMe = countries.get(ran);
+//			
+//			for (Country c : attackMe.getNeighbors()){
+//				//System.out.println("Fa: " + ++fa);
+//				if (!this.equals(c.getOccupier())){
+//					found = true;
+//					break;
+//				}//end if
+//			}//end for
+//			
+//		}//end while
+//		
+//		return attackMe;
 	}
 
 	@Override

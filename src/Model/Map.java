@@ -86,7 +86,7 @@ public class Map implements Serializable {
 		totalBonus += green.payOwnerBonus(player);
 		totalBonus += pink.payOwnerBonus(player);
 		totalBonus += red.payOwnerBonus(player);
-		totalBonus += black.payOwnerBonus(player);
+//		totalBonus += black.payOwnerBonus(player);
 		totalBonus += yellow.payOwnerBonus(player);
 
 		return totalBonus;

@@ -38,9 +38,28 @@ public class Tests {
 	public void testCard() {
 		// 93% coverage
 		Card us = new Card("murrica", "infantry");
+		Card us2 = new Card("murrica", "cavalry");
+		Card us3 = new Card("murrica", "artillery");
+		Card us0 = new Card("murrica", "WILD");
+		
 		assertEquals(us.getCountry(), "murrica");
 		assertEquals(us.getUnit(), "infantry");
 		assertEquals(us.toString(), "murrica, infantry");
+		
+		//unit types
+		assertEquals(1, us.getUnitType());
+		assertEquals(2, us2.getUnitType());
+		assertEquals(3, us3.getUnitType());
+		assertEquals(0, us0.getUnitType());
+		
+		//comparisons
+		assertTrue(new Card("flarm", "infantry").equals(us));
+		assertTrue(new Card("flarm", "cavalry").equals(us2));
+		assertTrue(new Card("flarm", "artillery").equals(us3));
+		assertTrue(new Card("flarm", "wild").equals(us0));
+		assertTrue(us0.equals(us));
+		assertTrue(us.equals(us0));
+		assertTrue(us0.equals(us3));
 	}
 	
 	@Test
@@ -184,23 +203,47 @@ public class Tests {
 	}
 
 	@Test
-	public void testRedeemCards() {
+	public void testRedeemCards() { 
 		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
 		Card walCard = new Card("The Wall", "cavalry");
 		Card someCard = new Card("Skagos", "artillery");
 		Card nextCard = new Card("The Wall Else", "infantry");
-		Player one = new HumanPlayer(1);
-		Player two = new HumanPlayer(1);
+		Player one = new AI(new EasyAI(), 1);
+		Player two = new AI(new MediumAI(),1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
 		skagos.addForcesVal(3);
 		one.occupyCountry(wall);
 		one.occupyCountry(skagos);
+		one.addCard(walCard);
+		one.addCard(someCard);
+		one.addCard(nextCard);
+		
+		//redeem.add(nextCard); 
+		redeem.add(walCard);
 		redeem.add(someCard);
 		redeem.add(nextCard);
+		assertEquals(one.getCards(), redeem);
+		
+		one.addCard(walCard);
+		one.addCard(someCard);
+		
+//		for (Card c: one.redeemCards()){
+//			System.out.println(c.toString());
+//		}
+		assertEquals(one.redeemCards(), redeem);
+		
+		redeem = new ArrayList<Card>();
+		two.addCard(walCard);
+		two.addCard(walCard);
+		two.addCard(walCard);
+		two.addCard(someCard);
+		two.addCard(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6, false);
+		redeem.add(walCard);
+		redeem.add(walCard);
+		assertEquals(two.redeemCards(), redeem);
 	}
 
 	@Test

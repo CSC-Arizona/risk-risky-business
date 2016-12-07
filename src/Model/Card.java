@@ -27,12 +27,22 @@ public class Card implements Serializable{
 	 * Sets up Card object with its country, unit, and ImageIcon based on its country.
 	 */
 	public Card(String country, String unit) {
-		this.country = country;
-		this.unit = unit;
+		setUpCard(country, unit);
 		this.filename = this.findMyFileName();
 		myImage = new ImageIcon(filename);
-		setMyUnitType();
 	}// end card constructor
+	
+	
+	private void setUpCard(String country, String unit){
+		this.country = country;
+		this.unit = unit;
+		setMyUnitType();
+	}
+	
+	//For making fake cards
+	public Card(String country, String unit, boolean test){
+		setUpCard(country, unit);
+	}
 	
 	private void setMyUnitType(){
 		if (unit.equalsIgnoreCase("infantry")){
@@ -125,7 +135,7 @@ public class Card implements Serializable{
 	}// end getUnit
 	
 	public boolean equals(Card other){
-		//If they're the same type
+		//If they're the same type 
 		if (unitType == other.getUnitType())
 			return true;
 		

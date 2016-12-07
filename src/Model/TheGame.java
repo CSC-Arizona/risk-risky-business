@@ -37,7 +37,7 @@ public class TheGame implements Serializable {
 		// Getting the sizes
 		humans = numOfHumanPlayers;
 		ais = numOfAIPlayers;
-		totalPlayers = humans + ais;
+		totalPlayers = humans + ais; 
 		countriesClaimed = 0;
 		countriesBefore = 0;
 		countriesAfter = 0;
@@ -318,7 +318,7 @@ public class TheGame implements Serializable {
 			// Remove a random player
 			Player tmp = players.remove(ranToMove);
 			// And reinsert him at the end
-			players.add(tmp);
+			players.add(tmp); 
 		} // end for
 
 		// And lets the lucky winner go first!

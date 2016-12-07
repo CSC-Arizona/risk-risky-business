@@ -7,7 +7,10 @@ import java.util.Random;
 public class EasyAI implements AIStrategy, Serializable {
 
 	private AI me;
-
+	static int a,b,c,d,e,f,g,h,wa,fa;
+	
+	
+	
 	public EasyAI(){};
 	public EasyAI(AI ai)
 	{
@@ -20,7 +23,8 @@ public class EasyAI implements AIStrategy, Serializable {
 		Random rand = new Random();
 		int randNum = 0;
 		int i = 0;
-		while (me.getAvailableTroops() > i) {
+		while (me.getAvailableTroops() > i) { 
+			//System.out.println("A: "+ ++a);
 			i++;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
@@ -37,9 +41,11 @@ public class EasyAI implements AIStrategy, Serializable {
 	public String reinforce() {
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
+			System.out.println("b: "+ ++b);
 			if (country.getForcesVal() > 2) {
 				stopFlag = false;
 				while (country.getForcesVal() > 2 && stopFlag == false) {
+					System.out.println("C: "+ ++c);
 					int i = 0;
 					for (Country neighbor : country.getNeighbors()) {
 						if (neighbor.getOccupier().equals(me)) {
@@ -82,7 +88,26 @@ public class EasyAI implements AIStrategy, Serializable {
 		
 		int randInt = rand.nextInt(neighboringEnemies.size());
 		Country attackMe = neighboringEnemies.get(randInt);
-		
+//		
+//		boolean found = false;
+//		ArrayList<Country> countries = me.getCountries();
+//		Country attackMe = null;
+//		
+//		while (!found){
+//			//System.out.println("Whilea: " + ++wa);
+//			int ran = (int)(Math.random() * countries.size());
+//			attackMe = countries.get(ran);
+//			
+//			for (Country c : attackMe.getNeighbors()){
+//				//System.out.println("Fa: " + ++fa);
+//				if (!this.equals(c.getOccupier())){
+//					found = true;
+//					break;
+//				}//end if
+//			}//end for
+//			
+//		}//end while
+//		
 		return attackMe;
 	}
 	@Override
@@ -90,8 +115,10 @@ public class EasyAI implements AIStrategy, Serializable {
 		ArrayList<Country> fringeCountries = me.findFringeCountries();
 		ArrayList<Country> countriesWorthAttacking = new ArrayList<>();
 		for (Country country : fringeCountries) {
+			//System.out.println("d: "+ ++d);
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
+				//System.out.println("e: "+ ++e);
 				if (!neighboringCountry.getOccupier().equals(me) && country.getForcesVal() > 1) {
 						countriesWorthAttacking.add(neighboringCountry);
 				} // end if

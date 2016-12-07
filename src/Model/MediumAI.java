@@ -11,11 +11,11 @@ public class MediumAI implements AIStrategy, Serializable {
 	public MediumAI() {
 	};
 
-	public MediumAI(AI ai) {
+	public MediumAI(AI ai) { 
 		me = ai;
 	}
 
-	@Override
+	@Override 
 	public String reinforce() {
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
@@ -91,6 +91,27 @@ public class MediumAI implements AIStrategy, Serializable {
 
 		int randNum = rand.nextInt(allNeighboringEnemies.size());
 		return allNeighboringEnemies.get(randNum);
+		
+//		boolean found = false;
+//		ArrayList<Country> countries = me.getCountries();
+//		Country attackMe = null;
+//		
+//		while (!found){
+//			//System.out.println("Whilea: " + ++wa);
+//			int ran = (int)(Math.random() * countries.size());
+//			attackMe = countries.get(ran);
+//			
+//			for (Country c : attackMe.getNeighbors()){
+//				//System.out.println("Fa: " + ++fa);
+//				if (!this.equals(c.getOccupier())){
+//					found = true;
+//					break;
+//				}//end if
+//			}//end for
+//			
+//		}//end while
+//		
+//		return attackMe;
 	}
 
 	@Override
