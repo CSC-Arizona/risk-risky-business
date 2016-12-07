@@ -18,6 +18,7 @@ public class AI extends Player implements Serializable {
 	private Random rand;
 	private AIStrategy strategy;
 	private ArrayList<Country> fringes;
+	private int numAttacks;
 	
 	//DELETE USSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 	static int w1, w2,f1,w3,f2,f3,w4,w5,w6,w7,w8,w9,wa,fa;
@@ -25,6 +26,7 @@ public class AI extends Player implements Serializable {
 
 	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
+		numAttacks = 0;
 		fringes = null;
 		strategy = strat;
 		strategy.setMe(this);
@@ -35,7 +37,7 @@ public class AI extends Player implements Serializable {
 	// are, go to the next one, otherwise
 	// return that country as a selection. Used for placement in the first turn.
 	public Country checkAllNeighbors() {
-		int i = 0, j = 0;
+		int i = 0, j = 0; 
 		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size()) {
@@ -105,6 +107,11 @@ public class AI extends Player implements Serializable {
 	 */
 
 	public boolean finishedAttacking() {
+		
+		numAttacks++;
+		
+		
+		
 		int i = 0;
 		for(Country country : findFringeCountries())
 		{
@@ -121,8 +128,24 @@ public class AI extends Player implements Serializable {
 			if(strategy.findCountriesToAttack() == null)
 				return true;
 		}
+//		
+//		return false;
 		
-		return false;
+		if (strategy instanceof EasyAI && numAttacks >=3){
+			numAttacks = 0;
+			return true;
+		}
+			
+		else if (strategy instanceof MediumAI && numAttacks >=7){
+			numAttacks = 0;
+			return true;
+		}
+		else if (strategy instanceof HardAI && numAttacks >=13){
+			numAttacks = 0;
+			return true;
+		}
+		else
+			return false;
 
 	}// end finishedAttacking
 
@@ -190,7 +213,7 @@ public class AI extends Player implements Serializable {
 		int randNum = 0;
 		int i = 0;
 		while (getAvailableTroops() > i) {
-			//System.out.println("While3: "+ ++w3);//next: w4, f2
+			System.out.println("While3: "+ ++w3);//next: w4, f2
 			i++;
 			randNum = rand.nextInt(getCountries().size());
 			countries.add(getCountries().get(randNum));
