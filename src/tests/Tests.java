@@ -186,9 +186,18 @@ public class Tests {
 
 	@Test
 	public void testHumanPlayer() {
-		// % coverage
+		// 100% coverage
 
 		Player human = new HumanPlayer(1);
+		ArrayList<Card> c = new ArrayList<Card>();
+		Card one = new Card("The Wall", "cavalry", true);
+		Card two = new Card("Skagos", "artillery", true);
+		Card three = new Card("The Wall Else", "infantry",true);
+		c.add(one);
+		c.add(two);
+		c.add(three);
+		((HumanPlayer)human).setCardsToRedeem(c);
+		assertEquals(human.redeemCards(), c);
 	}
 
 	@Test

@@ -65,7 +65,8 @@ public class AnimationPanel extends JPanel {
 		model = game;
 		attackDice= model.getAttackDice();
 		defenseDice= model.getDefenseDice();
-		repaint();
+		this.setBackground(Color.GRAY);
+		repaint();  
 	}
 
 	@Override
@@ -78,10 +79,11 @@ public class AnimationPanel extends JPanel {
 			 return;
 		 }
 		 System.out.println("model is not");
-		 gr.setColor(Color.RED);
+		 //gr.setBackground(Color.BLUE);
+		 //gr.setColor(Color.RED);
 		 //gr.drawRect(500, 500, 1000, 1000);
 		
-		// gr.drawImage(background, 0, 0, null);
+		 //gr.drawImage(background, 0, 0, null);
 
 		if (starting) {
 			gr.drawImage(getOffenseSprite(), OffenseXValue, OFFENSE_Y, null);
@@ -278,6 +280,7 @@ public class AnimationPanel extends JPanel {
 			}
 		try {
 			sheet = ImageIO.read(new File("images" + File.separator + "GoTSpriteSheet.png"));
+			//background = ImageIO.read(new File("images" + File.separator + "SplashScreen.jpg"));
 			SWOOSH = sheet.getSubimage(SWOOSH_X, SWOOSH_Y, SWOOSH_WIDTH, SWOOSH_HEIGHT);
 		} catch (IOException e) {
 			System.out.println("Could not find 'GoTSpriteSheet.png'");
