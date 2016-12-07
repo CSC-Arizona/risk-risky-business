@@ -88,6 +88,17 @@ public class Tests {
 		assertEquals(discard.getSize(), 1);
 		discard.removeAll();
 		assertEquals(discard.getSize(), 0);
+		
+		ArrayList<Card> c = new ArrayList<Card>();
+		Card one = new Card("The Wall", "cavalry", true);
+		Card two = new Card("Skagos", "artillery", true);
+		Card three = new Card("The Wall Else", "infantry",true);
+		c.add(one);
+		c.add(two);
+		c.add(three);
+		
+		discard.addToPile(c);
+		assertTrue(discard.getSize()==3);
 	}
 
 	@Test
@@ -173,7 +184,7 @@ public class Tests {
 
 	@Test
 	public void testMap() {
-		// 94.5% Coverage
+		// 79.4% Coverage
 		// TODO: Testcase doesn't pass, but it's the full coverage amount.
 		Map map = Map.getInstance(1);
 		// Map map1 = Map.newTourneyMap();
