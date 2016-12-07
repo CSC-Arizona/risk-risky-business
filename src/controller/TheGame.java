@@ -227,6 +227,7 @@ public class TheGame implements Serializable {
 		selectedCountry = null;
 	}// end nextPhase
 
+	
 	public boolean isGameOver() {
 		return gameOver;
 	}
@@ -255,6 +256,7 @@ public class TheGame implements Serializable {
 		return mainGamePhase;
 	}
 
+	// changes all the flags for a proper placement phase
 	private void changeToPlacementPhase() {
 		mainGamePhase = false;
 		placePhase = true;
@@ -265,6 +267,7 @@ public class TheGame implements Serializable {
 		gameOver = false;
 	}
 
+	//changes all the flags for a proper reinforce phase
 	private void changeToReinforcePhase() {
 		placePhase = false;
 		reinforcePhase = true;
@@ -274,6 +277,7 @@ public class TheGame implements Serializable {
 		gameOver = false;
 	}// end changetoReinforcePhase
 
+	//changes all the flags for a proper redeem card phase
 	private void changeToRedeemCardsPhase() {
 		// If this is our first card redemption
 		if (mainGamePhase == false)
@@ -286,6 +290,8 @@ public class TheGame implements Serializable {
 		gameOver = false;
 	}// end changeToRedeemCardsPhase
 
+	//changes the flags for a proper deploy phase
+	// also adds units to the current player, and writes to the game log
 	private void changeToDeployTroopsPhase() {
 		placePhase = false;
 		reinforcePhase = false;
@@ -301,6 +307,7 @@ public class TheGame implements Serializable {
 				+ gameMap.getContinentBonuses(getCurrentPlayer()) + "\n";
 	}// end changeToDeployTroopsPhase
 
+	//changes flags for a proper attack phase
 	private void changeToAttackPhase() {
 		placePhase = false;
 		reinforcePhase = false;
@@ -418,7 +425,6 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
-//			long startTime = System.nanoTime();
 
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
@@ -426,34 +432,28 @@ public class TheGame implements Serializable {
 				currentPlayer.addAvailableTroops(redeemCards());
 
 			skipCardRedemption();
-//			long endTime = System.nanoTime();
-//
-//			cardTime += (endTime - startTime) /1000000000;
-			// System.out.println("card" + cardTime);
+
 		} // end else if
 
 		// During deployment
 		else if (isDeployPhase()) {
-//			long startTime = System.nanoTime();
+
 			deployTroops();
 
 			if (currentPlayer.getAvailableTroops() == 0)
 				nextPhase();
-//			long endTime = System.nanoTime();
-//
-//			deployTime += (endTime - startTime) /1000000000;
-			// System.out.println("deploy" + deployTime);
+
 		} // end else if
 
 		// During attack phase
 		else if (isAttackPhase()) {
-//			long startTime = System.nanoTime();
-
+			//gets a country to attack, if there is no country to attack, moves to he next phase
 			moveTo = ((AI) currentPlayer).getStrategy().getCountryToAttack();
 			if (moveTo == null)
 				this.skipAttackPhase();
 
-			else {
+			else {//if there was a country to attack, grab the country that we are attacking from
+				//if for some reason that is null, do not attack.
 				moveFrom = ((AI) currentPlayer).getStrategy()
 						.findAttackingCountry(moveTo);
 				if (moveFrom != null)
@@ -463,39 +463,24 @@ public class TheGame implements Serializable {
 				if (((AI) currentPlayer).finishedAttacking())
 					this.skipAttackPhase();
 			}
-//			long endTime = System.nanoTime();
-//
-//			attackTime += (endTime - startTime) / 1000000000;
-			// System.out.println("attack" + attackTime);
+
 		} // end else if
 
 		// during official reinforcement
 		else if (isReinforcePhase()) {
-//			long startTime = System.nanoTime();
 			gameLog += ((AI) currentPlayer).getStrategy().reinforce();
 			nextPhase();
 			nextPlayer();
-//			long endTime = System.nanoTime();
-//
-//			reinforceTime +=  (endTime - startTime)/1000000000;
-			// System.out.println("reinforce" + reinforceTime);
+
 		} // end else if
 	}// end aiturn
 
 	/*
-	 * For testing purposes!!!
+	 * 	Gets an arraylist of countries from an ai, and places units on them until there are no units to place
+	 * 	if the current player is a human player, lets the player pick a country, and place how many units they would like
+	 * 	depending on how many they have to place. Does error checking for improper input.
 	 */
-	public void printAllCountriesAndOccupiers() {
-		Country[] countries = gameMap.getCountries();
-		for (int i = 0; i < countries.length; i++) {
-			System.out.println(countries[i].getName() + ": "
-					+ countries[i].getOccupier());
-		} // end for
-	}// end print all
-
 	private void deployTroops() {
-//		if (numAttacks%100==0)
-//			System.out.println("Current troops = " + currentPlayer.getAvailableTroops());
 		if (currentPlayer instanceof AI) {
 			ArrayList<Country> selectedCountries = new ArrayList<Country>();
 			selectedCountries = ((AI) currentPlayer).getStrategy()
@@ -514,7 +499,6 @@ public class TheGame implements Serializable {
 			} // end while
 		} // end if
 		else {
-			// if (selectedCountry != null){
 			boolean continueFlag = false;
 			int armiesToPlaceInt = 0;
 			String armiesToPlaceStr = JOptionPane
@@ -539,14 +523,13 @@ public class TheGame implements Serializable {
 					placeArmies(armiesToPlaceInt);
 				} // end else
 			} // end if
-				// }//end if
 		} // end else
 	}// end deploytroops
 
 	/*
 	 * humanTurn
 	 * 
-	 * plays one human turn
+	 * plays one human turn, checking which phase it it is, and moving on from there
 	 */
 	private void humanTurn() throws IllegalStateException {
 		if (isPlacePhase()) {
@@ -589,6 +572,10 @@ public class TheGame implements Serializable {
 		} // end else
 	}// end aiturn
 
+	/*
+	 *  Gets a country selected by the ai, if that country is available, place a unit there and return true,
+	 *  otherwise reutnr false
+	 */
 	public boolean aiChoicePlacement() {
 		selectedCountry = ((AI) currentPlayer).getStrategy().placeUnit();
 		if (checkIfCountryAvailable(selectedCountry)) {
@@ -608,6 +595,9 @@ public class TheGame implements Serializable {
 		return countryToCheck.getOccupier() == null;
 	}// end checkIfCountryAvailable
 
+	/*
+	 * If it is the place phase, and the selected country is valid, place a unit there, and change the occupier.
+	 */
 	public void placeArmies(int num) throws IllegalStateException {
 		if (isPlacePhase()) {
 			// Sets player to this country's occupier and adds country
@@ -634,10 +624,11 @@ public class TheGame implements Serializable {
 
 	/*
 	 * Given the player's current decision, redeem or don't redeem cards
+	 * if redemption was chosen, give the player the proper amount of units, 
+	 * check if the player owns any of the countries on the cards and allocate units as appropriate
+	 * and discard those cards
 	 */
 	public int redeemCards() {
-		// ArrayList<Card> cardsToRedeem = currentPlayer.redeemCards();
-
 		// If cards is null, the player didn't want to redeem anythign
 		if (cardsToRedeem == null)
 			return 0;
@@ -696,6 +687,9 @@ public class TheGame implements Serializable {
 		return numArmies;
 	}// end redeemCards
 
+	/*
+	 * return the correct number of attack die, depending on what is chosen in the gui, and the number of units on the attacking country
+	 */
 	public int getNumAttackDice() {
 		int forces = moveFrom.getForcesVal();
 		if (maxAttackDice == 3) {
@@ -719,6 +713,8 @@ public class TheGame implements Serializable {
 			return 1;	
 	}// end getNumAttackDice
 
+	
+	//get the number of defense die, depending on what is chosen in the gui, and how many units are on the defending country
 	public int getNumDefenseDice() {
 
 		int forces = moveTo.getForcesVal();
@@ -735,18 +731,6 @@ public class TheGame implements Serializable {
 
 	public boolean attack() {
 		numAttacks++;
-
-//		if (numAttacks % 500 == 0) {
-//			System.out.println("Phase = " + getPhase());
-//			System.out.println("Current player = " + currentPlayer.getName());
-//			System.out.println("Attacks = " + numAttacks);
-//			System.out.println("Attack time = " + attackTime);
-//			System.out.println("Deploy time = " + deployTime);
-//			System.out.println("Card time = " + cardTime);
-//			System.out.println("Reinforce time = " + reinforceTime);
-//			System.out.println("Countries size = "
-//					+ currentPlayer.getCountries().size());
-//		}
 
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
@@ -920,8 +904,7 @@ public class TheGame implements Serializable {
 			// return numArmies > moveTo.getForcesVal();
 		return attackWins - defenseWins;
 	}// end wasAttackSuccessful
-		// return numArmies > moveTo.getForcesVal();
-		// end wasAttackSuccessful
+
 
 	/**********************************************************************************
 	 *************************** Shuffling Armies in Countries***************************
@@ -958,7 +941,6 @@ public class TheGame implements Serializable {
 							"You must leave 1 army.", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				} else {
-					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
 					moveFlag = true;
 				}
 			}
@@ -987,7 +969,6 @@ public class TheGame implements Serializable {
 					JOptionPane.showMessageDialog(null, "Invalid number.",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				} else {
-					// theGame.getSelectedCountry().removeUnits(unitsToReturn);
 					moveFlag = true;
 				}
 			}
@@ -1026,7 +1007,6 @@ public class TheGame implements Serializable {
 			if (c.equals(toCountry)) {
 				visited.add(c);
 				canPlace = true;
-				// printPath(visited);
 				visited.remove(visited.size() - 1);
 				break;
 			}
@@ -1044,21 +1024,12 @@ public class TheGame implements Serializable {
 		}
 	}// end findPath
 
-	// private void printPath(ArrayList<Country> visited) {
-	// for (Country node : visited) {
-	// System.out.print(node);
-	// System.out.print(" ");
-	// }
-	// System.out.println();
-	// }// end printPath
-
 	public void removeLosers() {
 
 		Player removeMe = null;
 		for (Player player : players) {
 			if (player.getCountries().size() == 0) {
-//				System.out.println(player.getName() + " has been wiped off"
-//						+ " the map.");
+
 				gameLog += player.getName() + " has been wiped off the map.\n";
 				removeMe = player;
 			}
@@ -1066,18 +1037,10 @@ public class TheGame implements Serializable {
 		}
 		if (removeMe != null) {
 			discard.addToPile(removeMe.discardCards());
-			// deck.addToDiscardPile(removeMe.discardCards());
 			if(removeMe instanceof HumanPlayer)
 				humans--;
 			players.remove(removeMe);
 			totalPlayers--;
-
-			for (int i =0; i < players.size(); i++){
-				if(players.get(i) instanceof AI)
-					System.out.println("\t" + ((AI)players.get(i)).getStrategy().toString());
-				else
-					System.out.println("\t Human Player");
-			}
 		}
 
 	}// end removeLosers
@@ -1233,8 +1196,6 @@ public class TheGame implements Serializable {
 
 	public void passReinforcementPhase() {
 		clearSelections();
-		// nextPhase();
-		// nextPlayer();
 		play();
 	}// end passReinforce
 
