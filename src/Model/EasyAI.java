@@ -24,9 +24,10 @@ public class EasyAI implements AIStrategy, Serializable {
 		int randNum = 0; 
 		int i = 0;
 //		while (me.getAvailableTroops() > i) { 
-//			i+=2;
-			randNum = rand.nextInt(me.getCountries().size());
-			countries.add(me.getCountries().get(randNum));
+//			i+=2;]
+			ArrayList<Country> fringes = me.findFringeCountries();
+			randNum = rand.nextInt(fringes.size());
+			countries.add(fringes.get(randNum));
 //		}
 		return countries;
 	}

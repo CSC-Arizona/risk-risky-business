@@ -1162,27 +1162,16 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			if(theGame.getNumHumans()==0){  
+		
 				try {
 					Thread.sleep(250);
-				} catch (InterruptedException ex) {
-					Thread.currentThread().interrupt();
-					System.out.println("nahhh");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				this.remove(drawingPanel);
-				this.revalidate();
-				this.repaint();
-				setUpDrawingPanel(); 
-				setUpMenu();
-				//setUpClearButton();
-				//setUpPassButton();
-				setUpAIMenu();
-				this.revalidate();
-				this.repaint();
+				
 				drawingPanel.update(drawingPanel.getGraphics());
-			}
-			this.revalidate();
-			this.repaint();
+			
 
 		}// end update
 

@@ -1,5 +1,4 @@
-/*
- * 	File:		AI.java
+/*	File:		AI.java
  * 	Purpose:	AI class extends player and contains control of AI type players, both easy and hard.
  */
 
@@ -78,23 +77,9 @@ public class AI extends Player implements Serializable {
 		if (getCountries().size() > 44)
 			return false;
 		
-//		if (getCountries().size() <5)
-//			return true;
+	
+
 		
-		numAttacks++;
-//		if (strategy instanceof EasyAI && numAttacks >=7){
-//			numAttacks = 0;
-//			return true;
-//		}
-			
-		if (strategy instanceof MediumAI && numAttacks >=18){
-			numAttacks = 0;
-			return true;
-		}
-		else if (strategy instanceof HardAI && numAttacks >=30){
-			numAttacks = 0;
-			return true;
-		}
 		
 		
 		int i = 0;
