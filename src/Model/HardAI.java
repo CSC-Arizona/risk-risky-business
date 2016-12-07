@@ -18,49 +18,55 @@ public class HardAI implements AIStrategy, Serializable {
 
 	@Override
 	public ArrayList<Country> placeNewTroops() {
-		ArrayList<Country> returnMe = new ArrayList<>();
-		ArrayList<Continent> conts = Map.getAllContinents();
-		Collections.shuffle(conts);// shuffle continents up so that you don't
-									// always select the same continent over and
-									// over again
-		int index = 0;
-		Continent chosen = null;
-		
-		while (chosen == null){
-			chosen = conts.get(index);
-		}
-		
-		ArrayList<Country> mine = me.getCountries();
+
+		ArrayList<Country> countries = new ArrayList<>();
+		ArrayList<Country> fringes = me.findFringeCountries();
+		int randNum = 0;
 		int i = 0;
-		int j = 0;
-		int added = 0;
-		
-		while (added < me.getAvailableTroops()){
-			Country tmp = mine.get(i);
-			i++;
-			j++;
-			
-			//Add it!
-			if (chosen.getMyCountries().contains(tmp)){
-				returnMe.add(tmp);
-				added+=2;
-			}//end if
-			
-			//If we don't have any countries in this continent
-			if (j==chosen.getNumOfCountries()-1 && added == 0){
-				if (index == conts.size() - 1)
-					index = 0;
-				chosen = conts.get(++index);
-				j = 0;
-			}//end if
-			
-			if (i==mine.size())
-				i = 0;
-		}//end while
-		
-		
-		return returnMe;
-		
+ 		while (me.getAvailableTroops() > i) {
+			i+=2;
+			randNum = rand.nextInt(fringes.size());
+			countries.add(fringes.get(randNum));
+		}
+		return countries;
+//		ArrayList<Country> returnMe = new ArrayList<>();
+//		ArrayList<Continent> conts = Map.getAllContinents();
+//		Collections.shuffle(conts);// shuffle continents up so that you don't
+//									// always select the same continent over and
+//									// over again
+//		int index = 0;
+//		Continent chosen = conts.get(index);
+//		ArrayList<Country> mine = me.getCountries();
+//		int i = 0;
+//		int j = 0;
+//		int added = 0;
+//		
+//		while (added < me.getAvailableTroops()){
+//			Country tmp = mine.get(i);
+//			i++;
+//			j++;
+//			
+//			//Add it!
+//			if (chosen.getMyCountries().contains(tmp)){
+//				returnMe.add(tmp);
+//				added+=2;
+//			}//end if
+//			
+//			//If we don't have any countries in this continent
+//			if (j==chosen.getNumOfCountries()-1 && added == 0){
+//				if (index == conts.size() - 1)
+//					index = 0;
+//				chosen = conts.get(++index);
+//				j = 0;
+//			}//end if
+//			
+//			if (i==mine.size())
+//				i = 0;
+//		}//end while
+//		
+//		
+//		return returnMe;
+//		
 //		ArrayList<Country> returnMe = null;
 //		ArrayList<Continent> conts = Map.getAllContinents();
 //		Collections.shuffle(conts);// shuffle continents up so that you don't
