@@ -45,7 +45,7 @@ public class EasyAI implements AIStrategy, Serializable {
 						if (neighbor.getOccupier().equals(me)) {
 							neighbor.addForcesVal(1);
 							country.removeUnits(1);
-						}
+						} 
 						if (country.getForcesVal() == 2)
 							break;
 						
