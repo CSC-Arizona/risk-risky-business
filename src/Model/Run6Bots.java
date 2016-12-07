@@ -10,7 +10,7 @@ public class Run6Bots {
 
 	public static void main(String[] args) {
 		TheGame theGame = TheGame.getInstance(0, 6, true);
-		int i = 0;
+		int i = 0; 
 		// for(Player player : theGame.getPlayers())
 		// {
 		// if(i < 2){
@@ -36,7 +36,7 @@ public class Run6Bots {
 		i = 0;
 		int hardWin = 0, mediumWin = 0, easyWin = 0;
 
-		while (i < 10) {
+		while (i < 3) {
 
 			System.out.println("New Game");
 			System.out.println("Game " + (i+1));

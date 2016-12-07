@@ -74,7 +74,7 @@ public class riskGUI extends JFrame {
 		new riskGUI().setVisible(true);
 	}
 
-	private static BoardPanel drawingPanel;
+	private static BoardPanel drawingPanel; 
 	private JMenuBar menu;
 	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
@@ -369,7 +369,7 @@ public class riskGUI extends JFrame {
 		System.out.println("Brace Yourselves, RISK is Coming...");
 		splash = false;
 		drawingPanel.removeAll();
-		this.remove(drawingPanel);
+		this.remove(drawingPanel); 
 		// creates or grabs an instance of the game, first variable is number of
 		// human players, second is total number of players
 		theGame = TheGame.getInstance(humans, ai, false);
