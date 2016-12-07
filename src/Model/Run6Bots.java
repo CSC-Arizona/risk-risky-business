@@ -26,7 +26,7 @@ public class Run6Bots {
 			} else
 				hardWin++;
 			i++;
-
+			System.out.println("Attacks made in this game: " + theGame.getNumAttacks());
 			theGame.newGame(6);
 
 		}

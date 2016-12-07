@@ -9,7 +9,7 @@ public class EasyAI implements AIStrategy, Serializable {
 	private AI me;
 	static int a,b,c,d,e,f,g,h,wa,fa;
 	
-	
+	  
 	 
 	public EasyAI(){};
 	public EasyAI(AI ai)
@@ -40,9 +40,11 @@ public class EasyAI implements AIStrategy, Serializable {
 	public String reinforce() { 
 		boolean stopFlag = false;
 		for (Country country : me.getCountries()) {
+			//System.out.println("b: "+ ++b);
 			if (country.getForcesVal() > 2) {
 				stopFlag = false;
 				while (country.getForcesVal() > 2 && stopFlag == false) {
+					//System.out.println("C: "+ ++c);
 					int i = 0;
 					for (Country neighbor : country.getNeighbors()) {
 						if (neighbor.getOccupier().equals(me)) {

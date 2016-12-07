@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -113,6 +114,8 @@ public class riskGUI extends JFrame {
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
+	private Faction attacker = Faction.STARK;
+	private Faction defender = Faction.WILDLINGS;
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -392,6 +395,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players);
 		theGame.startGame();
+		//animations(attacker, defender);
 
 	}// end splashLoading2
 
@@ -591,6 +595,28 @@ public class riskGUI extends JFrame {
 	 * ends. This screen is shown for 10 seconds.
 	 */
 	private void splashLoading1() {
+//		AnimationPanel p = new AnimationPanel();
+//		p.setLocation(width/2 - 250, height/2 - 250);
+//		p.setDefenseFaction(Faction.STARK);
+//		p.setOffenseFaction(Faction.WILDLINGS);
+//		drawingPanel.add(p);
+//		this.repaint();
+//		int i=0;
+//		while(i<65){
+//			p.updateAnimations();
+//			try {
+//				Thread.sleep(50);
+//			} catch (InterruptedException ex) {
+//				Thread.currentThread().interrupt();
+//				System.out.println("nahhh");
+//			}
+//			this.repaint();
+//			i++;
+//		}
+//		drawingPanel.remove(p);
+//		this.repaint();
+		//this.repaint();
+		
 		splashInfo = new JPanel();
 		splashInfo.setLayout(null);
 		splashInfo.setSize(500, 150);
@@ -735,6 +761,65 @@ public class riskGUI extends JFrame {
 		statButton.setSize(4 * xWidth, 2 * yHeight);
 		statButton.setLocation(width - (int) (4.25 * xWidth), (int) (5.25 * yHeight));
 		drawingPanel.add(statButton);
+	}
+	
+	private void animations(Faction attacker, Faction defender){
+		System.out.println("begin");
+		JFrame animationFrame = new JFrame();
+		
+		animationFrame.setSize(700, 700);
+		animationFrame.setLocation(width/2 -250, height/2 - 250);
+		animationFrame.setLayout(new BorderLayout());
+		animationFrame.setTitle("Attack");
+		animationFrame.setBackground(Color.WHITE);
+		
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException ex) {
+//			Thread.currentThread().interrupt();
+//			System.out.println("nahhh");
+//		}
+		
+		AnimationPanel p = new AnimationPanel(theGame);
+		
+		//p.setLocation(100, 100);
+		p.setPreferredSize(new Dimension(500,500));
+		p.setDefenseFaction(defender);
+		p.setOffenseFaction(attacker);
+		//this.remove(drawingPanel);
+		animationFrame.add(p);
+		animationFrame.setVisible(true);
+		//animationFrame.revalidate();
+		p.repaint();
+		//this.add(p);
+		//this.revalidate();
+		//this.repaint();
+		//drawingPanel.add(p);
+		//drawingPanel.repaint();
+		int i=0;
+		while(i<65){
+			p.updateAnimations();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+				System.out.println("nahhh");
+			}
+			//animationFrame.revalidate();
+			animationFrame.repaint();
+			i++;
+		}
+		
+		animationFrame.setVisible(false);
+		//this.remove(p);
+		//this.add(drawingPanel);
+		//this.revalidate();
+		//this.repaint();
+		//drawingPanel.remove(p);
+		//this.repaint();
+		//this.repaint();
+		
+		System.out.println("end");
 	}
 
 	private void setUpDrawingPanel() {
@@ -1898,8 +1983,13 @@ public class riskGUI extends JFrame {
 					// Only allow attack from a country with more than one army
 					if (theGame.getSelectedCountry().getForcesVal() > 1) {
 						theGame.setMoveFrom();
-						if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
+
+						if (theGame.getMoveTo().isMyNeighbor(
+								theGame.getMoveFrom())) {
+							attacker = theGame.getMoveFrom().getOccupier().getFaction();
+							defender = theGame.getMoveTo().getOccupier().getFaction();
 							theGame.attack();
+							animations(attacker, defender);
 
 							ArrayList<Dice> attack = theGame.getAttackDice();
 							ArrayList<Dice> defense = theGame.getDefenseDice();
@@ -1931,7 +2021,12 @@ public class riskGUI extends JFrame {
 					theGame.setMoveTo();
 
 					if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
+						
+						attacker = theGame.getMoveFrom().getOccupier().getFaction();
+						defender = theGame.getMoveTo().getOccupier().getFaction();
+						
 						theGame.attack();
+						animations(attacker, defender);
 
 						// Saved so that they can be used for animations
 						ArrayList<Dice> attack = theGame.getAttackDice();

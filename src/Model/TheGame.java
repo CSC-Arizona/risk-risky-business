@@ -29,12 +29,14 @@ public class TheGame implements Serializable {
 	private ArrayList<Card> cardsToRedeem;
 	public static final String FILE_NAME = "game.ser";
 	private int attackerHits;
+	private int numAttacks;
 
 	/**********************************************************************************
 	 ********************************** Game Creation************************************
 	 **********************************************************************************/
 	private TheGame(int numOfHumanPlayers, int numOfAIPlayers, boolean tourny) {
 		// Getting the sizes
+		numAttacks = 0;
 		humans = numOfHumanPlayers;
 		ais = numOfAIPlayers;
 		totalPlayers = humans + ais; 
@@ -384,7 +386,7 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
-			System.out.println("Current player cards: "+currentPlayer.getCards().size());
+			//System.out.println("Current player cards: "+currentPlayer.getCards().size());
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
 			if (cardsToRedeem != null)
@@ -734,7 +736,7 @@ public class TheGame implements Serializable {
 	}// end getNumDefenseDice
 
 	public boolean attack() {
-
+		numAttacks++;
 		attackDice = Dice.roll(getNumAttackDice());
 		defenseDice = Dice.roll(getNumDefenseDice());
 
@@ -1067,6 +1069,10 @@ public class TheGame implements Serializable {
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public int getNumAttacks(){
+		return numAttacks;
 	}
 
 	public void setCurrentPlayer(Player currentPlayer) {
