@@ -64,6 +64,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.plaf.ComponentUI;
 
 import Model.*;
 import songplayer.SoundClipPlayer;
@@ -76,6 +77,8 @@ public class riskGUI extends JFrame {
 	}
 
 	private static BoardPanel drawingPanel; 
+	private static AnimationPanel animationPanel;
+	private JFrame animationFrame;
 	private JMenuBar menu;
 	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
@@ -114,8 +117,8 @@ public class riskGUI extends JFrame {
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
-	private Faction attacker = Faction.STARK;
-	private Faction defender = Faction.WILDLINGS;
+	private Faction attacker;// = Faction.STARK;
+	private Faction defender;// = Faction.WILDLINGS;
 
 	public riskGUI() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -125,8 +128,8 @@ public class riskGUI extends JFrame {
 			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File("LibreBaskerville-Regular.otf"));
 			gotFontBody = gotFontBody.deriveFont(24f);
 		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			e.printStackTrace(); 
+		} catch (IOException e) {  
 			e.printStackTrace();
 		}
 
@@ -145,7 +148,8 @@ public class riskGUI extends JFrame {
 
 
 		selectedCards = new ArrayList<Card>();
-
+		attacker = Faction.STARK;
+		defender = Faction.WILDLINGS;
 		splash = true; // comment me out for default mode
 		// splash = false; // comment me out for splash screens
 		setUpImages();
@@ -153,9 +157,30 @@ public class riskGUI extends JFrame {
 		setUpMenu();
 		setUpHouseArray();
 		setUpSplash(); // comment me out for default mode
+		
 		// comment me out for splash screens
 
 	}// end riskGui constructor
+
+	private void setUpAnimationFrame() {
+//		animationFrame = new JFrame(); 
+//		 
+//		animationFrame.setSize(700, 700);
+//		animationFrame.setLocation(width/2 - 350,height/2 - 350);
+//		animationFrame.setLayout(null);
+//		animationFrame.setTitle("Attack");
+//		animationFrame.setBackground(Color.WHITE);
+		
+		animationPanel = new AnimationPanel();
+		animationPanel.setUpEverything(theGame);
+		
+		animationPanel.setSize(500,500);
+		animationPanel.setPreferredSize(new Dimension(500,500));
+		animationPanel.setLocation(100,100);
+		//this.remove(drawingPanel);
+		//drawingPanel.add(animationPanel);
+		//animationFrame.add(animationPanel, BorderLayout.CENTER);
+	}
 
 	private void setUpAIMenu() {
 		int i = 1;
@@ -334,8 +359,10 @@ public class riskGUI extends JFrame {
 		setUpClearButton();
 		setUpPassButton();
 		setUpAIMenu();
+	
 		// player.startPlay();
 		drawingPanel.repaint();
+		
 	}// end defualtMode
 
 	private void setUpHouseArray() {
@@ -378,6 +405,7 @@ public class riskGUI extends JFrame {
 		setUpClearButton();
 		setUpPassButton();
 		setUpAIMenu();
+		setUpAnimationFrame();
 		ArrayList<Player> players = theGame.getPlayers();
 		for (int i = 0; i < humans; i++) {
 			players.get(i).setFaction(houses.get(i));
@@ -395,7 +423,7 @@ public class riskGUI extends JFrame {
 
 		theGame.setPlayers(players);
 		theGame.startGame();
-		//animations(attacker, defender);
+		animations(attacker, defender); 
 
 	}// end splashLoading2
 
@@ -647,7 +675,7 @@ public class riskGUI extends JFrame {
 	}// end splashLoading1
 
 	private void setUpGui() {
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLayout(new BorderLayout());
 		setTitle("GoT Risk");
@@ -765,40 +793,50 @@ public class riskGUI extends JFrame {
 	
 	private void animations(Faction attacker, Faction defender){
 		System.out.println("begin");
-		JFrame animationFrame = new JFrame();
-		
-		animationFrame.setSize(700, 700);
-		animationFrame.setLocation(width/2 -250, height/2 - 250);
-		animationFrame.setLayout(new BorderLayout());
-		animationFrame.setTitle("Attack");
-		animationFrame.setBackground(Color.WHITE);
+		drawingPanel.add(animationPanel);
+		//animationPanel.setLocation(width/2 -350, height/2 - 350);
+		animationPanel.resetStart();
+		animationPanel.setLocation(width/2 -350, height/2 - 350);
+//		JFrame animationFrame = new JFrame();
+//		
+//		animationFrame.setSize(700, 700);
+//		animationFrame.setLocation(width/2 -250, height/2 - 250);
+//		animationFrame.setLayout(null);
+//		animationFrame.setTitle("Attack");
+//		animationFrame.setBackground(Color.WHITE);
 		
 //		try {
 //			Thread.sleep(5000);
 //		} catch (InterruptedException ex) {
-//			Thread.currentThread().interrupt();
+//			Thread.currentThread().interrupt(); 
 //			System.out.println("nahhh");
 //		}
 		
-		AnimationPanel p = new AnimationPanel(theGame);
+//		AnimationPanel p = new AnimationPanel();
+//		p.setUpEverything(theGame);
+//		
+//		p.setLocation(0, 0);
+//		p.setSize(500,500);
 		
-		//p.setLocation(100, 100);
-		p.setPreferredSize(new Dimension(500,500));
-		p.setDefenseFaction(defender);
-		p.setOffenseFaction(attacker);
+
+		animationPanel.setDefenseFaction(defender);
+		animationPanel.setOffenseFaction(attacker);
 		//this.remove(drawingPanel);
-		animationFrame.add(p);
-		animationFrame.setVisible(true);
+
+		//animationFrame.setVisible(true);
 		//animationFrame.revalidate();
-		p.repaint();
+		//animationPanel.revalidate();
+		
+		animationPanel.update(getGraphics());
+		System.out.print(animationPanel.getLocation());
 		//this.add(p);
 		//this.revalidate();
-		//this.repaint();
+		//this.repaint();   
 		//drawingPanel.add(p);
 		//drawingPanel.repaint();
 		int i=0;
 		while(i<65){
-			p.updateAnimations();
+			animationPanel.updateAnimations();
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException ex) {
@@ -806,19 +844,21 @@ public class riskGUI extends JFrame {
 				System.out.println("nahhh");
 			}
 			//animationFrame.revalidate();
-			animationFrame.repaint();
+			//animationFrame.repaint();
+			animationPanel.update(getGraphics());
 			i++;
 		}
 		
-		animationFrame.setVisible(false);
+		//animationFrame.setVisible(false);
 		//this.remove(p);
 		//this.add(drawingPanel);
 		//this.revalidate();
 		//this.repaint();
-		//drawingPanel.remove(p);
+		drawingPanel.remove(animationPanel);
 		//this.repaint();
 		//this.repaint();
-		
+		this.repaint();
+		drawingPanel.repaint();
 		System.out.println("end");
 	}
 
@@ -887,6 +927,7 @@ public class riskGUI extends JFrame {
 	 * Other JPanels Below
 	 ********************************/
 	private class BoardPanel extends JPanel implements Observer {
+		
 		@Override
 		public void paintComponent(Graphics g) {
 			if (theGame != null)
