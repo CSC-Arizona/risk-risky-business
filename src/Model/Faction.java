@@ -1,6 +1,14 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Faction.java
+ * 	Purpose:	Faction Enum holds the name of the faction and its default name and sets/gets names. 
+ */
+
 package Model;
 
-public enum Faction {
+import java.io.Serializable;
+
+public enum Faction implements Serializable{
 	STARK("Stark", "Jon"), TARGARYEN("Targaryen", "Danaerys"), LANNISTER("Lannister", "Joffrey"), WHITEWALKERS(
 			"White Walker", "Night King"), DOTHRAKI("Dothraki", "Khal Drogo"), WILDLINGS("Wildling", "Mance Rayder");
 

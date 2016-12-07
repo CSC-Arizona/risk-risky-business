@@ -1,20 +1,39 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Player.java
+ * 	Purpose:	Abstract player class to control all player moves- both AI and Human- throughout the Risk game. 
+ */
+
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JMenuItem;
 
-public abstract class Player {
+public abstract class Player implements Serializable{
 	private String name;
 	private Faction faction;
 	private int availTroops;
 	private ArrayList<Country> myCountries;
 	private ArrayList<Card> myCards;
-
+	private boolean mustRedeemCards = false;
 	// private Country currentCountry; //to keep track of where to put the
 	// armies in certain Card redeeming situations
 	// private Continent[] allContinents; TODO
 
+	public Player(int numOfPlayers) {
+
+		this.name = null;
+		this.faction = null;
+		this.availTroops = 43 - ((numOfPlayers - 3) * 5);
+
+		this.myCountries = new ArrayList<>();
+		this.myCards = new ArrayList<>();
+	}// end constructor 
+	
+	
 	public void getTroops() {
 		if (myCountries.size() <= 9)
 			availTroops += 3;
@@ -29,16 +48,6 @@ public abstract class Player {
 	public void addTroops(int numTroops){
 		availTroops+=numTroops;
 	}
-
-	public Player(int numOfPlayers) {
-
-		this.name = null;
-		this.faction = null;
-		this.availTroops = 43 - ((numOfPlayers - 3) * 5);
-
-		this.myCountries = new ArrayList<>();
-		this.myCards = new ArrayList<>();
-	}// end constructor
 
 	public void setFaction(String house) {
 		if (house.compareTo("Lannister") == 0) {
@@ -65,7 +74,7 @@ public abstract class Player {
 	public void setName(String name) {
 		if ((name == null || name.equals("")) && faction != null) {
 			this.name = faction.getDefaultPlayerName();
-		}
+		} 
 		else
 			this.name = name;
 	}// end setName
@@ -78,7 +87,7 @@ public abstract class Player {
 		if (player == null)
 			return false;
 		
-		if (this.faction.compareTo(player.faction) == 0)
+		if (this == player)
 			return true;
 
 		return false;
@@ -86,6 +95,7 @@ public abstract class Player {
 	}// end equals
 
 	public ArrayList<Country> getCountries() {
+	//	Collections.shuffle(myCountries);
 		return myCountries;
 	}// end getCountries
 
@@ -121,6 +131,12 @@ public abstract class Player {
 
 	public void addCard(Card cardToAdd) {
 		myCards.add(cardToAdd);
+		
+		//If player now has 5 cards
+		if (myCards.size() == 5)
+			mustRedeemCards = true;
+		else
+			mustRedeemCards = false;
 	}
 
 	public ArrayList<Card> discardCards() {
@@ -130,18 +146,51 @@ public abstract class Player {
 		}
 
 		myCards.removeAll(cardsToDiscard);
+		
+		//Change whether the cards need to be redeemed
+		if (myCards.size()<5)
+			mustRedeemCards = false;
+		
 		return cardsToDiscard;
 	}
 	
-	public ArrayList<Card> discardCards(ArrayList<Card> cards) {
-		ArrayList<Card> cardsToDiscard = new ArrayList<>();
-		for (Card card : cards) {
-			cardsToDiscard.add(card);
-		}
-
-		myCards.removeAll(cardsToDiscard);
-		return cardsToDiscard;
+	public void discardCards(ArrayList<Card> cards) { 
+		myCards.removeAll(cards);
+		
+		//Change whether the cards need to be redeemed
+		if (myCards.size()<5)
+			mustRedeemCards = false;
 	}
 
-	public abstract int redeemCards();
+	//used for tourney mode
+	public void setFaction(int i)
+	{
+		switch(i)
+		{
+		case 0:
+			faction = Faction.STARK;
+			break;
+		case 1:
+			faction = Faction.TARGARYEN;
+			break;
+		case 2:
+			faction = Faction.DOTHRAKI;
+			break;
+		case 3: 
+			faction = Faction.LANNISTER;
+			break;
+		case 4:
+			faction = Faction.WHITEWALKERS;
+			break;
+		case 5:
+			faction = Faction.WILDLINGS;
+			break;
+		}
+	}
+	
+	public boolean mustRedeemCards(){
+		return mustRedeemCards;
+	}
+	
+	public abstract ArrayList<Card> redeemCards();
 }

@@ -1,18 +1,31 @@
 Known Bugs:
 
 FIXED//Every time you click for reinforcement, the AIs will all claim a country, even if you didn't actually claim one yet
+FIXED//-When attacking, you are capable of leaving ZERO units on your old country
 
-
--Weird Deployment bug where user has 0 units to deploy (The fuck, amirite???)
--Just ran into a bug where I am now playing as each AI, they aren't skipping to the human player??
--After removing losing players, it seems that the ArrayList might resort, but I think I know what the problem is -DT
-  -This bug also breaks the endgame print screen, but I think I know how to fix it -DT
+FIXED (we think)//Weird Deployment bug where user has 0 units to deploy (The fuck, amirite???)
+FIXED (we think) Just ran into a bug where I am now playing as each AI, they aren't skipping to the human player??
+MAYBE FIXED//-After removing losing players, it seems that the ArrayList might resort, but I think I know what the problem is -DT
+                -This bug also breaks the endgame print screen, but I think I know how to fix it -DT
 -Default mode cant find faction (not important as default mode probably wont be in final release)
 
 
+
 --TODO--
-1. fix attacking so that it works correctly
-2. implement saving/loading a game
+1. fix attacking so that it works correctly -DONE
+2. implement saving/loading a game - DONE
 3. fix GUI so that card trade button can only be pressed before deploy phase
 4. find a way for users to select cards to redeem
 5. force players to redeem cards if they have 5 cards
+If there's time:
+6. Allow pause of music on splash screen
+
+
+Brainstorming elements needed to be saved/loaded when ending/starting a game:
+
+- Game
+- Player array
+- Map 
+- Deck
+- 
+

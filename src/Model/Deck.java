@@ -1,5 +1,14 @@
+/*
+ * 	Authors: 	Dylan Tobia, Abigail Dodd, Sydney Komro, Jewell Finder
+ * 	File:		Deck.java
+ * 	Purpose:	Singleton Deck class holding all card objects of the risk game with shuffling and dealing. Also holds a discard pile.
+ */
+
 package Model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,18 +18,19 @@ import Model.Card;
  * Deck has 52 cards: 50 (one for each territory) + 2 (wild cards)
  * NOTE: Deck class is a singleton, should never have more than one! :) 
  */
-public class Deck {
+public class Deck implements Serializable{
 
 	private ArrayList<Card> riskDeck;
 	private int size;
 	private static Deck uniqueDeck;
-	private static ArrayList<Card> discardPile;
+	//private static ArrayList<Card> discardPile;
 
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
-		discardPile = new ArrayList<>();
+		//discardPile = new ArrayList<Card>();
 		fillDeck(riskDeck);
-		shuffle();
+		DiscardPile placeHolder = new DiscardPile();
+		shuffle(placeHolder);
 		size = 52;
 	}// end constructor
 
@@ -28,20 +38,34 @@ public class Deck {
 	public ArrayList<Card> getDeck() {
 		return riskDeck;
 	}
+	
+	public Deck newDeck(){
+		uniqueDeck=new Deck();
+		return uniqueDeck;
+	}
 
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
 			uniqueDeck = new Deck();
 		return uniqueDeck;
 	}// end getInstance
+	
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	    ois.defaultReadObject();
+	    uniqueDeck = this;
+	}
 
-	public void shuffle() {
-		if (size == 0 && discardPile.size() > 0) {
+	private Object readResolve()  {
+	    return uniqueDeck;
+	}
+
+	public void shuffle(DiscardPile pile) {
+		if (size == 0 && pile.getSize()>0) {
 			riskDeck.clear();
-			riskDeck = discardPile;
+			riskDeck.addAll(pile.getPile());
 			Collections.shuffle(riskDeck);
 			size = riskDeck.size();
-			discardPile.clear();
+			pile.removeAll();
 		} else {
 			riskDeck.clear();
 			fillDeck(riskDeck);
@@ -51,16 +75,17 @@ public class Deck {
 	}// end shuffle
 
 	// returns null if the deck has run out of cards.
-	public Card deal() {
+	public Card deal(DiscardPile pile) {
+		size = riskDeck.size();
 		if (size > 0) {
 			Card result;
-			result = riskDeck.get(size - 1);
-			riskDeck.remove(size - 1);
+			result = riskDeck.get(0);
+			riskDeck.remove(0);
 			size--;
 			return result;
 		} else {
-			shuffle();
-			return deal();
+			shuffle(pile);
+			return deal(pile);
 		}
 	}// end deal
 
@@ -75,8 +100,8 @@ public class Deck {
 			return false;
 	}
 
-	public void discard(Card c) {
-		discardPile.add(c);
+	public void discard(Card c, DiscardPile pile) {
+		pile.addToPile(c);
 	}
 
 	// possible units: infantry, cavalry, artillery. Add all territories
@@ -136,7 +161,7 @@ public class Deck {
 		deck.add(new Card("WILD", "WILD"));
 	}// end fillDeck
 
-	public void addToDiscardPile(ArrayList<Card> cards) {
-		discardPile.addAll(cards);
+	public void addToDiscardPile(ArrayList<Card> cards, DiscardPile pile) {
+		pile.addToPile(cards);
 	}
 }// end Deck Class
