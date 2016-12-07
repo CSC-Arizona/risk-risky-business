@@ -428,9 +428,11 @@ public class Tests {
 		country2.setOccupier(aiE);
 		countries = aiE.getStrategy().placeNewTroops();
 		countries.get(0).addForcesVal(5);
-		countries.get(1).addForcesVal(5);;
+		if(countries.size()>1){
+			countries.get(1).addForcesVal(5);
+			assertTrue(countries.get(1).getForcesVal() > 0);
+		}
 		assertTrue(countries.get(0).getForcesVal() > 0);
-		assertTrue(countries.get(1).getForcesVal() > 0);
 		aiE.getStrategy().reinforce();
 		assertTrue(countries.get(0).getForcesVal() >= 2);
 		assertTrue(countries.get(0).getForcesVal() >= 2);
