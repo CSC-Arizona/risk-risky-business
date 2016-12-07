@@ -91,7 +91,7 @@ public class TheGame implements Serializable {
 		discard = new DiscardPile();
 		players = new ArrayList<>();
 		addHumanPlayers();
-		addAI();
+		addAI(); 
 		currentPlayer = players.get(0);
 		numRedemptions = 0;
 		canPlace = false;

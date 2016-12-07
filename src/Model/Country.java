@@ -25,7 +25,7 @@ public class Country extends Observable implements Serializable{
 	private double buttonWidth;
 	private double buttonHeight;
 	private Player occupier;
-	private JButton myButton;
+	private JButton myButton; 
 	private ArrayList<Country> neighbors;
 
 	/*
@@ -173,12 +173,12 @@ public class Country extends Observable implements Serializable{
 		if (occupier != null) 
 			occupier.loseCountry(this);
 		
-		//Now, set the new owner
+		//Now, set the new owner 
 		occupier = player;
 		occupier.occupyCountry(this);
 		setChanged();
 		notifyObservers();
-	}// end setOccupier
+	}// end setOccupier 
 
 	public void addForcesVal(int i) {
 		forcesVal += i;
