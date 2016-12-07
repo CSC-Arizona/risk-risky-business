@@ -146,113 +146,244 @@ public class AI extends Player implements Serializable {
 
 	@Override
 	public ArrayList<Card> redeemCards() {
-		if (getCards().size() == 5) {
+		if (getCards().size() >= 5) {
 			return findmyCardsToRedeem();
 		} // end if
 		else
 			return null;
-	}
+	}  
 
-	private ArrayList<Card> findmyCardsToRedeem() {
 
-		ArrayList<Card> myThreeCards = new ArrayList<>();
-		int infantryCount = 0, calvaryCount = 0, artilleryCount = 0, wildCount = 0;
-		// step through 5 cards, and count how many of each
-		for (Card card : getCards()) {
-			switch (card.getUnit()) {
-			case "infantry":
-				infantryCount++;
-				break;
-			case "calvary":
-				calvaryCount++;
-				break;
-			case "artillery":
-				artilleryCount++;
-				break;
-			case "WILD":
-				wildCount++;
-				break;
-			}
-		}
-		if (infantryCount >= 3 || (wildCount == 1 && infantryCount >= 2) || (wildCount == 2 && infantryCount >= 1)) {
-			myThreeCards = findThreeInfantry();
-		} else if (calvaryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
-				|| (wildCount == 2 && calvaryCount >= 1)) {
-			myThreeCards = findThreeCalvary();
-		} else if (artilleryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
-				|| (wildCount == 2 && artilleryCount >= 1)) {
-			myThreeCards = findThreeArtillery();
-		} else {
-			myThreeCards = findOneOfEach();
-		}
+	
+	private ArrayList<Card> findmyCardsToRedeem(){
+		ArrayList<Card> cards = null;
+		
+		cards = findThreeInfantry();
+		if (cards != null)
+			return cards;
+		
+		cards = findThreeCalvary();
+		if (cards != null)
+			return cards;
+		
+		cards = findThreeArtillery();
+		if (cards != null)
+			return cards;
+		
+		cards = findOneOfEach();
+		if (cards != null)
+			return cards;
+		
+		throw new IllegalStateException("Didn't redeem cards!");
+		
+	}//end findMyCardsToRedeem
+	
+	private ArrayList<Card> findOneOfEach(){
+		Card inf = new Card(null, "infantry");
+		Card cal = new Card(null, "cavalry");
+		Card art = new Card(null, "artillery");
+		ArrayList<Card> cards = getCards();
+		boolean infFound=false, calFound=false, artFound=false;
+		ArrayList<Card> trade = new ArrayList<Card>();
+		
+		int i=0;
+		while (i<cards.size() && trade.size()<3){
+			//If it's an infantry or wild, add it
+			if (!infFound){
+				if (cards.get(i).equals(inf)){
+					trade.add(cards.get(i));
+					continue;
+				}//end if
+					
+			}//end if
+			
+			if (!calFound){
+				if (cards.get(i).equals(cal)){
+					trade.add(cards.get(i));
+					continue;
+				}//end if
+			}//end if
+			
+			if (!artFound){
+				if (cards.get(i).equals(art)){
+					trade.add(cards.get(i));
+					continue;
+				}//end if
+			}//end if
+			
+			i++;
+		}//end while
+		
+		if (trade.size()>3)
+			return null;
+		else
+			return trade;
+	}//end one of each
+	
+	private ArrayList<Card> findThreeInfantry(){
+		Card inf = new Card(null, "infantry");
+		ArrayList<Card> cards = getCards();
+		ArrayList<Card> trade = new ArrayList<Card>();
+		
+		int i=0;
+		while (i<cards.size() && trade.size()<3){
+			//If it's an infantry or wild, add it
+			if (cards.get(i).equals(inf))
+				trade.add(cards.get(i));
+			
+			i++;
+		}//end while
+		
+		if (trade.size()>3)
+			return null;
+		else
+			return trade;
+	}// end infantry
+	
+	private ArrayList<Card> findThreeCalvary(){
+		Card cav = new Card(null, "cavalry");
+		ArrayList<Card> cards = getCards();
+		ArrayList<Card> trade = new ArrayList<Card>();
+		
+		int i=0;
+		while (i<cards.size() && trade.size()<3){
+			//If it's an infantry or wild, add it
+			if (cards.get(i).equals(cav))
+				trade.add(cards.get(i));
+			
+			i++;
+		}//end while
+		
+		if (trade.size()>3)
+			return null;
+		else
+			return trade;
+	}// end infantry
+	
+	private ArrayList<Card> findThreeArtillery(){
+		Card art = new Card(null, "artillery");
+		ArrayList<Card> cards = getCards();
+		ArrayList<Card> trade = new ArrayList<Card>();
+		
+		int i=0;
+		while (i<cards.size() && trade.size()<3){
+			//If it's an infantry or wild, add it
+			if (cards.get(i).equals(art))
+				trade.add(cards.get(i));
+			
+			i++;
+		}//end while
+		
+		if (trade.size()>3)
+			return null;
+		else
+			return trade;
+	}// end infantry
+	
+	
+	
+	
+//	private ArrayList<Card> findmyCardsToRedeem() {
+//
+//		ArrayList<Card> myThreeCards = new ArrayList<>();
+//		int infantryCount = 0, calvaryCount = 0, artilleryCount = 0, wildCount = 0;
+//		// step through 5 cards, and count how many of each
+//		for (Card card : getCards()) {
+//			switch (card.getUnitType()) {
+//			case 1:
+//				infantryCount++;
+//				break;
+//			case 2:
+//				calvaryCount++;
+//				break;
+//			case 3:
+//				artilleryCount++;
+//				break;
+//			case 0:
+//				wildCount++;
+//				break;
+//			}
+//		}
+//		if (infantryCount >= 3 || (wildCount == 1 && infantryCount >= 2) || (wildCount == 2 && infantryCount >= 1)) {
+//			myThreeCards = findThreeInfantry();
+//		} else if (calvaryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
+//				|| (wildCount == 2 && calvaryCount >= 1)) {
+//			myThreeCards = findThreeCalvary();
+//		} else if (artilleryCount >= 3 || (wildCount == 1 && calvaryCount >= 2)
+//				|| (wildCount == 2 && artilleryCount >= 1)) {
+//			myThreeCards = findThreeArtillery();
+//		} else {
+//			myThreeCards = findOneOfEach();
+//		}
+//
+//		return myThreeCards;
+//	}// end findmyCardsToRedeem
+//
+//	private ArrayList<Card> findOneOfEach() {
+//		ArrayList<Card> myThreeCards = new ArrayList<>();
+//		boolean infantry = false, calvary = false, artillery = false;
+//		for (Card card : getCards()) {
+//			if (!infantry && (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0)) {
+//				myThreeCards.add(card);
+//				infantry = true;
+//			}
+//
+//			if (!calvary && (card.getUnit().compareTo("calvary") == 0 || card.getUnit().compareTo("WILD") == 0)) {
+//				myThreeCards.add(card);
+//				calvary = true;
+//			}
+//
+//			if (!artillery && (card.getUnit().compareTo("artillery") == 0 || card.getUnit().compareTo("WILD") == 0)) {
+//				myThreeCards.add(card);
+//				artillery = true;
+//			}
+//		}
+//		return myThreeCards;
+//	}// end findOneOfEach
+//
+//	private ArrayList<Card> findThreeArtillery() {
+//		ArrayList<Card> threeArtillery = new ArrayList<>();
+//		for (Card card : getCards()) {
+//			if (card.getUnit().compareTo("artillery") == 0) {
+//				threeArtillery.add(card);
+//			}
+//
+//			if (threeArtillery.size() == 3) {
+//				break;
+//			}
+//		}
+//		return threeArtillery;
+//	}// end findThreeArtillery
+//
+//	private ArrayList<Card> findThreeCalvary() {
+//		ArrayList<Card> threeCalvary = new ArrayList<>();
+//		for (Card card : getCards()) {
+//			if (card.getUnit().compareTo("calvary") == 0) {
+//				threeCalvary.add(card);
+//			}
+//
+//			if (threeCalvary.size() == 3) {
+//				break;
+//			}
+//		}
+//		return threeCalvary;
+//	}// end findThreeCalvary
+//
+//	private ArrayList<Card> findThreeInfantry() {
+//
+//		ArrayList<Card> threeInfantry = new ArrayList<>();
+//		for (Card card : getCards()) {
+//			if (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0) {
+//				threeInfantry.add(card);
+//			}
+//
+//			if (threeInfantry.size() == 3) {
+//				break;
+//			}
+//		}
+//		return threeInfantry;
+//	}// end findThreeInfantry
 
-		return myThreeCards;
-	}// end findmyCardsToRedeem
-
-	private ArrayList<Card> findOneOfEach() {
-		ArrayList<Card> myThreeCards = new ArrayList<>();
-		boolean infantry = false, calvary = false, artillery = false;
-		for (Card card : getCards()) {
-			if (!infantry && (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0)) {
-				myThreeCards.add(card);
-				infantry = true;
-			}
-
-			if (!calvary && (card.getUnit().compareTo("calvary") == 0 || card.getUnit().compareTo("WILD") == 0)) {
-				myThreeCards.add(card); 
-				calvary = true;
-			}
-
-			if (!artillery && (card.getUnit().compareTo("artillery") == 0 || card.getUnit().compareTo("WILD") == 0)) {
-				myThreeCards.add(card);
-				artillery = true;
-			}
-		}
-		return myThreeCards;
-	}// end findOneOfEach
-
-	private ArrayList<Card> findThreeArtillery() {
-		ArrayList<Card> threeArtillery = new ArrayList<>();
-		for (Card card : getCards()) {
-			if (card.getUnit().compareTo("artillery") == 0) {
-				threeArtillery.add(card);
-			}
-
-			if (threeArtillery.size() == 3) {
-				break;
-			}
-		}
-		return threeArtillery;
-	}// end findThreeArtillery
-
-	private ArrayList<Card> findThreeCalvary() {
-		ArrayList<Card> threeCalvary = new ArrayList<>();
-		for (Card card : getCards()) {
-			if (card.getUnit().compareTo("calvary") == 0) {
-				threeCalvary.add(card);
-			}
-
-			if (threeCalvary.size() == 3) {
-				break;
-			}
-		}
-		return threeCalvary;
-	}// end findThreeCalvary
-
-	private ArrayList<Card> findThreeInfantry() {
-
-		ArrayList<Card> threeInfantry = new ArrayList<>();
-		for (Card card : getCards()) {
-			if (card.getUnit().compareTo("infantry") == 0 || card.getUnit().compareTo("WILD") == 0) {
-				threeInfantry.add(card);
-			}
-
-			if (threeInfantry.size() == 3) {
-				break;
-			}
-		}
-		return threeInfantry;
-	}// end findThreeInfantry
 
 	public AIStrategy getStrategy() {
 		return strategy;

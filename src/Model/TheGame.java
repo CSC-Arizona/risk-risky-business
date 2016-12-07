@@ -327,7 +327,10 @@ public class TheGame implements Serializable {
 		// calls roundOfPlacement to let any AIs who may have been set to
 		// go first play their parts
 		currentPlayer = players.get(0);
-		play();
+		
+		//Only play if the first player is an AI
+		if (currentPlayer instanceof AI)
+			play();
 	}// end startGame
 
 	public void play() {
@@ -381,12 +384,13 @@ public class TheGame implements Serializable {
 
 		// During redeem cards
 		else if (isRedeemCardPhase()) {
+			System.out.println("Current player cards: "+currentPlayer.getCards().size());
 			cardsToRedeem = ((AI) currentPlayer).redeemCards();
 
 			if (cardsToRedeem != null)
 				currentPlayer.addAvailableTroops(redeemCards());
 
-			nextPhase();
+			skipCardRedemption();
 		} // end else if
 
 		// During deployment
