@@ -1222,7 +1222,6 @@ public class riskGUI extends JFrame {
 			JButton returnButton = new JButton("Return to your game");
 			returnButton.addActionListener(new StatPanelTurnOffListener());
 			this.add(returnButton, BorderLayout.SOUTH);
-			// this.setBorder(raisedWithColor);
 			this.revalidate();
 			this.repaint();
 		}// end constructor
@@ -1251,7 +1250,6 @@ public class riskGUI extends JFrame {
 
 		private JPanel addNameAndCardsPanel() {
 			JPanel myStuff = new JPanel();
-			// myStuff.setPreferredSize(new Dimension(width / 2, height / 2));
 			myStuff.setLayout(new GridLayout(2, 0));
 
 			// Drawing the name and factionr
@@ -1274,11 +1272,6 @@ public class riskGUI extends JFrame {
 
 			for (int i = 0; i < currCards.size(); i++) {
 				ImageIcon im = currCards.get(i).getMyImageIcon();
-				/*
-				 * JLabel card = new JLabel(im); card.setPreferredSize(new
-				 * Dimension( myStuff.getWidth() / 5 - 10, myStuff.getHeight() /
-				 * 2 - 10));
-				 */
 				CardPanel card = new CardPanel(im.getImage(), xWidth, yHeight);
 				cards.add(card);
 			}

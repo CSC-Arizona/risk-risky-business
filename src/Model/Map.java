@@ -86,12 +86,12 @@ public class Map implements Serializable {
 	public String[] getContinentOwnersAsStrings() {
 		String[] allStrings = new String[6];
 
-		allStrings[0] = blue.toString();
-		allStrings[1] = green.toString();
-		allStrings[2] = pink.toString();
-		allStrings[3] = red.toString();
-		allStrings[4] = black.toString();
-		allStrings[5] = yellow.toString();
+		allStrings[0] = blue.getBonus() + " units: " + blue.toString();
+		allStrings[1] = green.getBonus() + " units: " + green.toString();
+		allStrings[2] = pink.getBonus() + " units: " + pink.toString();
+		allStrings[3] = red.getBonus() + " units: " + red.toString();
+		allStrings[4] = black.getBonus() + " units: " + black.toString();
+		allStrings[5] = yellow.getBonus() + " units: " + yellow.toString();
 
 		return allStrings;
 	}
