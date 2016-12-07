@@ -23,11 +23,11 @@ public class EasyAI implements AIStrategy, Serializable {
 		Random rand = new Random();
 		int randNum = 0; 
 		int i = 0;
-		while (me.getAvailableTroops() > i) { 
-			i+=2;
+//		while (me.getAvailableTroops() > i) { 
+//			i+=2;
 			randNum = rand.nextInt(me.getCountries().size());
 			countries.add(me.getCountries().get(randNum));
-		}
+//		}
 		return countries;
 	}
 
@@ -42,7 +42,7 @@ public class EasyAI implements AIStrategy, Serializable {
 		ArrayList<Country> countries = me.getCountries();
 		
 		
-		for (int i=0; i < 10; i++){
+		for (int i=0; i < 3; i++){
 			int ran = (int)(Math.random() * countries.size());
 			Country c = countries.get(ran);
 			
@@ -54,36 +54,8 @@ public class EasyAI implements AIStrategy, Serializable {
 				log+=me.getName() + " removed 2 units from " + c.getName() + " and placed them on " + n.getName() + ".\n";
 			}//end if
 		}//end for
-		
-		
-		
+				
 		return log;
-//		boolean stopFlag = false;
-//		for (Country country : me.getCountries()) {
-//			//System.out.println("b: "+ ++b);
-//			if (country.getForcesVal() > 3) {
-//				stopFlag = false;
-//				while (country.getForcesVal() > 2 && stopFlag == false) {
-//					//System.out.println("C: "+ ++c);
-//					int i = 0;
-//					for (Country neighbor : country.getNeighbors()) {
-//						if (neighbor.getOccupier().equals(me)) {
-//							neighbor.addForcesVal(2);
-//							country.removeUnits(2);
-//						} 
-//						if (country.getForcesVal() == 2)
-//							break;
-//						
-//						i++;
-//						if(i >= country.getNeighbors().size())
-//						{
-//							stopFlag = true;
-//						}
-//					}
-//				}
-//			}
-//		}
-//		return null;
 	}
 
 	@Override
