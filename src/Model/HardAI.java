@@ -18,39 +18,77 @@ public class HardAI implements AIStrategy, Serializable {
 
 	@Override
 	public ArrayList<Country> placeNewTroops() {
-		ArrayList<Country> returnMe = null;
+		ArrayList<Country> returnMe = new ArrayList<>();
 		ArrayList<Continent> conts = Map.getAllContinents();
 		Collections.shuffle(conts);// shuffle continents up so that you don't
 									// always select the same continent over and
 									// over again
-		int[] contCountryCounter = new int[7];
+		int index = 0;
+		Continent chosen = conts.get(index);
+		ArrayList<Country> mine = me.getCountries();
 		int i = 0;
-		for (Continent cont : conts) {
-			contCountryCounter[i] = countOnCont(cont);
+		int j = 0;
+		int added = 0;
+		
+		while (added < me.getAvailableTroops()){
+			Country tmp = mine.get(i);
 			i++;
-		}
-		i = 0;
-		while (returnMe == null && i < contCountryCounter.length) {
-
-			if (contCountryCounter[i] >= (conts.get(i).getNumOfCountries() / 2)) {
-				returnMe = findFringeOnCont(conts.get(i));
-			}
-			i++;
-		}
-		i = 0;
-		if (returnMe == null || returnMe.size() == 0) {
-			returnMe = new ArrayList<>();
-			int randNum = 0;
-
-			while (me.getAvailableTroops() > i) {
-				i++;
-				randNum = rand.nextInt(me.getCountries().size());
-				returnMe.add(me.getCountries().get(randNum));
-			}
-
-		}
-
+			j++;
+			
+			//Add it!
+			if (chosen.getMyCountries().contains(tmp)){
+				returnMe.add(tmp);
+				added+=2;
+			}//end if
+			
+			//If we don't have any countries in this continent
+			if (j==chosen.getNumOfCountries()-1 && added == 0){
+				if (index == conts.size() - 1)
+					index = 0;
+				chosen = conts.get(++index);
+				j = 0;
+			}//end if
+			
+			if (i==mine.size())
+				i = 0;
+		}//end while
+		
+		
 		return returnMe;
+		
+//		ArrayList<Country> returnMe = null;
+//		ArrayList<Continent> conts = Map.getAllContinents();
+//		Collections.shuffle(conts);// shuffle continents up so that you don't
+//									// always select the same continent over and
+//									// over again
+//		int[] contCountryCounter = new int[7];
+//		int i = 0;
+//		for (Continent cont : conts) {
+//			contCountryCounter[i] = countOnCont(cont);
+//			i++;
+//		}
+//		i = 0;
+//		while (returnMe == null && i < contCountryCounter.length) {
+//
+//			if (contCountryCounter[i] >= (conts.get(i).getNumOfCountries() / 2)) {
+//				returnMe = findFringeOnCont(conts.get(i));
+//			}
+//			i++;
+//		}
+//		i = 0;
+//		if (returnMe == null || returnMe.size() == 0) {
+//			returnMe = new ArrayList<>();
+//			int randNum = 0;
+//
+//			while (me.getAvailableTroops() > i) {
+//				i++;
+//				randNum = rand.nextInt(me.getCountries().size());
+//				returnMe.add(me.getCountries().get(randNum));
+//			}
+//
+//		}
+//
+//		return returnMe;
 
 	}
 
@@ -116,6 +154,7 @@ public class HardAI implements AIStrategy, Serializable {
 	@Override
 	public String reinforce() {
 		String str = "";
+		int numRes = 0;
 		int surroundCounter = 0;
 
 		for (Country country : me.getCountries()) {
@@ -128,12 +167,17 @@ public class HardAI implements AIStrategy, Serializable {
 			}
 
 			if (surroundCounter == neighbors.size() && country.getForcesVal() > 1) {
-				while (country.getForcesVal() > 1) {
+				while (country.getForcesVal() > 4) {
 					for (Country neighbor : neighbors) {
-						country.removeUnits(1);
-						neighbor.addForcesVal(1);
+						country.removeUnits(2);
+						neighbor.addForcesVal(2);
 						str += me.getName() + " removed 1 unit from " + country.getName() + " and moved it to "
 								+ neighbor.getName() + ".\n";
+						numRes++;
+						
+						if (numRes == 15)
+							return str;
+						
 						if (country.getForcesVal() <= 1)
 							break;
 					}
@@ -313,5 +357,8 @@ public class HardAI implements AIStrategy, Serializable {
 
 		return countriesWorthAttacking;
 	}
-
+	
+	public String toString(){
+		return "HARD";
+	}
 }

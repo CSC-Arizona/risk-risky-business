@@ -74,8 +74,27 @@ public class AI extends Player implements Serializable {
 	// there are still other countries it can attack
 	public boolean finishedAttacking() {
 		
-		numAttacks++;
+		//If you're close to finished, just conquerrrrr
+		if (getCountries().size() > 44)
+			return true;
 		
+//		if (getCountries().size() <3)
+//			return false;
+		
+		numAttacks++;
+		if (strategy instanceof EasyAI && numAttacks >=7){
+			numAttacks = 0;
+			return true;
+		}
+			
+		else if (strategy instanceof MediumAI && numAttacks >=13){
+			numAttacks = 0;
+			return true;
+		}
+		else if (strategy instanceof HardAI && numAttacks >=21){
+			numAttacks = 0;
+			return true;
+		}
 		
 		
 		int i = 0;
@@ -93,21 +112,7 @@ public class AI extends Player implements Serializable {
 //		
 //		return false;
 		
-		if (strategy instanceof EasyAI && numAttacks >=3){
-			numAttacks = 0;
-			return true;
-		}
-			
-		else if (strategy instanceof MediumAI && numAttacks >=7){
-			numAttacks = 0;
-			return true;
-		}
-		else if (strategy instanceof HardAI && numAttacks >=13){
-			numAttacks = 0;
-			return true;
-		}
-		else
-			return false;
+		return false;
 
 
 	}// end finishedAttacking
@@ -179,8 +184,8 @@ public class AI extends Player implements Serializable {
 	}
 
 	public ArrayList<Country> findFringeCountries() {
-		if (fringes != null)
-			return fringes;
+//		if (fringes != null)
+//			return fringes;
 
 		ArrayList<Country> fringeCountries = new ArrayList<>();
 
