@@ -65,6 +65,7 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import controller.TheGame;
 import Model.*;
 import songplayer.SoundClipPlayer;
 

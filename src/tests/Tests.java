@@ -11,22 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import Model.AI;
-import Model.AIStrategy;
-import Model.Card;
-import Model.Continent;
-import Model.Country;
-import Model.Deck;
-import Model.Dice;
-import Model.DiscardPile;
-import Model.EasyAI;
-import Model.Faction;
-import Model.Game;
-import Model.HardAI;
-import Model.HumanPlayer;
-import Model.Map;
-import Model.MediumAI;
-import Model.Player;
+import Model.*;
 
 public class Tests {
 
@@ -263,8 +248,8 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6, false);
-		theGame.newGame();
+		//Game theGame = Game.getInstance(1, 6, false);
+		//theGame.newGame();
 		// int result = theGame.redeemCards(one, redeem);
 		// System.out.println(result);
 		// assertTrue(result == 4);
@@ -287,8 +272,8 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6, false);
-		theGame.newGame();
+		//Game theGame = Game.getInstance(1, 6, false);
+		//theGame.newGame();
 		// int result = theGame.redeemCards(one, redeem);
 		// System.out.println(result);
 		// assertTrue(result == 4);
@@ -311,8 +296,8 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		Game theGame = Game.getInstance(1, 6, false);
-		theGame.newGame();
+		//Game theGame = Game.getInstance(1, 6, false);
+		//theGame.newGame();
 		// int result = theGame.redeemCards(one, redeem);
 		// System.out.println(result);
 		// assertTrue(result == -1);
