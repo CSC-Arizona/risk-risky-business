@@ -114,6 +114,7 @@ public class riskGUI extends JFrame {
 	private Country attackFrom, attack;
 	private int numOfArmies = 0;
 	private boolean musicOn = true;
+	private boolean animationsOn = true;
 	private boolean useMaxDice = true;
 	private StatPanel currentStatsPanel;
 	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
@@ -426,7 +427,7 @@ public class riskGUI extends JFrame {
 		theGame.setPlayers(players);
 		theGame.startGame();
 
-		animations(attacker, defender); 
+		//animations(attacker, defender); 
 
 
 	}// end splashLoading2
@@ -679,7 +680,7 @@ public class riskGUI extends JFrame {
 	}// end splashLoading1
 
 	private void setUpGui() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setLayout(new BorderLayout());
 		setTitle("GoT Risk");
@@ -707,10 +708,10 @@ public class riskGUI extends JFrame {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
+						System.out.println("SAVE GAME");
+						System.exit(0);
 					}
 					// saveGame();
-					System.out.println("SAVE GAME");
-					System.exit(0);
 				} else if (confirm == JOptionPane.NO_OPTION) {
 					System.exit(0);
 				}
@@ -736,6 +737,15 @@ public class riskGUI extends JFrame {
 		JMenuItem musicStatus = new JMenuItem(music);
 		musicStatus.addActionListener(new musicListener());
 		settings.add(musicStatus);
+		String animations = "";
+		if (animationsOn)
+			animations = "Turn Off Animations";
+		else
+			animations = "Turn On Animations";
+		JMenuItem animationStatus = new JMenuItem(animations);
+		animationStatus.addActionListener(new animationListener());
+		settings.add(animationStatus);
+		
 		JMenu maxDice = new JMenu("Defualt Dice");
 		JMenuItem setMax = new JMenuItem("Always Max");
 		setMax.addActionListener(new HelpListener());
@@ -797,9 +807,10 @@ public class riskGUI extends JFrame {
 	
 	private void animations(Faction attacker, Faction defender){
 		System.out.println("begin");
+		animationPanel.resetStart();
 		drawingPanel.add(animationPanel);
 		//animationPanel.setLocation(width/2 -350, height/2 - 350);
-		animationPanel.resetStart();
+		
 		animationPanel.setLocation(width/2 -350, height/2 - 350);
 //		JFrame animationFrame = new JFrame();
 //		
@@ -2034,7 +2045,8 @@ public class riskGUI extends JFrame {
 							attacker = theGame.getMoveFrom().getOccupier().getFaction();
 							defender = theGame.getMoveTo().getOccupier().getFaction();
 							theGame.attack();
-							animations(attacker, defender);
+							if(animationsOn)
+								animations(attacker, defender);
 
 							ArrayList<Dice> attack = theGame.getAttackDice();
 							ArrayList<Dice> defense = theGame.getDefenseDice();
@@ -2071,7 +2083,8 @@ public class riskGUI extends JFrame {
 						defender = theGame.getMoveTo().getOccupier().getFaction();
 						
 						theGame.attack();
-						animations(attacker, defender);
+						if(animationsOn)
+							animations(attacker, defender);
 
 						// Saved so that they can be used for animations
 						ArrayList<Dice> attack = theGame.getAttackDice();
@@ -2172,7 +2185,8 @@ public class riskGUI extends JFrame {
 	private class NewGameListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			theGame.clear();
+			if(theGame != null)
+				theGame.clear();
 			splashNumPlayers();
 		}// end action performed
 	}// end game listener
@@ -2253,6 +2267,18 @@ public class riskGUI extends JFrame {
 			} else {
 				player.pause();
 			}
+			setUpMenu();
+			if (!splash)
+				setUpAIMenu();
+		}// end actionperformed
+	}// end musicListener
+	
+	private class animationListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+			animationsOn = !animationsOn;
 			setUpMenu();
 			if (!splash)
 				setUpAIMenu();
