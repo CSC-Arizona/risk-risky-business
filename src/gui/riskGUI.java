@@ -73,19 +73,23 @@ import songplayer.SoundClipPlayer;
 //just a simple GUI to start, with a drawingPanel for map stuff
 public class riskGUI extends JFrame {
 
-	public static void main(String[] args) throws UnknownHostException, IOException {
+	public static void main(String[] args) throws UnknownHostException,
+			IOException {
 		new riskGUI().setVisible(true);
 	}
 
 	private static BoardPanel drawingPanel;
 	private static AnimationPanel animationPanel;
 	private JMenuBar menu;
-	private int width = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
-	private int height = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
+	private int width = java.awt.GraphicsEnvironment
+			.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+	private int height = java.awt.GraphicsEnvironment
+			.getLocalGraphicsEnvironment().getMaximumWindowBounds().height;
 	private int xWidth = 0;
 	private int yHeight = 0;
 	private TheGame theGame;
-	private ImageIcon gameBoard, stark, targaryen, lannister, whiteWalkers, dothraki, wildlings;
+	private ImageIcon gameBoard, stark, targaryen, lannister, whiteWalkers,
+			dothraki, wildlings;
 	private CountryPanel currCountryPanel;
 	private boolean splash, gameOver = false;
 	private ImageIcon splashScreen;
@@ -104,18 +108,22 @@ public class riskGUI extends JFrame {
 	private boolean animationsOn = true;
 	private int attackMaxDie, defendMaxDie;
 	private StatPanel currentStatsPanel;
-	private Border blueline, raisedetched, loweredetched, raisedbevel, loweredbevel, empty, raisedWithColor;
+	private Border blueline, raisedetched, loweredetched, raisedbevel,
+			loweredbevel, empty, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
 	private boolean allAIS = false;
 	private Faction attacker;
 	private Faction defender;
-	
+
 	public riskGUI() {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsEnvironment ge = GraphicsEnvironment
+				.getLocalGraphicsEnvironment();
 		try {
-			gotFontHeader = Font.createFont(Font.TRUETYPE_FONT, new File("TrajanusBricks.ttf"));
+			gotFontHeader = Font.createFont(Font.TRUETYPE_FONT, new File(
+					"TrajanusBricks.ttf"));
 			gotFontHeader = gotFontHeader.deriveFont(36f);
-			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File("LibreBaskerville-Regular.otf"));
+			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File(
+					"LibreBaskerville-Regular.otf"));
 			gotFontBody = gotFontBody.deriveFont(24f);
 		} catch (FontFormatException e) {
 			e.printStackTrace();
@@ -134,19 +142,20 @@ public class riskGUI extends JFrame {
 		raisedbevel = BorderFactory.createRaisedBevelBorder();
 		loweredbevel = BorderFactory.createLoweredBevelBorder();
 		empty = BorderFactory.createEmptyBorder();
-		raisedWithColor = BorderFactory.createCompoundBorder(raisedetched, blueline);
+		raisedWithColor = BorderFactory.createCompoundBorder(raisedetched,
+				blueline);
 		attackMaxDie = 3;
 		defendMaxDie = 2;
 
 		selectedCards = new ArrayList<Card>();
 		attacker = Faction.STARK;
 		defender = Faction.WILDLINGS;
-		splash = true; 
+		splash = true;
 		setUpImages();
 		setUpGui();
 		setUpMenu();
 		setUpHouseArray();
-		setUpSplash(); 
+		setUpSplash();
 
 	}// end riskGui constructor
 
@@ -176,8 +185,11 @@ public class riskGUI extends JFrame {
 	public void loadGame() {
 		boolean error = setUpLoad();
 		if (error) {
-			JOptionPane.showMessageDialog(null, "No game data has been succesfully loaded. Start a new game.", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"No game data has been succesfully loaded. Start a new game.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 			splashNumPlayers();
 		} else {
 			splash = false;
@@ -201,7 +213,8 @@ public class riskGUI extends JFrame {
 		int get = choose.showOpenDialog(null);
 		if (get == JFileChooser.APPROVE_OPTION) {
 			try {
-				ObjectInputStream inFile = new ObjectInputStream(new FileInputStream(choose.getSelectedFile()));
+				ObjectInputStream inFile = new ObjectInputStream(
+						new FileInputStream(choose.getSelectedFile()));
 				theGame = (TheGame) inFile.readObject();
 				inFile.close();
 			} catch (Exception ex) {
@@ -330,7 +343,9 @@ public class riskGUI extends JFrame {
 			boolean nameFlag = false;
 
 			while (!nameFlag) {
-				String name = JOptionPane.showInputDialog("What will be Player " + (i + 1) + "'s Name?");
+				String name = JOptionPane
+						.showInputDialog("What will be Player " + (i + 1)
+								+ "'s Name?");
 				if (name == null) {
 					cancel = true;
 					nameFlag = true;
@@ -358,16 +373,21 @@ public class riskGUI extends JFrame {
 			String house = "";
 			while (illegalName == true && cancel == false) {
 				Boolean check = true;
-				house = (String) JOptionPane.showInputDialog(null, "Please choose Player " + (i + 1) + "'s House",
+				house = (String) JOptionPane.showInputDialog(null,
+						"Please choose Player " + (i + 1) + "'s House",
 						"Choose a House", JOptionPane.QUESTION_MESSAGE, null,
-						new Object[] { "Stark", "Targaryen", "Lannister", "White Walkers", "Wildlings", "Dothraki" },
+						new Object[] { "Stark", "Targaryen", "Lannister",
+								"White Walkers", "Wildlings", "Dothraki" },
 						"No");
 				if (house != null) {
 					for (int j = 0; j < houses.size(); j++) {
 						if (houses.get(j).compareTo(house) == 0) {
 							check = false;
-							JOptionPane.showMessageDialog(null, "House has already been chosen. Please pick another.",
-									"Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"House has already been chosen. Please pick another.",
+											"Error", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
@@ -391,9 +411,11 @@ public class riskGUI extends JFrame {
 
 				while (illegalName == true) {
 
-					ais = (String) JOptionPane.showInputDialog(null, "Please choose AI " + (i + 1) + "'s Strategy",
-							"Choose a Strategy", JOptionPane.QUESTION_MESSAGE, null,
-							new Object[] { "Easy", "Medium", "Hard" }, "Easy");
+					ais = (String) JOptionPane.showInputDialog(null,
+							"Please choose AI " + (i + 1) + "'s Strategy",
+							"Choose a Strategy", JOptionPane.QUESTION_MESSAGE,
+							null, new Object[] { "Easy", "Medium", "Hard" },
+							"Easy");
 
 					if (ais == null) {
 						cancel = true;
@@ -442,8 +464,9 @@ public class riskGUI extends JFrame {
 					continueFlag = true;
 
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Must choose a valid number between 0 and 6.", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Must choose a valid number between 0 and 6.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -461,14 +484,17 @@ public class riskGUI extends JFrame {
 						aiFlag = true;
 
 					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Must choose a valid number between 0 and 6.", "Error",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null,
+								"Must choose a valid number between 0 and 6.",
+								"Error", JOptionPane.ERROR_MESSAGE);
 					}
 					if (aiFlag) {
 						if ((ai + humans) > 6 || ai + humans < 3) {
-							JOptionPane.showMessageDialog(null,
-									"Invalid. Total number of players must be between 3 and 6.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Invalid. Total number of players must be between 3 and 6.",
+											"Error", JOptionPane.ERROR_MESSAGE);
 						} else
 							setFlag = true;
 
@@ -528,7 +554,6 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(splashInfo);
 		drawingPanel.repaint();
 
-
 		// pause on this screen for 10 seconds. Set to 5 seconds during testing.
 		try {
 			Thread.sleep(5000);
@@ -551,8 +576,8 @@ public class riskGUI extends JFrame {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				int confirm = JOptionPane.showConfirmDialog(null, "Save Data?", "End",
-						JOptionPane.YES_NO_CANCEL_OPTION);
+				int confirm = JOptionPane.showConfirmDialog(null, "Save Data?",
+						"End", JOptionPane.YES_NO_CANCEL_OPTION);
 				// If the user wants to save before quit, then save!
 				if (confirm == JOptionPane.CANCEL_OPTION) {
 					System.out.println("CANCEL CLOSE");
@@ -562,8 +587,10 @@ public class riskGUI extends JFrame {
 					int get = choose.showSaveDialog(null);
 					if (get == JFileChooser.APPROVE_OPTION) {
 						try {
-							FileOutputStream gameToDisk = new FileOutputStream(choose.getSelectedFile() + ".ser");
-							ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
+							FileOutputStream gameToDisk = new FileOutputStream(
+									choose.getSelectedFile() + ".ser");
+							ObjectOutputStream outFile = new ObjectOutputStream(
+									gameToDisk);
 							outFile.writeObject(theGame);
 							outFile.close();
 						} catch (Exception ex) {
@@ -667,7 +694,8 @@ public class riskGUI extends JFrame {
 		JButton clearButton = new JButton("Clear Move Selections");
 		clearButton.addActionListener(new clearButtonListener());
 		clearButton.setSize(4 * xWidth, 2 * yHeight);
-		clearButton.setLocation(width - (int) (4.25 * xWidth), (int) (0.25 * yHeight));
+		clearButton.setLocation(width - (int) (4.25 * xWidth),
+				(int) (0.25 * yHeight));
 		drawingPanel.add(clearButton);
 	}
 
@@ -675,7 +703,8 @@ public class riskGUI extends JFrame {
 		JButton passButton = new JButton("Skip to the Next Phase");
 		passButton.addActionListener(new PassButtonListener());
 		passButton.setSize(4 * xWidth, 2 * yHeight);
-		passButton.setLocation(width - (int) (4.25 * xWidth), (int) (2.75 * yHeight));
+		passButton.setLocation(width - (int) (4.25 * xWidth),
+				(int) (2.75 * yHeight));
 		drawingPanel.add(passButton);
 	}
 
@@ -683,7 +712,8 @@ public class riskGUI extends JFrame {
 		JButton statButton = new JButton("Check out our stats");
 		statButton.addActionListener(new StatPanelTurnOnListener());
 		statButton.setSize(4 * xWidth, 2 * yHeight);
-		statButton.setLocation(width - (int) (4.25 * xWidth), (int) (5.25 * yHeight));
+		statButton.setLocation(width - (int) (4.25 * xWidth),
+				(int) (5.25 * yHeight));
 		drawingPanel.add(statButton);
 	}
 
@@ -739,11 +769,11 @@ public class riskGUI extends JFrame {
 		drawingPanel.repaint();
 		this.repaint();
 
-		if(!allAIS){
+		if (!allAIS) {
 			player.stopTheme();
 			player.startPlay();
 		}
-		if(theGame.getNumHumans()!=0 || theGame.isFinished())
+		if (theGame.getNumHumans() != 0 || theGame.isFinished())
 			setUpStatButton();
 	}// end setUpDrawingPanel
 
@@ -798,7 +828,8 @@ public class riskGUI extends JFrame {
 				tmp = splashScreen.getImage();
 			else
 				tmp = gameBoard.getImage();
-			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(), drawingPanel.getHeight(), null);
+			g2.drawImage(tmp, 0, 0, drawingPanel.getWidth(),
+					drawingPanel.getHeight(), null);
 
 			Dimension drawD = drawingPanel.getSize();
 			xWidth = (int) (drawD.getWidth() / 40);
@@ -807,14 +838,14 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 
 			if (!gameOver) {
-				if (!splash && theGame.getNumHumans()!=0) {
+				if (!splash && theGame.getNumHumans() != 0) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
 
 				if (theGame != null) {
 					drawCurrentPlayer(g2);
-					drawUnits(g2);  
+					drawUnits(g2);
 					gameOver = theGame.isGameOver();
 				}
 				// drawGridAndNumbers(g2);
@@ -827,7 +858,7 @@ public class riskGUI extends JFrame {
 				}
 
 			}
-			if(theGame!=null){
+			if (theGame != null) {
 				setUpMenu();
 				setUpAIMenu();
 			}
@@ -839,7 +870,8 @@ public class riskGUI extends JFrame {
 			g2.setFont(gotFontBody.deriveFont(Font.BOLD, 35f));
 			for (Country country : theGame.getGameMap().getCountries()) {
 				if (country.getForcesVal() > 0) {
-					g2.drawString("" + country.getForcesVal(), ((int) country.getX() * xWidth) + 22,
+					g2.drawString("" + country.getForcesVal(),
+							((int) country.getX() * xWidth) + 22,
 							((int) country.getY() * yHeight) + 17);
 				}
 
@@ -880,12 +912,14 @@ public class riskGUI extends JFrame {
 			g2.drawString("Current Phase: " + theGame.getPhase(), 110, 45);
 			if (theGame.isPlayPhase() && theGame.isReinforcePhase()) {
 			} else if (!theGame.isPlacePhase() && theGame.isReinforcePhase())
-				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units left to place.",
-						110, 65);
+				g2.drawString("You have: "
+						+ theGame.getCurrentPlayer().getAvailableTroops()
+						+ " units left to place.", 110, 65);
 
 			else if (theGame.isDeployPhase())
-				g2.drawString("You have: " + theGame.getCurrentPlayer().getAvailableTroops() + " units to place.", 110,
-						65);
+				g2.drawString("You have: "
+						+ theGame.getCurrentPlayer().getAvailableTroops()
+						+ " units to place.", 110, 65);
 
 		}// end drawCurrentPlayer
 
@@ -898,28 +932,40 @@ public class riskGUI extends JFrame {
 					Faction ownerFaction = country.returnMyOwnersFaction();
 					switch (ownerFaction) {
 					case STARK:
-						g2.drawImage(stark.getImage(), ((int) country.getX() * xWidth) + 50,
-								((int) country.getY() * yHeight) + 5, 30, 30, null);
+						g2.drawImage(stark.getImage(),
+								((int) country.getX() * xWidth) + 50,
+								((int) country.getY() * yHeight) + 5, 30, 30,
+								null);
 						break;
 					case TARGARYEN:
-						g2.drawImage(targaryen.getImage(), ((int) country.getX() * xWidth) + 50,
-								((int) country.getY() * yHeight) + 5, 30, 30, null);
+						g2.drawImage(targaryen.getImage(),
+								((int) country.getX() * xWidth) + 50,
+								((int) country.getY() * yHeight) + 5, 30, 30,
+								null);
 						break;
 					case LANNISTER:
-						g2.drawImage(lannister.getImage(), ((int) country.getX() * xWidth) + 50,
-								((int) country.getY() * yHeight) + 5, 30, 30, null);
+						g2.drawImage(lannister.getImage(),
+								((int) country.getX() * xWidth) + 50,
+								((int) country.getY() * yHeight) + 5, 30, 30,
+								null);
 						break;
 					case DOTHRAKI:
-						g2.drawImage(dothraki.getImage(), ((int) country.getX() * xWidth) + 50,
-								((int) country.getY() * yHeight) + 5, 30, 30, null);
+						g2.drawImage(dothraki.getImage(),
+								((int) country.getX() * xWidth) + 50,
+								((int) country.getY() * yHeight) + 5, 30, 30,
+								null);
 						break;
 					case WHITEWALKERS:
-						g2.drawImage(whiteWalkers.getImage(), ((int) country.getX() * xWidth) + 50,
-								((int) country.getY() * yHeight) + 5, 30, 30, null);
+						g2.drawImage(whiteWalkers.getImage(),
+								((int) country.getX() * xWidth) + 50,
+								((int) country.getY() * yHeight) + 5, 30, 30,
+								null);
 						break;
 					case WILDLINGS:
-						g2.drawImage(wildlings.getImage(), ((int) country.getX() * xWidth) + 50,
-								((int) country.getY() * yHeight) + 5, 30, 30, null);
+						g2.drawImage(wildlings.getImage(),
+								((int) country.getX() * xWidth) + 50,
+								((int) country.getY() * yHeight) + 5, 30, 30,
+								null);
 
 					}
 
@@ -970,18 +1016,17 @@ public class riskGUI extends JFrame {
 		@Override
 		public void update(Observable arg0, Object arg1) {
 
-			if(theGame.isFinished() && theGame.getNumHumans()==0){
+			if (theGame.isFinished() && theGame.getNumHumans() == 0) {
 				Thread.currentThread().interrupt();
-				//drawingPanel.removeAll();
-				//this.remove(drawingPanel);
+				// drawingPanel.removeAll();
+				// this.remove(drawingPanel);
 				setUpDrawingPanel();
 				setUpMenu();
 				this.revalidate();
 				this.repaint();
 				this.update(getGraphics());
-			}
-			else if(theGame.getNumHumans()==0 && !theGame.isFinished()){  
-				allAIS=true;
+			} else if (theGame.getNumHumans() == 0 && !theGame.isFinished()) {
+				allAIS = true;
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException ex) {
@@ -1004,9 +1049,9 @@ public class riskGUI extends JFrame {
 			this.repaint();
 
 		}// end update
-		
-		private void updateGM(){
-			if(theGame.isFinished()){
+
+		private void updateGM() {
+			if (theGame.isFinished()) {
 				this.revalidate();
 				this.repaint();
 			}
@@ -1156,10 +1201,13 @@ public class riskGUI extends JFrame {
 					// set up the name
 					String player = allPlayers.get(i).getName();
 					if (allPlayers.get(i) instanceof AI)
-						player += " " + ((AI) allPlayers.get(i)).getStrategy().toString();
+						player += " "
+								+ ((AI) allPlayers.get(i)).getStrategy()
+										.toString();
 
 					player += " " + allPlayers.get(i).getFaction().getName();
-					player += ": " + allPlayers.get(i).getCountries().size() + " countries.";
+					player += ": " + allPlayers.get(i).getCountries().size()
+							+ " countries.";
 					aPlayer.setText(player);
 
 					// add it
@@ -1178,7 +1226,8 @@ public class riskGUI extends JFrame {
 				JPanel contPanel = new JPanel();
 				contPanel.setBorder(raisedWithColor);
 				contPanel.setLayout(new GridLayout(7, 1));
-				String[] allContinents = theGame.getMap().getContinentOwnersAsStrings();
+				String[] allContinents = theGame.getMap()
+						.getContinentOwnersAsStrings();
 
 				for (int i = 0; i < allContinents.length; i++) {
 					JLabel lab = new JLabel(allContinents[i]);
@@ -1223,7 +1272,8 @@ public class riskGUI extends JFrame {
 			owner.setFont(gotFontHeader.deriveFont(28f));
 			owner.setHorizontalAlignment(JLabel.CENTER);
 			if (curr.getOccupier() != null)
-				owner.setText(curr.getOccupier().getName() + " " + curr.getOccupier().getFaction().getName());
+				owner.setText(curr.getOccupier().getName() + " "
+						+ curr.getOccupier().getFaction().getName());
 			else
 				owner.setText("None");
 			top.add(owner, BorderLayout.SOUTH);
@@ -1288,12 +1338,14 @@ public class riskGUI extends JFrame {
 			for (int i = 0; i < myCards.size(); i++) {
 				JPanel both = new JPanel();
 				both.setLayout(new BorderLayout());
-				both.setPreferredSize(new Dimension((int) (1.5 * xWidth), (int) (3 * yHeight)));
+				both.setPreferredSize(new Dimension((int) (1.5 * xWidth),
+						(int) (3 * yHeight)));
 
 				// add card
 				ImageIcon im = myCards.get(i).getMyImageIcon();
 				CardPanel card = new CardPanel(im.getImage(), xWidth, yHeight);
-				card.setPreferredSize(new Dimension((int) (1.5 * xWidth), (int) (3 * yHeight)));
+				card.setPreferredSize(new Dimension((int) (1.5 * xWidth),
+						(int) (3 * yHeight)));
 				both.add(card, BorderLayout.CENTER);
 
 				// add checkboxes
@@ -1402,8 +1454,9 @@ public class riskGUI extends JFrame {
 				JLabel directions = new JLabel();
 				directions.setHorizontalAlignment(JLabel.CENTER);
 				if (theGame.isFinished()) {
-					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 28));
-					directions.setText(theGame.getCurrentPlayer().getName() + " has achieved total victory.");
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 24));
+					directions.setText(theGame.getCurrentPlayer().getName()
+							+ " has achieved total victory.");
 					this.add(directions, BorderLayout.CENTER);
 				} else if (theGame.isRedeemCardPhase()) {
 					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 28));
@@ -1508,7 +1561,8 @@ public class riskGUI extends JFrame {
 			ArrayList<Card> playCards = theGame.getCurrentPlayer().getCards();
 
 			// the action command is the card's index in the player's arraylist
-			int index = Integer.parseInt(((JCheckBox) itE.getItem()).getActionCommand());
+			int index = Integer.parseInt(((JCheckBox) itE.getItem())
+					.getActionCommand());
 
 			// if it's selected
 			if (itE.getStateChange() == ItemEvent.SELECTED) {
@@ -1531,17 +1585,21 @@ public class riskGUI extends JFrame {
 			if (cardsAreRedeemable()) {
 				theGame.setCardsToRedeem(selectedCards);
 				int armiesToAdd = theGame.redeemCards();
-				theGame.getCurrentPlayer().addAvailableTroops(armiesToAdd);  
+				theGame.getCurrentPlayer().addAvailableTroops(armiesToAdd);
 				theGame.nextPhase();
 			} // end else if
 			else {
 
 				if (selectedCards.size() < 0 || selectedCards.size() > 3) {
-					JOptionPane.showMessageDialog(riskGUI.this, "Illegal amount of cards chosen.",
-							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(riskGUI.this,
+							"Illegal amount of cards chosen.",
+							"Can't redeem cards.",
+							JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(riskGUI.this, "Cannot redeem cards chosen. Try again.",
-							"Can't redeem cards.", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(riskGUI.this,
+							"Cannot redeem cards chosen. Try again.",
+							"Can't redeem cards.",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 				selectedCards.clear();
 			}
@@ -1586,7 +1644,8 @@ public class riskGUI extends JFrame {
 				unitTypes[0]++;
 			else if (selectedCards.get(i).getUnit().equalsIgnoreCase("cavalry"))
 				unitTypes[1]++;
-			else if (selectedCards.get(i).getUnit().equalsIgnoreCase("artillery"))
+			else if (selectedCards.get(i).getUnit()
+					.equalsIgnoreCase("artillery"))
 				unitTypes[2]++;
 			else if (selectedCards.get(i).getUnit().equalsIgnoreCase("wild"))
 				unitTypes[3]++;
@@ -1607,7 +1666,8 @@ public class riskGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			if (theGame.isAttackPhase()) {
 				if (theGame.skipAttackPhase()) {
-					JOptionPane.showMessageDialog(riskGUI.this, "You earned a new card!", "Card Earned",
+					JOptionPane.showMessageDialog(riskGUI.this,
+							"You earned a new card!", "Card Earned",
 							JOptionPane.INFORMATION_MESSAGE);
 				} // end if
 				System.out.println("Passed attack phase");
@@ -1616,11 +1676,14 @@ public class riskGUI extends JFrame {
 				System.out.println("Ended turn");
 			} else if (theGame.isRedeemCardPhase()) {
 				if (!theGame.skipCardRedemption())
-					JOptionPane.showMessageDialog(riskGUI.this, "Because you have 5 cards, you must redeem 3.",
-							"Card Redemption Warning", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(riskGUI.this,
+							"Because you have 5 cards, you must redeem 3.",
+							"Card Redemption Warning",
+							JOptionPane.INFORMATION_MESSAGE);
 			} // end else if
 			else {
-				JOptionPane.showMessageDialog(riskGUI.this, "Sorry, you're not allowed to skip this phase.",
+				JOptionPane.showMessageDialog(riskGUI.this,
+						"Sorry, you're not allowed to skip this phase.",
 						"Pass Warning", JOptionPane.INFORMATION_MESSAGE);
 			}
 
@@ -1637,24 +1700,28 @@ public class riskGUI extends JFrame {
 
 				URL rules = null;
 				try {
-					rules = new URL("http://www.cs.arizona.edu/~mercer/Projects/335/Final/RiskRules.pdf");
+					rules = new URL(
+							"http://www.cs.arizona.edu/~mercer/Projects/335/Final/RiskRules.pdf");
 				} catch (MalformedURLException e1) {
 
 					e1.printStackTrace();
 				}
-				JEditorPane ep = new JEditorPane("text/html",
-						"<a href=\"" + rules.toString() + "\">Rules given to us by Rick Mercer</a>" //
-								+ "</body></html>");
+				JEditorPane ep = new JEditorPane("text/html", "<a href=\""
+						+ rules.toString()
+						+ "\">Rules given to us by Rick Mercer</a>" //
+						+ "</body></html>");
 				ep.setEditable(false);
 				ep.addHyperlinkListener(new LinkClickListener(rules));
 				JOptionPane.showMessageDialog(null, ep);
 
 			} else if (e.getActionCommand().compareTo("about") == 0) {
-				JOptionPane.showMessageDialog(riskGUI.this,
-						"Dylan Tobia, Abigail Dodd, Sydney Komro, and Jewell Finder are members of the team Risky Business"
-								+ "\n                                    This is a recreation of the popular board game, Risk.\n"
-								+ "                                         Created for our CS335 class as our final project.",
-						"About", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane
+						.showMessageDialog(
+								riskGUI.this,
+								"Dylan Tobia, Abigail Dodd, Sydney Komro, and Jewell Finder are members of the team Risky Business"
+										+ "\n                                    This is a recreation of the popular board game, Risk.\n"
+										+ "                                         Created for our CS335 class as our final project.",
+								"About", JOptionPane.INFORMATION_MESSAGE);
 			} else if (e.getActionCommand().compareTo("attack max") == 0) {
 				attackMaxDie = 3;
 				theGame.changeAttackDice(3);
@@ -1672,39 +1739,41 @@ public class riskGUI extends JFrame {
 				theGame.changeDefendDice(1);
 			} else if (e.getActionCommand().compareTo("how to play") == 0) {
 
-				JOptionPane.showMessageDialog(riskGUI.this,
-						"                                 Welcome to our implementation of Risk, Game of Thrones Edition!\n"
-								+ "**********************************************DISCLAIMER******************************************************** \n"
-								+ "IF A PLAYER LOSES AND IT IS JUST AI LEFT, OR IF YOU START A GAME WITH ONLY AI, THE GAME WILL PLAY UNTIL \n"
-								+ "COMPLETION, BUT THEN SEEMS TO FREEZE. IT ISN'T ACTUALLY FROZEN, JUST BE PATIENT, IT WILL SHOW THE WINNER\n"
-								+ "AND THEN THE MENU'S AND THING WILL BE ACCESSIBLE. WE ARE SORRY FOR THE INCONVENIECE.\n"
-								+ "****************************************************************************************************************\n"
-								+ "The game will first ask if you want to play a New Game, or load a previous save. If you would like to load\n"
-								+ "the file types are .ser files. Next it will ask you the usual questions, how many humans, ai's, what \n"
-								+ "faction you would like to play as, and what difficulty you would like the ai's to be. Then the game begins. \n"
-								+ "To place an army, click on the NAME of a country, and then the \"Place Army\" button, if that country is not\n"
-								+ "currently occupied, it will place a unit for you. Then it is the next players turn. Continue doing this until\n"
-								+ "all countries are occupied. Then it will move on to the reinforcement phase. Just like with placing armies,\n"
-								+ "to reinforce a country, select its NAME, and then the \"Place Army\" button. You can only reinforce countries\n"
-								+ "you own. When all of your units have been placed, it will move on to the next phase, beginning with the redeem\n"
-								+ "card phase. In this phase, the center panel will show you how many cards you currently have (If you have any).\n"
-								+ "To redeem cards, click the radio boxes beneath the cards you wish to redeem, and click the \"Trade in Cards\"\n"
-								+ "button. To continue to the next phase, the Deploy Phase, press the \"Skip Phase\" button located on the top\n"
-								+ "right of the screen. You can never skip the Deploy phase, and just like before, you must reinforce countries\n"
-								+ "that only you own. When you are finished you will automatically be moved to the Attack Phase. To attack a \n"
-								+ "country, click either the country you want to attack's NAME, or the country you want to attack from's NAME\n"
-								+ "and click either the \"Go To War\" button, or the \"Attack\" button (They are the same button, located at\n"
-								+ "the bottom of the info pane). Then click the other country you wish to attack, or attack from, and click the\n"
-								+ "attack button. You will be alerted to the outcome of the attack. If you have conquered a country, you will be\n"
-								+ "prompted with how many units you wish to move there. If you have not conquered the country yet, you will need\n"
-								+ "to reselect your attacking, and attack from countries. When you are finished attacking, press the \"Skip Phase\"\n"
-								+ "button located at the top right of the screen. Now you are in the reinforce phase. Click a country you own that\n"
-								+ "has more than 1 unit on it, and click the transfer troops button. Then click an attached, friendly country to place\n"
-								+ "units upon, and click the transfer troops button. You will be prompted with how many units you wish to move from it.\n"
-								+ "Keep in mind you MUST leave 1.When you are finished, press the \"Skip Phase\" button at the top right of the screen,\n "
-								+ "to advance to the next players turn. Continue this until the game is over, or you wish to stop. To save, click \n"
-								+ "File-Save Game, or close the window, which will then prompt you if you wish to save the game or not.\n"
-								+ "                                                                               Happy conquering!");
+				JOptionPane
+						.showMessageDialog(
+								riskGUI.this,
+								"                                 Welcome to our implementation of Risk, Game of Thrones Edition!\n"
+										+ "**********************************************DISCLAIMER******************************************************** \n"
+										+ "IF A PLAYER LOSES AND IT IS JUST AI LEFT, OR IF YOU START A GAME WITH ONLY AI, THE GAME WILL PLAY UNTIL \n"
+										+ "COMPLETION, BUT THEN SEEMS TO FREEZE. IT ISN'T ACTUALLY FROZEN, JUST BE PATIENT, IT WILL SHOW THE WINNER\n"
+										+ "AND THEN THE MENU'S AND THING WILL BE ACCESSIBLE. WE ARE SORRY FOR THE INCONVENIECE.\n"
+										+ "****************************************************************************************************************\n"
+										+ "The game will first ask if you want to play a New Game, or load a previous save. If you would like to load\n"
+										+ "the file types are .ser files. Next it will ask you the usual questions, how many humans, ai's, what \n"
+										+ "faction you would like to play as, and what difficulty you would like the ai's to be. Then the game begins. \n"
+										+ "To place an army, click on the NAME of a country, and then the \"Place Army\" button, if that country is not\n"
+										+ "currently occupied, it will place a unit for you. Then it is the next players turn. Continue doing this until\n"
+										+ "all countries are occupied. Then it will move on to the reinforcement phase. Just like with placing armies,\n"
+										+ "to reinforce a country, select its NAME, and then the \"Place Army\" button. You can only reinforce countries\n"
+										+ "you own. When all of your units have been placed, it will move on to the next phase, beginning with the redeem\n"
+										+ "card phase. In this phase, the center panel will show you how many cards you currently have (If you have any).\n"
+										+ "To redeem cards, click the radio boxes beneath the cards you wish to redeem, and click the \"Trade in Cards\"\n"
+										+ "button. To continue to the next phase, the Deploy Phase, press the \"Skip Phase\" button located on the top\n"
+										+ "right of the screen. You can never skip the Deploy phase, and just like before, you must reinforce countries\n"
+										+ "that only you own. When you are finished you will automatically be moved to the Attack Phase. To attack a \n"
+										+ "country, click either the country you want to attack's NAME, or the country you want to attack from's NAME\n"
+										+ "and click either the \"Go To War\" button, or the \"Attack\" button (They are the same button, located at\n"
+										+ "the bottom of the info pane). Then click the other country you wish to attack, or attack from, and click the\n"
+										+ "attack button. You will be alerted to the outcome of the attack. If you have conquered a country, you will be\n"
+										+ "prompted with how many units you wish to move there. If you have not conquered the country yet, you will need\n"
+										+ "to reselect your attacking, and attack from countries. When you are finished attacking, press the \"Skip Phase\"\n"
+										+ "button located at the top right of the screen. Now you are in the reinforce phase. Click a country you own that\n"
+										+ "has more than 1 unit on it, and click the transfer troops button. Then click an attached, friendly country to place\n"
+										+ "units upon, and click the transfer troops button. You will be prompted with how many units you wish to move from it.\n"
+										+ "Keep in mind you MUST leave 1.When you are finished, press the \"Skip Phase\" button at the top right of the screen,\n "
+										+ "to advance to the next players turn. Continue this until the game is over, or you wish to stop. To save, click \n"
+										+ "File-Save Game, or close the window, which will then prompt you if you wish to save the game or not.\n"
+										+ "                                                                               Happy conquering!");
 			}
 		}// actionPerformed
 	}// end helpListener
@@ -1746,8 +1815,11 @@ public class riskGUI extends JFrame {
 						theGame.setMoveFrom();
 					} // end if
 					else {
-						JOptionPane.showMessageDialog(null, "You can only transfer troops from your own countries.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"You can only transfer troops from your own countries.",
+										"Error", JOptionPane.ERROR_MESSAGE);
 					}
 				} // end if
 					// Then set the move To
@@ -1762,17 +1834,22 @@ public class riskGUI extends JFrame {
 						boolean success = theGame.transferTroops(numArmies);
 
 						if (!success) {
-							JOptionPane.showMessageDialog(null,
-									"There must be a path of your own countries between your two choices.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"There must be a path of your own countries between your two choices.",
+											"Error", JOptionPane.ERROR_MESSAGE);
 						} // end if
 
 						// Always clear the game, even if failure
 						theGame.clearSelections();
 					} // end if
 					else {
-						JOptionPane.showMessageDialog(null, "You can only transfer troops from your own countries.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"You can only transfer troops from your own countries.",
+										"Error", JOptionPane.ERROR_MESSAGE);
 					} // end else
 				} // end else if
 			} // end if
@@ -1794,16 +1871,20 @@ public class riskGUI extends JFrame {
 			String unitsToMove = "";
 
 			while (!moveFlag) {
-				unitsToMove = JOptionPane.showInputDialog("How Many armies? You must leave 1.");
+				unitsToMove = JOptionPane
+						.showInputDialog("How Many armies? You must leave 1.");
 				try {
 					unitsToReturn = Integer.parseInt(unitsToMove);
 					continueFlag = true;
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"That was invalid number.", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				}
 				if (continueFlag) {
 					if (unitsToReturn >= totalUnits) {
-						JOptionPane.showMessageDialog(null, "You must leave 1 army.", "Error",
+						JOptionPane.showMessageDialog(null,
+								"You must leave 1 army.", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					} else {
 						moveFlag = true;
@@ -1829,9 +1910,11 @@ public class riskGUI extends JFrame {
 					if (theGame.getSelectedCountry().getForcesVal() > 1)
 						theGame.setMoveFrom();
 					else {
-						JOptionPane.showMessageDialog(null,
-								"Cannot attack from a country with only one army. Please choose another", "Error",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Cannot attack from a country with only one army. Please choose another",
+										"Error", JOptionPane.ERROR_MESSAGE);
 					} // end else
 				} // end if
 
@@ -1847,9 +1930,12 @@ public class riskGUI extends JFrame {
 					if (theGame.getSelectedCountry().getForcesVal() > 1) {
 						theGame.setMoveFrom();
 
-						if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
-							attacker = theGame.getMoveFrom().getOccupier().getFaction();
-							defender = theGame.getMoveTo().getOccupier().getFaction();
+						if (theGame.getMoveTo().isMyNeighbor(
+								theGame.getMoveFrom())) {
+							attacker = theGame.getMoveFrom().getOccupier()
+									.getFaction();
+							defender = theGame.getMoveTo().getOccupier()
+									.getFaction();
 							theGame.attack();
 							if (animationsOn)
 								animations(attacker, defender);
@@ -1859,22 +1945,27 @@ public class riskGUI extends JFrame {
 
 						} // end if
 						else {
-							JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null,
+									"You can only attack your neighbors.",
+									"Error", JOptionPane.ERROR_MESSAGE);
 							theGame.clearSelections();
 						}
 					} // end if
 					else {
-						JOptionPane.showMessageDialog(null,
-								"Cannot attack from a country with only one army. Please choose another", "Error",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane
+								.showMessageDialog(
+										null,
+										"Cannot attack from a country with only one army. Please choose another",
+										"Error", JOptionPane.ERROR_MESSAGE);
 					} // end else
 				} // end if
 
 				else {
-					JOptionPane.showMessageDialog(null,
-							"Cannot attack from someone else's country. Please choose another", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Cannot attack from someone else's country. Please choose another",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				} // end else
 			} // end else if
 
@@ -1885,8 +1976,10 @@ public class riskGUI extends JFrame {
 
 					if (theGame.getMoveTo().isMyNeighbor(theGame.getMoveFrom())) {
 
-						attacker = theGame.getMoveFrom().getOccupier().getFaction();
-						defender = theGame.getMoveTo().getOccupier().getFaction();
+						attacker = theGame.getMoveFrom().getOccupier()
+								.getFaction();
+						defender = theGame.getMoveTo().getOccupier()
+								.getFaction();
 
 						theGame.attack();
 						if (animationsOn)
@@ -1898,14 +1991,18 @@ public class riskGUI extends JFrame {
 					} // end if
 
 					else {
-						JOptionPane.showMessageDialog(null, "You can only attack your neighbors.", "Error",
+						JOptionPane.showMessageDialog(null,
+								"You can only attack your neighbors.", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						theGame.clearSelections();
 					} // end else
 				} // end if
 				else {
-					JOptionPane.showMessageDialog(null, "Cannot attack your own country. Please choose another",
-							"Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Cannot attack your own country. Please choose another",
+									"Error", JOptionPane.ERROR_MESSAGE);
 				} // end else
 			} // end else if
 			theGame.setSelectedCountry(null);
@@ -1919,16 +2016,19 @@ public class riskGUI extends JFrame {
 		String unitsToMove = "";
 
 		while (!moveFlag) {
-			unitsToMove = JOptionPane.showInputDialog("How many armies do you want to use? You must leave 1.");
+			unitsToMove = JOptionPane
+					.showInputDialog("How many armies do you want to use? You must leave 1.");
 			try {
 				unitsToReturn = Integer.parseInt(unitsToMove);
 				continueFlag = true;
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "That was invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "That was invalid number.",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 			if (continueFlag) {
 				if (unitsToReturn >= totalUnits) {
-					JOptionPane.showMessageDialog(null, "Invalid number.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Invalid number.",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					moveFlag = true;
 				}
@@ -1954,26 +2054,31 @@ public class riskGUI extends JFrame {
 				if (theGame.getSelectedCountry().getOccupier() == null)
 					theGame.play();
 				else {
-					JOptionPane.showMessageDialog(null, "You must pick an unoccupied country", "Error",
+					JOptionPane.showMessageDialog(null,
+							"You must pick an unoccupied country", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				} // end else
 			} // end if
 			else if (theGame.isReinforcePhase() && !theGame.isPlayPhase()) {
-				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
+				if (theGame.getSelectedCountry().getOccupier()
+						.equals(theGame.getCurrentPlayer())) {
 					theGame.play();
 				} // end if
 				else {
-					JOptionPane.showMessageDialog(null, "You may only reinforce your own country", "Error",
+					JOptionPane.showMessageDialog(null,
+							"You may only reinforce your own country", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				} // end else
 			} // end else if
- 
+
 			else if (theGame.isDeployPhase()) {
-				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
+				if (theGame.getSelectedCountry().getOccupier()
+						.equals(theGame.getCurrentPlayer())) {
 					theGame.play();
 				} // end if
 				else {
-					JOptionPane.showMessageDialog(null, "You may only reinforce your own country", "Error",
+					JOptionPane.showMessageDialog(null,
+							"You may only reinforce your own country", "Error",
 							JOptionPane.ERROR_MESSAGE);
 				} // end else
 			} // end else if
@@ -2021,13 +2126,15 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			String newDifficulty = (String) JOptionPane.showInputDialog(null, "Please choose a Difficulty",
-					"Set Difficulty", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy", "Medium", "Hard" },
-					"Easy");
+			String newDifficulty = (String) JOptionPane.showInputDialog(null,
+					"Please choose a Difficulty", "Set Difficulty",
+					JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Easy",
+							"Medium", "Hard" }, "Easy");
 
 			for (Player ai : theGame.getPlayers()) {
 				if (ai instanceof AI) {
-					if (((AI) ai).getMenuItem().getActionCommand().compareTo(e.getActionCommand()) == 0) {
+					if (((AI) ai).getMenuItem().getActionCommand()
+							.compareTo(e.getActionCommand()) == 0) {
 						switch (newDifficulty) {
 
 						case "Easy":
@@ -2125,7 +2232,7 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			turnOffStatPanel();
-		}// end actionPerformed  
+		}// end actionPerformed
 	}// end turned off listener
 
 	private class saveGameListener implements ActionListener {
@@ -2137,8 +2244,10 @@ public class riskGUI extends JFrame {
 			int get = choose.showSaveDialog(null);
 			if (get == JFileChooser.APPROVE_OPTION) {
 				try {
-					FileOutputStream gameToDisk = new FileOutputStream(choose.getSelectedFile() + ".ser");
-					ObjectOutputStream outFile = new ObjectOutputStream(gameToDisk);
+					FileOutputStream gameToDisk = new FileOutputStream(
+							choose.getSelectedFile() + ".ser");
+					ObjectOutputStream outFile = new ObjectOutputStream(
+							gameToDisk);
 					outFile.writeObject(theGame);
 					outFile.close();
 				} catch (Exception ex) {

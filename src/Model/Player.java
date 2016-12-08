@@ -12,28 +12,28 @@ import java.util.Collections;
 
 import javax.swing.JMenuItem;
 
-public abstract class Player implements Serializable{
+public abstract class Player implements Serializable {
 	private String name;
 	private Faction faction;
 	private int availTroops;
 	private ArrayList<Country> myCountries;
 	private ArrayList<Card> myCards;
 	private boolean mustRedeemCards = false;
+
 	// private Country currentCountry; //to keep track of where to put the
 	// armies in certain Card redeeming situations
 	// private Continent[] allContinents; TODO
 
 	public Player(int numOfPlayers) {
- 
+
 		this.name = null;
 		this.faction = null;
 		this.availTroops = 43 - ((numOfPlayers - 3) * 5);
 
 		this.myCountries = new ArrayList<>();
 		this.myCards = new ArrayList<>();
-	}// end constructor 
-	
-	
+	}// end constructor
+
 	/*
 	 * Adds troops depending on how many countries a player owns
 	 */
@@ -44,12 +44,12 @@ public abstract class Player implements Serializable{
 			availTroops += (myCountries.size() / 3);
 
 	}// end getTroops
-	
+
 	/*
 	 * adds troops equal to the numTroops passed
 	 */
-	public void addTroops(int numTroops){
-		availTroops+=numTroops;
+	public void addTroops(int numTroops) {
+		availTroops += numTroops;
 	}
 
 	/*
@@ -78,19 +78,18 @@ public abstract class Player implements Serializable{
 	}// end setFaction
 
 	/*
-	 * sets the name to the passed name, if the pased name is the empty string, sets the name equal to the players faction enum
+	 * sets the name to the passed name, if the pased name is the empty string,
+	 * sets the name equal to the players faction enum
 	 */
 	public void setName(String name) {
 		if ((name == null || name.equals("")) && faction != null) {
 			this.name = faction.getDefaultPlayerName();
-		} 
-		else
+		} else
 			this.name = name;
 	}// end setName
 
 	/*
-	 * occupyCountry
-	 * 		adds a country to the players list of country
+	 * occupyCountry adds a country to the players list of country
 	 */
 	public void occupyCountry(Country occupyMe) {
 		myCountries.add(occupyMe);
@@ -102,7 +101,7 @@ public abstract class Player implements Serializable{
 	public boolean equals(Player player) {
 		if (player == null)
 			return false;
-		
+
 		if (this == player)
 			return true;
 
@@ -129,13 +128,13 @@ public abstract class Player implements Serializable{
 		availTroops -= troops;
 
 	}// end subtractFromAvailableTroops
-	
+
 	/*
 	 * adds the int troops to the availTroops variable
 	 */
-	public void addAvailableTroops(int troops){
+	public void addAvailableTroops(int troops) {
 		availTroops += troops;
-	}//end addAvailTroops
+	}// end addAvailTroops
 
 	public Faction getFaction() {
 		return faction;
@@ -153,12 +152,13 @@ public abstract class Player implements Serializable{
 	}// end loseCountry
 
 	/*
-	 * adds a card to the list of the players cards, if the player has 5, sets a mustReedeemCards flag
+	 * adds a card to the list of the players cards, if the player has 5, sets a
+	 * mustReedeemCards flag
 	 */
 	public void addCard(Card cardToAdd) {
 		myCards.add(cardToAdd);
-		
-		//If player now has 5 cards
+
+		// If player now has 5 cards
 		if (myCards.size() == 5)
 			mustRedeemCards = true;
 		else
@@ -166,7 +166,8 @@ public abstract class Player implements Serializable{
 	}
 
 	/*
-	 * for each card the player owns, add it to another list, and then remove them all. 
+	 * for each card the player owns, add it to another list, and then remove
+	 * them all.
 	 */
 	public ArrayList<Card> discardCards() {
 		ArrayList<Card> cardsToDiscard = new ArrayList<>();
@@ -175,33 +176,31 @@ public abstract class Player implements Serializable{
 		}
 
 		myCards.removeAll(cardsToDiscard);
-		
-		//Change whether the cards need to be redeemed
-		if (myCards.size()<5)
+
+		// Change whether the cards need to be redeemed
+		if (myCards.size() < 5)
 			mustRedeemCards = false;
-		
+
 		return cardsToDiscard;
 	}
-	
+
 	/*
 	 * discards all cards
 	 */
-	public void discardCards(ArrayList<Card> cards) { 
+	public void discardCards(ArrayList<Card> cards) {
 		myCards.removeAll(cards);
-		
-		//Change whether the cards need to be redeemed
-		if (myCards.size()<5)
+
+		// Change whether the cards need to be redeemed
+		if (myCards.size() < 5)
 			mustRedeemCards = false;
 	}
 
-	//used for tourney mode
+	// used for tourney mode
 	/*
 	 * sets faction by integer passed, instead of string
 	 */
-	public void setFaction(int i)
-	{
-		switch(i)
-		{
+	public void setFaction(int i) {
+		switch (i) {
 		case 0:
 			faction = Faction.STARK;
 			break;
@@ -211,7 +210,7 @@ public abstract class Player implements Serializable{
 		case 2:
 			faction = Faction.DOTHRAKI;
 			break;
-		case 3: 
+		case 3:
 			faction = Faction.LANNISTER;
 			break;
 		case 4:
@@ -222,10 +221,12 @@ public abstract class Player implements Serializable{
 			break;
 		}
 	}
-	
-	public boolean mustRedeemCards(){
+
+	public boolean mustRedeemCards() {
 		return mustRedeemCards;
 	}
-	//abstract function that must be implemented by any classes that extend this one
+
+	// abstract function that must be implemented by any classes that extend
+	// this one
 	public abstract ArrayList<Card> redeemCards();
 }

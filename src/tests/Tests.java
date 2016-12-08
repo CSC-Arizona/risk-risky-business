@@ -25,18 +25,18 @@ public class Tests {
 		Card us2 = new Card("murrica", "cavalry");
 		Card us3 = new Card("murrica", "artillery");
 		Card us0 = new Card("murrica", "WILD");
-		
+
 		assertEquals(us.getCountry(), "murrica");
 		assertEquals(us.getUnit(), "infantry");
 		assertEquals(us.toString(), "murrica, infantry");
-		
-		//unit types
+
+		// unit types
 		assertEquals(1, us.getUnitType());
 		assertEquals(2, us2.getUnitType());
 		assertEquals(3, us3.getUnitType());
 		assertEquals(0, us0.getUnitType());
-		
-		//comparisons
+
+		// comparisons
 		assertTrue(new Card("flarm", "infantry").equals(us));
 		assertTrue(new Card("flarm", "cavalry").equals(us2));
 		assertTrue(new Card("flarm", "artillery").equals(us3));
@@ -57,7 +57,8 @@ public class Tests {
 			try {
 				Scanner read = new Scanner(new File(cards.get(i).getFilename()));
 			} catch (FileNotFoundException e) {
-				System.out.println("Bad file name: " + cards.get(i).getFilename());
+				System.out.println("Bad file name: "
+						+ cards.get(i).getFilename());
 				incorrectlyNamed++;
 			}
 		} // end for
@@ -82,17 +83,17 @@ public class Tests {
 		assertEquals(discard.getSize(), 1);
 		discard.removeAll();
 		assertEquals(discard.getSize(), 0);
-		
+
 		ArrayList<Card> c = new ArrayList<Card>();
 		Card one = new Card("The Wall", "cavalry", true);
 		Card two = new Card("Skagos", "artillery", true);
-		Card three = new Card("The Wall Else", "infantry",true);
+		Card three = new Card("The Wall Else", "infantry", true);
 		c.add(one);
 		c.add(two);
 		c.add(three);
-		
+
 		discard.addToPile(c);
-		assertTrue(discard.getSize()==3);
+		assertTrue(discard.getSize() == 3);
 	}
 
 	@Test
@@ -130,7 +131,7 @@ public class Tests {
 		ActionListener act = null;
 		wall.makeButton(1, 1, act);
 		Dimension dim = wall.getButton().getSize();
-		
+
 		wall.updateButton(1, 1);
 		assertEquals(dim, wall.getButton().getSize());
 		wall.changeButtonSize(1, 1);
@@ -153,31 +154,29 @@ public class Tests {
 		assertEquals(wall.getForcesVal(), 5);
 		wall.setForcesToZero();
 		assertEquals(wall.getForcesVal(), 0);
-		
-		//Test card dumping
+
+		// Test card dumping
 		Card c = new Card("test", "wild", false);
 		Player poker = new HumanPlayer(1);
 		ArrayList<Card> remove = new ArrayList<Card>();
-		for (int i=0; i < 20; i++){
+		for (int i = 0; i < 20; i++) {
 			poker.addCard(c);
-			//Only add 4 to remove
-			if (i%5==0)
+			// Only add 4 to remove
+			if (i % 5 == 0)
 				remove.add(c);
-		}//end for
-		
+		}// end for
+
 		assertEquals(poker.getCards().size(), 20);
 		poker.discardCards(remove);
 		assertEquals(poker.getCards().size(), 0);
 		poker.discardCards();
 		assertEquals(poker.getCards().size(), 0);
-		
-		
 
 	}
 
 	@Test
 	public void testContinent() {
-		//85.6% coverage
+		// 85.6% coverage
 		if (players == null)
 			players = new ArrayList<>();
 		players.add(new HumanPlayer(2));
@@ -205,10 +204,10 @@ public class Tests {
 		// 79.4% Coverage
 		// TODO: Testcase doesn't pass, but it's the full coverage amount.
 		Map map = Map.getInstance(0);
-		
-		
-		assertEquals(map.getContinentOwnersAsStrings()[0], "4 units: Blue is held by no one.");
-		
+
+		assertEquals(map.getContinentOwnersAsStrings()[0],
+				"4 units: Blue is held by no one.");
+
 		// Map map1 = Map.newTourneyMap();
 		Country[] allCountries = map.getCountries();
 		assertEquals(allCountries[0].getName(), "The Wall");
@@ -219,16 +218,16 @@ public class Tests {
 	}
 
 	@Test
-	public void testContinentBonus(){
+	public void testContinentBonus() {
 		Continent tester = new Continent(3, "TestMe");
 		assertEquals(tester.getBonus(), 3);
-		
-		Map map = Map.getInstance(1); 
+
+		Map map = Map.getInstance(1);
 		Player player = new HumanPlayer(1);
-		
+
 		assertEquals(map.getContinentBonuses(player), 0);
 	}
-	
+
 	@Test
 	public void testHumanPlayer() {
 		// 100% coverage
@@ -237,28 +236,28 @@ public class Tests {
 		ArrayList<Card> c = new ArrayList<Card>();
 		Card one = new Card("The Wall", "cavalry", true);
 		Card two = new Card("Skagos", "artillery", true);
-		Card three = new Card("The Wall Else", "infantry",true);
+		Card three = new Card("The Wall Else", "infantry", true);
 		c.add(one);
 		c.add(two);
 		c.add(three);
-		((HumanPlayer)human).setCardsToRedeem(c);
+		((HumanPlayer) human).setCardsToRedeem(c);
 		assertEquals(human.redeemCards(), c);
 	}
 
-	@Test(expected=IllegalStateException.class)
-	public void testFalseCard(){
+	@Test(expected = IllegalStateException.class)
+	public void testFalseCard() {
 		Card fake = new Card("Failure", "aliens");
 	}
-	
+
 	@Test
-	public void testRedeemCards() { 
+	public void testRedeemCards() {
 		Continent blue = new Continent(0, "Blue");
 		ArrayList<Card> redeem = new ArrayList<Card>();
 		Card walCard = new Card("The Wall", "cavalry");
 		Card someCard = new Card("Skagos", "artillery");
 		Card nextCard = new Card("The Wall Else", "infantry");
 		Player one = new AI(new EasyAI(), 1);
-		Player two = new AI(new MediumAI(),1);
+		Player two = new AI(new MediumAI(), 1);
 		Country wall = new Country("The Wall", 6.75, 3.5, blue);
 		Country skagos = new Country("Skagos", 10, 3, blue);
 		skagos.addForcesVal(3);
@@ -267,21 +266,21 @@ public class Tests {
 		one.addCard(walCard);
 		one.addCard(someCard);
 		one.addCard(nextCard);
-		
-		//redeem.add(nextCard); 
+
+		// redeem.add(nextCard);
 		redeem.add(walCard);
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		assertEquals(one.getCards(), redeem);
-		
+
 		one.addCard(walCard);
 		one.addCard(someCard);
-		
-//		for (Card c: one.redeemCards()){
-//			System.out.println(c.toString());
-//		}
+
+		// for (Card c: one.redeemCards()){
+		// System.out.println(c.toString());
+		// }
 		assertEquals(one.redeemCards(), redeem);
-		
+
 		redeem = new ArrayList<Card>();
 		two.addCard(walCard);
 		two.addCard(walCard);
@@ -311,8 +310,8 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		//Game theGame = Game.getInstance(1, 6, false);
-		//theGame.newGame();
+		// Game theGame = Game.getInstance(1, 6, false);
+		// theGame.newGame();
 		// int result = theGame.redeemCards(one, redeem);
 		// System.out.println(result);
 		// assertTrue(result == 4);
@@ -335,8 +334,8 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		//Game theGame = Game.getInstance(1, 6, false);
-		//theGame.newGame();
+		// Game theGame = Game.getInstance(1, 6, false);
+		// theGame.newGame();
 		// int result = theGame.redeemCards(one, redeem);
 		// System.out.println(result);
 		// assertTrue(result == 4);
@@ -381,15 +380,14 @@ public class Tests {
 	}
 
 	@Test
-	public void testPlayer()
-	{
+	public void testPlayer() {
 		Player player = new HumanPlayer(3);
 		player.getTroops();
 		assertEquals(player.getAvailableTroops(), 46);
 		player.addTroops(1);
 		assertEquals(player.getAvailableTroops(), 47);
 		player.setFaction("Lannister");
-		assertTrue(player.getFaction() == Faction.LANNISTER); 
+		assertTrue(player.getFaction() == Faction.LANNISTER);
 		player.setFaction("Stark");
 		assertTrue(player.getFaction() == Faction.STARK);
 		player.setFaction("Targaryen");
@@ -403,7 +401,7 @@ public class Tests {
 		player.setName("jim");
 		assertEquals(player.getName(), "jim");
 		Continent cont = new Continent(0, "jake");
-		Country country = new Country("Jammy", 0 ,0, cont);
+		Country country = new Country("Jammy", 0, 0, cont);
 		country.setOccupier(player);
 		assertTrue(country.getOccupier() == player);
 		assertTrue(player.getCountries().size() == 1);
@@ -427,19 +425,19 @@ public class Tests {
 		assertEquals(player.getName(), "Mance Rayder");
 		assertTrue(player.equals(player));
 		assertEquals(player.equals(null), false);
-		for(int i = 0; i < 10; i++)
-		{
-			Country c = new Country(String.valueOf(i),0,0,cont);
+		for (int i = 0; i < 10; i++) {
+			Country c = new Country(String.valueOf(i), 0, 0, cont);
 			c.setOccupier(player);
 		}
 		player.getTroops();
 		assertEquals(player.getAvailableTroops(), 50);
 	}
+
 	@Test
 	public void testAI() {
 		AI aiE = new AI(new EasyAI(), 0);
 		AI aiM = new AI(new MediumAI(), 0);
-		AI aiH = new AI(new HardAI(), 0); 
+		AI aiH = new AI(new HardAI(), 0);
 		aiE.setStrategy(new EasyAI(aiE));
 		AIStrategy testStrat = aiE.getStrategy();
 		assertEquals(aiE.getStrategy(), testStrat);
@@ -453,16 +451,16 @@ public class Tests {
 		country.addForcesVal(1);
 		HardAI hai = new HardAI();
 		hai.setMe(aiH);
-		
+
 		assertTrue(hai.findEmptyCountry(cont) == null);
 		Country country2 = new Country("Jammy", 0, 0, cont);
-		Country country3 = new Country("Love", 0,0,cont);
-		//test for empties
+		Country country3 = new Country("Love", 0, 0, cont);
+		// test for empties
 		assertTrue(hai.findEmptyCountry(cont) != null);
-		
+
 		country3.setOccupier(aiH);
 		country2.setOccupier(aiH);
-		
+
 		country2.setOccupier(aiM);
 		country.addNeighbor(country2);
 		country2.addNeighbor(country);
@@ -471,22 +469,22 @@ public class Tests {
 		assertTrue(st.getRandomFromCont(cont) != null);
 		assertEquals(st.countOnCont(cont), 1);
 		assertTrue(aiH.pickRandomCountry() != null);
-		
+
 		assertTrue(aiH.getStrategy().placeUnit() != null);
 		Map map = Map.getInstance(1);
 		Country[] cs = map.getCountries();
-		
-		//populate all of the countries in this map
-		for (int i=0; i < cs.length; i++)
+
+		// populate all of the countries in this map
+		for (int i = 0; i < cs.length; i++)
 			cs[i].setOccupier(aiH);
 		assertTrue(hai.placeLeftOverUnits() != null);
-		
+
 		ArrayList<Country> countries = aiE.getCountries();
 		assertEquals(countries.size(), 0);
 		country2.setOccupier(aiE);
 		countries = aiE.getStrategy().placeNewTroops();
 		countries.get(0).addForcesVal(5);
-		if(countries.size()>1){
+		if (countries.size() > 1) {
 			countries.get(1).addForcesVal(5);
 			assertTrue(countries.get(1).getForcesVal() > 0);
 		}
@@ -500,11 +498,11 @@ public class Tests {
 		Country attackFrom = aiE.getStrategy().findAttackingCountry(attackMe);
 		assertTrue(attackFrom != null);
 		aiM.setStrategy(new MediumAI(aiM));
-		
+
 		Continent con = new Continent(0, "Blah");
-		Country a = new Country("a", 0,0,con);
-		Country b = new Country("b", 0,0,con);
-		Country d = new Country("c", 0,0,con);
+		Country a = new Country("a", 0, 0, con);
+		Country b = new Country("b", 0, 0, con);
+		Country d = new Country("c", 0, 0, con);
 		a.addNeighbor(b);
 		a.addNeighbor(d);
 		b.addNeighbor(a);
@@ -518,14 +516,12 @@ public class Tests {
 		b.addForcesVal(1);
 		d.addForcesVal(1);
 		aiM.getStrategy().reinforce();
-		assertFalse(a.getForcesVal()==10); 
-		
-		
-		for(Country c : Map.getInstance(0).getCountries())
-		{ 
-			if(c.getOccupier() == null)
-				c.setOccupier(new AI(new EasyAI(), 0)); 
-			
+		assertFalse(a.getForcesVal() == 10);
+
+		for (Country c : Map.getInstance(0).getCountries()) {
+			if (c.getOccupier() == null)
+				c.setOccupier(new AI(new EasyAI(), 0));
+
 			c.addForcesVal(5);
 		}
 		Country c3 = aiM.getStrategy().placeUnit();
@@ -533,13 +529,13 @@ public class Tests {
 		country2.setOccupier(aiM);
 		c3.addNeighbor(country2);
 		country2.addNeighbor(c3);
-		assertTrue(c3 != null); 
+		assertTrue(c3 != null);
 		for (Country c : c3.getNeighbors()) {
 			c.setOccupier(new AI(new EasyAI(), 0));
 		}
 		c3.addForcesVal(10);
-		aiM.getStrategy().reinforce(); 
-		
+		aiM.getStrategy().reinforce();
+
 		countries = aiM.getCountries();
 		countries = aiM.getStrategy().placeNewTroops();
 		attackMe = aiM.getStrategy().getCountryToAttack();
@@ -547,29 +543,29 @@ public class Tests {
 		HardAI strat = new HardAI();
 		strat.setMe(aiH);
 		assertFalse(strat.theMediumWay() == null);
-        aiH.setStrategy(new HardAI(aiH));
+		aiH.setStrategy(new HardAI(aiH));
 		Country c4 = aiH.getStrategy().placeUnit();
 		c4.setOccupier(aiH);
 		country2.setOccupier(aiH);
 		c4.addNeighbor(country2);
 		country2.addNeighbor(c4);
-		assertTrue(c3 != null); 
-		
+		assertTrue(c3 != null);
+
 		for (Country c : c4.getNeighbors()) {
 			c.setOccupier(new AI(new EasyAI(), 0));
 		}
 		c4.addForcesVal(10);
-		aiH.getStrategy().reinforce(); 
-		
+		aiH.getStrategy().reinforce();
+
 		countries = aiH.getCountries();
-		assertTrue(countries!=null);
+		assertTrue(countries != null);
 		countries = aiH.getStrategy().placeNewTroops();
-		assertTrue(countries!=null);
+		assertTrue(countries != null);
 		attackMe = aiH.getStrategy().getCountryToAttack();
-		assertTrue(countries!=null);
+		assertTrue(countries != null);
 		attackFrom = aiH.getStrategy().findAttackingCountry(attackMe);
-		assertTrue(countries!=null);
-		aiE.checkAllNeighbors(); 
+		assertTrue(countries != null);
+		aiE.checkAllNeighbors();
 		HardAI strat2 = new HardAI();
 		strat2.setMe(aiH);
 		countries = strat2.theMediumWay();
@@ -579,26 +575,26 @@ public class Tests {
 	@Test
 	public void testAIStrat() {
 		AI aiE = new AI(new EasyAI(), 0);
-		assertEquals(aiE.chooseMyDiceToRoll(1), 1);	
-		
+		assertEquals(aiE.chooseMyDiceToRoll(1), 1);
+
 		aiE.setStrategy(new EasyAI(aiE));
 		AIStrategy testStrat = aiE.getStrategy();
 		assertEquals(aiE.getStrategy(), testStrat);
 		Country country = aiE.getStrategy().placeUnit();
-		
+
 		Continent testCont = new Continent(1, "Tester");
 		Country wall = new Country("The Wall", 6.75, 3.5, testCont);
 		Country skagos = new Country("Skagos", 10, 3, testCont);
 		wall.addNeighbor(skagos);
-		
+
 		wall.setOccupier(aiE);
 		assertEquals(aiE.checkAllNeighbors().toString(), "Skagos");
 		assertFalse(aiE.finishedAttacking());
 		assertEquals(aiE.pickRandomOwnedCountry().toString(), "The Wall");
-		
+
 		AI aiH = new AI(new HardAI(), 0);
 		skagos.addNeighbor(wall);
-		skagos.setOccupier(aiH);		
+		skagos.setOccupier(aiH);
 	}
-	
+
 }
