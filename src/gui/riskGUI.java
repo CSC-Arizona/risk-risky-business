@@ -122,6 +122,7 @@ public class riskGUI extends JFrame {
 	private SoundClipPlayer player = new SoundClipPlayer();
 	private Faction attacker;// = Faction.STARK;
 	private Faction defender;// = Faction.WILDLINGS;
+	private boolean allAIS = false;
 
 
 	public riskGUI() {
@@ -931,8 +932,11 @@ public class riskGUI extends JFrame {
 		drawingPanel.repaint();
 		this.repaint();
 
-		//player.stopTheme();
-		//player.startPlay();
+		
+		if(!allAIS){
+			player.stopTheme();
+			player.startPlay();
+		}
 		if(theGame.getNumHumans()!=0 || theGame.isFinished())
 			setUpStatButton();
 	}// end setUpDrawingPanel
@@ -997,7 +1001,7 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 
 			if (!gameOver) {
-				if (!splash && (!(theGame.getNumHumans()==0) || theGame.isFinished())) {
+				if (!splash && ((theGame.getNumHumans()!=0) || theGame.isFinished())) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
@@ -1021,7 +1025,10 @@ public class riskGUI extends JFrame {
 				}
 
 			}
-
+			if(theGame!=null){
+				setUpMenu();
+				setUpAIMenu();
+			}
 		}// end paintComponenet
 
 		private void drawUnits(Graphics2D g2) {
@@ -1163,13 +1170,23 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			if(theGame.getNumHumans()==0 && !theGame.isFinished()){  
+			if(theGame.isFinished()){
+				
+				drawingPanel.removeAll();
+				this.remove(drawingPanel);
+				setUpDrawingPanel();
+				drawingPanel.revalidate();
+				drawingPanel.repaint();
+			}
+			else if(theGame.getNumHumans()==0 && !theGame.isFinished()){  
+				allAIS=true;
 				try {
-					Thread.sleep(10);
+					Thread.sleep(1);
 				} catch (InterruptedException ex) {
 					Thread.currentThread().interrupt();
 					System.out.println("nahhh");
 				}
+				drawingPanel.removeAll();
 				this.remove(drawingPanel);
 				this.revalidate();
 				this.repaint();
@@ -1784,7 +1801,7 @@ public class riskGUI extends JFrame {
 			if (cardsAreRedeemable()) {
 				theGame.setCardsToRedeem(selectedCards);
 				int armiesToAdd = theGame.redeemCards();
-				theGame.getCurrentPlayer().addAvailableTroops(armiesToAdd);
+				theGame.getCurrentPlayer().addAvailableTroops(armiesToAdd);  
 				theGame.nextPhase();
 			} // end else if
 
@@ -2235,7 +2252,7 @@ public class riskGUI extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				} // end else
 			} // end else if
-
+ 
 			else if (theGame.isDeployPhase()) {
 				if (theGame.getSelectedCountry().getOccupier().equals(theGame.getCurrentPlayer())) {
 					theGame.play();
@@ -2399,7 +2416,7 @@ public class riskGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			turnOffStatPanel();
-		}// end actionPerformed
+		}// end actionPerformed  
 	}// end turned off listener
 
 	private class saveGameListener implements ActionListener {
