@@ -87,7 +87,7 @@ public class SoundClipPlayer extends JFrame {
 	}
 
 	/*
-	 * stopTheme ends the theme song (so that the dramatic rains can play
+	 * stopTheme ends the theme song (so that the dramatic rains can play)
 	 */
 	public void stopTheme() {
 		if (clip != null)

@@ -19,10 +19,9 @@ public abstract class Player implements Serializable{
 	private ArrayList<Country> myCountries;
 	private ArrayList<Card> myCards;
 	private boolean mustRedeemCards = false;
-	// private Country currentCountry; //to keep track of where to put the
-	// armies in certain Card redeeming situations
-	// private Continent[] allContinents; TODO
 
+	//constructor for player
+	//parameters: number of players
 	public Player(int numOfPlayers) {
  
 		this.name = null;
@@ -40,8 +39,9 @@ public abstract class Player implements Serializable{
 		else
 			availTroops += (myCountries.size() / 3);
 
-		//redeemCards(); //this will mess up how human players need to redeem cards, calling it in the GUI for AI and in the button listener for the human player instead
-		// TODO continent stuff
+		//redeemCards(); //this will mess up how human players need to redeem cards, 
+		//calling it in the GUI for AI and in the button listener for 
+		//the human player instead
 
 	}// end getTroops
 	
