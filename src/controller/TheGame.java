@@ -1,5 +1,11 @@
 package controller;
 
+/*
+ * TheGame
+ * 		controller class that runs the whole entire game
+ * 
+ * 		Author: Dylan Tobia, Abigail Dodd, Jewell Finder, Sydney Komro
+ */
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
