@@ -16,7 +16,6 @@ public class AI extends Player implements Serializable {
 	private JMenuItem myDiff;
 	private Random rand;
 	private AIStrategy strategy;
-	
 	/*
 	 * 	Constructor
 	 */
@@ -69,11 +68,6 @@ public class AI extends Player implements Serializable {
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
 	public boolean finishedAttacking() {
-
-		// If you're close to finished, just conquerrrrr
-		if (getCountries().size() > 44)
-			return false;
-
 		int i = 0;
 		for (Country country : findFringeCountries()) {
 			if (country.getForcesVal() == 1)
