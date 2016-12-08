@@ -110,7 +110,7 @@ public class EasyAI implements AIStrategy, Serializable {
 			} // end for
 		} // end for
 
-		if (countriesWorthAttacking.size() == 0)
+		if (countriesWorthAttacking.size() == 0) 
 			return null;
 
 		return countriesWorthAttacking;
