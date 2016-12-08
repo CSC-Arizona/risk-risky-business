@@ -23,42 +23,60 @@ public class Deck implements Serializable{
 	private ArrayList<Card> riskDeck;
 	private int size;
 	private static Deck uniqueDeck;
-	//private static ArrayList<Card> discardPile;
 
+	/*
+	 * Constructor
+	 */
 	private Deck() {
 		riskDeck = new ArrayList<Card>();
-		//discardPile = new ArrayList<Card>();
 		fillDeck(riskDeck);
 		DiscardPile placeHolder = new DiscardPile();
 		shuffle(placeHolder);
 		size = 52;
 	}// end constructor
 
-	// USed only for testing card
+	// Used only for testing card
 	public ArrayList<Card> getDeck() {
 		return riskDeck;
 	}
 	
+	/*
+	 * creates a brand new deck
+	 */
 	public Deck newDeck(){
 		uniqueDeck=new Deck();
 		return uniqueDeck;
 	}
 
+
+	/*
+	 * getInstance() 
+	 * 		if unique deck is null, create a new one, otherwise return uniqueDeck
+	 */
 	public static synchronized Deck getInstance() {
 		if (uniqueDeck == null)
 			uniqueDeck = new Deck();
 		return uniqueDeck;
 	}// end getInstance
 	
+	/*
+	 * ReadObject, special method for loading singleton objects
+	 */
 	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
 	    ois.defaultReadObject();
 	    uniqueDeck = this;
 	}
 
+	/*
+	 * Special object for loading singleton objects
+	 */
 	private Object readResolve()  {
 	    return uniqueDeck;
 	}
 
+	/*
+	 * shuffles the discard pile into the deck if the deck itself is empty. otherwise just creates, fills, and shuffles a new deck
+	 */
 	public void shuffle(DiscardPile pile) {
 		if (size == 0 && pile.getSize()>0) {
 			riskDeck.clear();
@@ -75,6 +93,7 @@ public class Deck implements Serializable{
 	}// end shuffle
 
 	// returns null if the deck has run out of cards.
+	// grabs one card off of the top of the deck, and returns it.
 	public Card deal(DiscardPile pile) {
 		size = riskDeck.size();
 		if (size > 0) {
@@ -100,12 +119,16 @@ public class Deck implements Serializable{
 			return false;
 	}
 
+	/*
+	 * adds card c to the discard pile
+	 */
 	public void discard(Card c, DiscardPile pile) {
 		pile.addToPile(c);
 	}
 
 	// possible units: infantry, cavalry, artillery. Add all territories
 	// (countries) and 2 wild cards.
+	// fills the deck with new, unique cards
 	private void fillDeck(ArrayList<Card> deck) {
 		deck.add(new Card("The Wall", "infantry"));
 		deck.add(new Card("Skagos", "cavalry"));
@@ -161,6 +184,9 @@ public class Deck implements Serializable{
 		deck.add(new Card("WILD", "WILD"));
 	}// end fillDeck
 
+	/*
+	 * adds a whole array list of cards to the discard pile
+	 */
 	public void addToDiscardPile(ArrayList<Card> cards, DiscardPile pile) {
 		pile.addToPile(cards);
 	}
