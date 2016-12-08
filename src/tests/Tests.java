@@ -182,6 +182,10 @@ public class Tests {
 		// 79.4% Coverage
 		// TODO: Testcase doesn't pass, but it's the full coverage amount.
 		Map map = Map.getInstance(1);
+		
+		
+		assertEquals(map.getContinentOwnersAsStrings()[0], "4 units: Blue is held by no one.");
+		
 		// Map map1 = Map.newTourneyMap();
 		Country[] allCountries = map.getCountries();
 		assertEquals(allCountries[0].getName(), "The Wall");
@@ -191,7 +195,10 @@ public class Tests {
 	}
 
 	@Test
-	public void testContinentBonus(){ 
+	public void testContinentBonus(){
+		Continent tester = new Continent(3, "TestMe");
+		assertEquals(tester.getBonus(), 3);
+		
 		Map map = Map.getInstance(1); 
 		Player player = new HumanPlayer(1);
 		
@@ -516,6 +523,25 @@ public class Tests {
 	public void testAIStrat() {
 		AI aiE = new AI(new EasyAI(), 0);
 		assertEquals(aiE.chooseMyDiceToRoll(1), 1);	
+		
+		aiE.setStrategy(new EasyAI(aiE));
+		AIStrategy testStrat = aiE.getStrategy();
+		assertEquals(aiE.getStrategy(), testStrat);
+		Country country = aiE.getStrategy().placeUnit();
+		
+		Continent testCont = new Continent(1, "Tester");
+		Country wall = new Country("The Wall", 6.75, 3.5, testCont);
+		Country skagos = new Country("Skagos", 10, 3, testCont);
+		wall.addNeighbor(skagos);
+		
+		wall.setOccupier(aiE);
+		assertEquals(aiE.checkAllNeighbors().toString(), "Skagos");
+		assertFalse(aiE.finishedAttacking());
+		assertEquals(aiE.pickRandomOwnedCountry().toString(), "The Wall");
+		
+		AI aiH = new AI(new HardAI(), 0);
+		skagos.addNeighbor(wall);
+		skagos.setOccupier(aiH);		
 	}
 	
 }
