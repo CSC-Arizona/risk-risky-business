@@ -206,8 +206,8 @@ public class Tests {
 
 	@Test
 	public void testMap() {
+
 		Map map = Map.getInstance(1);
-		
 		
 		assertEquals(map.getContinentOwnersAsStrings()[0], "4 units: Blue is held by no one.");
 		
@@ -215,6 +215,7 @@ public class Tests {
 		Country[] allCountries = map.getCountries();
 		assertEquals(allCountries[0].getName(), "The Wall");
 		map = map.newTourneyMap();
+		map.updateAllButtonSizes();
 		assertEquals(allCountries[0].getName(), "The Wall");
 		assertEquals(map.getAllContinents().size(), 7);
 	}
