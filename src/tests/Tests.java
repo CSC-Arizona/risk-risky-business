@@ -204,7 +204,7 @@ public class Tests {
 	public void testMap() {
 		// 79.4% Coverage
 		// TODO: Testcase doesn't pass, but it's the full coverage amount.
-		Map map = Map.getInstance(1);
+		Map map = Map.getInstance(0);
 		
 		
 		assertEquals(map.getContinentOwnersAsStrings()[0], "4 units: Blue is held by no one.");

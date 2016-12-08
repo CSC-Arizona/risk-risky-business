@@ -194,7 +194,7 @@ public class Map implements Serializable {
 	 * updateAllButtonSizes updates all of the manually set sizes for each
 	 * country button
 	 */
-	private void updateAllButtonSizes() {
+	public void updateAllButtonSizes() {
 		// public void changeButtonSize(double width, double height)
 		countries[0].changeButtonSize(2, 1.75);
 		countries[1].changeButtonSize(0, 0);
