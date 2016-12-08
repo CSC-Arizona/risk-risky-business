@@ -143,7 +143,7 @@ public class EasyAI implements AIStrategy, Serializable {
 	 * 		No explanation needed
 	 */
 	public String toString(){
-		return "EASY";
+		return "(easy)";
 	}
 	
 	/*

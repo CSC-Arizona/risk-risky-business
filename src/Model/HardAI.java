@@ -3,8 +3,8 @@ package Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
+@SuppressWarnings("serial")
 public class HardAI implements AIStrategy, Serializable {
 
 	private AI me;
@@ -179,7 +179,7 @@ public class HardAI implements AIStrategy, Serializable {
 	// takes a continent as its argument, steps through all countries on
 	// continent, and checks which ones I own,
 	// adds the ones I own to a list, and picks a random one from the list
-	private Country getRandomFromCont(Continent continent) {
+	public Country getRandomFromCont(Continent continent) {
 		ArrayList<Country> myContinentCountries = new ArrayList<>();
 		for (Country country : continent.getMyCountries()) {
 			if (country.getOccupier().equals(me)) {
@@ -195,37 +195,6 @@ public class HardAI implements AIStrategy, Serializable {
 		return null;
 	}
 
-	private ArrayList<Country> findFringeOnCont(Continent cont) {
-		ArrayList<Country> continentFringeList = new ArrayList<>();
-		int i = 0, j = 0;
-		ArrayList<Country> countriesIOwn = findCountriesOnCont(cont);
-		ArrayList<Country> neighbors = countriesIOwn.get(i).getNeighbors();
-		while (i < countriesIOwn.size()) {
-			j = 0; 
-			while (j < neighbors.size()) {
-
-				if (!me.equals(neighbors.get(j).getOccupier())) {
-					continentFringeList.add(countriesIOwn.get(i));
-					j = neighbors.size();
-				}
-				j++;
-			}
-			i++;
-			if (i < countriesIOwn.size())
-				neighbors = countriesIOwn.get(i).getNeighbors();
-		}
-		return continentFringeList;
-	}
-
-	private ArrayList<Country> findCountriesOnCont(Continent cont) {
-		ArrayList<Country> iOwn = new ArrayList<>();
-		for (Country country : cont.getMyCountries()) {
-			if (country.getOccupier().equals(me)) {
-				iOwn.add(country);
-			}
-		}
-		return iOwn;
-	}
 
 	@Override
 	public Country placeUnit() {
@@ -308,6 +277,6 @@ public class HardAI implements AIStrategy, Serializable {
 	}
 	
 	public String toString(){
-		return "HARD";
+		return "(hard)";
 	}
 }

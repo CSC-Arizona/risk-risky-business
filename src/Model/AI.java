@@ -39,6 +39,9 @@ public class AI extends Player implements Serializable {
 	// return that country as a selection. Used for placement in the first turn.
 	public Country checkAllNeighbors() {
 		int i = 0, j = 0; 
+		
+		if (getCountries().size() == 0)
+			return null;
 		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size()) {

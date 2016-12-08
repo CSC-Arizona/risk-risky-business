@@ -101,7 +101,7 @@ public class MediumAI implements AIStrategy, Serializable {
 	}
 	
 	public String toString(){
-		return "MED";
+		return "(med)";
 	}
 	
 	@Override

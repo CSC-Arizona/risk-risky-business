@@ -1330,6 +1330,8 @@ public class riskGUI extends JFrame {
 
 					// set up the name
 					String player = allPlayers.get(i).getName();
+					if (allPlayers.get(i) instanceof AI)
+						player += " " + ((AI)allPlayers.get(i)).getStrategy().toString();
 					player += " " + allPlayers.get(i).getFaction().getName();
 					player += ": " + allPlayers.get(i).getCountries().size() + " countries.";
 					aPlayer.setText(player);
