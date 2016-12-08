@@ -26,6 +26,12 @@ public class Map implements Serializable {
 	private static ArrayList<Continent> allContinents;
 	private static Map gameMap = null;
 
+	
+	/*
+	 * constructor
+	 * 		hard codes all of the continents in this game (since there
+	 * 		are so few), countries, and neighbor relationships
+	 */
 	private Map(int i) {
 		blue = new Continent(4, "Blue");
 		green = new Continent(2, "Green");
@@ -46,9 +52,12 @@ public class Map implements Serializable {
 
 		fillCountries(i);
 
-	}// end
-		// constructor
+	}// end constructor
 
+	/*
+	 * getInstance
+	 * 		Returns an instance of this singleton class
+	 */
 	public static Map getInstance(int i) {
 		if (gameMap == null)
 			gameMap = new Map(i);
@@ -56,26 +65,45 @@ public class Map implements Serializable {
 		return gameMap;
 	}// end getInstance
 
-	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+	/*
+	 * readObject
+	 * 		For serializing
+	 */
+	private void readObject(ObjectInputStream ois) throws IOException,
+			ClassNotFoundException {
 		ois.defaultReadObject();
 		gameMap = this;
 	}
 
+	/*
+	 * readResolve
+	 * 		For serializing
+	 */
 	private Object readResolve() {
 		return gameMap;
 	}
-
+	
+	/*
+	 * newMap
+	 * 		makes a new instance of the map
+	 */
 	public Map newMap() {
 		gameMap = null;
 		return getInstance(0);
 	}
 
+	/*
+	 * getContinentBonuses
+	 * 		Collects all of the continent bonuses that
+	 * 		one particular player has earned on this map
+	 */
 	public int getContinentBonuses(Player player) {
 		int totalBonus = 0;
 
 		totalBonus += blue.payOwnerBonus(player);
 		totalBonus += green.payOwnerBonus(player);
 		totalBonus += pink.payOwnerBonus(player);
+		totalBonus += orange.payOwnerBonus(player);
 		totalBonus += red.payOwnerBonus(player);
 		totalBonus += black.payOwnerBonus(player);
 		totalBonus += yellow.payOwnerBonus(player);
@@ -83,19 +111,30 @@ public class Map implements Serializable {
 		return totalBonus;
 	}// end getContinentBonuses
 
+	/*
+	 * getContinentOwnerAsStrings
+	 * 		return a string containing all of the continents,
+	 * 		their continent bunses and their owners (if any).
+	 * 		For the gameLog
+	 */
 	public String[] getContinentOwnersAsStrings() {
-		String[] allStrings = new String[6];
+		String[] allStrings = new String[7];
 
 		allStrings[0] = blue.getBonus() + " units: " + blue.toString();
 		allStrings[1] = green.getBonus() + " units: " + green.toString();
-		allStrings[2] = pink.getBonus() + " units: " + pink.toString();
-		allStrings[3] = red.getBonus() + " units: " + red.toString();
-		allStrings[4] = black.getBonus() + " units: " + black.toString();
-		allStrings[5] = yellow.getBonus() + " units: " + yellow.toString();
+		allStrings[2] = orange.getBonus() + " units: " + orange.toString();
+		allStrings[3] = pink.getBonus() + " units: " + pink.toString();
+		allStrings[4] = red.getBonus() + " units: " + red.toString();
+		allStrings[5] = black.getBonus() + " units: " + black.toString();
+		allStrings[6] = yellow.getBonus() + " units: " + yellow.toString();
 
 		return allStrings;
 	}
 
+	/*
+	 * fillCountries
+	 * 		construct all 50 countries inside of the game
+	 */
 	private void fillCountries(int j) {
 		// this method is going to suck
 		countries[0] = new Country("The Wall", 6.5, 3, blue);
@@ -134,7 +173,8 @@ public class Map implements Serializable {
 		countries[33] = new Country("Parched Fields", 23.25, 23, yellow);
 		countries[34] = new Country("Abandoned Lands", 25.5, 18.75, yellow);
 		countries[35] = new Country("Western Grass Sea", 26.5, 24.75, yellow);
-		countries[36] = new Country("Kingdoms of the Jfeqevron", 28.75, 19.5, yellow);
+		countries[36] = new Country("Kingdoms of the Jfeqevron", 28.75, 19.5,
+				yellow);
 		countries[37] = new Country("Eastern Grass Sea", 31, 23.5, yellow);
 		countries[38] = new Country("The Footprint", 31, 16, yellow);
 		countries[39] = new Country("Vaes Dothrak", 32.25, 19.5, yellow);
@@ -148,7 +188,7 @@ public class Map implements Serializable {
 		countries[47] = new Country("Ghiscar", 27.75, 34.25, black);
 		countries[48] = new Country("The Red Waste", 30.1, 31.75, black);
 		countries[49] = new Country("Qarth", 34.35, 32.75, black);
-		
+
 		addAllNeighbors();
 		if (j == 0) {
 			updateAllButtonSizes();
@@ -158,7 +198,6 @@ public class Map implements Serializable {
 		}
 
 	}// end fillCountries
-
 
 	private void updateAllButtonSizes() {
 		// public void changeButtonSize(double width, double height)

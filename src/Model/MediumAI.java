@@ -44,7 +44,9 @@ public class MediumAI implements AIStrategy, Serializable {
 							numRes++;
 							neighbor.addForcesVal(2);
 							country.removeUnits(2);
-							log += me.getName() + " removed 2 units from " + country.getName() + " and placed them on "
+							log += me.getName() + " removed 2 units from "
+									+ country.getName()
+									+ " and placed them on "
 									+ neighbor.getName() + ".\n";
 						}
 
@@ -115,14 +117,12 @@ public class MediumAI implements AIStrategy, Serializable {
 		return countryToReturn;
 	}
 
-	
-	public String toString(){
+	public String toString() {
 		return "(med)";
 	}
 
 	/*
-	 * returns a list of all neighboring enemy countries
-	 * and picks a random one
+	 * returns a list of all neighboring enemy countries and picks a random one
 	 */
 	@Override
 	public Country getCountryToAttack() {
@@ -136,9 +136,10 @@ public class MediumAI implements AIStrategy, Serializable {
 	}
 
 	/*
-	 * Finds all fringe countries, then checks their neighbors. If the neighbor is an enemy,
-	 * and I have >= the same amount of units on it, add the neighbor to a lit of countries to attack.
-	 * If the list ends up being empty, return null, otherwise return that list.
+	 * Finds all fringe countries, then checks their neighbors. If the neighbor
+	 * is an enemy, and I have >= the same amount of units on it, add the
+	 * neighbor to a lit of countries to attack. If the list ends up being
+	 * empty, return null, otherwise return that list.
 	 */
 	@Override
 	public ArrayList<Country> findCountriesToAttack() {
@@ -148,8 +149,8 @@ public class MediumAI implements AIStrategy, Serializable {
 			ArrayList<Country> neighbors = country.getNeighbors();
 			for (Country neighboringCountry : neighbors) {
 				if (!neighboringCountry.getOccupier().equals(me)
-						&& (neighboringCountry.getForcesVal() <= country.getForcesVal()
-								&& country.getForcesVal() > 1)) {
+						&& (neighboringCountry.getForcesVal() <= country
+								.getForcesVal() && country.getForcesVal() > 1)) {
 					countriesWorthAttacking.add(neighboringCountry);
 				} // end if
 			} // end for
@@ -162,8 +163,10 @@ public class MediumAI implements AIStrategy, Serializable {
 	}
 
 	/*
-	 * Given a country moveTo, step through its neighbors. If I own the neighbor, and have >= the number of
-	 * units on the given country, and have more than 1 unit on my country, return my country. Otherwise, return null.
+	 * Given a country moveTo, step through its neighbors. If I own the
+	 * neighbor, and have >= the number of units on the given country, and have
+	 * more than 1 unit on my country, return my country. Otherwise, return
+	 * null.
 	 */
 	@Override
 	public Country findAttackingCountry(Country moveTo) {
@@ -175,7 +178,8 @@ public class MediumAI implements AIStrategy, Serializable {
 			for (Country neighbor : country.getNeighbors()) {
 
 				if (moveTo.equals(neighbor)
-						&& (moveTo.getForcesVal() <= country.getForcesVal() && country.getForcesVal() > 1)) {
+						&& (moveTo.getForcesVal() <= country.getForcesVal() && country
+								.getForcesVal() > 1)) {
 					attackFrom = country;
 					break;
 				}
