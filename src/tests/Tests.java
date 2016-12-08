@@ -15,8 +15,6 @@ import Model.*;
 
 public class Tests {
 
-	// No tests for Faction or Continents enums
-
 	private ArrayList<Player> players;
 
 	@Test
@@ -149,6 +147,25 @@ public class Tests {
 		assertEquals(wall.getForcesVal(), 5);
 		wall.setForcesToZero();
 		assertEquals(wall.getForcesVal(), 0);
+		
+		//Test card dumping
+		Card c = new Card("test", "wild", false);
+		Player poker = new HumanPlayer(1);
+		ArrayList<Card> remove = new ArrayList<Card>();
+		for (int i=0; i < 20; i++){
+			poker.addCard(c);
+			//Only add 4 to remove
+			if (i%5==0)
+				remove.add(c);
+		}//end for
+		
+		assertEquals(poker.getCards().size(), 20);
+		poker.discardCards(remove);
+		assertEquals(poker.getCards().size(), 0);
+		poker.discardCards();
+		assertEquals(poker.getCards().size(), 0);
+		
+		
 
 	}
 
@@ -434,12 +451,21 @@ public class Tests {
 		for (Country c : country.getNeighbors()) {
 			c.setOccupier(new AI(new EasyAI(), 0));
 		}
+		Continent cont = new Continent(0, "CONTINENT");
 		country.setOccupier(aiE);
 		country.addForcesVal(1);
-		Continent cont = new Continent(0, "CONTINENT");
+		HardAI hai = new HardAI();
+		hai.setMe(aiH);
+		
+		assertTrue(hai.findEmptyCountry(cont) == null);
 		Country country2 = new Country("Jammy", 0, 0, cont);
 		Country country3 = new Country("Love", 0,0,cont);
+		//test for empties
+		assertTrue(hai.findEmptyCountry(cont) != null);
+		
 		country3.setOccupier(aiH);
+		country2.setOccupier(aiH);
+		
 		country2.setOccupier(aiM);
 		country.addNeighbor(country2);
 		country2.addNeighbor(country);
@@ -452,8 +478,11 @@ public class Tests {
 		assertTrue(aiH.getStrategy().placeUnit() != null);
 		Map map = Map.getInstance(1);
 		Country[] cs = map.getCountries();
+		
+		//populate all of the countries in this map
 		for (int i=0; i < cs.length; i++)
 			cs[i].setOccupier(aiH);
+		assertTrue(hai.placeLeftOverUnits() != null);
 		
 		ArrayList<Country> countries = aiE.getCountries();
 		assertEquals(countries.size(), 0);

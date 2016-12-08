@@ -87,7 +87,7 @@ public class HardAI implements AIStrategy, Serializable {
 	/*
 	 * finds the country that is not occupied on cont, and returns it
 	 */
-	private Country findEmptyCountry(Continent cont) {
+	public Country findEmptyCountry(Continent cont) {
 		for (Country country : cont.getMyCountries()) {
 			if (country.getOccupier() == null)
 				return country;
