@@ -215,10 +215,6 @@ public class riskGUI extends JFrame {
 
 	}
 
-	public void saveGame() {
-		
-	}
-
 	private void turnOnStatPanel() {
 		currentStatsPanel = new StatPanel();
 		this.remove(drawingPanel);
@@ -811,20 +807,21 @@ public class riskGUI extends JFrame {
 			drawFactions(g2);
 
 			if (!gameOver) {
-				if (!splash && ((theGame.getNumHumans()!=0) || theGame.isFinished())) {
+				if (!splash && theGame.getNumHumans()!=0) {
 					updateCountryButtons();
 					currCountryPanel.updatePanel(g);
 				}
 
 				if (theGame != null) {
 					drawCurrentPlayer(g2);
-					drawUnits(g2);
+					drawUnits(g2);  
 					gameOver = theGame.isGameOver();
 				}
 				// drawGridAndNumbers(g2);
 			} else {
 				drawUnits(g2);
-
+				drawingPanel.add(currCountryPanel);
+				currCountryPanel.updatePanel(g);
 				for (Country country : theGame.getGameMap().getCountries()) {
 					country.getButton().setEnabled(false);
 				}
@@ -972,13 +969,16 @@ public class riskGUI extends JFrame {
 		// update for drawing factions over occupied functions
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			if(theGame.isFinished()){
-				
-				drawingPanel.removeAll();
-				this.remove(drawingPanel);
+
+			if(theGame.isFinished() && theGame.getNumHumans()==0){
+				Thread.currentThread().interrupt();
+				//drawingPanel.removeAll();
+				//this.remove(drawingPanel);
 				setUpDrawingPanel();
-				drawingPanel.revalidate();
-				drawingPanel.repaint();
+				setUpMenu();
+				this.revalidate();
+				this.repaint();
+				this.update(getGraphics());
 			}
 			else if(theGame.getNumHumans()==0 && !theGame.isFinished()){  
 				allAIS=true;
@@ -998,11 +998,19 @@ public class riskGUI extends JFrame {
 				this.revalidate();
 				this.repaint();
 				drawingPanel.update(drawingPanel.getGraphics());
+				updateGM();
 			}
 			this.revalidate();
 			this.repaint();
 
 		}// end update
+		
+		private void updateGM(){
+			if(theGame.isFinished()){
+				this.revalidate();
+				this.repaint();
+			}
+		}
 
 	}// end boardPanel
 
