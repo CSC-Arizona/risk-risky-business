@@ -46,9 +46,12 @@ public class AnimationPanel extends JPanel {
 
 	public static final int OFFENSE_Y = 350, DEFENSE_Y = 150;
 	public static final int JIGGLE_MAX = 1, JIGGLE_MIN = -1, JIGGLE_TIME = 15;
-	private int sprite_defense_y, sprite_offense_y, sprite_defense_frames, sprite_offense_frames;
-	private int jiggle = 0, frameCounter = 0, OffenseXValue = 25, DefenseXValue = 350;
-	private int swooshStatus = 0, swooshX = 125, swooshY = 295, spriteOStatus = 0, spriteDStatus = 0;
+	private int sprite_defense_y, sprite_offense_y, sprite_defense_frames,
+			sprite_offense_frames;
+	private int jiggle = 0, frameCounter = 0, OffenseXValue = 25,
+			DefenseXValue = 350;
+	private int swooshStatus = 0, swooshX = 125, swooshY = 295,
+			spriteOStatus = 0, spriteDStatus = 0;
 	private boolean starting = true, attack = false;
 
 	/*
@@ -64,6 +67,12 @@ public class AnimationPanel extends JPanel {
 		repaint();
 	}
 
+	/*
+	 * paintComponent Paints animations of all of the possible faction battles,
+	 * including showing the difference between the attacker and the defender,
+	 * the dice rolled in the turn, and the characters reacting to their success
+	 * or defeat
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D gr = (Graphics2D) g;
@@ -108,13 +117,13 @@ public class AnimationPanel extends JPanel {
 			// set up dice to be shown from the model
 			int i = 0;
 			for (Dice c : attackDice) {
-				gr.drawImage(redDice.get(c.getValue() - 1), OffenseXValue + 100 + ((i + 1) * 50) + 10, OFFENSE_Y, 50,
-						50, null);
+				gr.drawImage(redDice.get(c.getValue() - 1), OffenseXValue + 100
+						+ ((i + 1) * 50) + 10, OFFENSE_Y, 50, 50, null);
 				i++;
 			}
 			for (Dice c : defenseDice) {
-				gr.drawImage(whiteDice.get(c.getValue() - 1), DefenseXValue - ((i + 1) * 50) - 10, DEFENSE_Y, 50, 50,
-						null);
+				gr.drawImage(whiteDice.get(c.getValue() - 1), DefenseXValue
+						- ((i + 1) * 50) - 10, DEFENSE_Y, 50, 50, null);
 				i++;
 			}
 			// continue moving in the wind while calling jiggleOffense
@@ -130,13 +139,13 @@ public class AnimationPanel extends JPanel {
 			// set up dice to be shown from the model
 			int i = 0;
 			for (Dice c : attackDice) {
-				gr.drawImage(redDice.get(c.getValue() - 1), OffenseXValue + 100 + ((i + 1) * 50) + 10, OFFENSE_Y, 50,
-						50, null);
+				gr.drawImage(redDice.get(c.getValue() - 1), OffenseXValue + 100
+						+ ((i + 1) * 50) + 10, OFFENSE_Y, 50, 50, null);
 				i++;
 			}
 			for (Dice c : defenseDice) {
-				gr.drawImage(whiteDice.get(c.getValue() - 1), DefenseXValue - ((i + 1) * 50) - 10, DEFENSE_Y, 50, 50,
-						null);
+				gr.drawImage(whiteDice.get(c.getValue() - 1), DefenseXValue
+						- ((i + 1) * 50) - 10, DEFENSE_Y, 50, 50, null);
 				i++;
 			}
 			// continue moving in the wind while calling jiggleOffense and
@@ -153,13 +162,13 @@ public class AnimationPanel extends JPanel {
 			// set up dice to be shown from the model
 			int i = 0;
 			for (Dice c : attackDice) {
-				gr.drawImage(redDice.get(c.getValue() - 1), OffenseXValue + 100 + ((i + 1) * 50) + 10, OFFENSE_Y, 50,
-						50, null);
+				gr.drawImage(redDice.get(c.getValue() - 1), OffenseXValue + 100
+						+ ((i + 1) * 50) + 10, OFFENSE_Y, 50, 50, null);
 				i++;
 			}
 			for (Dice c : defenseDice) {
-				gr.drawImage(whiteDice.get(c.getValue() - 1), DefenseXValue - ((i + 1) * 50) - 10, DEFENSE_Y, 50, 50,
-						null);
+				gr.drawImage(whiteDice.get(c.getValue() - 1), DefenseXValue
+						- ((i + 1) * 50) - 10, DEFENSE_Y, 50, 50, null);
 				i++;
 			}
 			// continue moving in the wind while calling jiggleDefense
@@ -246,45 +255,52 @@ public class AnimationPanel extends JPanel {
 	 */
 
 	/*
-	 * loadImages(): loads all images needed for the animation (all dice and the spriteSheet)
+	 * loadImages(): loads all images needed for the animation (all dice and the
+	 * spriteSheet)
 	 */
 	private void loadImages() {
 
 		for (int i = 0; i < 6; i++) {
 			try {
-				redDice.add(ImageIO.read(
-						new File("images" + File.separator + "dice" + File.separator + "RedDice" + (i + 1) + ".jpg")));
+				redDice.add(ImageIO.read(new File("images" + File.separator
+						+ "dice" + File.separator + "RedDice" + (i + 1)
+						+ ".jpg")));
 			} catch (IOException e) {
 				System.out.println("Could not find Dice Images");
 			}
 		}
 		for (int i = 0; i < 6; i++) {
 			try {
-				whiteDice.add(ImageIO.read(new File(
-						"images" + File.separator + "dice" + File.separator + "WhiteDice" + (i + 1) + ".jpg")));
+				whiteDice.add(ImageIO.read(new File("images" + File.separator
+						+ "dice" + File.separator + "WhiteDice" + (i + 1)
+						+ ".jpg")));
 
 			} catch (IOException e) {
 				System.out.println("Could not find Dice Images");
 			}
 		}
 		try {
-			sheet = ImageIO.read(new File("images" + File.separator + "GoTSpriteSheet.png"));
-			swoosh = sheet.getSubimage(SWOOSH_X, SWOOSH_Y, SWOOSH_WIDTH, SWOOSH_HEIGHT);
+			sheet = ImageIO.read(new File("images" + File.separator
+					+ "GoTSpriteSheet.png"));
+			swoosh = sheet.getSubimage(SWOOSH_X, SWOOSH_Y, SWOOSH_WIDTH,
+					SWOOSH_HEIGHT);
 		} catch (IOException e) {
 			System.out.println("Could not find 'GoTSpriteSheet.png'");
 		}
 	}
 
-	//returns subimage of sprite wanted
+	// returns subimage of sprite wanted
 	private BufferedImage getOffenseSprite() {
 		// the back image of the offense
-		return sheet.getSubimage(getNextOffense(), sprite_offense_y, SPRITE_WIDTH, SPRITE_HEIGHT);
+		return sheet.getSubimage(getNextOffense(), sprite_offense_y,
+				SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 
-	//returns subimage of sprite wanted
+	// returns subimage of sprite wanted
 	private BufferedImage getDefenseSprite() {
 		// the front image of the defense
-		return sheet.getSubimage(getNextDefense(), sprite_defense_y, SPRITE_WIDTH, SPRITE_HEIGHT);
+		return sheet.getSubimage(getNextDefense(), sprite_defense_y,
+				SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
 
 	/*
@@ -322,7 +338,8 @@ public class AnimationPanel extends JPanel {
 	}
 
 	/*
-	 * getNextOffense(): return x value of the area of the sprite sheet wanted based on wind
+	 * getNextOffense(): return x value of the area of the sprite sheet wanted
+	 * based on wind
 	 */
 	private int getNextOffense() {
 		if (spriteOStatus < sprite_offense_frames) {
@@ -334,9 +351,10 @@ public class AnimationPanel extends JPanel {
 	}
 
 	/*
-	 * getNextDefense(): return x value of the area of the sprite sheet wanted based on wind
+	 * getNextDefense(): return x value of the area of the sprite sheet wanted
+	 * based on wind
 	 */
-	private int getNextDefense() {   
+	private int getNextDefense() {
 		if (spriteDStatus < sprite_defense_frames) {
 			return SPRITE_FRONT_X + (SPRITE_WIDTH * spriteDStatus);
 		} else {
@@ -350,7 +368,7 @@ public class AnimationPanel extends JPanel {
 	 */
 	private void drawAttack() {
 		if (swooshStatus < 24) {
-			swooshX = swooshX + 5;  
+			swooshX = swooshX + 5;
 			swooshY = swooshY - 5;
 			swooshStatus++;
 		} else
