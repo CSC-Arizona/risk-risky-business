@@ -68,7 +68,9 @@ public class Tests {
 		// 91% coverage
 		Deck testDeck = Deck.getInstance();
 		DiscardPile discard = new DiscardPile();
+		
 		assertEquals(52, testDeck.getSize());
+		assertFalse(testDeck.isEmpty());
 		testDeck.shuffle(discard);
 		testDeck.deal(discard);
 		assertEquals(51, testDeck.getSize());
@@ -81,7 +83,9 @@ public class Tests {
 		assertEquals(discard.getSize(), 1);
 		discard.removeAll();
 		assertEquals(discard.getSize(), 0);
-		
+		assertFalse(testDeck.isEmpty());
+
+		testDeck = testDeck.newDeck();
 		ArrayList<Card> c = new ArrayList<Card>();
 		Card one = new Card("The Wall", "cavalry", true);
 		Card two = new Card("Skagos", "artillery", true);
