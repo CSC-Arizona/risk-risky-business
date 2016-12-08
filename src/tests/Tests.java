@@ -206,8 +206,6 @@ public class Tests {
 
 	@Test
 	public void testMap() {
-		// 79.4% Coverage
-		// TODO: Testcase doesn't pass, but it's the full coverage amount.
 		Map map = Map.getInstance(1);
 		
 		
@@ -592,7 +590,7 @@ public class Tests {
 	@Test
 	public void testAIStrat() {
 		AI aiE = new AI(new EasyAI(), 0);
-		assertEquals(aiE.chooseMyDiceToRoll(1), 1);	
+		assertEquals(aiE.chooseMyDiceToRoll(1), 1);
 		
 		aiE.setStrategy(new EasyAI(aiE));
 		AIStrategy testStrat = aiE.getStrategy();
