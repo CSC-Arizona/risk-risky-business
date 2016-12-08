@@ -13,11 +13,6 @@ import Model.MediumAI;
 public class Run6Bots {
 
 	public static void main(String[] args) {
-		int j = 0;
-
-		// while (true){
-		// j++;
-
 		TheGame theGame = TheGame.getInstance(0, 6, true);
 		int i = 0;
 		int hardWin = 0, mediumWin = 0, easyWin = 0, numAttacks = 0;
