@@ -1402,7 +1402,7 @@ public class riskGUI extends JFrame {
 				JLabel directions = new JLabel();
 				directions.setHorizontalAlignment(JLabel.CENTER);
 				if (theGame.isFinished()) {
-					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 34));
+					directions.setFont(gotFontHeader.deriveFont(Font.BOLD, 28));
 					directions.setText(theGame.getCurrentPlayer().getName() + " has achieved total victory.");
 					this.add(directions, BorderLayout.CENTER);
 				} else if (theGame.isRedeemCardPhase()) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -128,7 +129,12 @@ public class Tests {
 
 		ActionListener act = null;
 		wall.makeButton(1, 1, act);
+		Dimension dim = wall.getButton().getSize();
+		
 		wall.updateButton(1, 1);
+		assertEquals(dim, wall.getButton().getSize());
+		wall.changeButtonSize(1, 1);
+		assertTrue(dim.equals(wall.getButton().getSize()));
 		wall.getMyButton();
 
 		ArrayList<Country> neighbors = wall.getNeighbors();
@@ -198,7 +204,7 @@ public class Tests {
 	public void testMap() {
 		// 79.4% Coverage
 		// TODO: Testcase doesn't pass, but it's the full coverage amount.
-		Map map = Map.getInstance(1);
+		Map map = Map.getInstance(0);
 		
 		
 		assertEquals(map.getContinentOwnersAsStrings()[0], "4 units: Blue is held by no one.");
@@ -493,6 +499,27 @@ public class Tests {
 		Country attackFrom = aiE.getStrategy().findAttackingCountry(attackMe);
 		assertTrue(attackFrom != null);
 		aiM.setStrategy(new MediumAI(aiM));
+		
+		Continent con = new Continent(0, "Blah");
+		Country a = new Country("a", 0,0,con);
+		Country b = new Country("b", 0,0,con);
+		Country d = new Country("c", 0,0,con);
+		a.addNeighbor(b);
+		a.addNeighbor(d);
+		b.addNeighbor(a);
+		b.addNeighbor(d);
+		d.addNeighbor(a);
+		d.addNeighbor(b);
+		a.setOccupier(aiM);
+		b.setOccupier(aiM);
+		d.setOccupier(aiM);
+		a.addForcesVal(10);
+		b.addForcesVal(1);
+		d.addForcesVal(1);
+		aiM.getStrategy().reinforce();
+		assertFalse(a.getForcesVal()==10); 
+		
+		
 		for(Country c : Map.getInstance(0).getCountries())
 		{ 
 			if(c.getOccupier() == null)
