@@ -10,7 +10,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -22,15 +21,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -39,7 +34,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -61,10 +55,8 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.plaf.ComponentUI;
 
 import controller.TheGame;
 import Model.*;
@@ -106,10 +98,8 @@ public class riskGUI extends JFrame {
 	private ArrayList<AIStrategy> strat = new ArrayList<>();
 	private boolean musicOn = true;
 	private boolean animationsOn = true;
-	private int attackMaxDie, defendMaxDie;
 	private StatPanel currentStatsPanel;
-	private Border blueline, raisedetched, loweredetched, raisedbevel,
-			loweredbevel, empty, raisedWithColor;
+	private Border blueline, raisedetched, loweredetched, raisedWithColor;
 	private SoundClipPlayer player = new SoundClipPlayer();
 	private boolean allAIS = false;
 	private Faction attacker;
@@ -139,13 +129,8 @@ public class riskGUI extends JFrame {
 		blueline = BorderFactory.createLineBorder(Color.BLUE);
 		raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 		loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		raisedbevel = BorderFactory.createRaisedBevelBorder();
-		loweredbevel = BorderFactory.createLoweredBevelBorder();
-		empty = BorderFactory.createEmptyBorder();
 		raisedWithColor = BorderFactory.createCompoundBorder(raisedetched,
 				blueline);
-		attackMaxDie = 3;
-		defendMaxDie = 2;
 
 		selectedCards = new ArrayList<Card>();
 		attacker = Faction.STARK;
@@ -159,6 +144,11 @@ public class riskGUI extends JFrame {
 
 	}// end riskGui constructor
 
+	/*
+	 * setupAnimationFrame
+	 * 
+	 * sets up the frame that will do the animations
+	 */
 	private void setUpAnimationFrame() {
 
 		animationPanel = new AnimationPanel();
@@ -169,6 +159,9 @@ public class riskGUI extends JFrame {
 		animationPanel.setLocation(100, 100);
 	}
 
+	/*
+	 * setUpAIMenu sets up the menu for the AIs
+	 */
 	private void setUpAIMenu() {
 		int i = 1;
 		JMenu AIDiff = new JMenu("AI Difficulty");
@@ -182,6 +175,9 @@ public class riskGUI extends JFrame {
 		menu.add(AIDiff);
 	}// end setUpAiMenu
 
+	/*
+	 * loadGame Load a previously saved game
+	 */
 	public void loadGame() {
 		boolean error = setUpLoad();
 		if (error) {
@@ -206,6 +202,9 @@ public class riskGUI extends JFrame {
 
 	}
 
+	/*
+	 * setUoLoad Sets up the apparatus for loading a game
+	 */
 	private boolean setUpLoad() {
 		boolean error = false;
 		JFileChooser choose = new JFileChooser();
@@ -228,6 +227,10 @@ public class riskGUI extends JFrame {
 
 	}
 
+	/*
+	 * turnOnStatPanel turns on the stats panel by removing the map pane and
+	 * replacing it with a new stats panel
+	 */
 	private void turnOnStatPanel() {
 		currentStatsPanel = new StatPanel();
 		this.remove(drawingPanel);
@@ -236,6 +239,10 @@ public class riskGUI extends JFrame {
 		this.repaint();
 	}// end turnOnStatPanel
 
+	/*
+	 * turnOffStatPanel turns off the stat panel by removing it and replacing
+	 * the map panel
+	 */
 	private void turnOffStatPanel() {
 		this.remove(currentStatsPanel);
 		this.add(drawingPanel);
@@ -243,40 +250,9 @@ public class riskGUI extends JFrame {
 		this.repaint();
 	}// end turnOffStatPanel
 
-	private void defaultMode() {
-		humans = 1;
-		ai = 5;
-		ArrayList<Player> players = theGame.getPlayers();
-		players.get(0).setFaction("Stark");
-		players.get(1).setFaction("Dothraki");
-		players.get(2).setFaction("White Walkers");
-		players.get(3).setFaction("Lannister");
-		players.get(4).setFaction("Targaryen");
-		players.get(5).setFaction("Wildlings");
-		players.get(0).setName("Player1");
-		((AI) players.get(1)).setStrategy(new EasyAI());
-		((AI) players.get(2)).setStrategy(new EasyAI());
-		((AI) players.get(3)).setStrategy(new EasyAI());
-		((AI) players.get(4)).setStrategy(new EasyAI());
-		((AI) players.get(5)).setStrategy(new EasyAI());
-
-		// Updating the arraylist in the game
-		theGame.setPlayers(players);
-		// Starting the game...
-		theGame.startGame();
-
-		drawingPanel = new BoardPanel();
-		theGame = TheGame.getInstance(1, 5, false);
-		setUpDrawingPanel();
-		setUpMenu();
-		setUpClearButton();
-		setUpPassButton();
-		setUpAIMenu();
-
-		drawingPanel.repaint();
-
-	}// end defualtMode
-
+	/*
+	 * setUpHouseArray All of the possible houses are added to an arraylist
+	 */
 	private void setUpHouseArray() {
 		possHouses = new ArrayList<String>();
 		possHouses.add("Stark");
@@ -288,6 +264,9 @@ public class riskGUI extends JFrame {
 
 	}// end setUpHouseArray
 
+	/*
+	 * setUpSplash builds the first splash loading screen
+	 */
 	private void setUpSplash() {
 		splashScreen = new ImageIcon("images/SplashScreen.jpg");
 		drawingPanel = new BoardPanel();
@@ -302,6 +281,9 @@ public class riskGUI extends JFrame {
 		splashLoading1();
 	}// end setUpSplash
 
+	/*
+	 * setUpSplash builds the second splash loading screen
+	 */
 	private void splashLoading2() {
 
 		splash = false;
@@ -336,6 +318,9 @@ public class riskGUI extends JFrame {
 
 	}// end splashLoading2
 
+	/*
+	 * splashNames Collects the names of the players
+	 */
 	private void splashNames() {
 		boolean cancel = false;
 		playerNames = new ArrayList<String>();
@@ -364,6 +349,9 @@ public class riskGUI extends JFrame {
 			splashLoading2();
 	}// end splash names
 
+	/*
+	 * splashHouses collects the houses of the players and sets the others
+	 */
 	private void splashHouses() {
 		drawingPanel.remove(splashInfo);
 		boolean cancel = false;
@@ -448,6 +436,9 @@ public class riskGUI extends JFrame {
 			splashNames();
 	}// end splashHouses
 
+	/*
+	 * splashNumPlayers Gets the number of human and AIs
+	 */
 	private void splashNumPlayers() {
 
 		String human = "", ais = "";
@@ -508,6 +499,9 @@ public class riskGUI extends JFrame {
 			splashHouses();
 	}// end splashNumPlayers
 
+	/*
+	 * splashChooseGame lets user choose between new or saved game
+	 */
 	private void splashChooseGame() {
 		drawingPanel.remove(splashInfo);
 		splashInfo = new JPanel();
@@ -559,12 +553,14 @@ public class riskGUI extends JFrame {
 			Thread.sleep(5000);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
-			System.out.println("nahhh");
 		}
 		// move on to splash screen #2, choosing game play
 		splashChooseGame();
 	}// end splashLoading1
 
+	/*
+	 * setUpGUI does all necessary information to build the GUI
+	 */
 	private void setUpGui() {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -580,7 +576,6 @@ public class riskGUI extends JFrame {
 						"End", JOptionPane.YES_NO_CANCEL_OPTION);
 				// If the user wants to save before quit, then save!
 				if (confirm == JOptionPane.CANCEL_OPTION) {
-					System.out.println("CANCEL CLOSE");
 				} else if (confirm == JOptionPane.OK_OPTION) {
 					JFileChooser choose = new JFileChooser();
 					choose.setCurrentDirectory(new File("./SavedGames"));
@@ -596,7 +591,6 @@ public class riskGUI extends JFrame {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
-						System.out.println("SAVE GAME");
 						System.exit(0);
 					}
 				} else if (confirm == JOptionPane.NO_OPTION) {
@@ -607,6 +601,9 @@ public class riskGUI extends JFrame {
 
 	}// end setUpGui
 
+	/*
+	 * setUpMenu builds the menu
+	 */
 	private void setUpMenu() {
 		JMenu file = new JMenu("File");
 		JMenuItem newGame = new JMenuItem("New Game");
@@ -689,6 +686,9 @@ public class riskGUI extends JFrame {
 
 	}// end setUpMenu
 
+	/*
+	 * setUpClearButton Creats the clear moves button
+	 */
 	private void setUpClearButton() {
 
 		JButton clearButton = new JButton("Clear Move Selections");
@@ -699,6 +699,9 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(clearButton);
 	}
 
+	/*
+	 * setUpPassButton Creates the button that lets you skip phases
+	 */
 	private void setUpPassButton() {
 		JButton passButton = new JButton("Skip to the Next Phase");
 		passButton.addActionListener(new PassButtonListener());
@@ -708,6 +711,9 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(passButton);
 	}
 
+	/*
+	 * setUpStatButton Creats button that lets you select the stats pane
+	 */
 	private void setUpStatButton() {
 		JButton statButton = new JButton("Check out our stats");
 		statButton.addActionListener(new StatPanelTurnOnListener());
@@ -717,6 +723,10 @@ public class riskGUI extends JFrame {
 		drawingPanel.add(statButton);
 	}
 
+	/*
+	 * animations Starts the animations! Takes the factions of the two players
+	 * at war
+	 */
 	private void animations(Faction attacker, Faction defender) {
 		setUpAnimationFrame();
 
@@ -735,7 +745,6 @@ public class riskGUI extends JFrame {
 				Thread.sleep(50);
 			} catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
-				System.out.println("nahhh");
 			}
 
 			animationPanel.update(getGraphics());
@@ -747,6 +756,10 @@ public class riskGUI extends JFrame {
 		drawingPanel.repaint();
 	}
 
+	/*
+	 * setUpDrawingPanel Creates the panel where the map and all of the gameplay
+	 * goes!
+	 */
 	private void setUpDrawingPanel() {
 		drawingPanel = new BoardPanel();
 		drawingPanel.setLayout(null);
@@ -777,6 +790,9 @@ public class riskGUI extends JFrame {
 			setUpStatButton();
 	}// end setUpDrawingPanel
 
+	/*
+	 * setUpImages Builds the images of the factions
+	 */
 	private void setUpImages() {
 
 		gameBoard = new ImageIcon("images/GoTMapRisk.jpg");
@@ -788,7 +804,9 @@ public class riskGUI extends JFrame {
 		wildlings = new ImageIcon("images/wildlings.jpg");
 	}// end setUpImages
 
-	// draws buttons over the name of all of the countries
+	/*
+	 * drawCountryButtons draws buttons over the name of all of the countries
+	 */
 	private void drawCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
 			// The Make button method has the same logic that was previously
@@ -797,13 +815,12 @@ public class riskGUI extends JFrame {
 			drawingPanel.add(country.getButton());
 		} // end for
 
-		// Manually adjusts the size and shape of a few of the weirder
-		// shaped country buttons
-
 	}// end drawCountryButtons
 
-	// Updates those buttons if the size of the panel changes
-
+	/*
+	 * updateCountryButton Updates those buttons if the size of the panel
+	 * changes
+	 */
 	private void updateCountryButtons() {
 		for (Country country : theGame.getGameMap().getCountries()) {
 			country.updateButton(xWidth, yHeight);
@@ -813,6 +830,9 @@ public class riskGUI extends JFrame {
 	/*********************************
 	 * Other JPanels Below
 	 ********************************/
+	/*
+	 * BoardPanel The panel that displays country info, lets you trade, etc.
+	 */
 	private class BoardPanel extends JPanel implements Observer {
 
 		@Override
@@ -864,6 +884,9 @@ public class riskGUI extends JFrame {
 			}
 		}// end paintComponenet
 
+		/*
+		 * drawUnits draws the units that each country has place on it
+		 */
 		private void drawUnits(Graphics2D g2) {
 
 			g2.setColor(Color.BLACK);
@@ -879,6 +902,10 @@ public class riskGUI extends JFrame {
 
 		}// end drawUnits
 
+		/*
+		 * draws information about the current player, including his house,
+		 * image, etc.
+		 */
 		private void drawCurrentPlayer(Graphics2D g2) {
 			Player currentPlayer = theGame.getCurrentPlayer();
 			if (currentPlayer != null) {
@@ -923,7 +950,9 @@ public class riskGUI extends JFrame {
 
 		}// end drawCurrentPlayer
 
-		// draws factions if a country is occupied
+		/*
+		 * drawFactions draws factions if a country is occupied
+		 */
 		private void drawFactions(Graphics2D g2) {
 			Map temp = Map.getInstance(0);
 			Country[] allCountries = temp.getCountries();
@@ -973,13 +1002,11 @@ public class riskGUI extends JFrame {
 			}
 
 		}// end drawFaction
-			// draws a 40X40 grid over the risk map. Used for determining where
-			// to
-			// place buttons.
 
-		// draws a 40X40 grid over the risk map. Used for determining where to
-		// place buttons.
-
+		/*
+		 * drawGridAndNumbers draws a 40X40 grid over the risk map. Used for
+		 * determining where to place buttons. Used for measuring
+		 */
 		private void drawGridAndNumbers(Graphics2D g2) {
 			for (int i = xWidth; i < width - 40; i += xWidth) {
 				g2.drawLine(i, 0, i, height - 70);
@@ -1012,7 +1039,12 @@ public class riskGUI extends JFrame {
 			}
 		}// end drawGridAndNumbers
 
-		// update for drawing factions over occupied functions
+		/*
+		 * update for drawing factions over occupied functions(non-Javadoc)
+		 * 
+		 * @see java.util.Observer#update(java.util.Observable,
+		 * java.lang.Object)
+		 */
 		@Override
 		public void update(Observable arg0, Object arg1) {
 
@@ -1031,7 +1063,6 @@ public class riskGUI extends JFrame {
 					Thread.sleep(1);
 				} catch (InterruptedException ex) {
 					Thread.currentThread().interrupt();
-					System.out.println("nahhh");
 				}
 				drawingPanel.removeAll();
 				this.remove(drawingPanel);
@@ -1050,6 +1081,9 @@ public class riskGUI extends JFrame {
 
 		}// end update
 
+		/*
+		 * updateGm revalidates and repaints (because null layouts are silly)
+		 */
 		private void updateGM() {
 			if (theGame.isFinished()) {
 				this.revalidate();
@@ -1063,6 +1097,10 @@ public class riskGUI extends JFrame {
 		return drawingPanel;
 	}// end getBoardPanel
 
+	/*
+	 * statPanel
+	 * 		draws the statistics panel
+	 */
 	private class StatPanel extends JPanel {
 		private Player currPlayer;
 		private CurrentPlayerStatsPanel currPanel;
@@ -1219,6 +1257,9 @@ public class riskGUI extends JFrame {
 				return playList;
 			}// end allPlayersList
 
+			/*
+			 * draws the continents and log
+			 */
 			private JPanel contsAndLogPanel() {
 				JPanel lastPanel = new JPanel();
 				lastPanel.setLayout(new GridLayout(1, 2));
@@ -1248,6 +1289,9 @@ public class riskGUI extends JFrame {
 		}// end allplayerstats
 	}
 
+	/*
+	 * Displays the country information and directions otherwise
+	 */
 	private class CountryPanel extends JPanel {
 
 		private Country curr;
@@ -1580,7 +1624,6 @@ public class riskGUI extends JFrame {
 	private class TradeClickListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("You wish to trade.");
 
 			if (cardsAreRedeemable()) {
 				theGame.setCardsToRedeem(selectedCards);
@@ -1670,10 +1713,8 @@ public class riskGUI extends JFrame {
 							"You earned a new card!", "Card Earned",
 							JOptionPane.INFORMATION_MESSAGE);
 				} // end if
-				System.out.println("Passed attack phase");
 			} else if (theGame.isReinforcePhase() && theGame.isPlayPhase()) {
 				theGame.passReinforcementPhase();
-				System.out.println("Ended turn");
 			} else if (theGame.isRedeemCardPhase()) {
 				if (!theGame.skipCardRedemption())
 					JOptionPane.showMessageDialog(riskGUI.this,
@@ -1723,19 +1764,19 @@ public class riskGUI extends JFrame {
 										+ "                                         Created for our CS335 class as our final project.",
 								"About", JOptionPane.INFORMATION_MESSAGE);
 			} else if (e.getActionCommand().compareTo("attack max") == 0) {
-				attackMaxDie = 3;
+
 				theGame.changeAttackDice(3);
 			} else if (e.getActionCommand().compareTo("attack 2") == 0) {
-				attackMaxDie = 2;
+
 				theGame.changeAttackDice(2);
 			} else if (e.getActionCommand().compareTo("attack 1") == 0) {
-				attackMaxDie = 1;
+
 				theGame.changeAttackDice(1);
 			} else if (e.getActionCommand().compareTo("defend max") == 0) {
-				defendMaxDie = 2;
+
 				theGame.changeDefendDice(2);
 			} else if (e.getActionCommand().compareTo("defend min") == 0) {
-				defendMaxDie = 1;
+
 				theGame.changeDefendDice(1);
 			} else if (e.getActionCommand().compareTo("how to play") == 0) {
 
