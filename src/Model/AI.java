@@ -1,5 +1,7 @@
 /*	File:		AI.java
  * 	Purpose:	AI class extends player and contains control of AI type players, both easy and hard.
+ * 
+ * by Dylan Tobia, Abigail Dodd, Sydney Komro, and Jewell Finder
  */
 
 package Model;
@@ -16,9 +18,9 @@ public class AI extends Player implements Serializable {
 	private JMenuItem myDiff;
 	private Random rand;
 	private AIStrategy strategy;
-	
+
 	/*
-	 * 	Constructor
+	 * Constructor
 	 */
 	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
@@ -27,19 +29,22 @@ public class AI extends Player implements Serializable {
 		rand = new Random();
 	}// end AI constructor
 
-	// checks an ai's countries neighbors, to see if they are occupied. if they
-	// are, go to the next one, otherwise
-	// return that country as a selection. Used for placement in the first turn.
+	/*
+	 * checks an ai's countries neighbors, to see if they are occupied. if they
+	 * are, go to the next one, otherwisereturn that country as a selection.
+	 * Used for placement in the first turn.
+	 */
 	public Country checkAllNeighbors() {
-		int i = 0, j = 0; 
-		
+		int i = 0, j = 0;
+
 		if (getCountries().size() == 0)
 			return null;
 		// get my first countries neighbors
 		ArrayList<Country> neighbors = getCountries().get(i).getNeighbors();
 		while (i < neighbors.size()) {
 			j = 0;
-			while (j < neighbors.size() && neighbors.get(j).getOccupier() != null) {
+			while (j < neighbors.size()
+					&& neighbors.get(j).getOccupier() != null) {
 				j++;
 			}
 
@@ -53,11 +58,17 @@ public class AI extends Player implements Serializable {
 		return null;
 	}// end checkAllNeighbors
 
-	
+	/*
+	 * chooseMyDiceToRoll Returns itself, because we wanted a method stub that
+	 * we could customize but realized we didn't need it
+	 */
 	public int chooseMyDiceToRoll(int max) {
 		return max;
 	}// end chooseMyDice
 
+	/*
+	 * pickRandomOwnedCountry for random placement
+	 */
 	public Country pickRandomOwnedCountry() {
 		Random rand = new Random();
 		int randNum = rand.nextInt(getCountries().size());
@@ -86,14 +97,15 @@ public class AI extends Player implements Serializable {
 			if (strategy.findCountriesToAttack() == null)
 				return true;
 		}
-		//
-		// return false;
 
 		return false;
 
 	}// end finishedAttacking
 
-	// picks a random country from the list of countries to attack
+	/*
+	 * pickRandomFromList picks a random country from the list of countries to
+	 * attack
+	 */
 	private Country pickRandomFromList(ArrayList<Country> countriesToAttack) {
 		if (countriesToAttack == null)
 			return null;
@@ -106,22 +118,27 @@ public class AI extends Player implements Serializable {
 		return countriesToAttack.get(randInt);
 	}// end pickRandomFromList
 
-	// creates the ai's menuItem for changing difficulty
+	/*
+	 * makeMenuItem creates the ai's menuItem for changing difficulty
+	 */
 	public void makeMenuItem(int i, ActionListener aiDiffChangeListener) {
 		myDiff = new JMenuItem("AI " + i);
 		myDiff.addActionListener(aiDiffChangeListener);
 		myDiff.setActionCommand(String.valueOf(i));
 	}// end makeMenuItem
 
-	// returns its jMenuItem
+	/*
+	 * getMenuItem returns its jMenuItem
+	 */
 	public JMenuItem getMenuItem() {
 		return myDiff;
 	}// end getMenuItem
 
-	// starts at first country, checks if it is surrounded by friendlies, if it
-	// is
-	// moves all of its units except for one to its neighbors
-
+	/*
+	 * pickRandomFromFringe starts at first country, checks if it is surrounded
+	 * by friendlies, if it is moves all of its units except for one to its
+	 * neighbors
+	 */
 	public Country pickRandomFromFringe() {
 		ArrayList<Country> fringeCountries = findFringeCountries();
 
@@ -143,9 +160,12 @@ public class AI extends Player implements Serializable {
 	}
 
 	/*
-	 * Finds all countries that are on the "fringe" of ownership. Checks through all of my owned countries,
-	 * and then looks at their neighbors. If I do not own the neigbor, then the current country is, in fact a fringe,
-	 * add it to the list, and continue to the next owned country.
+	 * findFringeCountries
+	 * 
+	 * Finds all countries that are on the "fringe" of ownership. Checks through
+	 * all of my owned countries, and then looks at their neighbors. If I do not
+	 * own the neigbor, then the current country is, in fact a fringe, add it to
+	 * the list, and continue to the next owned country.
 	 * 
 	 * Return this list
 	 */
@@ -172,7 +192,8 @@ public class AI extends Player implements Serializable {
 	}
 
 	/*
-	 * if I have 5 cards, get the ones I wish to redeem and return them
+	 * redeemCards if I have 5 cards, get the ones I wish to redeem and return
+	 * them
 	 */
 	@Override
 	public ArrayList<Card> redeemCards() {
@@ -184,7 +205,7 @@ public class AI extends Player implements Serializable {
 	}
 
 	/*
-	 * finds my 3 cars to redeem. 
+	 * findMyCardsToRedeem finds my 3 cars to redeem.
 	 */
 	private ArrayList<Card> findmyCardsToRedeem() {
 		ArrayList<Card> cards = null;
@@ -210,7 +231,7 @@ public class AI extends Player implements Serializable {
 	}// end findMyCardsToRedeem
 
 	/*
-	 * finds one of each type of card
+	 * findOneOfEach finds one of each type of card
 	 */
 	private ArrayList<Card> findOneOfEach() {
 		Card inf = new Card(null, "infantry", false);
@@ -258,7 +279,7 @@ public class AI extends Player implements Serializable {
 	}// end one of each
 
 	/*
-	 * finds 3 infantry cards
+	 * findThreeInfantry finds 3 infantry cards
 	 */
 	private ArrayList<Card> findThreeInfantry() {
 		Card inf = new Card(null, "infantry", false);
@@ -281,7 +302,7 @@ public class AI extends Player implements Serializable {
 	}// end infantry
 
 	/*
-	 * finds 3 calvary cards
+	 * findThreeCavalry finds 3 calvary cards
 	 */
 	private ArrayList<Card> findThreeCalvary() {
 		Card cav = new Card(null, "cavalry", false);
@@ -304,7 +325,7 @@ public class AI extends Player implements Serializable {
 	}// end infantry
 
 	/*
-	 * finds 3 artillery cards
+	 * findThreeArtillery finds 3 artillery cards
 	 */
 	private ArrayList<Card> findThreeArtillery() {
 		Card art = new Card(null, "artillery", false);
@@ -326,7 +347,9 @@ public class AI extends Player implements Serializable {
 			return null;
 	}// end infantry
 
-
+	/*
+	 * getter and setter for strategy
+	 */
 	public AIStrategy getStrategy() {
 		return strategy;
 	}

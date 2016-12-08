@@ -931,8 +931,8 @@ public class riskGUI extends JFrame {
 		drawingPanel.repaint();
 		this.repaint();
 
-		//player.stopTheme();
-		//player.startPlay();
+		player.stopTheme();
+		player.startPlay();
 		if(theGame.getNumHumans()!=0 || theGame.isFinished())
 			setUpStatButton();
 	}// end setUpDrawingPanel
@@ -1332,6 +1332,7 @@ public class riskGUI extends JFrame {
 					String player = allPlayers.get(i).getName();
 					if (allPlayers.get(i) instanceof AI)
 						player += " " + ((AI)allPlayers.get(i)).getStrategy().toString();
+						
 					player += " " + allPlayers.get(i).getFaction().getName();
 					player += ": " + allPlayers.get(i).getCountries().size() + " countries.";
 					aPlayer.setText(player);
@@ -1351,7 +1352,7 @@ public class riskGUI extends JFrame {
 
 				JPanel contPanel = new JPanel();
 				contPanel.setBorder(raisedWithColor);
-				contPanel.setLayout(new GridLayout(6, 1));
+				contPanel.setLayout(new GridLayout(7, 1));
 				String[] allContinents = theGame.getMap().getContinentOwnersAsStrings();
 
 				for (int i = 0; i < allContinents.length; i++) {
