@@ -76,7 +76,6 @@ public class EasyAI implements AIStrategy, Serializable {
 		Map map = Map.getInstance(1);
 		Country[] countries = map.getCountries();
 		return countries[randNum]; 
-
 	}
 	
 	/*
