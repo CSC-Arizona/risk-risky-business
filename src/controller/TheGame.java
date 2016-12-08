@@ -376,9 +376,8 @@ public class TheGame implements Serializable {
 		// Then, continue as long as an AI is playing
 		while (currentPlayer instanceof AI) {
 			aiTurn();
-			if (gameOver)
+			if(gameOver)
 				break;
-
 		} // end while
 	}// end play
 

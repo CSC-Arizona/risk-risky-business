@@ -16,19 +16,12 @@ public class AI extends Player implements Serializable {
 	private JMenuItem myDiff;
 	private Random rand;
 	private AIStrategy strategy;
-	private ArrayList<Country> fringes;
-
-	private int numAttacks;
 	
-	//DELETE USSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-	static int w1, w2,f1,w3,f2,f3,w4,w5,w6,w7,w8,w9,wa,fa;
-	// private Game theGame;
-
-
+	/*
+	 * 	Constructor
+	 */
 	public AI(AIStrategy strat, int numOfPlayers) {
 		super(numOfPlayers);
-		numAttacks = 0;
-		fringes = null;
 		strategy = strat;
 		strategy.setMe(this);
 		rand = new Random();
@@ -60,6 +53,7 @@ public class AI extends Player implements Serializable {
 		return null;
 	}// end checkAllNeighbors
 
+	
 	public int chooseMyDiceToRoll(int max) {
 		return max;
 	}// end chooseMyDice
@@ -75,16 +69,11 @@ public class AI extends Player implements Serializable {
 	// if there is no country to attack, return. if it loses a battle, check if
 	// there are still other countries it can attack
 	public boolean finishedAttacking() {
-		
-		//If you're close to finished, just conquerrrrr
+
+		// If you're close to finished, just conquerrrrr
 		if (getCountries().size() > 44)
 			return false;
-		
-	
 
-		
-		
-		
 		int i = 0;
 		for (Country country : findFringeCountries()) {
 			if (country.getForcesVal() == 1)
@@ -97,11 +86,10 @@ public class AI extends Player implements Serializable {
 			if (strategy.findCountriesToAttack() == null)
 				return true;
 		}
-//		
-//		return false;
-		
-		return false;
+		//
+		// return false;
 
+		return false;
 
 	}// end finishedAttacking
 
@@ -130,26 +118,6 @@ public class AI extends Player implements Serializable {
 		return myDiff;
 	}// end getMenuItem
 
-	// returns the ai's current strategy as a string, used for checking if the
-	// ai difficulty menu in the gui was working
-
-	// returns a randomlist of countries to add units to out of the ai's owned
-	// countries
-	private ArrayList<Country> pickSetOfRandomOwnedCountry() {
-		ArrayList<Country> countries = new ArrayList<>();
-		Random rand = new Random();
-		int randNum = 0;
-		int i = 0;
-		while (getAvailableTroops() > i) {
-//			System.out.println("While3: "+ ++w3);//next: w4, f2
-
-			i++;
-			randNum = rand.nextInt(getCountries().size());
-			countries.add(getCountries().get(randNum));
-		}
-		return countries;
-	}// end pickSetOfRandomOwnedCountry
-
 	// starts at first country, checks if it is surrounded by friendlies, if it
 	// is
 	// moves all of its units except for one to its neighbors
@@ -164,6 +132,9 @@ public class AI extends Player implements Serializable {
 		return fringeCountries.get(randNum);
 	}
 
+	/*
+	 * picks a random country out of all owned countries
+	 */
 	public Country pickRandomCountry() {
 		Map map = Map.getInstance(0);
 		Country[] countries = map.getCountries();
@@ -171,10 +142,14 @@ public class AI extends Player implements Serializable {
 		return countries[randNum];
 	}
 
+	/*
+	 * Finds all countries that are on the "fringe" of ownership. Checks through all of my owned countries,
+	 * and then looks at their neighbors. If I do not own the neigbor, then the current country is, in fact a fringe,
+	 * add it to the list, and continue to the next owned country.
+	 * 
+	 * Return this list
+	 */
 	public ArrayList<Country> findFringeCountries() {
-//		if (fringes != null)
-//			return fringes;
-
 		ArrayList<Country> fringeCountries = new ArrayList<>();
 
 		int i = 0, j = 0;
@@ -193,10 +168,12 @@ public class AI extends Player implements Serializable {
 				neighbors = getCountries().get(i).getNeighbors();
 		}
 
-		fringes = fringeCountries;
 		return fringeCountries;
 	}
 
+	/*
+	 * if I have 5 cards, get the ones I wish to redeem and return them
+	 */
 	@Override
 	public ArrayList<Card> redeemCards() {
 		if (getCards().size() >= 5) {
@@ -206,6 +183,9 @@ public class AI extends Player implements Serializable {
 			return null;
 	}
 
+	/*
+	 * finds my 3 cars to redeem. 
+	 */
 	private ArrayList<Card> findmyCardsToRedeem() {
 		ArrayList<Card> cards = null;
 
@@ -229,6 +209,9 @@ public class AI extends Player implements Serializable {
 
 	}// end findMyCardsToRedeem
 
+	/*
+	 * finds one of each type of card
+	 */
 	private ArrayList<Card> findOneOfEach() {
 		Card inf = new Card(null, "infantry", false);
 		Card cal = new Card(null, "cavalry", false);
@@ -274,6 +257,9 @@ public class AI extends Player implements Serializable {
 			return null;
 	}// end one of each
 
+	/*
+	 * finds 3 infantry cards
+	 */
 	private ArrayList<Card> findThreeInfantry() {
 		Card inf = new Card(null, "infantry", false);
 		ArrayList<Card> cards = getCards();
@@ -294,6 +280,9 @@ public class AI extends Player implements Serializable {
 			return null;
 	}// end infantry
 
+	/*
+	 * finds 3 calvary cards
+	 */
 	private ArrayList<Card> findThreeCalvary() {
 		Card cav = new Card(null, "cavalry", false);
 		ArrayList<Card> cards = getCards();
@@ -314,6 +303,9 @@ public class AI extends Player implements Serializable {
 			return null;
 	}// end infantry
 
+	/*
+	 * finds 3 artillery cards
+	 */
 	private ArrayList<Card> findThreeArtillery() {
 		Card art = new Card(null, "artillery", false);
 		ArrayList<Card> cards = getCards();
