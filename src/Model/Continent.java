@@ -9,7 +9,7 @@ package Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Continent implements Serializable{ 
+public class Continent implements Serializable {
 
 	private Player owner;
 	private ArrayList<Country> myCountries;
@@ -17,6 +17,7 @@ public class Continent implements Serializable{
 	private String name;
 
 	private int numOfCountries = 0;
+
 	public Continent() {
 		this.name = "";
 		owner = null;
@@ -24,7 +25,7 @@ public class Continent implements Serializable{
 		ownerBonus = 0;
 	}// end continent constructor #1
 
-	public Continent(int ownerBonus, String name) { 
+	public Continent(int ownerBonus, String name) {
 		this.name = name;
 		owner = null;
 		this.myCountries = new ArrayList<Country>();
@@ -34,12 +35,10 @@ public class Continent implements Serializable{
 	// returns 0 if the player is not the owner of this country,
 	// and returns the owner bonus otherwise
 	/*
-	 * payOwnerBonus()
-	 * parameters: Player play 
-	 * returns: int (0 or bonus value)
-	 * purpose: determines if current player gets a bonus for 
-	 * owning an entire continent and returns the bonus associated
-	 * with that continent. dependent on findOwner();
+	 * payOwnerBonus() parameters: Player play returns: int (0 or bonus value)
+	 * purpose: determines if current player gets a bonus for owning an entire
+	 * continent and returns the bonus associated with that continent. dependent
+	 * on findOwner();
 	 */
 	public int payOwnerBonus(Player play) {
 		if (play.equals(findOwner()))
@@ -47,17 +46,14 @@ public class Continent implements Serializable{
 		else
 			return 0;
 	}// end payOwnerbonus
-	
-	
-	public int getBonus(){
+
+	public int getBonus() {
 		return ownerBonus;
 	}
 
 	/*
-	 * addCountry()
-	 * parameters: Country country
-	 * returns: none
-	 * purpose: adds the given country to the current continent's country array
+	 * addCountry() parameters: Country country returns: none purpose: adds the
+	 * given country to the current continent's country array
 	 */
 	public void addCountry(Country country) {
 		myCountries.add(country);
@@ -65,17 +61,15 @@ public class Continent implements Serializable{
 	}// end addCountry
 
 	/*
-	 * findOwner()
-	 * parameters: none
-	 * returns: Player or null
-	 * purpose: determines if all countries in myCountries are owned 
-	 * by the same player, if so, that player is returned.
+	 * findOwner() parameters: none returns: Player or null purpose: determines
+	 * if all countries in myCountries are owned by the same player, if so, that
+	 * player is returned.
 	 */
 	public Player findOwner() {
 		Player owner = myCountries.get(0).getOccupier();
 		int i = 1;
-		
-		if (owner == null) 
+
+		if (owner == null)
 			return null;
 
 		while (i < myCountries.size()) {
@@ -91,11 +85,11 @@ public class Continent implements Serializable{
 	 * Override Object's toString() method for continent
 	 */
 	public String toString() {
-		findOwner(); 
+		findOwner();
 		String str = "";
 
 		str += name + " is held by ";
-		
+
 		if (owner != null)
 			str += owner.getName();
 		else
@@ -103,15 +97,13 @@ public class Continent implements Serializable{
 
 		return str;
 	}// end toString
-	
-	public int getNumOfCountries()
-	{
+
+	public int getNumOfCountries() {
 		return numOfCountries;
 	}
-	
- 	public ArrayList<Country> getMyCountries()
- 	{
- 		return myCountries;
- 	}
+
+	public ArrayList<Country> getMyCountries() {
+		return myCountries;
+	}
 
 }

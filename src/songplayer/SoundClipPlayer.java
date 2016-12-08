@@ -16,7 +16,9 @@ public class SoundClipPlayer extends JFrame {
 	private Clip clip;
 	private long clipTime;
 
-	// Constructor
+	/*
+	 * Constructor Creates an invisible sound player to play our music
+	 */
 	public SoundClipPlayer() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Sound Playing");
@@ -24,10 +26,15 @@ public class SoundClipPlayer extends JFrame {
 		this.setVisible(false);
 	}
 
+	/*
+	 * startPlay begins playing the rains of castamere on a loop
+	 */
 	public void startPlay() {
 		try {
-			File soundFile = new File("The Rains of Castamere (Instrumental.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+			File soundFile = new File(
+					"The Rains of Castamere (Instrumental.wav");
+			AudioInputStream audioIn = AudioSystem
+					.getAudioInputStream(soundFile);
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -39,11 +46,17 @@ public class SoundClipPlayer extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/*
+	 * startTheme starts playing the game of thrones theme song (for the splash
+	 * screens)
+	 */
 	public void startTheme() {
 		try {
-			File soundFile = new File("Game_Of_Thrones_Official_Show_Open_HBO_.wav");
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
+			File soundFile = new File(
+					"Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+			AudioInputStream audioIn = AudioSystem
+					.getAudioInputStream(soundFile);
 			clip = AudioSystem.getClip();
 			clip.open(audioIn);
 			clip.start();
@@ -56,18 +69,28 @@ public class SoundClipPlayer extends JFrame {
 		}
 	}
 
+	/*
+	 * pause Pauses the sound clip player by recording its stopping point just
+	 * before stopping the music
+	 */
 	public void pause() {
 		clipTime = clip.getMicrosecondPosition();
 		clip.stop();
 	}
 
+	/*
+	 * notifyPause Unpauses the music
+	 */
 	public void notifyPause() {
 		clip.setMicrosecondPosition(clipTime);
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 
+	/*
+	 * stopTheme ends the theme song (so that the dramatic rains can play
+	 */
 	public void stopTheme() {
-		if(clip !=null)
+		if (clip != null)
 			clip.stop();
 	}
 

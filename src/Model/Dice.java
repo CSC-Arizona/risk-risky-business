@@ -48,6 +48,9 @@ public class Dice implements Serializable, Comparable<Dice> {
 		return this.value;
 	}// end getValue
 
+	/*
+	 * compares one dice's value to another
+	 */
 	@Override
 	public int compareTo(Dice other) {
 

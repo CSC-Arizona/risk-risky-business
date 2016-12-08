@@ -26,11 +26,9 @@ public class Map implements Serializable {
 	private static ArrayList<Continent> allContinents;
 	private static Map gameMap = null;
 
-	
 	/*
-	 * constructor
-	 * 		hard codes all of the continents in this game (since there
-	 * 		are so few), countries, and neighbor relationships
+	 * constructor hard codes all of the continents in this game (since there
+	 * are so few), countries, and neighbor relationships
 	 */
 	private Map(int i) {
 		blue = new Continent(4, "Blue");
@@ -55,8 +53,7 @@ public class Map implements Serializable {
 	}// end constructor
 
 	/*
-	 * getInstance
-	 * 		Returns an instance of this singleton class
+	 * getInstance Returns an instance of this singleton class
 	 */
 	public static Map getInstance(int i) {
 		if (gameMap == null)
@@ -66,8 +63,7 @@ public class Map implements Serializable {
 	}// end getInstance
 
 	/*
-	 * readObject
-	 * 		For serializing
+	 * readObject For serializing
 	 */
 	private void readObject(ObjectInputStream ois) throws IOException,
 			ClassNotFoundException {
@@ -76,16 +72,14 @@ public class Map implements Serializable {
 	}
 
 	/*
-	 * readResolve
-	 * 		For serializing
+	 * readResolve For serializing
 	 */
 	private Object readResolve() {
 		return gameMap;
 	}
-	
+
 	/*
-	 * newMap
-	 * 		makes a new instance of the map
+	 * newMap makes a new instance of the map
 	 */
 	public Map newMap() {
 		gameMap = null;
@@ -93,9 +87,8 @@ public class Map implements Serializable {
 	}
 
 	/*
-	 * getContinentBonuses
-	 * 		Collects all of the continent bonuses that
-	 * 		one particular player has earned on this map
+	 * getContinentBonuses Collects all of the continent bonuses that one
+	 * particular player has earned on this map
 	 */
 	public int getContinentBonuses(Player player) {
 		int totalBonus = 0;
@@ -112,10 +105,9 @@ public class Map implements Serializable {
 	}// end getContinentBonuses
 
 	/*
-	 * getContinentOwnerAsStrings
-	 * 		return a string containing all of the continents,
-	 * 		their continent bunses and their owners (if any).
-	 * 		For the gameLog
+	 * getContinentOwnerAsStrings return a string containing all of the
+	 * continents, their continent bunses and their owners (if any). For the
+	 * gameLog
 	 */
 	public String[] getContinentOwnersAsStrings() {
 		String[] allStrings = new String[7];
@@ -132,8 +124,7 @@ public class Map implements Serializable {
 	}
 
 	/*
-	 * fillCountries
-	 * 		construct all 50 countries inside of the game
+	 * fillCountries construct all 50 countries inside of the game
 	 */
 	private void fillCountries(int j) {
 		// this method is going to suck
@@ -199,6 +190,10 @@ public class Map implements Serializable {
 
 	}// end fillCountries
 
+	/*
+	 * updateAllButtonSizes updates all of the manually set sizes for each
+	 * country button
+	 */
 	private void updateAllButtonSizes() {
 		// public void changeButtonSize(double width, double height)
 		countries[0].changeButtonSize(2, 1.75);
@@ -254,7 +249,12 @@ public class Map implements Serializable {
 
 	}
 
-	// Another terrible method
+	/*
+	 * addAllNeighbors Manually adds every neighbor for every country, creating
+	 * an adjacency list of all of the countries. This method calls a helper
+	 * method in order to save me on typing. It passes the indices of the
+	 * neighbors in the countries array
+	 */
 	private void addAllNeighbors() {
 		int index = 0;
 		// Adding to the wall
@@ -407,29 +407,21 @@ public class Map implements Serializable {
 		// qarth
 		int[] qarth = { 48, 46 };
 		addMyNeighbors(index++, qarth);
-		// printAllNeighbors();
 	}// end addAllNeighbors
 
-	private void printAllNeighbors() {
-		for (int i = 0; i < countries.length; i++) {
-			ArrayList<Country> buds = countries[i].getNeighbors();
-			System.out.print(countries[i].toString() + "\n\t");
-			for (int j = 0; j < buds.size(); j++) {
-				System.out.print(buds.get(j).toString() + " ");
-			} // end for
-			System.out.println();
-		}
-
-	}// end printAllNeighbors
-
-	// Takes an array of ints, and adds all of the countries at those
-	// indices to be neighbors of the country at the first index
+	/*
+	 * addMyNeighbors Takes an array of ints, and adds all of the countries at
+	 * those indices to be neighbors of the country at the first index
+	 */
 	private void addMyNeighbors(int countryI, int[] neighborsI) {
 		for (int i = 0; i < neighborsI.length; i++) {
 			countries[countryI].addNeighbor(countries[neighborsI[i]]);
 		}
 	}// end addMyNeighbors
 
+	/*
+	 * Miscellaneous getters and setters
+	 */
 	public Country[] getCountries() {
 		return countries;
 	}// end getCountries

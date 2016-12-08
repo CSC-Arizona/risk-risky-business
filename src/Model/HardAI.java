@@ -1,5 +1,12 @@
 package Model;
 
+/*
+ * HardAI
+ * 
+ * Author: Dylan Tobia, Abigail Dodd, Jewell Finder, Sydney Komro
+ * 
+ * Creates a HardAI Strategy to be used during gameplay by a hard level ai
+ */
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,7 +87,7 @@ public class HardAI implements AIStrategy, Serializable {
 	/*
 	 * finds the country that is not occupied on cont, and returns it
 	 */
-	private Country findEmptyCountry(Continent cont) {
+	public Country findEmptyCountry(Continent cont) {
 		for (Country country : cont.getMyCountries()) {
 			if (country.getOccupier() == null)
 				return country;

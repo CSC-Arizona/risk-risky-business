@@ -17,6 +17,9 @@ public class CardPanel extends JPanel {
 	private int xWidth;
 	private int yHeight;
 
+	/*
+	 * constructor
+	 */
 	public CardPanel(Image im, int x, int y) {
 		super();
 		myImage = im;
@@ -24,9 +27,12 @@ public class CardPanel extends JPanel {
 		yHeight = y;
 	}// end constructor
 
+	/*
+	 * paintComponent
+	 * 		Called in repaint. It pains the image to be a set size relative to the 
+	 * 		size of the frame (calculated with xWidth and yHeight)
+	 */
 	public void paintComponent(Graphics g) {
-	//	xWidth = this.getWidth()/40;
-	//	yHeight = this.getHeight()/40;
-		g.drawImage(myImage, 15, 15, (int) (3.25 * xWidth), (int) (8 * yHeight), null); //this.getWidth()-10, this.getHeight()-10, null);//(int) (0.5 * xWidth), (int) (1.5 * yHeight), null);
+		g.drawImage(myImage, 15, 15, (int) (3.25 * xWidth), (int) (8 * yHeight), null); 
 	}// end paintComponent
 }// end CardPanel

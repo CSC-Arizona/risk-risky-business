@@ -1,7 +1,7 @@
 package Model;
 
 /*
- * EasyAI
+ * MediumAI
  * 
  * by Abigail Dodd, Sydney Komro, Dylan Tobia, Jewell Finder
  * 

@@ -72,8 +72,7 @@ public class EasyAI implements AIStrategy, Serializable {
 		int randNum = rand.nextInt(50);
 		Map map = Map.getInstance(1);
 		Country[] countries = map.getCountries();
-		return countries[randNum];
-
+		return countries[randNum]; 
 	}
 
 	/*
@@ -110,7 +109,7 @@ public class EasyAI implements AIStrategy, Serializable {
 			} // end for
 		} // end for
 
-		if (countriesWorthAttacking.size() == 0)
+		if (countriesWorthAttacking.size() == 0) 
 			return null;
 
 		return countriesWorthAttacking;
