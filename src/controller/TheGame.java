@@ -421,7 +421,7 @@ public class TheGame implements Serializable {
 
 		// Do nothing if the game is over!
 		else if (isFinished()) {
-
+			
 		}// end else if
 
 		// During redeem cards
