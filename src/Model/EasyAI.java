@@ -49,28 +49,11 @@ public class EasyAI implements AIStrategy, Serializable {
 
 	/*
 	 * reinforce
-	 * 		Reinforces occupied countries after placement and after battles
-	 * 		Returns a string of what it did for the game log
+	 * 		Does nothing. Easy AI doesn't reinforce.
 	 */
 	@Override
 	public String reinforce() { 
-		String log = "";
-		ArrayList<Country> countries = me.getCountries();
-		
-		
-		for (int i=0; i < 0; i++){
-			int ran = (int)(Math.random() * countries.size());
-			Country c = countries.get(ran);
-			
-			if (c.getForcesVal() > 3){
-				ran = (int)(Math.random() * c.getNeighbors().size());
-				Country n = c.getNeighbors().get(ran);
-				n.addForcesVal(2);
-				c.removeUnits(2);
-				log+=me.getName() + " removed 2 units from " + c.getName() + " and placed them on " + n.getName() + ".\n";
-			}//end if
-		}//end for
-				
+		String log = "";				
 		return log;
 	}
 
