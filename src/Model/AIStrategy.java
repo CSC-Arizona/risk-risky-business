@@ -1,3 +1,9 @@
+/*
+ * AIStrategy.java
+ * 		An interface for use with AI
+ * 
+ */
+
 package Model;
 
 import java.io.Serializable;

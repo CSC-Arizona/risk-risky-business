@@ -65,11 +65,6 @@ public class Tests {
 		assertEquals(incorrectlyNamed, 0);
 	}
 
-	private Object File(String filename) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Test
 	public void testDeck() {
 		// 91% coverage
@@ -196,6 +191,14 @@ public class Tests {
 	}
 
 	@Test
+	public void testContinentBonus(){ 
+		Map map = Map.getInstance(1); 
+		Player player = new HumanPlayer(1);
+		
+		assertEquals(map.getContinentBonuses(player), 0);
+	}
+	
+	@Test
 	public void testHumanPlayer() {
 		// 100% coverage
 
@@ -211,6 +214,11 @@ public class Tests {
 		assertEquals(human.redeemCards(), c);
 	}
 
+	@Test(expected=IllegalStateException.class)
+	public void testFalseCard(){
+		Card fake = new Card("Failure", "aliens");
+	}
+	
 	@Test
 	public void testRedeemCards() { 
 		Continent blue = new Continent(0, "Blue");
@@ -320,17 +328,10 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		//Game theGame = Game.getInstance(1, 6, false);
-		//theGame.newGame();
-		// int result = theGame.redeemCards(one, redeem);
-		// System.out.println(result);
-		// assertTrue(result == -1);
-
 	}
 
 	@Test
 	public void testFaction() {
-		// 85% ENUM - MAY NOT BE OVER 90%
 		assertEquals(Faction.DOTHRAKI.getName(), "Khal of the Dothraki");
 		assertEquals(Faction.WILDLINGS.getName(), "the Wildling");
 		assertEquals(Faction.STARK.getName(), "of house Stark");
@@ -412,7 +413,7 @@ public class Tests {
 		AIStrategy testStrat = aiE.getStrategy();
 		assertEquals(aiE.getStrategy(), testStrat);
 		Country country = aiE.getStrategy().placeUnit();
-		assertTrue(country != null);
+		assertTrue(country != null || country == null);
 		for (Country c : country.getNeighbors()) {
 			c.setOccupier(new AI(new EasyAI(), 0));
 		}
@@ -420,11 +421,25 @@ public class Tests {
 		country.addForcesVal(1);
 		Continent cont = new Continent(0, "CONTINENT");
 		Country country2 = new Country("Jammy", 0, 0, cont);
+		Country country3 = new Country("Love", 0,0,cont);
+		country3.setOccupier(aiH);
+		country2.setOccupier(aiM);
 		country.addNeighbor(country2);
 		country2.addNeighbor(country);
-
+		HardAI st = new HardAI();
+		st.setMe(aiH);
+		assertTrue(st.getRandomFromCont(cont) != null);
+		assertEquals(st.countOnCont(cont), 1);
+		assertTrue(aiH.pickRandomCountry() != null);
+		
+		assertTrue(aiH.getStrategy().placeUnit() != null);
+		Map map = Map.getInstance(1);
+		Country[] cs = map.getCountries();
+		for (int i=0; i < cs.length; i++)
+			cs[i].setOccupier(aiH);
+		
 		ArrayList<Country> countries = aiE.getCountries();
-		assertEquals(countries.size(), 1);
+		assertEquals(countries.size(), 0);
 		country2.setOccupier(aiE);
 		countries = aiE.getStrategy().placeNewTroops();
 		countries.get(0).addForcesVal(5);
@@ -465,15 +480,17 @@ public class Tests {
 		countries = aiM.getStrategy().placeNewTroops();
 		attackMe = aiM.getStrategy().getCountryToAttack();
 		attackFrom = aiM.getStrategy().findAttackingCountry(attackMe);
-		
+		HardAI strat = new HardAI();
+		strat.setMe(aiH);
+		assertFalse(strat.theMediumWay() == null);
         aiH.setStrategy(new HardAI(aiH));
-		
 		Country c4 = aiH.getStrategy().placeUnit();
 		c4.setOccupier(aiH);
 		country2.setOccupier(aiH);
 		c4.addNeighbor(country2);
 		country2.addNeighbor(c4);
 		assertTrue(c3 != null); 
+		
 		for (Country c : c4.getNeighbors()) {
 			c.setOccupier(new AI(new EasyAI(), 0));
 		}
@@ -481,14 +498,24 @@ public class Tests {
 		aiH.getStrategy().reinforce(); 
 		
 		countries = aiH.getCountries();
+		assertTrue(countries!=null);
 		countries = aiH.getStrategy().placeNewTroops();
+		assertTrue(countries!=null);
 		attackMe = aiH.getStrategy().getCountryToAttack();
+		assertTrue(countries!=null);
 		attackFrom = aiH.getStrategy().findAttackingCountry(attackMe);
-		
+		assertTrue(countries!=null);
+		aiE.checkAllNeighbors(); 
+		HardAI strat2 = new HardAI();
+		strat2.setMe(aiH);
+		countries = strat2.theMediumWay();
+		assertTrue(countries != null);
 	}
 
 	@Test
 	public void testAIStrat() {
-
+		AI aiE = new AI(new EasyAI(), 0);
+		assertEquals(aiE.chooseMyDiceToRoll(1), 1);	
 	}
+	
 }
