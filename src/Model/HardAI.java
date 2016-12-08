@@ -1,5 +1,12 @@
 package Model;
 
+/*
+ * HardAI
+ * 
+ * Author: Dylan Tobia, Abigail Dodd, Jewell Finder, Sydney Komro
+ * 
+ * Creates a HardAI Strategy to be used during gameplay by a hard level ai
+ */
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

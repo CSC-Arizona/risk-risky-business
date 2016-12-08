@@ -221,6 +221,16 @@ public class Tests {
 		assertEquals(human.redeemCards(), c);
 	}
 
+	@Test
+	public void testPlayerCards(){
+		Player player = new HumanPlayer(1); 
+		player.setName("Monty");
+		Card card = new Card("Skagos", "infantry");
+		player.addCard(card); 
+		
+		assertEquals(player.getName().toString(), "Monty");
+	}
+	
 	@Test(expected=IllegalStateException.class)
 	public void testFalseCard(){
 		Card fake = new Card("Failure", "aliens");

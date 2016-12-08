@@ -1,7 +1,6 @@
 package controller;
 
-/*
- * Name: TheGame (What's the name of TheGame??)
+/* Name: TheGame (What's the name of TheGame??)
  * File: TheGame.java
  * Purpose: Coordinates games of risk between human and AI players. 
  */

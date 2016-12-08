@@ -33,22 +33,27 @@ public abstract class Player implements Serializable{
 	}// end constructor 
 	
 	
+	/*
+	 * Adds troops depending on how many countries a player owns
+	 */
 	public void getTroops() {
 		if (myCountries.size() <= 9)
 			availTroops += 3;
 		else
 			availTroops += (myCountries.size() / 3);
 
-		//redeemCards(); //this will mess up how human players need to redeem cards, 
-		//calling it in the GUI for AI and in the button listener for 
-		//the human player instead
-
 	}// end getTroops
 	
+	/*
+	 * adds troops equal to the numTroops passed
+	 */
 	public void addTroops(int numTroops){
 		availTroops+=numTroops;
 	}
 
+	/*
+	 * sets the faction compared to a string
+	 */
 	public void setFaction(String house) {
 		if (house.compareTo("Lannister") == 0) {
 			faction = Faction.LANNISTER;
@@ -71,6 +76,9 @@ public abstract class Player implements Serializable{
 		}
 	}// end setFaction
 
+	/*
+	 * sets the name to the passed name, if the pased name is the empty string, sets the name equal to the players faction enum
+	 */
 	public void setName(String name) {
 		if ((name == null || name.equals("")) && faction != null) {
 			this.name = faction.getDefaultPlayerName();
@@ -79,10 +87,17 @@ public abstract class Player implements Serializable{
 			this.name = name;
 	}// end setName
 
+	/*
+	 * occupyCountry
+	 * 		adds a country to the players list of country
+	 */
 	public void occupyCountry(Country occupyMe) {
 		myCountries.add(occupyMe);
 	}// end occupyCountry
 
+	/*
+	 * compares a player to another player
+	 */
 	public boolean equals(Player player) {
 		if (player == null)
 			return false;
@@ -95,7 +110,6 @@ public abstract class Player implements Serializable{
 	}// end equals
 
 	public ArrayList<Country> getCountries() {
-	//	Collections.shuffle(myCountries);
 		return myCountries;
 	}// end getCountries
 
@@ -107,12 +121,17 @@ public abstract class Player implements Serializable{
 		return myCards;
 	}// end getCards
 
+	/*
+	 * removes the int troops from the availTroops variable
+	 */
 	public void subtractFromAvailableTroops(int troops) {
 		availTroops -= troops;
 
 	}// end subtractFromAvailableTroops
 	
-	
+	/*
+	 * adds the int troops to the availTroops variable
+	 */
 	public void addAvailableTroops(int troops){
 		availTroops += troops;
 	}//end addAvailTroops
@@ -125,10 +144,16 @@ public abstract class Player implements Serializable{
 		return name;
 	}// end getName
 
+	/*
+	 * removes a country from the players list of countries
+	 */
 	public void loseCountry(Country loser) {
 		myCountries.remove(loser);
 	}// end loseCountry
 
+	/*
+	 * adds a card to the list of the players cards, if the player has 5, sets a mustReedeemCards flag
+	 */
 	public void addCard(Card cardToAdd) {
 		myCards.add(cardToAdd);
 		
@@ -139,6 +164,9 @@ public abstract class Player implements Serializable{
 			mustRedeemCards = false;
 	}
 
+	/*
+	 * for each card the player owns, add it to another list, and then remove them all. 
+	 */
 	public ArrayList<Card> discardCards() {
 		ArrayList<Card> cardsToDiscard = new ArrayList<>();
 		for (Card card : myCards) {
@@ -154,6 +182,9 @@ public abstract class Player implements Serializable{
 		return cardsToDiscard;
 	}
 	
+	/*
+	 * discards all cards
+	 */
 	public void discardCards(ArrayList<Card> cards) { 
 		myCards.removeAll(cards);
 		
@@ -163,6 +194,9 @@ public abstract class Player implements Serializable{
 	}
 
 	//used for tourney mode
+	/*
+	 * sets faction by integer passed, instead of string
+	 */
 	public void setFaction(int i)
 	{
 		switch(i)
@@ -191,6 +225,6 @@ public abstract class Player implements Serializable{
 	public boolean mustRedeemCards(){
 		return mustRedeemCards;
 	}
-	
+	//abstract function that must be implemented by any classes that extend this one
 	public abstract ArrayList<Card> redeemCards();
 }
