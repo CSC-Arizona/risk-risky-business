@@ -213,6 +213,7 @@ public class Tests {
 		Country[] allCountries = map.getCountries();
 		assertEquals(allCountries[0].getName(), "The Wall");
 		map = map.newTourneyMap();
+		map.updateAllButtonSizes();
 		assertEquals(allCountries[0].getName(), "The Wall");
 		assertEquals(map.getAllContinents().size(), 7);
 	}
