@@ -70,7 +70,9 @@ public class Tests {
 		// 91% coverage
 		Deck testDeck = Deck.getInstance();
 		DiscardPile discard = new DiscardPile();
+		
 		assertEquals(52, testDeck.getSize());
+		assertFalse(testDeck.isEmpty());
 		testDeck.shuffle(discard);
 		testDeck.deal(discard);
 		assertEquals(51, testDeck.getSize());
@@ -84,6 +86,9 @@ public class Tests {
 		discard.removeAll();
 		assertEquals(discard.getSize(), 0);
 
+		assertFalse(testDeck.isEmpty());
+
+		testDeck = testDeck.newDeck();
 		ArrayList<Card> c = new ArrayList<Card>();
 		Card one = new Card("The Wall", "cavalry", true);
 		Card two = new Card("Skagos", "artillery", true);
@@ -201,8 +206,7 @@ public class Tests {
 
 	@Test
 	public void testMap() {
-		// 79.4% Coverage
-		// TODO: Testcase doesn't pass, but it's the full coverage amount.
+
 		Map map = Map.getInstance(0);
 
 		assertEquals(map.getContinentOwnersAsStrings()[0],
@@ -244,8 +248,19 @@ public class Tests {
 		assertEquals(human.redeemCards(), c);
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testFalseCard() {
+
+	@Test
+	public void testPlayerCards(){
+		Player player = new HumanPlayer(1); 
+		player.setName("Monty");
+		Card card = new Card("Skagos", "infantry");
+		player.addCard(card); 
+		
+		assertEquals(player.getName().toString(), "Monty");
+	}
+	
+	@Test(expected=IllegalStateException.class)
+	public void testFalseCard(){
 		Card fake = new Card("Failure", "aliens");
 	}
 
@@ -334,11 +349,6 @@ public class Tests {
 		redeem.add(someCard);
 		redeem.add(nextCard);
 		redeem.add(walCard);
-		// Game theGame = Game.getInstance(1, 6, false);
-		// theGame.newGame();
-		// int result = theGame.redeemCards(one, redeem);
-		// System.out.println(result);
-		// assertTrue(result == 4);
 	}
 
 	@Test

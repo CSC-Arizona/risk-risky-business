@@ -20,10 +20,9 @@ public abstract class Player implements Serializable {
 	private ArrayList<Card> myCards;
 	private boolean mustRedeemCards = false;
 
-	// private Country currentCountry; //to keep track of where to put the
-	// armies in certain Card redeeming situations
-	// private Continent[] allContinents; TODO
 
+	//constructor for player
+	//parameters: number of players
 	public Player(int numOfPlayers) {
 
 		this.name = null;
