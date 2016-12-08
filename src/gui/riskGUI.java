@@ -1296,6 +1296,7 @@ public class riskGUI extends JFrame {
 
 		private Country curr;
 
+		//constructor
 		public CountryPanel() {
 			this.setLayout(new BorderLayout());
 			this.setBorder(loweredetched);
@@ -1435,6 +1436,7 @@ public class riskGUI extends JFrame {
 			this.revalidate();
 		}// end makeCardPanel
 
+		//adds war button to panel
 		public void makePlayingMyCountryBottomLabel() {
 			JButton butt = new JButton("Go to War!");
 			butt.addActionListener(new AttackListener());
@@ -1443,6 +1445,7 @@ public class riskGUI extends JFrame {
 
 		}// end makeBottomLabel
 
+		//adds transfer troops button to panel
 		public void makeTransferMyCountryBottomLabel() {
 			JButton trans = new JButton("Transfer Troops");
 			trans.addActionListener(new TransferTroopListener());
@@ -1450,6 +1453,7 @@ public class riskGUI extends JFrame {
 			this.revalidate();
 		}// end makeTransferMyCountryBottomLabel
 
+		//adds attack button to panel
 		public void makePlayingYourCountryBottomLabel() {
 			JButton attack = new JButton("Attack");
 			attack.addActionListener(new AttackListener());
@@ -1457,6 +1461,7 @@ public class riskGUI extends JFrame {
 			this.revalidate();
 		}// end makePlayingYourCountryBottomLabel
 
+		//adds place troops button
 		public void makePlacementBottomLabel() {
 			JButton place = new JButton("Place Troops Here");
 			place.addActionListener(new PlaceAndReinforceListener());
@@ -1483,11 +1488,13 @@ public class riskGUI extends JFrame {
 			this.add(neighbors, BorderLayout.CENTER);
 			neighbors.revalidate();
 		}
-
+		
+		//update panel
 		public void updatePanel() {
 			updatePanel(null);
 		}
 
+		//update center panel
 		public void updatePanel(Graphics g) {
 			curr = theGame.getSelectedCountry();
 			this.removeAll();
@@ -1649,7 +1656,10 @@ public class riskGUI extends JFrame {
 			repaint();
 		}// end actionPerformed
 	}// end tradeClickListener
-
+	
+	/*
+	 * determines if the players cards are redeemable
+	 */
 	private boolean cardsAreRedeemable() {
 		if (selectedCards.size() != 3)
 			return false;
@@ -1663,7 +1673,10 @@ public class riskGUI extends JFrame {
 				return false;
 		} // end else
 	}// end cardsAreRedeemable
-
+	
+	/*
+	 * determines if the player has 3 of one type of card
+	 */
 	private boolean cardsHaveThreeOfOne() {
 		String unit = selectedCards.get(0).getUnit();
 
@@ -1679,6 +1692,9 @@ public class riskGUI extends JFrame {
 		return true;
 	}
 
+	/*
+	 *determines if the player has one card of each kind 
+	 */
 	private boolean cardsHaveOneOfEach() {
 		int[] unitTypes = new int[4];
 
@@ -1703,6 +1719,10 @@ public class riskGUI extends JFrame {
 		return true;
 	}// end cardsHaveOneOfEach
 
+	
+	/*
+	 * Passes to the next phase for the user and notifies the game.
+	 */
 	private class PassButtonListener implements ActionListener {
 
 		@Override
@@ -2051,6 +2071,9 @@ public class riskGUI extends JFrame {
 		}// end actionPerformed
 	}// end AttackListener
 
+	/*
+	 * sets up a Joptionpane to ask how many armies to move and determines if it is a valid value. 
+	 */
 	public int getArmiesToUse(Country countryToRemoveUnits) {
 		boolean moveFlag = false, continueFlag = false;
 		int totalUnits = countryToRemoveUnits.getForcesVal(), unitsToReturn = 0;
@@ -2195,6 +2218,9 @@ public class riskGUI extends JFrame {
 		}// end actionperformed
 	}// end aiDiffChangeListener
 
+	/*
+	 * clearButton calls theGame's method to clear all selections and repaints the drawingPanel
+	 */
 	private class clearButtonListener implements ActionListener {
 
 		@Override
@@ -2205,6 +2231,9 @@ public class riskGUI extends JFrame {
 		}// end actionperformed
 	}// end clearButtonListener
 
+	/*
+	 * music listener notifies sound player to pause the music and updates the menu.
+	 */
 	private class musicListener implements ActionListener {
 
 		@Override
@@ -2222,6 +2251,10 @@ public class riskGUI extends JFrame {
 		}// end actionperformed
 	}// end musicListener
 
+	/*
+	 * animationListener is called when menu option is pressed and resets the menu.
+	 * turns off animations during attack.
+	 */
 	private class animationListener implements ActionListener {
 
 		@Override
@@ -2234,9 +2267,14 @@ public class riskGUI extends JFrame {
 		}// end actionperformed
 	}// end musicListener
 
+	/*
+	 * LinkClickListener allows for the user to click on the Hyperlink when the rules menu listener is pressed
+	 * and sends the user to the url specified on their desktop.
+	 */
 	private class LinkClickListener implements HyperlinkListener {
 		private URL myUrl;
 
+		//sets URL to rules
 		public LinkClickListener(URL rules) {
 			myUrl = rules;
 
@@ -2259,6 +2297,10 @@ public class riskGUI extends JFrame {
 		}
 	}
 
+	/*
+	 * StatPanel on listener is called whenever stat panel button is pressed 
+	 * This calls the method turnOnStatPanel()
+	 */
 	private class StatPanelTurnOnListener implements ActionListener {
 		private boolean turnedOn = false;
 
@@ -2268,6 +2310,10 @@ public class riskGUI extends JFrame {
 		}// end actionPerformed
 	}// end StatPanelListener
 
+	/*
+	 * StatPanel off listener is called whenever button at the bottom of the statPanel is pressed. 
+	 * This calls the method turnOffStatPanel()
+	 */
 	private class StatPanelTurnOffListener implements ActionListener {
 
 		@Override
@@ -2276,6 +2322,10 @@ public class riskGUI extends JFrame {
 		}// end actionPerformed
 	}// end turned off listener
 
+	/*
+	 * saveGameListener is called whenever saveGame menu item is pressed. 
+	 * writes theGame object to outputStream and saves via JFileChooser
+	 */
 	private class saveGameListener implements ActionListener {
 
 		@Override
