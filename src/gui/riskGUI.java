@@ -1674,6 +1674,11 @@ public class riskGUI extends JFrame {
 
 				JOptionPane.showMessageDialog(riskGUI.this,
 						"                                 Welcome to our implementation of Risk, Game of Thrones Edition!\n"
+								+ "**********************************************DISCLAIMER******************************************************** \n"
+								+ "IF A PLAYER LOSES AND IT IS JUST AI LEFT, OR IF YOU START A GAME WITH ONLY AI, THE GAME WILL PLAY UNTIL \n"
+								+ "COMPLETION, BUT THEN SEEMS TO FREEZE. IT ISN'T ACTUALLY FROZEN, JUST BE PATIENT, IT WILL SHOW THE WINNER\n"
+								+ "AND THEN THE MENU'S AND THING WILL BE ACCESSIBLE. WE ARE SORRY FOR THE INCONVENIECE.\n"
+								+ "****************************************************************************************************************\n"
 								+ "The game will first ask if you want to play a New Game, or load a previous save. If you would like to load\n"
 								+ "the file types are .ser files. Next it will ask you the usual questions, how many humans, ai's, what \n"
 								+ "faction you would like to play as, and what difficulty you would like the ai's to be. Then the game begins. \n"
