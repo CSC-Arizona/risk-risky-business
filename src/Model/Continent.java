@@ -69,14 +69,21 @@ public class Continent implements Serializable {
 		Player owner = myCountries.get(0).getOccupier();
 		int i = 1;
 
-		if (owner == null)
+		if (owner == null){
+			this.owner = null;
 			return null;
+		}
+			
 
 		while (i < myCountries.size()) {
-			if (!owner.equals(myCountries.get(i).getOccupier()))
+			if (!owner.equals(myCountries.get(i).getOccupier())){
+				this.owner = null;
 				return null;
+			}
+				
 			i++;
-		}
+		}//end while
+		
 		this.owner = owner;
 		return owner;
 	}// end findOwner
