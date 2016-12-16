@@ -76,7 +76,8 @@ public class Continent implements Serializable {
 			if (!owner.equals(myCountries.get(i).getOccupier()))
 				return null;
 			i++;
-		}
+		}//end while
+		
 		this.owner = owner;
 		return owner;
 	}// end findOwner
