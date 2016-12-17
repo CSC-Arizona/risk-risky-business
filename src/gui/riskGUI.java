@@ -109,11 +109,11 @@ public class riskGUI extends JFrame {
 		GraphicsEnvironment ge = GraphicsEnvironment
 				.getLocalGraphicsEnvironment();
 		try {
-			gotFontHeader = Font.createFont(Font.TRUETYPE_FONT, new File(
-					"TrajanusBricks.ttf"));
+			gotFontHeader = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream("otherSources/TrajanusBricks.ttf"));
+					//"otherSources/TrajanusBricks.ttf"));
 			gotFontHeader = gotFontHeader.deriveFont(36f);
-			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, new File(
-					"LibreBaskerville-Regular.otf"));
+			gotFontBody = Font.createFont(Font.TRUETYPE_FONT, this.getClass().getResourceAsStream(
+					"otherSources/LibreBaskerville-Regular.otf"));
 			gotFontBody = gotFontBody.deriveFont(24f);
 		} catch (FontFormatException e) {
 			e.printStackTrace();

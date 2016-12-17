@@ -32,7 +32,7 @@ public class SoundClipPlayer extends JFrame {
 	public void startPlay() {
 		try {
 			File soundFile = new File(
-					"The Rains of Castamere (Instrumental.wav");
+					"otherSources/The Rains of Castamere (Instrumental.wav");
 			AudioInputStream audioIn = AudioSystem
 					.getAudioInputStream(soundFile);
 			clip = AudioSystem.getClip();
@@ -54,7 +54,7 @@ public class SoundClipPlayer extends JFrame {
 	public void startTheme() {
 		try {
 			File soundFile = new File(
-					"Game_Of_Thrones_Official_Show_Open_HBO_.wav");
+					"otherSources/Game_Of_Thrones_Official_Show_Open_HBO_.wav");
 			AudioInputStream audioIn = AudioSystem
 					.getAudioInputStream(soundFile);
 			clip = AudioSystem.getClip();
